@@ -1,2 +1,2 @@
-# Assistant-API
-File Store for the Assistant API
+# Hunter-Industries-API
+File Store for the Hunter Industries API
