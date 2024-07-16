@@ -1,5 +1,10 @@
-# Build
-[Bb]in/
+# Builds
+**[Bb]in/
+***[Dd]ebug/
+***[Rr]elease/
 
 # Odds
-.vs/
+/.vs/
+
+# Dev Config
+*[Aa]ppsettings.[Dd]evelopment.json
