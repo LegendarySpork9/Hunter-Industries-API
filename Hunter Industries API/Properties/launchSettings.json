@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "https://hunter-industries.co.uk/",
+      "sslPort": 44304
+    }
+  },
+  "profiles": {
+    "HunterIndustriesAPI": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7026;http://localhost:5287",
+      "environmentVariables": {
+        "ASPNETCOREENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": false,
+      "launchUrl": "api/swagger",
+      "environmentVariables": {
+        "ASPNETCOREENVIRONMENT": "Development"
+      }
+    }
+  }
+}
