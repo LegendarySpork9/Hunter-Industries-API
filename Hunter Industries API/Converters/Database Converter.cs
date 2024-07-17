@@ -1,10 +1,10 @@
 ﻿// Copyright © - unpublished - Toby Hunter
 namespace HunterIndustriesAPI.Converters
 {
-    public static class DatabaseConverter
+    public class DatabaseConverter
     {
         // Formats the given parameters.
-        public static string? FormatParameters(string[] parameters)
+        public string? FormatParameters(string[] parameters)
         {
             string? data;
 

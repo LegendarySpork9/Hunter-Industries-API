@@ -59,7 +59,7 @@ namespace HunterIndustriesAPI
             builder.Services.AddCors(Options =>
             {
                 Options.AddPolicy("AllowAllOrigins",
-                    builder => builder.WithOrigins("https://hunter-industries.co.uk").AllowAnyHeader().AllowAnyMethod());
+                builder => builder.WithOrigins("https://hunter-industries.co.uk").AllowAnyHeader().AllowAnyMethod());
             });
 
             // Sets up the authentication token and Scopes.
