@@ -1,5 +1,5 @@
 ﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models
+namespace HunterIndustriesAPI.Models.Requests
 {
     public class AssistantFilterModel
     {
