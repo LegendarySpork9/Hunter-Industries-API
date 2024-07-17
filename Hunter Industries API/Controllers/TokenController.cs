@@ -1,13 +1,13 @@
 ﻿// Copyright © - unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
+using HunterIndustriesAPI.Models.Requests;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Objects;
 using HunterIndustriesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Text;
 
 namespace HunterIndustriesAPI.Controllers
