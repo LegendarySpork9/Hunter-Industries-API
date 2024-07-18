@@ -1,8 +1,11 @@
 ﻿// Copyright © - unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Converters.Assistant;
-using HunterIndustriesAPI.Models.Requests;
+using HunterIndustriesAPI.Models.Requests.Bodies.Assistant;
+using HunterIndustriesAPI.Models.Requests.Filters.Assistant;
+using HunterIndustriesAPI.Models.Responses.Assistant;
+using HunterIndustriesAPI.Objects.Assistant;
 using HunterIndustriesAPI.Services;
+using HunterIndustriesAPI.Services.Assistant;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +22,17 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         {
             AuditHistoryService _auditHistoryService = new();
             AuditHistoryConverter _auditHistoryConverter = new();
-            ConfigConverter _configConverter = new();
+            ConfigService _configService = new();
 
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.AssistantName, filters.AssistantID });
 
             // Gets the config(s) from the AssistantInformation table.
-            var Result = GetAssistantConfig(filters.AssistantName, filters.AssistantID);
-            string[] AssistantNames = Result.Item1;
+            var result = _configService.GetAssistantConfig(filters.AssistantName, filters.AssistantID);
+            List<AssistantConfiguration> assistantConfigurations = result.Item1;
 
             // Checks if data was returned.
-            if (AssistantNames == Array.Empty<string>())
+            if (assistantConfigurations == new List<AssistantConfiguration>())
             {
                 return Ok(new
                 {
@@ -37,16 +40,15 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 });
             }
 
-            var FormattedRecords = _configConverter.FormatData(Result.Item1, Result.Item2, Result.Item3, Result.Item4, Result.Item5, Result.Item6);
-            int TotalRecords = Result.Item7;
-
-            return Ok(new
+            ConfigResponseModel response = new()
             {
-                latestrelease = Result.Item8,
-                configs = FormattedRecords,
-                configcount = Result.Item1.Length,
-                totalcount = TotalRecords
-            });
+                LatestRelease = result.Item3,
+                AssistantConfigurations = assistantConfigurations,
+                ConfigCount = assistantConfigurations.Count,
+                TotalCount = result.Item2,
+            };
+
+            return StatusCode(200, response);
         }
 
         [HttpPost]
@@ -54,6 +56,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         {
             AuditHistoryService _auditHistoryService = new();
             AuditHistoryConverter _auditHistoryConverter = new();
+            ConfigService _configService = new();
 
             // Checks if the request contains a body.
             if (request == null)
@@ -80,22 +83,22 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             // Checks if a config already exists.
-            if (AssistantExists(request.AssistantName, request.IDNumber))
+            if (_configService.AssistantExists(request.AssistantName, request.IDNumber))
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"),
-                    _auditHistoryConverter.GetStatusID("OK"), new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"), 
+                    new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
 
                 return Ok(new
                 {
-                    information = "A config with the name and ID already exists."
+                    information = "A config with the name and/or ID already exists."
                 });
             }
 
             // Creates the config and returns the result.
-            if (!AssistantConfigCreated(request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName))
+            if (!_configService.AssistantConfigCreated(request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName))
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"),
-                    _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), 
+                    new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
 
                 return StatusCode(500, new
                 {
@@ -106,17 +109,19 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"),
                     new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
 
-            string Version = GetMostRecentVersion();
+            string version = _configService.GetMostRecentVersion();
 
-            return StatusCode(201, new
+            AssistantConfiguration response = new()
             {
-                assistantname = request.AssistantName,
-                assistantid = request.IDNumber,
-                designateduser = request.AssignedUser,
-                hostname = request.HostName,
-                deletion = false,
-                version = Version
-            });
+                AssistantName = request.AssistantName,
+                AssistantID = request.IDNumber,
+                AssignedUser = request.AssignedUser,
+                HostName = request.HostName,
+                Deletion = false,
+                Version = version,
+            };
+
+            return StatusCode(201, response);
         }
     }
 }

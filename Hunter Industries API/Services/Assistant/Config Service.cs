@@ -1,22 +1,18 @@
-﻿using System.Data.SqlClient;
+﻿// Copyright © - unpublished - Toby Hunter
+using System.Data.SqlClient;
 using HunterIndustriesAPI.Models;
+using HunterIndustriesAPI.Objects.Assistant;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
     public class ConfigService
     {
         // Gets the config(s) from the database.
-        public (string[], string[], string[], string[], bool[], string[], int, string) GetAssistantConfig(string assistantName, string assistantID)
+        public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string? assistantName, string? assistantID)
         {
             try
             {
-                // Make into Object
-                string[] AssistantNames = Array.Empty<string>();
-                string[] AssistantIDs = Array.Empty<string>();
-                string[] UserNames = Array.Empty<string>();
-                string[] HostNames = Array.Empty<string>();
-                bool[] Deletions = Array.Empty<bool>();
-                string[] Versions = Array.Empty<string>();
+                List<AssistantConfiguration> assistantConfigurations = new();
 
                 // Creates the variables for the SQL queries.
                 SqlConnection connection;
@@ -24,7 +20,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 SqlDataReader dataReader;
 
                 // Obtaines and returns all the rows in the AssistantInformation table.
-                string sqlQuery = @"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from AssistantInformation AI
+                string sqlQuery = @"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from Assistant_Information AI
 join [Location] L on AI.LocationID = L.LocationID
 join Deletion D on AI.DeletionStatusID = D.StatusID
 join [Version] V on AI.VersionID = V.VersionID
@@ -59,23 +55,28 @@ where AI.Name is not null";
 
                 while (dataReader.Read())
                 {
-                    AssistantNames = AssistantNames.Append(dataReader.GetString(0)).ToArray();
-                    AssistantIDs = AssistantIDs.Append(dataReader.GetString(1)).ToArray();
-                    UserNames = UserNames.Append(dataReader.GetString(2)).ToArray();
-                    HostNames = HostNames.Append(dataReader.GetString(3)).ToArray();
-                    Deletions = Deletions.Append(Convert.ToBoolean(dataReader.GetString(4))).ToArray();
-                    Versions = Versions.Append(dataReader.GetString(5)).ToArray();
+                    AssistantConfiguration configuration = new()
+                    {
+                        AssistantName = dataReader.GetString(0),
+                        AssistantID = dataReader.GetString(1),
+                        AssignedUser = dataReader.GetString(2),
+                        HostName = dataReader.GetString(3),
+                        Deletion = bool.Parse(dataReader.GetString(4)),
+                        Version = dataReader.GetString(5)
+                    };
+                    
+                    assistantConfigurations.Add(configuration);
                 }
 
                 dataReader.Close();
                 connection.Close();
 
-                return (AssistantNames, AssistantIDs, UserNames, HostNames, Deletions, Versions, GetTotalConfigs(command), GetMostRecentVersion());
+                return (assistantConfigurations, GetTotalConfigs(command), GetMostRecentVersion());
             }
 
             catch (Exception ex)
             {
-                return (Array.Empty<string>(), Array.Empty<string>(), Array.Empty<string>(), Array.Empty<string>(), Array.Empty<bool>(), Array.Empty<string>(), 0, string.Empty);
+                return (new List<AssistantConfiguration>(), 0, string.Empty);
             }
         }
 
@@ -94,11 +95,11 @@ where AI.Name is not null";
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;
-                command.CommandText = command.CommandText.Replace(@"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from AssistantInformation AI
+                command.CommandText = command.CommandText.Replace(@"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from Assistant_Information AI
 join [Location] L on AI.LocationID = L.LocationID
 join Deletion D on AI.DeletionStatusID = D.StatusID
 join [Version] V on AI.VersionID = V.VersionID
-join [User] U on AI.UserID = U.UserID", "select count(*) from AssistantInformation AI");
+join [User] U on AI.UserID = U.UserID", "select count(*) from Assistant_Information AI");
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -119,7 +120,7 @@ join [User] U on AI.UserID = U.UserID", "select count(*) from AssistantInformati
         }
 
         // Gets the most recent release version in the Versions table.
-        private string GetMostRecentVersion()
+        public string GetMostRecentVersion()
         {
             try
             {
@@ -161,7 +162,8 @@ order by VersionID desc";
         {
             try
             {
-                string? assistant = null;
+                string? name = null;
+                string? idNumber = null;
 
                 // Creates the variables for the SQL queries.
                 SqlConnection connection;
@@ -169,13 +171,13 @@ order by VersionID desc";
                 SqlDataReader dataReader;
 
                 // Obtaines and returns all the rows in the AssistantInformation table.
-                string sqlQuery = @"select AI.Name from AssistantInformation AI
+                string sqlQuery = @"select AI.Name, AI.IDNumber from Assistant_Information AI
 join [Location] L on AI.LocationID = L.LocationID
 join Deletion D on AI.DeletionStatusID = D.StatusID
 join [Version] V on AI.VersionID = V.VersionID
 join [User] U on AI.UserID = U.UserID
 where AI.Name = @AssistantName
-and AI.IDNumber = @AssistantID";
+or AI.IDNumber = @AssistantID";
 
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
@@ -186,13 +188,19 @@ and AI.IDNumber = @AssistantID";
 
                 while (dataReader.Read())
                 {
-                    assistant = dataReader.GetString(0);
+                    name = dataReader.GetString(0);
+                    idNumber = dataReader.GetString(1);
                 }
 
                 dataReader.Close();
                 connection.Close();
 
-                if (string.IsNullOrEmpty(assistant))
+                if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(idNumber))
+                {
+                    return false;
+                }
+
+                if (name != assistantName && idNumber != assistantID)
                 {
                     return false;
                 }
@@ -249,7 +257,7 @@ values (@Name)";
                     return false;
                 }
 
-                sqlQuery = @"insert into [AssistantInformation] (LocationID, DeletionStatusID, VersionID, UserID, Name, IDNumber)
+                sqlQuery = @"insert into [Assistant_Information] (LocationID, DeletionStatusID, VersionID, UserID, Name, IDNumber)
 values (@LocationID, 2, (select top 1 VersionID from [Version] order by VersionID desc), @UserID, @AssistantName, @IDNumber)";
                 rowsAffected = 0;
 
