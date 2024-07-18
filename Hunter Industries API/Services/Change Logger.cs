@@ -4,10 +4,10 @@ using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Services
 {
-    public static class ChangeLogger
+    public class ChangeLogger
     {
         // Logs any changes to the data.
-        public static bool LogChange(int endpointID, int auditID, string field, string oldValue, string newValue)
+        public bool LogChange(int endpointID, int auditID, string field, string oldValue, string newValue)
         {
             bool Successful = false;
 
