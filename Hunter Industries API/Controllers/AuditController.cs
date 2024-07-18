@@ -7,6 +7,7 @@ using HunterIndustriesAPI.Models.Responses;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace HunterIndustriesAPI.Controllers
 {
@@ -33,10 +34,10 @@ namespace HunterIndustriesAPI.Controllers
             }
 
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate.ToString(), filters.PageSize.ToString(), filters.PageNumber.ToString() });
+                    new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
             // Gets the data from the AuditHistory table.
-            var result = _auditHistoryService.GetAuditHistory(filters.IPAddress, filters.Endpoint, Convert.ToDateTime(filters.FromDate), filters.PageSize, filters.PageNumber);
+            var result = _auditHistoryService.GetAuditHistory(filters.IPAddress, filters.Endpoint, DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), filters.PageSize, filters.PageNumber);
             int[] auditIDs = result.Item1;
 
             // Checks if data was returned.

@@ -21,7 +21,7 @@ namespace HunterIndustriesAPI.Services
                 SqlCommand command;
 
                 // Inserts the record into the AuditHistory table.
-                string sqlQuery = @"insert into AuditHistory (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
+                string sqlQuery = @"insert into Audit_History (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
 output inserted.AuditID
 values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
@@ -70,10 +70,10 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 SqlDataReader dataReader;
 
                 // Obtaines and returns all the rows in the AuditHistory table.
-                string sqlQuery = $@"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from AuditHistory AH
+                string sqlQuery = $@"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
 join [Endpoint] E on AH.EndpointID = E.EndpointID
 join Methods M on AH.MethodID = M.MethodID
-join StatusCode SC on AH.StatusID = SC.StatusID
+join Status_Code SC on AH.StatusID = SC.StatusID
 where AH.AuditID is not null";
 
                 if (!string.IsNullOrEmpty(ipAddress))
@@ -86,9 +86,9 @@ where AH.AuditID is not null";
                     sqlQuery += "\nand E.Value = @Endpoint";
                 }
 
-                if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate.ToString() != "01/01/0001 00:00:00")
+                if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate.ToString() != "01/01/1900 00:00:00")
                 {
-                    sqlQuery += "\nand AH.DateOccured > cast(@FromDate as datetime)";
+                    sqlQuery += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
                 }
 
                 sqlQuery += @"
@@ -127,7 +127,16 @@ fetch next @PageSize rows only";
                     methods = methods.Append(dataReader.GetString(3)).ToArray();
                     status = status.Append(dataReader.GetString(4)).ToArray();
                     occured = occured.Append(dataReader.GetDateTime(5)).ToArray();
-                    parameters = parameters.Append(dataReader.GetString(6)).ToArray();
+
+                    if (dataReader.IsDBNull(6))
+                    {
+                        parameters = parameters.Append(String.Empty).ToArray();
+                    }
+
+                    else
+                    {
+                        parameters = parameters.Append(dataReader.GetString(6)).ToArray();
+                    }
                 }
 
                 dataReader.Close();
@@ -157,16 +166,13 @@ fetch next @PageSize rows only";
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;
-                command.CommandText = command.CommandText.Replace(@"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from AuditHistory AH
+                command.CommandText = command.CommandText.Replace(@"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
 join [Endpoint] E on AH.EndpointID = E.EndpointID
 join Methods M on AH.MethodID = M.MethodID
-join StatusCode SC on AH.StatusID = SC.StatusID", @"select count(*) from AuditHistory AH
-join [Endpoint] E on AH.EndpointID = E.EndpointID
-join Methods M on AH.MethodID = M.MethodID
-join StatusCode SC on AH.StatusID = SC.StatusID").Replace(@"
-order by AH.AuditID asc
-OFFSET (@PageSize * (@PageNumber - 1)) ROWS
-FETCH NEXT @PageSize ROWS ONLY", string.Empty);
+join Status_Code SC on AH.StatusID = SC.StatusID", @"select count(*) from Audit_History AH
+join [Endpoint] E on AH.EndpointID = E.EndpointID").Replace(@"order by AH.AuditID asc
+offset (@PageSize * (@PageNumber - 1)) rows
+fetch next @PageSize rows only", "");
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())

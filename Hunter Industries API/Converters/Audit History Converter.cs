@@ -78,11 +78,14 @@ namespace HunterIndustriesAPI.Converters
             string[] splitParams = parameters.Split("\",\"");
             string[] formattedParams = Array.Empty<string>();
 
-            foreach (string parameter in splitParams)
+            if (parameters != String.Empty)
             {
-                string param = parameter.Replace("\"", "");
+                foreach (string parameter in splitParams)
+                {
+                    string param = parameter.Replace("\"", "");
 
-                formattedParams = formattedParams.Append(param).ToArray();
+                    formattedParams = formattedParams.Append(param).ToArray();
+                }
             }
 
             return formattedParams;

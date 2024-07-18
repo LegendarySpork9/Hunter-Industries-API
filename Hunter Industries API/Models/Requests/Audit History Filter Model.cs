@@ -3,7 +3,7 @@ namespace HunterIndustriesAPI.Models.Requests
 {
     public class AuditHistoryFilterModel
     {
-        public DateTime? FromDate { get; set; }
+        public string FromDate { get; set; } = "01/01/1900";
         public string? IPAddress { get; set; }
         public string? Endpoint { get; set; }
         public int PageSize { get; set; } = 25;

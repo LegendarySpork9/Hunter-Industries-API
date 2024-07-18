@@ -14,7 +14,7 @@ namespace HunterIndustriesAPI
             // Access the json inside the appsettings file.
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.Development.json")
+            .AddJsonFile("appsettings - Development.json")
             .Build();
 
             DatabaseModel.ConnectionString = configuration["SQLConnectionString"];
