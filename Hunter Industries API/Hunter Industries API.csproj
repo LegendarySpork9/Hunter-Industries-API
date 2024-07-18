@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\Assistant\ConfigController.cs" />
     <Compile Remove="Controllers\Assistant\DeletionController.cs" />
     <Compile Remove="Controllers\Assistant\LocationController.cs" />
     <Compile Remove="Controllers\Assistant\VersionController.cs" />
@@ -18,10 +17,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Assistant\" />
   </ItemGroup>
 
 </Project>
