@@ -70,7 +70,7 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 SqlDataReader dataReader;
 
                 // Obtaines and returns all the rows in the AuditHistory table.
-                string sqlQuery = $@"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
+                string sqlQuery = @"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
 join [Endpoint] E on AH.EndpointID = E.EndpointID
 join Methods M on AH.MethodID = M.MethodID
 join Status_Code SC on AH.StatusID = SC.StatusID
