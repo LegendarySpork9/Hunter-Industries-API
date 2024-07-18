@@ -8,29 +8,29 @@ namespace HunterIndustriesAPI.Services
 {
     public class TokenService
     {
-        private readonly string applicationName;
+        private readonly string ProgramName;
 
         // Sets the application name upon initialisation. 
         public TokenService(string phrase)
         {
-            applicationName = GetApplicationName(phrase);
+            ProgramName = GetApplicationName(phrase);
         }
 
         // Returns the application name.
         public string ApplicationName()
         {
-            return applicationName;
+            return ProgramName;
         }
 
         // Obtains the header data from the request.
-        public (string username, string password) ExtractCredentialsFromBasicAuth(string authHeadervalue)
+        public (string username, string password) ExtractCredentialsFromBasicAuth(string authHeaderValue)
         {
             string username = string.Empty;
             string password = string.Empty;
 
             try
             {
-                var encodedCredentials = authHeadervalue.Replace("Basic ", string.Empty);
+                var encodedCredentials = authHeaderValue.Replace("Basic ", string.Empty);
                 var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
                 var credentialsArray = decodedCredentials.Split(':');
 
@@ -87,7 +87,7 @@ namespace HunterIndustriesAPI.Services
         }
 
         // Gets the claims for the token generation.
-        public Claim[] GetClaims(string username, string phrase)
+        public Claim[] GetClaims(string username)
         {
             switch (IsAdmin())
             {
@@ -95,20 +95,22 @@ namespace HunterIndustriesAPI.Services
 
                     var claims = new[]
                     {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim("scope", "Assistant API"),
-                    new Claim("scope", "Assistant Control Panel API"),
-                    new Claim("scope", "Book Reader API")
-                };
+                        new Claim(ClaimTypes.Name, username),
+                        new Claim("scope", "Assistant API"),
+                        new Claim("scope", "Assistant Control Panel API"),
+                        new Claim("scope", "Book Reader API")
+                    };
+
                     return claims;
 
                 default:
 
                     claims = new[]
                     {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim("scope", GetScope())
-                };
+                        new Claim(ClaimTypes.Name, username),
+                        new Claim("scope", GetScope())
+                    };
+
                     return claims;
             }
         }
@@ -116,7 +118,7 @@ namespace HunterIndustriesAPI.Services
         // Checks if the user is the admin.
         private bool IsAdmin()
         {
-            return applicationName switch
+            return ProgramName switch
             {
                 "API Admin" => true,
                 _ => false
@@ -126,7 +128,7 @@ namespace HunterIndustriesAPI.Services
         // Gets the scope for the given phrase.
         private string GetScope()
         {
-            return applicationName switch
+            return ProgramName switch
             {
                 "Virtual Assistant" => "Assistant API",
                 _ => string.Empty

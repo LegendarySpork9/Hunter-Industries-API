@@ -14,7 +14,7 @@ namespace HunterIndustriesAPI
             // Access the json inside the appsettings file.
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.Development.json")
+            .AddJsonFile("appsettings - Development.json")
             .Build();
 
             DatabaseModel.ConnectionString = configuration["SQLConnectionString"];
@@ -59,7 +59,7 @@ namespace HunterIndustriesAPI
             builder.Services.AddCors(Options =>
             {
                 Options.AddPolicy("AllowAllOrigins",
-                    builder => builder.WithOrigins("https://hunter-industries.co.uk").AllowAnyHeader().AllowAnyMethod());
+                builder => builder.WithOrigins("https://hunter-industries.co.uk").AllowAnyHeader().AllowAnyMethod());
             });
 
             // Sets up the authentication token and Scopes.

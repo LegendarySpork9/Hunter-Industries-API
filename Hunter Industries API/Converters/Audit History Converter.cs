@@ -1,10 +1,12 @@
 ﻿// Copyright © - unpublished - Toby Hunter
+using HunterIndustriesAPI.Objects;
+
 namespace HunterIndustriesAPI.Converters
 {
-    public static class AuditHistoryConverter
+    public class AuditHistoryConverter
     {
         // Returns the endpoint ID that relates to the given endpoint.
-        public static int GetEndpointID(string endpoint)
+        public int GetEndpointID(string endpoint)
         {
             return endpoint switch
             {
@@ -19,7 +21,7 @@ namespace HunterIndustriesAPI.Converters
         }
 
         // Returns the method ID that relates to the given method.
-        public static int GetMethodID(string method)
+        public int GetMethodID(string method)
         {
             return method switch
             {
@@ -31,7 +33,7 @@ namespace HunterIndustriesAPI.Converters
         }
 
         // Returns the status ID that relates to the response given.
-        public static int GetStatusID(string status)
+        public int GetStatusID(string status)
         {
             return status switch
             {
@@ -46,17 +48,44 @@ namespace HunterIndustriesAPI.Converters
             };
         }
 
+        // Formats the returned data.
+        public List<AuditHistoryRecord> FormatData(int[] auditIDs, string[] ipAddresses, string[] endpoints, string[] methods, string[] status, DateTime[] occured, string[] parameters)
+        {
+            List<AuditHistoryRecord> auditHistory = new();
+
+            for (int x = 0; x < auditIDs.Length; x++)
+            {
+                AuditHistoryRecord record = new()
+                {
+                    Id = auditIDs[x],
+                    IPAddress = ipAddresses[x],
+                    Endpoint = endpoints[x],
+                    Method = methods[x],
+                    Status = status[x],
+                    OccuredAt = occured[x],
+                    Paramaters = FormatParameters(parameters[x])
+                };
+
+                auditHistory.Add(record);
+            }
+
+            return auditHistory;
+        }
+
         // Formats the parameters.
-        public static string[] FormatParameters(string parameters)
+        private string[] FormatParameters(string parameters)
         {
             string[] splitParams = parameters.Split("\",\"");
             string[] formattedParams = Array.Empty<string>();
 
-            foreach (string parameter in splitParams)
+            if (parameters != String.Empty)
             {
-                string param = parameter.Replace("\"", "");
+                foreach (string parameter in splitParams)
+                {
+                    string param = parameter.Replace("\"", "");
 
-                formattedParams = formattedParams.Append(param).ToArray();
+                    formattedParams = formattedParams.Append(param).ToArray();
+                }
             }
 
             return formattedParams;
