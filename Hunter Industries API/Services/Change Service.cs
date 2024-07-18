@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Services
 {
-    public class ChangeLogger
+    public class ChangeService
     {
         // Logs any changes to the data.
         public bool LogChange(int endpointID, int auditID, string field, string oldValue, string newValue)
