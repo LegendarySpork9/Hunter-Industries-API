@@ -10,7 +10,6 @@
   <ItemGroup>
     <Compile Remove="Controllers\Assistant\DeletionController.cs" />
     <Compile Remove="Controllers\Assistant\LocationController.cs" />
-    <Compile Remove="Controllers\Assistant\VersionController.cs" />
   </ItemGroup>
 
   <ItemGroup>
