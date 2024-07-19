@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Services.Assistant
     public class DeletionService
     {
         // Gets the deletion status of the given assistant.
-        public DeletionResponseModel GetAssistantDeletion(string? assistantName, string? assistantID)
+        public DeletionResponseModel GetAssistantDeletion(string assistantName, string assistantID)
         {
             try
             {
