@@ -4,30 +4,33 @@ namespace HunterIndustriesAPI.Converters
     public class DatabaseConverter
     {
         // Formats the given parameters.
-        public string? FormatParameters(string[] parameters)
+        public string? FormatParameters(string[]? parameters)
         {
-            string? data;
+            string? data = null;
 
-            if (parameters.Length > 1)
+            if (parameters != null)
             {
-                string formattedParameters = string.Empty;
-
-                for (int x = 0; x < parameters.Length; x++)
+                if (parameters.Length > 1)
                 {
-                    if (!String.IsNullOrEmpty(parameters[x]))
+                    string formattedParameters = string.Empty;
+
+                    for (int x = 0; x < parameters.Length; x++)
                     {
-                        formattedParameters += $"\"{parameters[x]}\",";
+                        if (!String.IsNullOrEmpty(parameters[x]))
+                        {
+                            formattedParameters += $"\"{parameters[x]}\",";
+                        }
                     }
+
+                    formattedParameters = formattedParameters.Remove(formattedParameters.LastIndexOf(","), 1);
+
+                    data = formattedParameters;
                 }
 
-                formattedParameters = formattedParameters.Remove(formattedParameters.LastIndexOf(","), 1);
-
-                data = formattedParameters;
-            }
-
-            else
-            {
-                data = $"\"{parameters}\"";
+                else
+                {
+                    data = $"\"{parameters}\"";
+                }
             }
 
             return data;
