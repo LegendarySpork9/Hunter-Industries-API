@@ -17,7 +17,7 @@ namespace HunterIndustriesAPI.Services
                 SqlConnection connection;
                 SqlCommand command;
 
-                // Inserts the record into the AuditHistory table.
+                // Inserts the record into the Change table.
                 string sqlQuery = @"insert into [Change] (EndpointID, AuditID, Field, OldValue, NewValue)
 values (@EndpointID, @AuditID, @Field, @OldValue, @NewValue)";
 
