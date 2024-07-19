@@ -1,11 +1,13 @@
 ﻿// Copyright © - unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Models;
+using HunterIndustriesAPI.Models.Requests.Bodies.Assistant;
+using HunterIndustriesAPI.Models.Requests.Filters.Assistant;
+using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Services;
+using HunterIndustriesAPI.Services.Assistant;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
 {
@@ -17,10 +19,15 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [HttpGet]
         public IActionResult RequestVersion([FromQuery] AssistantFilterModel filters)
         {
+            AuditHistoryService _auditHistoryService = new();
+            AuditHistoryConverter _auditHistoryConverter = new();
+            VersionService _versionService = new();
+
             // Checks if the request contains the needed filters.
             if (filters.AssistantName == null || filters.AssistantID == null)
             {
-                AuditController.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"), null);
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), 
+                    new string[] { filters.AssistantName, filters.AssistantID });
 
                 return BadRequest(new
                 {
@@ -28,14 +35,14 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 });
             }
 
-            AuditController.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
+            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.AssistantName, filters.AssistantID });
 
-            // Gets the version from the AssistantInformation table.
-            var Result = GetAssistantVersion(filters.AssistantName, filters.AssistantID);
+            // Gets the version from the Assistant_Information table.
+            VersionResponseModel response = _versionService.GetAssistantVersion(filters.AssistantName, filters.AssistantID);
 
             // Checks if data was returned.
-            if (Result.Item1 == "")
+            if (response == new VersionResponseModel())
             {
                 return Ok(new
                 {
@@ -43,21 +50,22 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 });
             }
 
-            return Ok(new
-            {
-                assistantName = Result.Item1,
-                assistantID = Result.Item2,
-                version = Result.Item3
-            });
+            return StatusCode(200, response);
         }
 
         [HttpPatch]
         public IActionResult UpdateVersion([FromBody] VersionModel request, [FromQuery] AssistantFilterModel filters)
         {
+            AuditHistoryService _auditHistoryService = new();
+            AuditHistoryConverter _auditHistoryConverter = new();
+            ConfigService _configService = new();
+            VersionService _versionService = new();
+            ChangeService _changeService = new();
+
             // Checks whether all requireds are present.
             if (string.IsNullOrWhiteSpace(filters.AssistantName) || string.IsNullOrWhiteSpace(filters.AssistantID) || string.IsNullOrWhiteSpace(request.Version))
             {
-                AuditController.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
                     new string[] { filters.AssistantName, filters.AssistantID, request.Version });
 
                 return BadRequest(new
@@ -67,34 +75,28 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             // Checks if a config exists.
-            if (ConfigController.AssistantExists(filters.AssistantName, filters.AssistantID))
+            if (_configService.AssistantExists(filters.AssistantName, filters.AssistantID))
             {
-                var currentVersion = GetAssistantVersion(filters.AssistantName, filters.AssistantID);
+                VersionResponseModel response = _versionService.GetAssistantVersion(filters.AssistantName, filters.AssistantID);
 
                 // Updates the version and returns the result.
-                if (AssistantVersionUpdated(filters.AssistantName, filters.AssistantID, request.Version))
+                if (_versionService.AssistantVersionUpdated(filters.AssistantName, filters.AssistantID, request.Version))
                 {
-                    var auditID = AuditController.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.AssistantName, filters.AssistantID, request.Version });
+                    var auditID = _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),
+                        new string[] { filters.AssistantName, filters.AssistantID, request.Version });
 
-                    if (request.Version != currentVersion.Item2)
+                    if (request.Version != response.Version)
                     {
-                        ChangeLogger.LogChange(AuditHistoryConverter.GetEndpointID("assistant/version"), auditID.Item2, "Version", currentVersion.Item3, request.Version);
+                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("assistant/version"), auditID.Item2, "Version", response.Version, request.Version);
                     }
 
-                    // Gets the version from the AssistantInformation table.
-                    var Result = GetAssistantVersion(filters.AssistantName, filters.AssistantID);
+                    response.Version = request.Version;
 
-                    return Ok(new
-                    {
-                        assistantName = Result.Item1,
-                        assistantID = Result.Item2,
-                        version = Result.Item3
-                    });
+                    return StatusCode(200, response);
                 }
 
-                AuditController.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"),
-                    AuditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantID, request.Version });
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"),
+                    _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantID, request.Version });
 
                 return StatusCode(500, new
                 {
@@ -102,98 +104,13 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 });
             }
 
-            AuditController.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
+            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
                     new string[] { filters.AssistantName, filters.AssistantID, request.Version });
 
             return StatusCode(404, new
             {
                 information = "No config exists with the given parameters."
             });
-        }
-
-        //* SQL *//
-
-        // Gets the version number of the given assistant.
-        private static (string, string, string) GetAssistantVersion(string assistantName, string assistantID)
-        {
-            try
-            {
-                string? name = null;
-                string? id = null;
-                string? version = null;
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
-
-                // Obtaines and returns all the rows in the AssistantInformation table.
-                string sqlQuery = @"select AI.Name, AI.IDNumber, V.Value from AssistantInformation AI
-join [Version] V on AI.VersionID = V.VersionID
-where AI.Name = @AssistantName
-and AI.IDNumber = @AssistantID";
-
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@AssistantID", assistantID));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    name = dataReader.GetString(0);
-                    id = dataReader.GetString(1);
-                    version = dataReader.GetString(2);
-                }
-
-                dataReader.Close();
-                connection.Close();
-
-                return (name, id, version);
-            }
-
-            catch (Exception ex)
-            {
-                return (string.Empty, string.Empty, string.Empty);
-            }
-        }
-
-        // Updates the version number of the given assistant.
-        private static bool AssistantVersionUpdated(string assistantName, string idNumber, string version)
-        {
-            try
-            {
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-
-                // Updates the VersionID column on the AssistantInformation table.
-                string sqlQuery = DatabaseModel.AssistantQueries[1];
-                int rowsAffected;
-
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Version", version));
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@IDNumber", idNumber));
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
-                {
-                    connection.Close();
-                    return false;
-                }
-
-                connection.Close();
-                return true;
-            }
-
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
     }
 }
