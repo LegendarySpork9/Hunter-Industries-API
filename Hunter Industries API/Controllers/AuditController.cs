@@ -1,5 +1,5 @@
 ﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Models.Requests;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Objects;
