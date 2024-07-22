@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Services.Assistant
     public class ConfigService
     {
         // Gets the config(s) from the database.
-        public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string? assistantName, string? assistantID)
+        public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string? assistantName, string? assistantId)
         {
             try
             {
@@ -32,7 +32,7 @@ where AI.Name is not null";
                     sqlQuery += "\nand AI.Name = @AssistantName";
                 }
 
-                if (!string.IsNullOrEmpty(assistantID))
+                if (!string.IsNullOrEmpty(assistantId))
                 {
                     sqlQuery += "\nand AI.IDNumber = @AssistantID";
                 }
@@ -48,7 +48,7 @@ where AI.Name is not null";
 
                 if (sqlQuery.Contains("@AssistantID"))
                 {
-                    command.Parameters.Add(new SqlParameter("@AssistantID", assistantID));
+                    command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
                 }
 
                 dataReader = command.ExecuteReader();
@@ -58,7 +58,7 @@ where AI.Name is not null";
                     AssistantConfiguration configuration = new()
                     {
                         AssistantName = dataReader.GetString(0),
-                        AssistantID = dataReader.GetString(1),
+                        IdNumber = dataReader.GetString(1),
                         AssignedUser = dataReader.GetString(2),
                         HostName = dataReader.GetString(3),
                         Deletion = bool.Parse(dataReader.GetString(4)),
@@ -158,7 +158,7 @@ order by VersionID desc";
         }
 
         // Checks whether the given assistant already exists in the table.
-        public bool AssistantExists(string assistantName, string assistantID)
+        public bool AssistantExists(string assistantName, string assistantId)
         {
             try
             {
@@ -183,7 +183,7 @@ or AI.IDNumber = @AssistantID";
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@AssistantID", assistantID));
+                command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -200,7 +200,7 @@ or AI.IDNumber = @AssistantID";
                     return false;
                 }
 
-                if (name != assistantName && idNumber != assistantID)
+                if (name != assistantName && idNumber != assistantId)
                 {
                     return false;
                 }

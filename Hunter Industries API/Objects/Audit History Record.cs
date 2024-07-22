@@ -2,7 +2,7 @@
 
 namespace HunterIndustriesAPI.Objects
 {
-    public class AuditHistoryRecord
+    public record AuditHistoryRecord
     {
         public int? Id { get; set; }
         public string? IPAddress { get; set; }
