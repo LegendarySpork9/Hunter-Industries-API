@@ -7,7 +7,7 @@ namespace HunterIndustriesAPI.Services
     public class ChangeService
     {
         // Logs any changes to the data.
-        public bool LogChange(int endpointID, int auditID, string field, string oldValue, string newValue)
+        public bool LogChange(int endpointId, int auditId, string field, string oldValue, string newValue)
         {
             bool Successful = false;
 
@@ -26,8 +26,8 @@ values (@EndpointID, @AuditID, @Field, @OldValue, @NewValue)";
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@EndpointID", endpointID));
-                command.Parameters.Add(new SqlParameter("@AuditID", auditID));
+                command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
+                command.Parameters.Add(new SqlParameter("@AuditID", auditId));
                 command.Parameters.Add(new SqlParameter("@Field", field));
                 command.Parameters.Add(new SqlParameter("@OldValue", oldValue));
                 command.Parameters.Add(new SqlParameter("@NewValue", newValue));

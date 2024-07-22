@@ -25,10 +25,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ConfigService _configService = new();
 
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.AssistantName, filters.AssistantID });
+                    new string[] { filters.AssistantName, filters.AssistantId });
 
             // Gets the config(s) from the AssistantInformation table.
-            var result = _configService.GetAssistantConfig(filters.AssistantName, filters.AssistantID);
+            var result = _configService.GetAssistantConfig(filters.AssistantName, filters.AssistantId);
             List<AssistantConfiguration> assistantConfigurations = result.Item1;
 
             // Checks if data was returned.
@@ -71,10 +71,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             // Checks whether all requireds are present.
-            if (string.IsNullOrWhiteSpace(request.AssistantName) || string.IsNullOrWhiteSpace(request.IDNumber) || string.IsNullOrWhiteSpace(request.AssignedUser) || string.IsNullOrWhiteSpace(request.HostName))
+            if (string.IsNullOrWhiteSpace(request.AssistantName) || string.IsNullOrWhiteSpace(request.IdNumber) || string.IsNullOrWhiteSpace(request.AssignedUser) || string.IsNullOrWhiteSpace(request.HostName))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
+                    new string[] { request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName });
 
                 return BadRequest(new
                 {
@@ -83,10 +83,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             // Checks if a config already exists.
-            if (_configService.AssistantExists(request.AssistantName, request.IDNumber))
+            if (_configService.AssistantExists(request.AssistantName, request.IdNumber))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"), 
-                    new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
+                    new string[] { request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName });
 
                 return Ok(new
                 {
@@ -95,10 +95,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             // Creates the config and returns the result.
-            if (!_configService.AssistantConfigCreated(request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName))
+            if (!_configService.AssistantConfigCreated(request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), 
-                    new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
+                    new string[] { request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName });
 
                 return StatusCode(500, new
                 {
@@ -107,14 +107,14 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"),
-                    new string[] { request.AssistantName, request.IDNumber, request.AssignedUser, request.HostName });
+                    new string[] { request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName });
 
             string version = _configService.GetMostRecentVersion();
 
             AssistantConfiguration response = new()
             {
                 AssistantName = request.AssistantName,
-                AssistantID = request.IDNumber,
+                IdNumber = request.IdNumber,
                 AssignedUser = request.AssignedUser,
                 HostName = request.HostName,
                 Deletion = false,

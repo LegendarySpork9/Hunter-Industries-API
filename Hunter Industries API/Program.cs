@@ -49,6 +49,7 @@ namespace HunterIndustriesAPI
                                 Id = "Bearer"
                             }
                         },
+
                         Array.Empty<string>()
                     }
                  });

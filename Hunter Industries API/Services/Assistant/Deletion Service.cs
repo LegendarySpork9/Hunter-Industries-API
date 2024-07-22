@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Services.Assistant
     public class DeletionService
     {
         // Gets the deletion status of the given assistant.
-        public DeletionResponseModel GetAssistantDeletion(string assistantName, string assistantID)
+        public DeletionResponseModel GetAssistantDeletion(string assistantName, string assistantId)
         {
             try
             {
@@ -29,7 +29,7 @@ and AI.IDNumber = @AssistantID";
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@AssistantID", assistantID));
+                command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -37,7 +37,7 @@ and AI.IDNumber = @AssistantID";
                     deletion = new()
                     {
                         AssistantName = dataReader.GetString(0),
-                        AssistantId = dataReader.GetString(1),
+                        IdNumber = dataReader.GetString(1),
                         Deletion = bool.Parse(dataReader.GetString(2))
                     };
                 }

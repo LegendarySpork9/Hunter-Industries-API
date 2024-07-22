@@ -3,7 +3,7 @@ using HunterIndustriesAPI.Objects;
 
 namespace HunterIndustriesAPI.Models.Responses
 {
-    public class AuditHistoryResponseModel
+    public record AuditHistoryResponseModel
     {
         public List<AuditHistoryRecord>? Entries { get; set; }
         public int? EntryCount { get; set; }

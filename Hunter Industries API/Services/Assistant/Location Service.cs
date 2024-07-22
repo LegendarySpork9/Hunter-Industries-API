@@ -37,7 +37,7 @@ and AI.IDNumber = @AssistantID";
                     location = new()
                     {
                         AssistantName = dataReader.GetString(0),
-                        AssistantId = dataReader.GetString(1),
+                        IdNumber = dataReader.GetString(1),
                         HostName = dataReader.GetString(2),
                         IPAddress = dataReader.GetString(3)
                     };

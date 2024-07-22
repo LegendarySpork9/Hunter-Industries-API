@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Services
     public class AuditHistoryService
     {
         // Logs the call to the AuditHistory table.
-        public (bool, int) LogRequest(string ipAddress, int endpointID, int methodID, int statusID, string[]? parameters)
+        public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[]? parameters)
         {
             try
             {
@@ -29,9 +29,9 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@IPAddress", ipAddress));
-                command.Parameters.Add(new SqlParameter("@EndpointID", endpointID));
-                command.Parameters.Add(new SqlParameter("@MethodID", methodID));
-                command.Parameters.Add(new SqlParameter("@StatusID", statusID));
+                command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
+                command.Parameters.Add(new SqlParameter("@MethodID", methodId));
+                command.Parameters.Add(new SqlParameter("@StatusID", statusId));
                 command.Parameters.Add(new SqlParameter("@Parameters", formattedParameters));
                 var result = command.ExecuteScalar();
 
@@ -53,7 +53,7 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
         // Gets the audit history data from the database.
         public (int[], string[], string[], string[], string[], DateTime[], string[], int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
-        {
+        {// Output a list of the audit hostory model.
             try
             {
                 int[] auditIDs = Array.Empty<int>();

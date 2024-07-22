@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Services.Assistant
     public class VersionService
     {
         // Gets the version number of the given assistant.
-        public VersionResponseModel GetAssistantVersion(string assistantName, string assistantID)
+        public VersionResponseModel GetAssistantVersion(string assistantName, string assistantId)
         {
             try
             {
@@ -29,7 +29,7 @@ and AI.IDNumber = @AssistantID";
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@AssistantID", assistantID));
+                command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -37,7 +37,7 @@ and AI.IDNumber = @AssistantID";
                     version = new()
                     {
                         AssistantName = dataReader.GetString(0),
-                        AssistantId = dataReader.GetString(1),
+                        IdNumber = dataReader.GetString(1),
                         Version = dataReader.GetString(2)
                     };
                 }

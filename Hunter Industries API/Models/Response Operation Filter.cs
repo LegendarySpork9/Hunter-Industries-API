@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace HunterIndustriesAPI
+namespace HunterIndustriesAPI.Models
 {
     internal class ResponseOperationFilter : IOperationFilter
     {
