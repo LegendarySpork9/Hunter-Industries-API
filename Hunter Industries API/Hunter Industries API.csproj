@@ -8,13 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <Compile Remove="Converters\Assistant\**" />
+    <Content Remove="Converters\Assistant\**" />
+    <EmbeddedResource Remove="Converters\Assistant\**" />
+    <None Remove="Converters\Assistant\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Converters\Assistant\" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
 </Project>

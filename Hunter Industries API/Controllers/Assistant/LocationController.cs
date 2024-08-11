@@ -24,10 +24,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             LocationService _locationService = new();
 
             // Checks if the request contains the needed filters.
-            if (filters.AssistantName == null || filters.AssistantID == null)
+            if (filters.AssistantName == null || filters.AssistantId == null)
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), 
-                    new string[] { filters.AssistantName, filters.AssistantID });
+                    new string[] { filters.AssistantName, filters.AssistantId });
 
                 return BadRequest(new
                 {
@@ -36,10 +36,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.AssistantName, filters.AssistantID });
+                    new string[] { filters.AssistantName, filters.AssistantId });
 
             // Gets the location from the Assistant_Information table.
-            LocationResponseModel response = _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantID);
+            LocationResponseModel response = _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantId);
 
             // Checks if data was returned.
             if (response == new LocationResponseModel())
@@ -63,10 +63,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ChangeService _changeService = new();
 
             // Checks whether all requireds are present.
-            if (string.IsNullOrWhiteSpace(filters.AssistantName) || string.IsNullOrWhiteSpace(filters.AssistantID) || (string.IsNullOrWhiteSpace(request.HostName) && string.IsNullOrEmpty(request.IPAddress)))
+            if (string.IsNullOrWhiteSpace(filters.AssistantName) || string.IsNullOrWhiteSpace(filters.AssistantId) || (string.IsNullOrWhiteSpace(request.HostName) && string.IsNullOrEmpty(request.IPAddress)))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    new string[] { filters.AssistantName, filters.AssistantID, request.HostName, request.IPAddress });
+                    new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                 return BadRequest(new
                 {
@@ -75,15 +75,15 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             // Checks if a config exists.
-            if (_configService.AssistantExists(filters.AssistantName, filters.AssistantID))
+            if (_configService.AssistantExists(filters.AssistantName, filters.AssistantId))
             {
-                LocationResponseModel response = _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantID);
+                LocationResponseModel response = _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantId);
 
                 // Updates the location and returns the result.
-                if (_locationService.AssistantLocationUpdated(filters.AssistantName, filters.AssistantID, request.HostName, request.IPAddress))
+                if (_locationService.AssistantLocationUpdated(filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress))
                 {
                     var auditID = _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"), 
-                        new string[] { filters.AssistantName, filters.AssistantID, request.HostName, request.IPAddress });
+                        new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                     if (!string.IsNullOrEmpty(request.HostName) && request.HostName != response.HostName)
                     {
@@ -101,7 +101,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
 
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"),
-                    _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantID, request.HostName, request.IPAddress });
+                    _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                 return StatusCode(500, new
                 {
@@ -110,7 +110,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
-                    new string[] { filters.AssistantName, filters.AssistantID, request.HostName, request.IPAddress });
+                    new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
             return StatusCode(404, new
             {
