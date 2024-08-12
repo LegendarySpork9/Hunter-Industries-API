@@ -38,10 +38,10 @@ namespace HunterIndustriesAPI.Controllers
 
             // Gets the data from the AuditHistory table.
             var result = _auditHistoryService.GetAuditHistory(filters.IPAddress, filters.Endpoint, DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), filters.PageSize, filters.PageNumber);
-            int[] auditIDs = result.Item1;
+            List<AuditHistoryRecord> auditHistories = result.Item1;
 
             // Checks if data was returned.
-            if (auditIDs == Array.Empty<int>())
+            if (auditHistories == new List<AuditHistoryRecord>())
             {
                 return Ok(new
                 {
@@ -49,14 +49,13 @@ namespace HunterIndustriesAPI.Controllers
                 });
             }
 
-            List<AuditHistoryRecord> auditHistory = _auditHistoryConverter.FormatData(result.Item1, result.Item2, result.Item3, result.Item4, result.Item5, result.Item6, result.Item7);
-            int totalRecords = result.Item8;
+            int totalRecords = result.Item2;
             int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
 
             AuditHistoryResponseModel response = new()
             {
-                Entries = auditHistory,
-                EntryCount = auditHistory.Count,
+                Entries = auditHistories,
+                EntryCount = auditHistories.Count,
                 PageNumber = filters.PageNumber,
                 PageSize = filters.PageSize,
                 TotalPageCount = totalPages,
