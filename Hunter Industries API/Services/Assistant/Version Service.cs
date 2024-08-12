@@ -59,6 +59,8 @@ and AI.IDNumber = @AssistantID";
         {
             try
             {
+                bool updated = true;
+
                 // Creates the variables for the SQL queries.
                 SqlConnection connection;
                 SqlCommand command;
@@ -80,11 +82,11 @@ and IDNumber = @IDNumber";
                 if (rowsAffected != 1)
                 {
                     connection.Close();
-                    return false;
+                    updated = false;
                 }
 
                 connection.Close();
-                return true;
+                return updated;
             }
 
             catch (Exception ex)
