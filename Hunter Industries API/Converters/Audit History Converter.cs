@@ -48,32 +48,8 @@ namespace HunterIndustriesAPI.Converters
             };
         }
 
-        // Formats the returned data.
-        public List<AuditHistoryRecord> FormatData(int[] auditIDs, string[] ipAddresses, string[] endpoints, string[] methods, string[] status, DateTime[] occured, string[] parameters)
-        {
-            List<AuditHistoryRecord> auditHistory = new();
-
-            for (int x = 0; x < auditIDs.Length; x++)
-            {
-                AuditHistoryRecord record = new()
-                {
-                    Id = auditIDs[x],
-                    IPAddress = ipAddresses[x],
-                    Endpoint = endpoints[x],
-                    Method = methods[x],
-                    Status = status[x],
-                    OccuredAt = occured[x],
-                    Paramaters = FormatParameters(parameters[x])
-                };
-
-                auditHistory.Add(record);
-            }
-
-            return auditHistory;
-        }
-
         // Formats the parameters.
-        private string[] FormatParameters(string parameters)
+        public string[] FormatParameters(string parameters)
         {
             string[] splitParams = parameters.Split("\",\"");
             string[] formattedParams = Array.Empty<string>();

@@ -1,6 +1,7 @@
 ﻿// Copyright © - unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
+using HunterIndustriesAPI.Objects;
 using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Services
@@ -52,17 +53,12 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
         }
 
         // Gets the audit history data from the database.
-        public (int[], string[], string[], string[], string[], DateTime[], string[], int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
-        {// Output a list of the audit hostory model.
+        public (List<AuditHistoryRecord>, int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
+        {
             try
             {
-                int[] auditIDs = Array.Empty<int>();
-                string[] ipAddresses = Array.Empty<string>();
-                string[] endpoints = Array.Empty<string>();
-                string[] methods = Array.Empty<string>();
-                string[] status = Array.Empty<string>();
-                DateTime[] occured = Array.Empty<DateTime>();
-                string[] parameters = Array.Empty<string>();
+                AuditHistoryConverter _auditHistoryConverter = new();
+                List<AuditHistoryRecord> auditHistories = new();
 
                 // Creates the variables for the SQL queries.
                 SqlConnection connection;
@@ -121,33 +117,33 @@ fetch next @PageSize rows only";
 
                 while (dataReader.Read())
                 {
-                    auditIDs = auditIDs.Append(dataReader.GetInt32(0)).ToArray();
-                    ipAddresses = ipAddresses.Append(dataReader.GetString(1)).ToArray();
-                    endpoints = endpoints.Append(dataReader.GetString(2)).ToArray();
-                    methods = methods.Append(dataReader.GetString(3)).ToArray();
-                    status = status.Append(dataReader.GetString(4)).ToArray();
-                    occured = occured.Append(dataReader.GetDateTime(5)).ToArray();
-
-                    if (dataReader.IsDBNull(6))
+                    AuditHistoryRecord auditHistory = new()
                     {
-                        parameters = parameters.Append(String.Empty).ToArray();
+                        Id = dataReader.GetInt32(0),
+                        IPAddress = dataReader.GetString(1),
+                        Endpoint = dataReader.GetString(2),
+                        Method = dataReader.GetString(3),
+                        Status = dataReader.GetString(4),
+                        OccuredAt = dataReader.GetDateTime(5)
+                    };
+
+                    if (!dataReader.IsDBNull(6))
+                    {
+                        auditHistory.Paramaters = _auditHistoryConverter.FormatParameters(dataReader.GetString(6));
                     }
 
-                    else
-                    {
-                        parameters = parameters.Append(dataReader.GetString(6)).ToArray();
-                    }
+                    auditHistories.Add(auditHistory);
                 }
 
                 dataReader.Close();
                 connection.Close();
 
-                return (auditIDs, ipAddresses, endpoints, methods, status, occured, parameters, GetTotalAuditHistory(command));
+                return (auditHistories, GetTotalAuditHistory(command));
             }
 
             catch (Exception ex)
             {
-                return (Array.Empty<int>(), Array.Empty<string>(), Array.Empty<string>(), Array.Empty<string>(), Array.Empty<string>(), Array.Empty<DateTime>(), Array.Empty<string>(), 0);
+                return (new List<AuditHistoryRecord>(), 0);
             }
         }
 
