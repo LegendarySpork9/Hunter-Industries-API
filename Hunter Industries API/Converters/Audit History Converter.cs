@@ -1,6 +1,4 @@
 ﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Objects;
-
 namespace HunterIndustriesAPI.Converters
 {
     public class AuditHistoryConverter
