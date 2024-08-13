@@ -164,6 +164,7 @@ order by VersionID desc";
             {
                 string? name = null;
                 string? idNumber = null;
+                bool exists = false;
 
                 // Creates the variables for the SQL queries.
                 SqlConnection connection;
@@ -195,17 +196,12 @@ or AI.IDNumber = @AssistantID";
                 dataReader.Close();
                 connection.Close();
 
-                if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(idNumber))
+                if (name == assistantName && idNumber == assistantId)
                 {
-                    return false;
+                    exists = true;
                 }
 
-                if (name != assistantName && idNumber != assistantId)
-                {
-                    return false;
-                }
-
-                return true;
+                return exists;
             }
 
             catch (Exception ex)
@@ -219,6 +215,8 @@ or AI.IDNumber = @AssistantID";
         {
             try
             {
+                bool created = true;
+
                 // Creates the variables for the SQL queries.
                 SqlConnection connection;
                 SqlCommand command;
@@ -239,43 +237,49 @@ values (@Hostname, @IPAddress)";
                 if (locationId == null)
                 {
                     connection.Close();
-                    return false;
+                    created = false;
                 }
 
-                sqlQuery = @"insert into [User] (Name)
+                if (created)
+                {
+                    sqlQuery = @"insert into [User] (Name)
 output inserted.UserID
 values (@Name)";
-                rowsAffected = 0;
+                    rowsAffected = 0;
 
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Name", assignedUser));
-                var userId = command.ExecuteScalar();
+                    command = new SqlCommand(sqlQuery, connection);
+                    command.Parameters.Add(new SqlParameter("@Name", assignedUser));
+                    var userId = command.ExecuteScalar();
 
-                if (userId == null)
-                {
-                    connection.Close();
-                    return false;
-                }
+                    if (userId == null)
+                    {
+                        connection.Close();
+                        created = false;
+                    }
 
-                sqlQuery = @"insert into [Assistant_Information] (LocationID, DeletionStatusID, VersionID, UserID, Name, IDNumber)
+                    if (created)
+                    {
+                        sqlQuery = @"insert into [Assistant_Information] (LocationID, DeletionStatusID, VersionID, UserID, Name, IDNumber)
 values (@LocationID, 2, (select top 1 VersionID from [Version] order by VersionID desc), @UserID, @AssistantName, @IDNumber)";
-                rowsAffected = 0;
+                        rowsAffected = 0;
 
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@LocationID", locationId));
-                command.Parameters.Add(new SqlParameter("@UserID", userId));
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@IDNumber", idNumber));
-                rowsAffected = command.ExecuteNonQuery();
+                        command = new SqlCommand(sqlQuery, connection);
+                        command.Parameters.Add(new SqlParameter("@LocationID", locationId));
+                        command.Parameters.Add(new SqlParameter("@UserID", userId));
+                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
+                        command.Parameters.Add(new SqlParameter("@IDNumber", idNumber));
+                        rowsAffected = command.ExecuteNonQuery();
 
-                if (rowsAffected != 1)
-                {
-                    connection.Close();
-                    return false;
+                        if (rowsAffected != 1)
+                        {
+                            connection.Close();
+                            created = false;
+                        }
+                    }
                 }
 
                 connection.Close();
-                return true;
+                return created;
             }
 
             catch (Exception ex)

@@ -13,6 +13,9 @@ namespace HunterIndustriesAPI.Services
         {
             try
             {
+                bool logged = true;
+                int auditId = 0;
+
                 DatabaseConverter _databaseConverter = new();
 
                 string? formattedParameters = _databaseConverter.FormatParameters(parameters);
@@ -39,11 +42,16 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 if (result == null)
                 {
                     connection.Close();
-                    return (false, 0);
+                    logged = false;
+                }
+
+                else
+                {
+                    auditId = (int)result;
                 }
 
                 connection.Close();
-                return (true, (int)result);
+                return (logged, auditId);
             }
 
             catch (Exception ex)
