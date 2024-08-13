@@ -2,6 +2,7 @@
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models.Requests.Bodies.Assistant;
 using HunterIndustriesAPI.Models.Requests.Filters.Assistant;
+using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.Assistant;
@@ -23,34 +24,58 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             AuditHistoryConverter _auditHistoryConverter = new();
             DeletionService _deletionService = new();
 
+            ResponseModel response = new();
+            bool responseGiven = false;
+
             // Checks if the request contains the needed filters.
             if (filters.AssistantName == null || filters.AssistantId == null)
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), 
                     new string[] { filters.AssistantName, filters.AssistantId });
 
-                return BadRequest(new
+                response = new()
                 {
-                    error = "Invalid or no filters provided."
-                });
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "Invalid or no filters provided."
+                    }
+                };
+                responseGiven = true;
             }
 
-            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.AssistantName, filters.AssistantId });
-
-            // Gets the deletion status from the Assistant_Information table.
-            DeletionResponseModel response = _deletionService.GetAssistantDeletion(filters.AssistantName, filters.AssistantId);
-
-            // Checks if data was returned.
-            if (response == new DeletionResponseModel())
+            if (!responseGiven)
             {
-                return Ok(new
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
+                   new string[] { filters.AssistantName, filters.AssistantId });
+
+                // Gets the deletion status from the Assistant_Information table.
+                DeletionResponseModel deletionResponse = _deletionService.GetAssistantDeletion(filters.AssistantName, filters.AssistantId);
+
+                // Checks if data was returned.
+                if (deletionResponse == new DeletionResponseModel())
                 {
-                    information = "No data returned by given parameters."
-                });
+                    response = new()
+                    {
+                        StatusCode = 200,
+                        Data = new
+                        {
+                            information = "No data returned by given parameters."
+                        }
+                    };
+                }
+
+                else
+                {
+                    response = new()
+                    {
+                        StatusCode = 200,
+                        Data = deletionResponse
+                    };
+                }
             }
 
-            return StatusCode(200, response);
+            return StatusCode(response.StatusCode, response.Data);
         }
 
         [HttpPatch]
@@ -62,22 +87,30 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             DeletionService _deletionService = new();
             ChangeService _changeService = new();
 
+            ResponseModel response = new();
+            bool responseGiven = false;
+
             // Checks whether all requireds are present.
             if (string.IsNullOrWhiteSpace(filters.AssistantName) || string.IsNullOrWhiteSpace(filters.AssistantId) || string.IsNullOrWhiteSpace(request.Deletion.ToString()))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
                     new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
 
-                return BadRequest(new
+                response = new()
                 {
-                    error = "Filter or body parameters missing."
-                });
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "Filter or body parameters missing."
+                    }
+                };
+                responseGiven = true;
             }
 
             // Checks if a config exists.
-            if (_configService.AssistantExists(filters.AssistantName, filters.AssistantId))
+            if (!responseGiven && _configService.AssistantExists(filters.AssistantName, filters.AssistantId))
             {
-                DeletionResponseModel response = _deletionService.GetAssistantDeletion(filters.AssistantName, filters.AssistantId);
+                DeletionResponseModel deletionResponse = _deletionService.GetAssistantDeletion(filters.AssistantName, filters.AssistantId);
 
                 // Updates the deletion status and returns the result.
                 if (_deletionService.AssistantDeletionUpdated(filters.AssistantName, filters.AssistantId, bool.Parse(request.Deletion.ToString())))
@@ -85,32 +118,52 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     var auditID = _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
 
-                    if (request.Deletion != response.Deletion)
+                    if (request.Deletion != deletionResponse.Deletion)
                     {
-                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("assistant/deletion"), auditID.Item2, "Deletion", response.Deletion.ToString(), request.Deletion.ToString());
+                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("assistant/deletion"), auditID.Item2, "Deletion", deletionResponse.Deletion.ToString(), request.Deletion.ToString());
                     }
 
-                    response.Deletion = request.Deletion;
+                    deletionResponse.Deletion = request.Deletion;
 
-                    return StatusCode(200, response);
+                    response = new()
+                    {
+                        StatusCode = 200,
+                        Data = deletionResponse
+                    };
                 }
 
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"),
-                    _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
-
-                return StatusCode(500, new
+                else
                 {
-                    error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
-                });
+                    _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"),
+                        _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
+
+                    response = new()
+                    {
+                        StatusCode = 500,
+                        Data = new
+                        {
+                            error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
+                        }
+                    };
+                }
             }
 
-            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
+            if (!responseGiven)
+            {
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
                     new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
 
-            return StatusCode(404, new
-            {
-                information = "No config exists with the given parameters."
-            });
+                response = new()
+                {
+                    StatusCode = 404,
+                    Data = new
+                    {
+                        information = "No config exists with the given parameters."
+                    }
+                };
+            }
+
+            return StatusCode(response.StatusCode, response.Data);
         }
     }
 }
