@@ -20,12 +20,15 @@ namespace HunterIndustriesAPI.Controllers
         {
             AuditHistoryService _auditHistoryService = new();
             AuditHistoryConverter _auditHistoryConverter = new();
+            ModelValidationService _modelValidator = new();
 
             ResponseModel response = new();
-            bool responseGiven = false;
 
-            // Checks if the request contains a body.
-            if (request == null)
+            request.AuthHeader = Request.Headers["Authorization"];
+            string[] validationIgnore = { "Username", "Password" };
+
+            // Checks if the request is valid.
+            if (!_modelValidator.IsValid(request, true, validationIgnore))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"), null);
 
@@ -34,54 +37,22 @@ namespace HunterIndustriesAPI.Controllers
                     StatusCode = 400,
                     Data = new
                     {
-                        error = "Invalid or no body provided."
+                        error = "Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present."
                     }
                 };
-            }
 
-            // Checks the number of headers on the request.
-            var authHeader = Request.Headers["Authorization"];
-            if (!responseGiven && (authHeader.Count == 0 || string.IsNullOrEmpty(authHeader[0])))
-            {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    new string[] { request.Phrase });
-
-                response = new()
-                {
-                    StatusCode = 400,
-                    Data = new
-                    {
-                        error = "Authorisation header is missing or empty."
-                    }
-                };
-            }
-
-            // Checks if the phrase variable contains a string.
-            if (!responseGiven && string.IsNullOrWhiteSpace(request.Phrase))
-            {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    new string[] { request.Phrase });
-
-                response = new()
-                {
-                    StatusCode = 400,
-                    Data = new
-                    {
-                        error = "No phrase provided."
-                    }
-                };
+                return StatusCode(response.StatusCode, response.Data);
             }
 
             TokenService _tokenService = new(request.Phrase);
 
             // Obtains the headers on the request.
-            var authHeaderValue = authHeader[0];
-            var (username, password) = _tokenService.ExtractCredentialsFromBasicAuth(authHeaderValue);
+            (request.Username, request.Password) = _tokenService.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
 
-            if (!responseGiven && (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password)))
+            if (!_modelValidator.IsValid(request, true))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    new string[] { username, password, request.Phrase });
+                    new string[] { request.Username, request.Password, request.Phrase });
 
                 response = new()
                 {
@@ -91,13 +62,15 @@ namespace HunterIndustriesAPI.Controllers
                         error = "Invalid or malformed basic authentication header."
                     }
                 };
+
+                return StatusCode(response.StatusCode, response.Data);
             }
 
             // Checks if the user is valid.
-            if (!responseGiven && _tokenService.IsValidUser(username, password, request.Phrase))
+            if (_tokenService.IsValidUser(request.Username, request.Password, request.Phrase))
             {
                 // Creates the token.
-                var claims = _tokenService.GetClaims(username);
+                var claims = _tokenService.GetClaims(request.Username);
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -109,6 +82,9 @@ namespace HunterIndustriesAPI.Controllers
                     expires: DateTime.Now.AddMinutes(15),
                     signingCredentials: creds
                 ));
+
+                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"),
+                    new string[] { request.Username, request.Password, request.Phrase });
 
                 response = new()
                 {
@@ -128,24 +104,20 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { username, password, request.Phrase });
+                return StatusCode(response.StatusCode, response.Data);
             }
 
-            if (!responseGiven && !_tokenService.IsValidUser(username, password, request.Phrase))
+            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Unauthorized"),
+                    new string[] { request.Username, request.Password, request.Phrase });
+
+            response = new()
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Unauthorized"),
-                    new string[] { username, password, request.Phrase });
-
-                response = new()
+                StatusCode = 401,
+                Data = new
                 {
-                    StatusCode = 401,
-                    Data = new
-                    {
-                        error = "Invalid credentials or phrase provided."
-                    }
-                };
-            }
+                    error = "Invalid credentials or phrase provided."
+                }
+            };
 
             return StatusCode(response.StatusCode, response.Data);
         }

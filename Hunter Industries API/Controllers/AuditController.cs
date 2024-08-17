@@ -21,12 +21,12 @@ namespace HunterIndustriesAPI.Controllers
         {
             AuditHistoryService _auditHistoryService = new();
             AuditHistoryConverter _auditHistoryConverter = new();
+            ModelValidationService _modelValidator = new();
 
             ResponseModel response = new();
-            bool responseGiven = false;
 
             // Checks if there are filter values.
-            if (filters.PageSize == 0 || filters.PageNumber == 0)
+            if (!_modelValidator.IsValid(filters))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("BadRequest"), null);
 
@@ -35,56 +35,52 @@ namespace HunterIndustriesAPI.Controllers
                     StatusCode = 400,
                     Data = new
                     {
-                        error = "Invalid filters provided."
+                        error = "Invalid or no filters provided."
                     }
                 };
-                responseGiven = true;
+
+                return StatusCode(response.StatusCode, response.Data);
             }
 
-            if (!responseGiven)
-            {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
+            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
-                // Gets the data from the AuditHistory table.
-                var result = _auditHistoryService.GetAuditHistory(filters.IPAddress, filters.Endpoint, DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), filters.PageSize, filters.PageNumber);
-                List<AuditHistoryRecord> auditHistories = result.Item1;
+            // Gets the data from the AuditHistory table.
+            var result = _auditHistoryService.GetAuditHistory(filters.IPAddress, filters.Endpoint, DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), filters.PageSize, filters.PageNumber);
+            List<AuditHistoryRecord> auditHistories = result.Item1;
 
-                // Checks if data was returned.
-                if (auditHistories.Count == 0)
+            // Checks if data was returned.
+            if (auditHistories.Count == 0)
+            {
+                response = new()
                 {
-                    response = new()
+                    StatusCode = 200,
+                    Data = new
                     {
-                        StatusCode = 200,
-                        Data = new
-                        {
-                            information = "No data returned by given parameters."
-                        }
-                    };
-                }
+                        information = "No data returned by given parameters."
+                    }
+                };
 
-                else
-                {
-                    int totalRecords = result.Item2;
-                    int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
-
-                    response = new()
-                    {
-                        StatusCode = 200,
-                        Data = new AuditHistoryResponseModel()
-                        {
-                            Entries = auditHistories,
-                            EntryCount = auditHistories.Count,
-                            PageNumber = filters.PageNumber,
-                            PageSize = filters.PageSize,
-                            TotalPageCount = totalPages,
-                            TotalCount = totalRecords
-                        }
-                    };
-                }
+                return StatusCode(response.StatusCode, response.Data);
             }
 
-            // Returns the records.
+            int totalRecords = result.Item2;
+            int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
+
+            response = new()
+            {
+                StatusCode = 200,
+                Data = new AuditHistoryResponseModel()
+                {
+                    Entries = auditHistories,
+                    EntryCount = auditHistories.Count,
+                    PageNumber = filters.PageNumber,
+                    PageSize = filters.PageSize,
+                    TotalPageCount = totalPages,
+                    TotalCount = totalRecords
+                }
+            };
+
             return StatusCode(response.StatusCode, response.Data);
         }
     }
