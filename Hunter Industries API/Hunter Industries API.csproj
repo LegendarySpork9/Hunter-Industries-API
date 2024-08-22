@@ -17,6 +17,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Content\HI Tech Logo NBG.png" />
+    <None Remove="CSS\Swagger.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="CSS\Swagger.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Content\HI Tech Logo NBG.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />

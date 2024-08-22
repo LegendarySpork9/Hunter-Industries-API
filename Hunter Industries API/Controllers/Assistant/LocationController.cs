@@ -17,7 +17,22 @@ namespace HunterIndustriesAPI.Controllers.Assistant
     [ApiController]
     public class LocationController : ControllerBase
     {
+        /// <summary>
+        /// Returns the location details of an assistants.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     GET /assistant/location?AssistantName=Test&amp;AssistantID=TST 1456-4
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        /// </remarks>
+        /// <response code="200">Returns the assistant location details or nothing.</response>
+        /// <response code="400">If the filters are invalid.</response>
+        /// <response code="401">If the bearer token is expired or fails validation.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(LocationResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
         public IActionResult RequestLocation([FromQuery] AssistantFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new();
@@ -75,7 +90,30 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             return StatusCode(response.StatusCode, response.Data);
         }
 
+        /// <summary>
+        /// Updates the location details for an assistant.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     PATCH /assistant/location?AssistantName=Test&amp;AssistantID=TST 1456-4
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        ///     Content-Type: application/json
+        ///     {
+        ///         "HostName": "Test"
+        ///     }
+        /// </remarks>
+        /// <response code="200">If the location details are updated.</response>
+        /// <response code="400">If the body or filters are invalid.</response>
+        /// <response code="401">If the bearer token is expired or fails validation.</response>
+        /// <response code="404">If no configuration was found using the filters.</response>
+        /// <response code="500">If something went wrong on the server.</response>
         [HttpPatch]
+        [ProducesResponseType(typeof(LocationResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status500InternalServerError)]
+        [Produces("application/json")]
         public IActionResult UpdateLocation([FromBody] LocationModel request, [FromQuery] AssistantFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new();

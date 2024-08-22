@@ -1,5 +1,6 @@
 // Copyright © - unpublished - Toby Hunter
 using HunterIndustriesAPI.Models;
+using HunterIndustriesAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -47,6 +48,9 @@ namespace HunterIndustriesAPI
                 });
 
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+
+                options.OperationFilter<OptionalParameterOperationFilter>();
+                options.OperationFilter<RemoveStatusCodeOperationFilter>();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -132,6 +136,12 @@ namespace HunterIndustriesAPI
                 RequestPath = "/CSS"
             });
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Content")),
+                RequestPath = "/Content"
+            });
+
             app.UseSwagger(options =>
             {
                 options.RouteTemplate = "api/swagger/{documentname}/swagger.json";
@@ -139,7 +149,7 @@ namespace HunterIndustriesAPI
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/api/swagger/v1/swagger.json", "V1.0.0");
+                options.SwaggerEndpoint("https://localhost:7026/api/swagger/v1/swagger.json", "V1.0.0");
                 options.RoutePrefix = "api/swagger";
                 options.InjectStylesheet("/CSS/Swagger.css");
             });

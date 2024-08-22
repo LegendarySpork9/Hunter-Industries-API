@@ -31,6 +31,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         /// <response code="200">Returns the assistant configuration collection or nothing.</response>
         /// <response code="401">If the bearer token is expired or fails validation.</response>
         [HttpGet]
+        [MakeFiltersOptional]
         [ProducesResponseType(typeof(ConfigResponseModel), StatusCodes.Status200OK)]
         [Produces("application/json")]
         public IActionResult RequestConfig([FromQuery] AssistantFilterModel filters)

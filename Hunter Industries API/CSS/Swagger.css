@@ -1,19 +1,28 @@
-﻿/* Removes the 'Try It Out' button. */
+﻿/* Removes the interactive buttons. */
 .try-out {
     display: none;
 }
 
-/* Removes the 'Authorize' button */
 .btn.authorize.unlocked {
     display: none;
 }
 
-/* Removes the padlock icon on the calls. */
 .authorization__btn.unlocked {
     display: none;
 }
 
-/* Removes the copy to clipboard button */
 .view-line-link.copy-to-clipboard {
     display: none;
+}
+
+/* Sets up the look of the page. */
+.swagger-ui .topbar {
+    background: #130f3c;
+}
+
+img[alt="Swagger UI"] {
+    display: block;
+    content: url('/Content/HI Tech Logo NBG.png');
+    width: 140px;
+    height: 40px;
 }

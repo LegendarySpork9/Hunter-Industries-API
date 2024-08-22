@@ -38,6 +38,7 @@ namespace HunterIndustriesAPI.Controllers
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status500InternalServerError)]
         [Produces("application/json")]
+        [RemoveStatusCode]
         public IActionResult RequestToken([FromBody, Required] AuthenticationModel request)
         {
             AuditHistoryService _auditHistoryService = new();
