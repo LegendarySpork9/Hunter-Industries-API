@@ -9,6 +9,7 @@ using HunterIndustriesAPI.Services.Assistant;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
 {
@@ -17,7 +18,23 @@ namespace HunterIndustriesAPI.Controllers.Assistant
     [ApiController]
     public class DeletionController : ControllerBase
     {
+        /// <summary>
+        /// Returns the deletion value of an assistant configuration.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     GET /assistant/deletion?AssistantName=Test&amp;AssistantID=TST 1456-4
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        /// </remarks>
+        /// <param name="filters"></param>
+        /// <response code="200">Returns the assistant configuration deletion value or nothing.</response>
+        /// <response code="400">If the filters are invalid.</response>
+        /// <response code="401">If the bearer token is expired or fails validation.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(DeletionResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
         public IActionResult RequestDeletion([FromQuery] AssistantFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new();
@@ -76,8 +93,31 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             return StatusCode(response.StatusCode, response.Data);
         }
 
+        /// <summary>
+        /// Updates the deletion value for an assistant configuration.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     PATCH /assistant/deletion?AssistantName=Test&amp;AssistantID=TST 1456-4
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        ///     Content-Type: application/json
+        ///     {
+        ///         "Deletion": "true"
+        ///     }
+        /// </remarks>
+        /// <response code="200">If the deletion value is updated.</response>
+        /// <response code="400">If the body or filters are invalid.</response>
+        /// <response code="401">If the bearer token is expired or fails validation.</response>
+        /// <response code="404">If no configuration was found using the filters.</response>
+        /// <response code="500">If something went wrong on the server.</response>
         [HttpPatch]
-        public IActionResult UpdateDeletion([FromBody] DeletionModel request, [FromQuery] AssistantFilterModel filters)
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status500InternalServerError)]
+        [Produces("application/json")]
+        public IActionResult UpdateDeletion([FromBody, Required] DeletionModel request, [FromQuery] AssistantFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new();
             AuditHistoryConverter _auditHistoryConverter = new();

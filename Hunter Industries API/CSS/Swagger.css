@@ -1,0 +1,19 @@
+﻿/* Removes the 'Try It Out' button. */
+.try-out {
+    display: none;
+}
+
+/* Removes the 'Authorize' button */
+.btn.authorize.unlocked {
+    display: none;
+}
+
+/* Removes the padlock icon on the calls. */
+.authorization__btn.unlocked {
+    display: none;
+}
+
+/* Removes the copy to clipboard button */
+.view-line-link.copy-to-clipboard {
+    display: none;
+}
