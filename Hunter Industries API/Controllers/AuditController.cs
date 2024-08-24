@@ -12,11 +12,26 @@ using System.Globalization;
 namespace HunterIndustriesAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AssistantControlPanel")]
-    [Route("api/audithistory")]
+    [Route("api/AuditHistory")]
     [ApiController]
     public class AuditController : ControllerBase
     {
+        /// <summary>
+        /// Returns a collection of calls made to the api.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     GET /audithistory?FromDate=02/11/2024&amp;Endpoint=https://hunter-industries.co.uk/api/auth/token
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        /// </remarks>
+        /// <response code="200">Returns the audit history collection or nothing.</response>
+        /// <response code="400">If the filters are invalid.</response>
+        /// <response code="401">If the bearer token is expired or fails validation.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(AuditHistoryResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
         public IActionResult RequestAuditHistory([FromQuery] AuditHistoryFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new();

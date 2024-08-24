@@ -1,0 +1,28 @@
+﻿/* Removes the interactive buttons. */
+.try-out {
+    display: none;
+}
+
+.btn.authorize.unlocked {
+    display: none;
+}
+
+.authorization__btn.unlocked {
+    display: none;
+}
+
+.view-line-link.copy-to-clipboard {
+    display: none;
+}
+
+/* Sets up the look of the page. */
+.swagger-ui .topbar {
+    background: #130f3c;
+}
+
+img[alt="Swagger UI"] {
+    display: block;
+    content: url('/Content/HI Tech Logo NBG.png');
+    width: 140px;
+    height: 40px;
+}

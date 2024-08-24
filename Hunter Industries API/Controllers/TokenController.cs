@@ -7,6 +7,7 @@ using HunterIndustriesAPI.Objects;
 using HunterIndustriesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -15,14 +16,40 @@ namespace HunterIndustriesAPI.Controllers
     [Route("api/auth/[controller]")]
     public class TokenController : ControllerBase
     {
+        /// <summary>
+        /// Creates a bearer token.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     POST /token
+        ///     Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+        ///     Content-Type: application/json
+        ///     {
+        ///         "Phrase": "Some wise words or something here."
+        ///     }
+        /// </remarks>
+        /// <response code="200">Returns the bearer token and token information.</response>
+        /// <response code="400">If the body or header is invalid.</response>
+        /// <response code="401">If the details given do not match anything in the database.</response>
+        /// <response code="500">If something went wrong on the server.</response>
         [HttpPost]
-        public IActionResult RequestToken([FromBody] AuthenticationModel request)
+        [ProducesResponseType(typeof(TokenResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status500InternalServerError)]
+        [Produces("application/json")]
+        public IActionResult RequestToken([FromBody, Required] AuthenticationModel request)
         {
             AuditHistoryService _auditHistoryService = new();
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
 
             ResponseModel response = new();
+
+            if (request == null)
+            {
+                request = new AuthenticationModel();
+            }
 
             request.AuthHeader = Request.Headers["Authorization"];
             string[] validationIgnore = { "Username", "Password" };

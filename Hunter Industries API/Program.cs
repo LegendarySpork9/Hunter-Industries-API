@@ -1,8 +1,11 @@
 // Copyright © - unpublished - Toby Hunter
 using HunterIndustriesAPI.Models;
+using HunterIndustriesAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 
 namespace HunterIndustriesAPI
@@ -30,6 +33,24 @@ namespace HunterIndustriesAPI
             // Sets up the swagger page.
             builder.Services.AddSwaggerGen(options =>
             {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "1.0.0",
+                    Title = "Hunter Industries API",
+                    Description = "This is the OpenAPI documentation for the Hunter Industries API.",
+                    Contact = new OpenApiContact
+                    {
+                        /* Change these details to as see fit. */
+                        Name = "Development Team",
+                        Email = "Toby.Hunter@Hunter-Industries.co.uk"
+                    }
+                    /* Add a terms of service and license. */
+                });
+
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+
+                options.OperationFilter<OptionalParameterOperationFilter>();
+
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT authorization header using the Bearer scheme.",
@@ -52,9 +73,7 @@ namespace HunterIndustriesAPI
 
                         Array.Empty<string>()
                     }
-                 });
-
-                options.OperationFilter<ResponseOperationFilter>();
+                });
             });
 
             builder.Services.AddCors(Options =>
@@ -110,11 +129,29 @@ namespace HunterIndustriesAPI
             // Runs the web application.
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
+            app.UseStaticFiles(new StaticFileOptions
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "CSS")),
+                RequestPath = "/CSS"
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Content")),
+                RequestPath = "/Content"
+            });
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "api/swagger/{documentname}/swagger.json";
+            });
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("https://localhost:7026/api/swagger/v1/swagger.json", "V1.0.0");
+                options.RoutePrefix = "api/swagger";
+                options.InjectStylesheet("/CSS/Swagger.css");
+            });
 
             app.UseCors("AllowAllOrigins");
 

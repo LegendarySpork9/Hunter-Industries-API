@@ -1,10 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>HunterIndustriesAPI</RootNamespace>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +14,19 @@
     <Content Remove="Converters\Assistant\**" />
     <EmbeddedResource Remove="Converters\Assistant\**" />
     <None Remove="Converters\Assistant\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Content\HI Tech Logo NBG.png" />
+    <None Remove="CSS\Swagger.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="CSS\Swagger.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Content\HI Tech Logo NBG.png" />
   </ItemGroup>
 
   <ItemGroup>
