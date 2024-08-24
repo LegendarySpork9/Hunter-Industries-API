@@ -50,7 +50,6 @@ namespace HunterIndustriesAPI
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 
                 options.OperationFilter<OptionalParameterOperationFilter>();
-                options.OperationFilter<RemoveStatusCodeOperationFilter>();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
