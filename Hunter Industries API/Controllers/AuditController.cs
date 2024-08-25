@@ -34,7 +34,8 @@ namespace HunterIndustriesAPI.Controllers
         [Produces("application/json")]
         public IActionResult RequestAuditHistory([FromQuery] AuditHistoryFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
 

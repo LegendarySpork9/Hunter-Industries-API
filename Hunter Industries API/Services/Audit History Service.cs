@@ -8,27 +8,34 @@ namespace HunterIndustriesAPI.Services
 {
     public class AuditHistoryService
     {
+        private readonly LoggerService _logger;
+
+        public AuditHistoryService(LoggerService logger)
+        {
+            _logger = logger;
+        }
+
         // Logs the call to the AuditHistory table.
         public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[]? parameters)
         {
-            try
-            {
-                bool logged = true;
-                int auditId = 0;
+            bool logged = false;
+            int auditId = 0;
 
-                DatabaseConverter _databaseConverter = new();
+            DatabaseConverter _databaseConverter = new();
 
-                string? formattedParameters = _databaseConverter.FormatParameters(parameters);
+            string? formattedParameters = _databaseConverter.FormatParameters(parameters);
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
 
-                // Inserts the record into the AuditHistory table.
-                string sqlQuery = @"insert into Audit_History (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
+            // Inserts the record into the AuditHistory table.
+            string sqlQuery = @"insert into Audit_History (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
 output inserted.AuditID
 values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -39,67 +46,66 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 command.Parameters.Add(new SqlParameter("@Parameters", formattedParameters));
                 var result = command.ExecuteScalar();
 
-                if (result == null)
+                if (result != null)
                 {
-                    connection.Close();
-                    logged = false;
-                }
-
-                else
-                {
-                    auditId = (int)result;
+                    auditId = int.Parse(result.ToString());
+                    logged = true;
                 }
 
                 connection.Close();
-                return (logged, auditId);
             }
 
             catch (Exception ex)
             {
-                return (false, 0);
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run AuditHistoryService.LogRequest with the following parameters {new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), formattedParameters}}.");
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
             }
+
+            return (logged, auditId);
         }
 
         // Gets the audit history data from the database.
         public (List<AuditHistoryRecord>, int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
-            try
-            {
-                AuditHistoryConverter _auditHistoryConverter = new();
-                List<AuditHistoryRecord> auditHistories = new();
+            AuditHistoryConverter _auditHistoryConverter = new();
+            List<AuditHistoryRecord> auditHistories = new();
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
+            int totalRecords = 0;
 
-                // Obtaines and returns all the rows in the AuditHistory table.
-                string sqlQuery = @"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the rows in the AuditHistory table.
+            string sqlQuery = @"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
 join [Endpoint] E on AH.EndpointID = E.EndpointID
 join Methods M on AH.MethodID = M.MethodID
 join Status_Code SC on AH.StatusID = SC.StatusID
 where AH.AuditID is not null";
 
-                if (!string.IsNullOrEmpty(ipAddress))
-                {
-                    sqlQuery += "\nand AH.IPAddress = @IPAddress";
-                }
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                sqlQuery += "\nand AH.IPAddress = @IPAddress";
+            }
 
-                if (!string.IsNullOrEmpty(endpoint))
-                {
-                    sqlQuery += "\nand E.Value = @Endpoint";
-                }
+            if (!string.IsNullOrEmpty(endpoint))
+            {
+                sqlQuery += "\nand E.Value = @Endpoint";
+            }
 
-                if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate.ToString() != "01/01/1900 00:00:00")
-                {
-                    sqlQuery += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
-                }
+            if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate.ToString() != "01/01/1900 00:00:00")
+            {
+                sqlQuery += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
+            }
 
-                sqlQuery += @"
+            sqlQuery += @"
 order by AH.AuditID asc
 offset (@PageSize * (@PageNumber - 1)) rows
 fetch next @PageSize rows only";
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -146,26 +152,29 @@ fetch next @PageSize rows only";
                 dataReader.Close();
                 connection.Close();
 
-                return (auditHistories, GetTotalAuditHistory(command));
+                totalRecords = GetTotalAuditHistory(command);
             }
 
             catch (Exception ex)
             {
-                return (new List<AuditHistoryRecord>(), 0);
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run AuditHistoryService.GetAuditHistory with the following parameters {new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() }}.");
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
             }
+
+            return (auditHistories, totalRecords);
         }
 
         // Gets the total number of records in the AuditHistory table.
         private int GetTotalAuditHistory(SqlCommand command)
         {
+            int totalRecords = 0;
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlDataReader dataReader;
+
             try
             {
-                int totalRecords = 0;
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlDataReader dataReader;
-
                 // Obtaines and returns the number of rows in the AuditHistory table.
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
@@ -186,14 +195,15 @@ fetch next @PageSize rows only", "");
 
                 dataReader.Close();
                 connection.Close();
-
-                return totalRecords;
             }
 
             catch (Exception ex)
             {
-                return 0;
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run AuditHistoryService.GetTotalAuditHistory with the following parameters {new string[] { command.CommandText, command.Parameters.ToString() }}.");
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
             }
+
+            return totalRecords;
         }
     }
 }

@@ -35,7 +35,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [Produces("application/json")]
         public IActionResult RequestLocation([FromQuery] AssistantFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
             LocationService _locationService = new();
@@ -116,7 +117,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [Produces("application/json")]
         public IActionResult UpdateLocation([FromBody] LocationModel request, [FromQuery] AssistantFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
             ConfigService _configService = new();

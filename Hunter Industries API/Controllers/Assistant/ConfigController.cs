@@ -36,7 +36,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [Produces("application/json")]
         public IActionResult RequestConfig([FromQuery] AssistantFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ConfigService _configService = new();
 
@@ -108,7 +109,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [Produces("application/json")]
         public IActionResult CreateConfig([FromBody, Required] ConfigModel request)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
             ConfigService _configService = new();

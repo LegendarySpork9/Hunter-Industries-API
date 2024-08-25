@@ -14,6 +14,10 @@ namespace HunterIndustriesAPI
     {
         public static void Main(string[] args)
         {
+            log4net.Config.XmlConfigurator.Configure(new FileInfo(Path.Combine(AppContext.BaseDirectory, "Log4Net.config")));
+            LoggerService _logger = new("ApplicationBuild");
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Info, "Logging Started");
+
             // Access the json inside the appsettings file.
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -23,6 +27,11 @@ namespace HunterIndustriesAPI
             DatabaseModel.ConnectionString = configuration["SQLConnectionString"];
 
             configuration.GetSection("JwtSettings").Get<ValidationModel>();
+
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, DatabaseModel.ConnectionString);
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, ValidationModel.Issuer);
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, ValidationModel.Audience);
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, ValidationModel.SecretKey);
 
             // Builds the web application.
             var builder = WebApplication.CreateBuilder(args);
@@ -76,6 +85,8 @@ namespace HunterIndustriesAPI
                 });
             });
 
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, "Swagger Generation Configured.");
+
             builder.Services.AddCors(Options =>
             {
                 Options.AddPolicy("AllowAllOrigins",
@@ -126,6 +137,8 @@ namespace HunterIndustriesAPI
                 });
             });
 
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, "Authentication Configured.");
+
             // Runs the web application.
             var app = builder.Build();
 
@@ -162,6 +175,8 @@ namespace HunterIndustriesAPI
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, "Application Built.");
 
             app.Run();
         }

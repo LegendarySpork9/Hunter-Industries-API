@@ -9,11 +9,13 @@ namespace HunterIndustriesAPI.Services
     public class TokenService
     {
         private readonly string ProgramName;
+        private readonly LoggerService _logger;
 
         // Sets the application name upon initialisation. 
-        public TokenService(string phrase)
+        public TokenService(string phrase, LoggerService logger)
         {
             ProgramName = GetApplicationName(phrase);
+            _logger = logger;
         }
 
         // Returns the application name.
@@ -41,9 +43,10 @@ namespace HunterIndustriesAPI.Services
                 }
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
-                
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"Failed to extract the username and password from the basic header of value {authHeaderValue}");
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
             }
 
             return (username, password);
@@ -138,21 +141,21 @@ namespace HunterIndustriesAPI.Services
         //* SQL *//
 
         // Gets the users from the database.
-        private static (string[], string[]) GetUsers()
+        private (string[], string[]) GetUsers()
         {
+            string[] usernames = Array.Empty<string>();
+            string[] passwords = Array.Empty<string>();
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the users in the API_User table.
+            string sqlQuery = "select * from API_User";
+
             try
             {
-                string[] usernames = Array.Empty<string>();
-                string[] passwords = Array.Empty<string>();
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
-
-                // Obtaines and returns all the users in the API_User table.
-                string sqlQuery = "select * from API_User";
-
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -166,31 +169,32 @@ namespace HunterIndustriesAPI.Services
 
                 dataReader.Close();
                 connection.Close();
-
-                return (usernames, passwords);
             }
 
             catch (Exception ex)
             {
-                return (Array.Empty<string>(), Array.Empty<string>());
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run TokenService.GetUsers.");
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
             }
+
+            return (usernames, passwords);
         }
 
         // Gets the phrases used for authorisation from the database.
-        private static string[] GetAuthorisationPhrases()
+        private string[] GetAuthorisationPhrases()
         {
+            string[] phrases = Array.Empty<string>();
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the phrases in the Authorisation table.
+            string sqlQuery = "select * from Authorisation";
+
             try
             {
-                string[] phrases = Array.Empty<string>();
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
-
-                // Obtaines and returns all the phrases in the Authorisation table.
-                string sqlQuery = "select * from Authorisation";
-
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -203,31 +207,32 @@ namespace HunterIndustriesAPI.Services
 
                 dataReader.Close();
                 connection.Close();
-
-                return phrases;
             }
 
             catch (Exception ex)
             {
-                return Array.Empty<string>();
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run TokenService.GetAuthorisationPhrases.");
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
             }
+
+            return phrases;
         }
 
         // Gets the application names from the database.
-        private static string GetApplicationName(string phrase)
+        private string GetApplicationName(string phrase)
         {
+            string name = string.Empty;
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns the application name for the given phrase.
+            string sqlQuery = $"select Name from Applications where PhraseID = (select PhraseID from Authorisation where phrase = @phrase)";
+
             try
             {
-                string name = string.Empty;
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
-
-                // Obtaines and returns the application name for the given phrase.
-                string sqlQuery = $"select Name from Applications where PhraseID = (select PhraseID from Authorisation where phrase = @phrase)";
-
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -241,14 +246,15 @@ namespace HunterIndustriesAPI.Services
 
                 dataReader.Close();
                 connection.Close();
-
-                return name;
             }
 
             catch (Exception ex)
             {
-                return string.Empty;
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run TokenService.GetApplicationName with the following parameter {phrase}.");
+                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
             }
+
+            return name;
         }
     }
 }
