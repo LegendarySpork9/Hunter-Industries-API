@@ -30,17 +30,21 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         /// <response code="400">If the filters are invalid.</response>
         /// <response code="401">If the bearer token is expired or fails validation.</response>
         [HttpGet]
+        [MakeFiltersRequired]
         [ProducesResponseType(typeof(LocationResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
         [Produces("application/json")]
         public IActionResult RequestLocation([FromQuery] AssistantFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
-            LocationService _locationService = new();
+            LocationService _locationService = new(_logger);
 
             ResponseModel response = new();
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
 
             // Checks if the request contains the needed filters.
             if (!_modelValidator.IsValid(filters, true))
@@ -57,6 +61,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -78,6 +83,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -87,6 +93,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 Data = locationResponse
             };
 
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
             return StatusCode(response.StatusCode, response.Data);
         }
 
@@ -109,6 +116,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         /// <response code="404">If no configuration was found using the filters.</response>
         /// <response code="500">If something went wrong on the server.</response>
         [HttpPatch]
+        [MakeFiltersRequired]
         [ProducesResponseType(typeof(LocationResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status404NotFound)]
@@ -116,14 +124,17 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [Produces("application/json")]
         public IActionResult UpdateLocation([FromBody] LocationModel request, [FromQuery] AssistantFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
-            ConfigService _configService = new();
-            LocationService _locationService = new();
-            ChangeService _changeService = new();
+            ConfigService _configService = new(_logger);
+            LocationService _locationService = new(_logger);
+            ChangeService _changeService = new(_logger);
 
             ResponseModel response = new();
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint called with the following parameters {_logger.FormatParameters(request)}, {_logger.FormatParameters(filters)}.");
 
             // Checks whether all requireds are present.
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(filters, true))
@@ -140,6 +151,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -172,6 +184,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                         Data = locationResponse
                     };
 
+                    _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
                     return StatusCode(response.StatusCode, response.Data);
                 }
 
@@ -187,6 +200,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -202,6 +216,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
             return StatusCode(response.StatusCode, response.Data);
         }
     }

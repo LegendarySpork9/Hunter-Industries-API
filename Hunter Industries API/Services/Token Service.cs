@@ -1,4 +1,5 @@
 ﻿// Copyright © - unpublished - Toby Hunter
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using System.Data.SqlClient;
 using System.Security.Claims;
@@ -9,10 +10,12 @@ namespace HunterIndustriesAPI.Services
     public class TokenService
     {
         private readonly string ProgramName;
+        private readonly LoggerService Logger;
 
         // Sets the application name upon initialisation. 
-        public TokenService(string phrase)
+        public TokenService(string phrase, LoggerService _logger)
         {
+            Logger = _logger;
             ProgramName = GetApplicationName(phrase);
         }
 
@@ -25,6 +28,8 @@ namespace HunterIndustriesAPI.Services
         // Obtains the header data from the request.
         public (string username, string password) ExtractCredentialsFromBasicAuth(string authHeaderValue)
         {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth called with the header value \"{authHeaderValue}\".");
+
             string username = string.Empty;
             string password = string.Empty;
 
@@ -41,11 +46,13 @@ namespace HunterIndustriesAPI.Services
                 }
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
-                
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"Failed to extract the username and password from the basic header.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth returned {username} | {password}.");
             return (username, password);
         }
 
@@ -138,21 +145,21 @@ namespace HunterIndustriesAPI.Services
         //* SQL *//
 
         // Gets the users from the database.
-        private static (string[], string[]) GetUsers()
+        private (string[], string[]) GetUsers()
         {
+            string[] usernames = Array.Empty<string>();
+            string[] passwords = Array.Empty<string>();
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the users in the API_User table.
+            string sqlQuery = "select * from API_User";
+
             try
             {
-                string[] usernames = Array.Empty<string>();
-                string[] passwords = Array.Empty<string>();
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
-
-                // Obtaines and returns all the users in the API_User table.
-                string sqlQuery = "select * from API_User";
-
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -166,31 +173,32 @@ namespace HunterIndustriesAPI.Services
 
                 dataReader.Close();
                 connection.Close();
-
-                return (usernames, passwords);
             }
 
             catch (Exception ex)
             {
-                return (Array.Empty<string>(), Array.Empty<string>());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run TokenService.GetUsers.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            return (usernames, passwords);
         }
 
         // Gets the phrases used for authorisation from the database.
-        private static string[] GetAuthorisationPhrases()
+        private string[] GetAuthorisationPhrases()
         {
+            string[] phrases = Array.Empty<string>();
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the phrases in the Authorisation table.
+            string sqlQuery = "select * from Authorisation";
+
             try
             {
-                string[] phrases = Array.Empty<string>();
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
-
-                // Obtaines and returns all the phrases in the Authorisation table.
-                string sqlQuery = "select * from Authorisation";
-
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -203,31 +211,34 @@ namespace HunterIndustriesAPI.Services
 
                 dataReader.Close();
                 connection.Close();
-
-                return phrases;
             }
 
             catch (Exception ex)
             {
-                return Array.Empty<string>();
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run TokenService.GetAuthorisationPhrases.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            return phrases;
         }
 
         // Gets the application names from the database.
-        private static string GetApplicationName(string phrase)
+        private string GetApplicationName(string phrase)
         {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase \"{phrase}\".");
+
+            string name = string.Empty;
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns the application name for the given phrase.
+            string sqlQuery = $"select Name from Applications where PhraseID = (select PhraseID from Authorisation where phrase = @phrase)";
+
             try
             {
-                string name = string.Empty;
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
-
-                // Obtaines and returns the application name for the given phrase.
-                string sqlQuery = $"select Name from Applications where PhraseID = (select PhraseID from Authorisation where phrase = @phrase)";
-
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -241,14 +252,16 @@ namespace HunterIndustriesAPI.Services
 
                 dataReader.Close();
                 connection.Close();
-
-                return name;
             }
 
             catch (Exception ex)
             {
-                return string.Empty;
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run TokenService.GetApplicationName.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName returned {name}.");
+            return name;
         }
     }
 }

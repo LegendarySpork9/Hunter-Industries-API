@@ -40,7 +40,8 @@ namespace HunterIndustriesAPI.Controllers
         [Produces("application/json")]
         public IActionResult RequestToken([FromBody, Required] AuthenticationModel request)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
 
@@ -53,6 +54,8 @@ namespace HunterIndustriesAPI.Controllers
 
             request.AuthHeader = Request.Headers["Authorization"];
             string[] validationIgnore = { "Username", "Password" };
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint called with the following parameters {_logger.FormatParameters(request)}.");
 
             // Checks if the request is valid.
             if (!_modelValidator.IsValid(request, true, validationIgnore))
@@ -68,10 +71,11 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
-            TokenService _tokenService = new(request.Phrase);
+            TokenService _tokenService = new(request.Phrase, _logger);
 
             // Obtains the headers on the request.
             (request.Username, request.Password) = _tokenService.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
@@ -90,6 +94,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -131,6 +136,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -146,6 +152,7 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
             return StatusCode(response.StatusCode, response.Data);
         }
     }

@@ -34,11 +34,14 @@ namespace HunterIndustriesAPI.Controllers
         [Produces("application/json")]
         public IActionResult RequestAuditHistory([FromQuery] AuditHistoryFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new();
+            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+            AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
 
             ResponseModel response = new();
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
 
             // Checks if there are filter values.
             if (!_modelValidator.IsValid(filters))
@@ -54,6 +57,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -76,6 +80,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -96,6 +101,7 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {response.Data}");
             return StatusCode(response.StatusCode, response.Data);
         }
     }
