@@ -7,7 +7,7 @@ namespace HunterIndustriesAPI.Services
     public class LoggerService
     {
         private readonly string Identifier;
-        private readonly ILog _logger = LogManager.GetLogger("APILog");
+        private readonly ILog Logger = LogManager.GetLogger("APILog");
 
         public LoggerService(string id)
         {
@@ -57,14 +57,14 @@ namespace HunterIndustriesAPI.Services
             return formattedParameters;
         }
 
-        public void LogMessage(string level, string message)
+        public void LogMessage(string level, string message, string? summary = null)
         {
             switch (level)
             {
-                case "Info": _logger.Info($"{Identifier} - {message}"); break;
-                case "Debug": _logger.Debug($"{Identifier} - {message}"); break;
-                case "Warn": _logger.Warn($"{Identifier} - {message}"); break;
-                case "Error": _logger.Error($"{Identifier} - {message}"); break;
+                case "Info": Logger.Info($"{Identifier} - {message}"); break;
+                case "Debug": Logger.Debug($"{Identifier} - {message}"); break;
+                case "Warn": Logger.Warn($"{Identifier} - {message}"); break;
+                case "Error": ThreadContext.Properties["IPAddress"] = Identifier; ThreadContext.Properties["Summary"] = summary; Logger.Error(message); break;
             }
         }
     }
