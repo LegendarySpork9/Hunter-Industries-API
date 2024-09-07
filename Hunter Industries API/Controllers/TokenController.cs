@@ -55,7 +55,7 @@ namespace HunterIndustriesAPI.Controllers
             request.AuthHeader = Request.Headers["Authorization"];
             string[] validationIgnore = { "Username", "Password" };
 
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Info, $"Token endpoint called with the following parameters {new string[] { request.AuthHeader, request.Phrase }}.");
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint called with the following parameters {_logger.FormatParameters(request)}.");
 
             // Checks if the request is valid.
             if (!_modelValidator.IsValid(request, true, validationIgnore))
@@ -71,7 +71,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -94,7 +94,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -136,7 +136,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -152,7 +152,7 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
             return StatusCode(response.StatusCode, response.Data);
         }
     }

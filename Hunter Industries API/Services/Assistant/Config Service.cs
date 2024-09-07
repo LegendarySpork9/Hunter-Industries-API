@@ -1,5 +1,7 @@
 ﻿// Copyright © - unpublished - Toby Hunter
+using System;
 using System.Data.SqlClient;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects.Assistant;
 
@@ -7,36 +9,48 @@ namespace HunterIndustriesAPI.Services.Assistant
 {
     public class ConfigService
     {
+        private readonly LoggerService Logger;
+
+        public ConfigService(LoggerService _logger)
+        {
+            Logger = _logger;
+        }
+
         // Gets the config(s) from the database.
         public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string? assistantName, string? assistantId)
         {
-            try
-            {
-                List<AssistantConfiguration> assistantConfigurations = new();
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
+            List<AssistantConfiguration> assistantConfigurations = new();
 
-                // Obtaines and returns all the rows in the AssistantInformation table.
-                string sqlQuery = @"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from Assistant_Information AI
+            int totalConfigs = 0;
+            string mostRecentVersion = string.Empty;
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the rows in the AssistantInformation table.
+            string sqlQuery = @"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from Assistant_Information AI
 join [Location] L on AI.LocationID = L.LocationID
 join Deletion D on AI.DeletionStatusID = D.StatusID
 join [Version] V on AI.VersionID = V.VersionID
 join [User] U on AI.UserID = U.UserID
 where AI.Name is not null";
 
-                if (!string.IsNullOrEmpty(assistantName))
-                {
-                    sqlQuery += "\nand AI.Name = @AssistantName";
-                }
+            if (!string.IsNullOrEmpty(assistantName))
+            {
+                sqlQuery += "\nand AI.Name = @AssistantName";
+            }
 
-                if (!string.IsNullOrEmpty(assistantId))
-                {
-                    sqlQuery += "\nand AI.IDNumber = @AssistantID";
-                }
+            if (!string.IsNullOrEmpty(assistantId))
+            {
+                sqlQuery += "\nand AI.IDNumber = @AssistantID";
+            }
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -71,26 +85,31 @@ where AI.Name is not null";
                 dataReader.Close();
                 connection.Close();
 
-                return (assistantConfigurations, GetTotalConfigs(command), GetMostRecentVersion());
+                totalConfigs = GetTotalConfigs(command);
+                mostRecentVersion = GetMostRecentVersion();
             }
 
             catch (Exception ex)
             {
-                return (new List<AssistantConfiguration>(), 0, string.Empty);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run ConfigService.GetAssistantConfig.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {Logger.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
+            return (assistantConfigurations, totalConfigs, mostRecentVersion);
         }
 
         // Gets the total number of records in the AssistantInformation table.
         private int GetTotalConfigs(SqlCommand command)
         {
+            int totalRecords = 0;
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlDataReader dataReader;
+
             try
             {
-                int totalRecords = 0;
-
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlDataReader dataReader;
-
                 // Obtaines and returns the number of rows in the AuditHistory table.
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
@@ -109,32 +128,33 @@ join [User] U on AI.UserID = U.UserID", "select count(*) from Assistant_Informat
 
                 dataReader.Close();
                 connection.Close();
-
-                return totalRecords;
             }
 
             catch (Exception ex)
             {
-                return 0;
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run ConfigService.GetTotalConfigs.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            return totalRecords;
         }
 
         // Gets the most recent release version in the Versions table.
         public string GetMostRecentVersion()
         {
-            try
-            {
-                string version = string.Empty;
+            string version = string.Empty;
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
 
-                // Obtaines and returns the latest version.
-                string sqlQuery = @"select top 1 Value from [Version]
+            // Obtaines and returns the latest version.
+            string sqlQuery = @"select top 1 Value from [Version]
 order by VersionID desc";
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -147,32 +167,33 @@ order by VersionID desc";
 
                 dataReader.Close();
                 connection.Close();
-
-                return version;
             }
 
             catch (Exception ex)
             {
-                return string.Empty;
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run ConfigService.GetMostRecentVersion.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            return version;
         }
 
         // Checks whether the given assistant already exists in the table.
         public bool AssistantExists(string assistantName, string assistantId)
         {
-            try
-            {
-                string? name = null;
-                string? idNumber = null;
-                bool exists = false;
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
+            string? name = null;
+            string? idNumber = null;
+            bool exists = false;
 
-                // Obtaines and returns all the rows in the AssistantInformation table.
-                string sqlQuery = @"select AI.Name, AI.IDNumber from Assistant_Information AI
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the rows in the AssistantInformation table.
+            string sqlQuery = @"select AI.Name, AI.IDNumber from Assistant_Information AI
 join [Location] L on AI.LocationID = L.LocationID
 join Deletion D on AI.DeletionStatusID = D.StatusID
 join [Version] V on AI.VersionID = V.VersionID
@@ -180,6 +201,8 @@ join [User] U on AI.UserID = U.UserID
 where AI.Name = @AssistantName
 or AI.IDNumber = @AssistantID";
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -191,42 +214,46 @@ or AI.IDNumber = @AssistantID";
                 {
                     name = dataReader.GetString(0);
                     idNumber = dataReader.GetString(1);
+
+                    if ((name == assistantName && idNumber == assistantId) || idNumber == assistantId)
+                    {
+                        exists = true;
+                    }
                 }
 
                 dataReader.Close();
                 connection.Close();
-
-                if (name == assistantName && idNumber == assistantId)
-                {
-                    exists = true;
-                }
-
-                return exists;
             }
 
             catch (Exception ex)
             {
-                return false;
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run ConfigService.AssistantExists.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists returned {exists}.");
+            return exists;
         }
 
         // Inserts the new config into the relevant tables.
         public bool AssistantConfigCreated(string assistantName, string idNumber, string assignedUser, string hostName)
         {
-            try
-            {
-                bool created = true;
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {Logger.FormatParameters(new string[] { assistantName, idNumber, assignedUser, hostName })}.");
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
+            bool created = true;
 
-                // Inserts the values into the relevant tables to create the config.
-                string sqlQuery = @"insert into [Location] (HostName, IPAddress)
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+
+            // Inserts the values into the relevant tables to create the config.
+            string sqlQuery = @"insert into [Location] (HostName, IPAddress)
 output inserted.LocationID
 values (@Hostname, @IPAddress)";
-                int rowsAffected;
+            int rowsAffected;
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -279,13 +306,16 @@ values (@LocationID, 2, (select top 1 VersionID from [Version] order by VersionI
                 }
 
                 connection.Close();
-                return created;
             }
 
             catch (Exception ex)
             {
-                return false;
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run ConfigService.AssistantConfigCreated.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated returned {created}.");
+            return created;
         }
     }
 }

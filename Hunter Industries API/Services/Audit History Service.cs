@@ -8,16 +8,18 @@ namespace HunterIndustriesAPI.Services
 {
     public class AuditHistoryService
     {
-        private readonly LoggerService _logger;
+        private readonly LoggerService Logger;
 
-        public AuditHistoryService(LoggerService logger)
+        public AuditHistoryService(LoggerService _logger)
         {
-            _logger = logger;
+            Logger = _logger;
         }
 
         // Logs the call to the AuditHistory table.
         public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[]? parameters)
         {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), Logger.FormatParameters(parameters) })}.");
+
             bool logged = false;
             int auditId = 0;
 
@@ -57,16 +59,19 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
             catch (Exception ex)
             {
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run AuditHistoryService.LogRequest with the following parameters {new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), formattedParameters}}.");
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run AuditHistoryService.LogRequest.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest returned {logged} | {auditId}.");
             return (logged, auditId);
         }
 
         // Gets the audit history data from the database.
         public (List<AuditHistoryRecord>, int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+
             AuditHistoryConverter _auditHistoryConverter = new();
             List<AuditHistoryRecord> auditHistories = new();
 
@@ -157,10 +162,11 @@ fetch next @PageSize rows only";
 
             catch (Exception ex)
             {
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run AuditHistoryService.GetAuditHistory with the following parameters {new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() }}.");
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run AuditHistoryService.GetAuditHistory.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory returned {auditHistories.Count} records | {totalRecords}");
             return (auditHistories, totalRecords);
         }
 
@@ -199,8 +205,8 @@ fetch next @PageSize rows only", "");
 
             catch (Exception ex)
             {
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run AuditHistoryService.GetTotalAuditHistory with the following parameters {new string[] { command.CommandText, command.Parameters.ToString() }}.");
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run AuditHistoryService.GetTotalAuditHistory.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
             return totalRecords;

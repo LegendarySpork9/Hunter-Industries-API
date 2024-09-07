@@ -4,24 +4,24 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace HunterIndustriesAPI.Services
 {
-    public class OptionalParameterOperationFilter : IOperationFilter
+    public class RequiredParameterOperationFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             var actionAttributes = context.ApiDescription.ActionDescriptor.EndpointMetadata;
 
-            if (actionAttributes.OfType<MakeFiltersOptionalAttribute>().Any())
+            if (actionAttributes.OfType<MakeFiltersRequiredAttribute>().Any())
             {
                 foreach (var parameter in operation.Parameters)
                 {
                     if (parameter != null)
                     {
-                        parameter.Required = false;
+                        parameter.Required = true;
                     }
                 }
             }
         }
     }
 
-    public class MakeFiltersOptionalAttribute : Attribute { }
+    public class MakeFiltersRequiredAttribute : Attribute { }
 }

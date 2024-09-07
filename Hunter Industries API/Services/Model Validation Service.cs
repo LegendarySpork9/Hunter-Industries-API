@@ -90,6 +90,11 @@ namespace HunterIndustriesAPI.Services
                 valueConfirmed = int.TryParse(value.ToString(), out _);
             }
 
+            if (value.GetType() == typeof(bool))
+            {
+                valueConfirmed = bool.TryParse(value.ToString(), out _);
+            }
+
             return valueConfirmed;
         }
 

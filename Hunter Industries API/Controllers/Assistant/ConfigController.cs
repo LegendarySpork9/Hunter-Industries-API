@@ -31,7 +31,6 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         /// <response code="200">Returns the assistant configuration collection or nothing.</response>
         /// <response code="401">If the bearer token is expired or fails validation.</response>
         [HttpGet]
-        [MakeFiltersOptional]
         [ProducesResponseType(typeof(ConfigResponseModel), StatusCodes.Status200OK)]
         [Produces("application/json")]
         public IActionResult RequestConfig([FromQuery] AssistantFilterModel filters)
@@ -39,9 +38,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
             AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
-            ConfigService _configService = new();
+            ConfigService _configService = new(_logger);
 
             ResponseModel response;
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
 
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.AssistantName, filters.AssistantId });
@@ -62,6 +63,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -77,6 +79,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
             return StatusCode(response.StatusCode, response.Data);
         }
 
@@ -113,9 +116,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             AuditHistoryService _auditHistoryService = new(_logger);
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
-            ConfigService _configService = new();
+            ConfigService _configService = new(_logger);
 
             ResponseModel response = new();
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint called with the following parameters {_logger.FormatParameters(request)}.");
 
             // Checks if the request contains a body.
             if (!_modelValidator.IsValid(request, true))
@@ -132,6 +137,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -150,6 +156,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -167,6 +174,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
                 return StatusCode(response.StatusCode, response.Data);
             }
 
@@ -189,6 +197,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
             return StatusCode(response.StatusCode, response.Data);
         }
     }

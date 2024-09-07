@@ -1,4 +1,5 @@
 // Copyright © - unpublished - Toby Hunter
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,8 +16,8 @@ namespace HunterIndustriesAPI
         public static void Main(string[] args)
         {
             log4net.Config.XmlConfigurator.Configure(new FileInfo(Path.Combine(AppContext.BaseDirectory, "Log4Net.config")));
-            LoggerService _logger = new("ApplicationBuild");
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Info, "Logging Started");
+            LoggerService _logger = new("Application");
+            _logger.LogMessage(StandardValues.LoggerValues.Info, "Logging Started");
 
             // Access the json inside the appsettings file.
             IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -28,10 +29,10 @@ namespace HunterIndustriesAPI
 
             configuration.GetSection("JwtSettings").Get<ValidationModel>();
 
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, DatabaseModel.ConnectionString);
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, ValidationModel.Issuer);
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, ValidationModel.Audience);
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, ValidationModel.SecretKey);
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, DatabaseModel.ConnectionString);
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, ValidationModel.Issuer);
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, ValidationModel.Audience);
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, ValidationModel.SecretKey);
 
             // Builds the web application.
             var builder = WebApplication.CreateBuilder(args);
@@ -58,7 +59,7 @@ namespace HunterIndustriesAPI
 
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 
-                options.OperationFilter<OptionalParameterOperationFilter>();
+                options.OperationFilter<RequiredParameterOperationFilter>();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -85,7 +86,7 @@ namespace HunterIndustriesAPI
                 });
             });
 
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, "Swagger Generation Configured.");
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Swagger Generation Configured.");
 
             builder.Services.AddCors(Options =>
             {
@@ -137,7 +138,7 @@ namespace HunterIndustriesAPI
                 });
             });
 
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, "Authentication Configured.");
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Authentication Configured.");
 
             // Runs the web application.
             var app = builder.Build();
@@ -161,7 +162,21 @@ namespace HunterIndustriesAPI
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("https://localhost:7026/api/swagger/v1/swagger.json", "V1.0.0");
+                if (app.Environment.IsDevelopment())
+                {
+                    options.SwaggerEndpoint("https://localhost:7026/api/swagger/v1/swagger.json", "V1.0.0");
+                }
+
+                if (app.Environment.IsStaging())
+                {
+                    options.SwaggerEndpoint("https://hunter-industries.co.uk/qa/api/swagger/v1/swagger.json", "V1.0.0");
+                }
+
+                else
+                {
+                    options.SwaggerEndpoint("https://hunter-industries.co.uk/api/swagger/v1/swagger.json", "V1.0.0");
+                }
+                
                 options.RoutePrefix = "api/swagger";
                 options.InjectStylesheet("/CSS/Swagger.css");
             });
@@ -176,7 +191,7 @@ namespace HunterIndustriesAPI
 
             app.UseAuthorization();
 
-            _logger.LogMessage(Values.LoggerLevels.LevelValues.Debug, "Application Built.");
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Application Built.");
 
             app.Run();
         }

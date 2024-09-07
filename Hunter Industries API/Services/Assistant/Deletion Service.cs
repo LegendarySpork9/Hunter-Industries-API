@@ -1,30 +1,41 @@
 ﻿// Copyright © - unpublished - Toby Hunter
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Responses.Assistant;
+using System;
 using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
     public class DeletionService
     {
+        private readonly LoggerService Logger;
+
+        public DeletionService(LoggerService _logger)
+        {
+            Logger = _logger;
+        }
+
         // Gets the deletion status of the given assistant.
         public DeletionResponseModel GetAssistantDeletion(string assistantName, string assistantId)
         {
-            try
-            {
-                DeletionResponseModel deletion = new();
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
-                SqlDataReader dataReader;
+            DeletionResponseModel deletion = new();
 
-                // Obtaines and returns all the rows in the AssistantInformation table.
-                string sqlQuery = @"select AI.Name, AI.IDNumber, D.Value from Assistant_Information AI
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            // Obtaines and returns all the rows in the AssistantInformation table.
+            string sqlQuery = @"select AI.Name, AI.IDNumber, D.Value from Assistant_Information AI
 join Deletion D on AI.DeletionStatusID = D.StatusID
 where AI.Name = @AssistantName
 and AI.IDNumber = @AssistantID";
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -44,33 +55,37 @@ and AI.IDNumber = @AssistantID";
 
                 dataReader.Close();
                 connection.Close();
-
-                return deletion;
             }
 
             catch (Exception ex)
             {
-                return  new DeletionResponseModel();
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run DeletionService.GetAssistantDeletion.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion returned {Logger.FormatParameters(deletion)}.");
+            return deletion;
         }
 
         // Updates the deletion status of the given assistant.
         public bool AssistantDeletionUpdated(string assistantName, string idNumber, bool deletion)
         {
-            try
-            {
-                bool updated = true;
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, idNumber, deletion.ToString() })}.");
 
-                // Creates the variables for the SQL queries.
-                SqlConnection connection;
-                SqlCommand command;
+            bool updated = true;
 
-                // Updates the deletionStatusID column on the AssistantInformation table.
-                string sqlQuery = @"update Assistant_Information set DeletionStatusID = (select StatusID from [Deletion] where Value = @Deletion)
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+
+            // Updates the deletionStatusID column on the AssistantInformation table.
+            string sqlQuery = @"update Assistant_Information set DeletionStatusID = (select StatusID from [Deletion] where Value = @Deletion)
 where Name = @AssistantName
 and IDNumber = @IDNumber";
-                int rowsAffected;
+            int rowsAffected;
 
+            try
+            {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
@@ -86,13 +101,16 @@ and IDNumber = @IDNumber";
                 }
 
                 connection.Close();
-                return updated;
             }
 
             catch (Exception ex)
             {
-                return false;
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run DeletionService.AssistantDeletionUpdated.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated returned {updated}.");
+            return updated;
         }
     }
 }

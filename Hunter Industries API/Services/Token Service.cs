@@ -1,4 +1,5 @@
 ﻿// Copyright © - unpublished - Toby Hunter
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using System.Data.SqlClient;
 using System.Security.Claims;
@@ -9,13 +10,13 @@ namespace HunterIndustriesAPI.Services
     public class TokenService
     {
         private readonly string ProgramName;
-        private readonly LoggerService _logger;
+        private readonly LoggerService Logger;
 
         // Sets the application name upon initialisation. 
-        public TokenService(string phrase, LoggerService logger)
+        public TokenService(string phrase, LoggerService _logger)
         {
+            Logger = _logger;
             ProgramName = GetApplicationName(phrase);
-            _logger = logger;
         }
 
         // Returns the application name.
@@ -27,6 +28,8 @@ namespace HunterIndustriesAPI.Services
         // Obtains the header data from the request.
         public (string username, string password) ExtractCredentialsFromBasicAuth(string authHeaderValue)
         {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth called with the header value \"{authHeaderValue}\".");
+
             string username = string.Empty;
             string password = string.Empty;
 
@@ -45,10 +48,11 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"Failed to extract the username and password from the basic header of value {authHeaderValue}");
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"Failed to extract the username and password from the basic header.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth returned {username} | {password}.");
             return (username, password);
         }
 
@@ -173,8 +177,8 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run TokenService.GetUsers.");
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run TokenService.GetUsers.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
             return (usernames, passwords);
@@ -211,8 +215,8 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run TokenService.GetAuthorisationPhrases.");
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run TokenService.GetAuthorisationPhrases.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
             return phrases;
@@ -221,6 +225,8 @@ namespace HunterIndustriesAPI.Services
         // Gets the application names from the database.
         private string GetApplicationName(string phrase)
         {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase \"{phrase}\".");
+
             string name = string.Empty;
 
             // Creates the variables for the SQL queries.
@@ -250,10 +256,11 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, $"The following error occured when trying to run TokenService.GetApplicationName with the following parameter {phrase}.");
-                _logger.LogMessage(Values.LoggerLevels.LevelValues.Error, ex.ToString());
+                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run TokenService.GetApplicationName.");
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName returned {name}.");
             return name;
         }
     }

@@ -22,7 +22,10 @@ namespace HunterIndustriesAPI.Converters
                         }
                     }
 
-                    formattedParameters = formattedParameters.Remove(formattedParameters.LastIndexOf(","), 1);
+                    if (!string.IsNullOrWhiteSpace(formattedParameters))
+                    {
+                        formattedParameters = formattedParameters.Remove(formattedParameters.LastIndexOf(","), 1);
+                    }
 
                     data = formattedParameters;
                 }
