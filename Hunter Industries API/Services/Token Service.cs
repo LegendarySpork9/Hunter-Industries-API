@@ -48,8 +48,9 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Failed to extract the username and password from the basic header.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "Failed to extract the username and password from the basic header.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth returned {username} | {password}.");
@@ -177,8 +178,9 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run TokenService.GetUsers.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run TokenService.GetUsers.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return (usernames, passwords);
@@ -215,8 +217,9 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run TokenService.GetAuthorisationPhrases.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run TokenService.GetAuthorisationPhrases.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return phrases;
@@ -256,8 +259,9 @@ namespace HunterIndustriesAPI.Services
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run TokenService.GetApplicationName.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run TokenService.GetApplicationName.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName returned {name}.");

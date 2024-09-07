@@ -53,8 +53,9 @@ values (@EndpointID, @AuditID, @Field, @OldValue, @NewValue)";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run ChangeService.LogChange.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run ChangeService.LogChange.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange returned {successful}.");
