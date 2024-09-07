@@ -59,7 +59,7 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run AuditHistoryService.LogRequest.");
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run AuditHistoryService.LogRequest.");
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
@@ -162,7 +162,7 @@ fetch next @PageSize rows only";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run AuditHistoryService.GetAuditHistory.");
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run AuditHistoryService.GetAuditHistory.");
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
@@ -205,7 +205,7 @@ fetch next @PageSize rows only", "");
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run AuditHistoryService.GetTotalAuditHistory.");
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run AuditHistoryService.GetTotalAuditHistory.");
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 

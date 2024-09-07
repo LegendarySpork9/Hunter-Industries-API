@@ -59,7 +59,7 @@ and AI.IDNumber = @AssistantID";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run DeletionService.GetAssistantDeletion.");
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run DeletionService.GetAssistantDeletion.");
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
@@ -105,7 +105,7 @@ and IDNumber = @IDNumber";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run DeletionService.AssistantDeletionUpdated.");
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run DeletionService.AssistantDeletionUpdated.");
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 

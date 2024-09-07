@@ -29,10 +29,10 @@ namespace HunterIndustriesAPI
 
             configuration.GetSection("JwtSettings").Get<ValidationModel>();
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, DatabaseModel.ConnectionString);
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, ValidationModel.Issuer);
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, ValidationModel.Audience);
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, ValidationModel.SecretKey);
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, $"Connection String: {DatabaseModel.ConnectionString}");
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, $"Valid Token Issuer: {ValidationModel.Issuer}");
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, $"Valid Token Audience: {ValidationModel.Audience}");
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, $"Valid Token Security Key: {ValidationModel.SecretKey}");
 
             // Builds the web application.
             var builder = WebApplication.CreateBuilder(args);

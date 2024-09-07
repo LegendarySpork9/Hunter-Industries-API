@@ -58,7 +58,7 @@ and AI.IDNumber = @AssistantID";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run VersionService.GetAssistantVersion.");
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run VersionService.GetAssistantVersion.");
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
@@ -104,7 +104,7 @@ and IDNumber = @IDNumber";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Error, $"The following error occured when trying to run VersionService.AssistantVersionUpdated.");
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run VersionService.AssistantVersionUpdated.");
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
