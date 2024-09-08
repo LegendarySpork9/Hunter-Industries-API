@@ -19,10 +19,34 @@
   <ItemGroup>
     <None Remove="Content\HI Tech Logo NBG.png" />
     <None Remove="CSS\Swagger.css" />
+    <None Remove="SQL\AssistantExists.SQL" />
+    <None Remove="SQL\GetAssistantConfig.SQL" />
+    <None Remove="SQL\GetAssistantDeletion.SQL" />
+    <None Remove="SQL\GetAssistantLocation.SQL" />
+    <None Remove="SQL\GetAssistantVersion.SQL" />
+    <None Remove="SQL\GetAuditHistory.SQL" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="CSS\Swagger.css" />
+    <Content Include="SQL\AssistantExists.SQL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\GetAssistantConfig.SQL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\GetAssistantDeletion.SQL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\GetAssistantLocation.SQL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\GetAssistantVersion.SQL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\GetAuditHistory.SQL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

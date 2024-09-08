@@ -32,7 +32,7 @@ namespace HunterIndustriesAPI.Services
             SqlCommand command;
 
             // Inserts the record into the AuditHistory table.
-            string sqlQuery = @"insert into Audit_History (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
+            string sqlQuery = @"insert into AuditHistory (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
 output inserted.AuditID
 values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
@@ -79,7 +79,7 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
             // Inserts the record into the AuditHistory table.
             string sqlQuery = @"insert into LoginAttempt (UserID, PhraseID, AuditID, DateOccured, IsSuccessful)
-values ((select UserID from API_User where Username = @Username and Password = @Password), (select PhraseID from Authorisation where Phrase = @Phrase), @AuditID, GetDate(), @IsSuccessful)";
+values ((select UserID from APIUser with (nolock) where Username = @Username and Password = @Password), (select PhraseID from Authorisation with (nolock) where Phrase = @Phrase), @AuditID, GetDate(), @IsSuccessful)";
 
             try
             {
@@ -120,11 +120,7 @@ values ((select UserID from API_User where Username = @Username and Password = @
             SqlDataReader dataReader;
 
             // Obtaines and returns all the rows in the AuditHistory table.
-            string sqlQuery = @"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
-join [Endpoint] E on AH.EndpointID = E.EndpointID
-join Methods M on AH.MethodID = M.MethodID
-join Status_Code SC on AH.StatusID = SC.StatusID
-where AH.AuditID is not null";
+            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAuditHistory.SQL"));
 
             if (!string.IsNullOrEmpty(ipAddress))
             {
@@ -223,13 +219,7 @@ fetch next @PageSize rows only";
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;
-                command.CommandText = command.CommandText.Replace(@"select AuditID, IPAddress, E.Value, M.Value, SC.Value, DateOccured, [Parameters] from Audit_History AH
-join [Endpoint] E on AH.EndpointID = E.EndpointID
-join Methods M on AH.MethodID = M.MethodID
-join Status_Code SC on AH.StatusID = SC.StatusID", @"select count(*) from Audit_History AH
-join [Endpoint] E on AH.EndpointID = E.EndpointID").Replace(@"order by AH.AuditID asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only", "");
+                command.CommandText = "select count(*) from AuditHistory AH with (nolock)";
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())

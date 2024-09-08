@@ -28,10 +28,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             SqlDataReader dataReader;
 
             // Obtaines and returns all the rows in the AssistantInformation table.
-            string sqlQuery = @"select AI.Name, AI.IDNumber, V.Value from Assistant_Information AI
-join [Version] V on AI.VersionID = V.VersionID
-where AI.Name = @AssistantName
-and AI.IDNumber = @AssistantID";
+            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantVersion.SQL"));
 
             try
             {
@@ -79,7 +76,7 @@ and AI.IDNumber = @AssistantID";
             SqlCommand command;
 
             // Updates the VersionID column on the Assistant_Information table.
-            string sqlQuery = @"update Assistant_Information set VersionID = (select VersionID from [Version] where Value = @Version)
+            string sqlQuery = @"update AssistantInformation set VersionID = (select VersionID from [Version] with (nolock) where Value = @Version)
 where Name = @AssistantName
 and IDNumber = @IDNumber";
             int rowsAffected;

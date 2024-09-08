@@ -28,10 +28,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             SqlDataReader dataReader;
 
             // Obtaines and returns all the rows in the Assistant_Information table.
-            string sqlQuery = @"select AI.Name, AI.IDNumber, L.HostName, L.IPAddress from Assistant_Information AI
-join Location L on AI.LocationID = L.LocationID
-where AI.Name = @AssistantName
-and AI.IDNumber = @AssistantID";
+            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantLocation.SQL"));
 
             try
             {
@@ -82,7 +79,7 @@ and AI.IDNumber = @AssistantID";
             // Updates the HostName or the IPAddress on the Location table.
             string sqlQuery = @"update [Location] set HostName = @HostName, IPAddress = @IPAddress
 where LocationID = (
-	select LocationID from Assistant_Information
+	select LocationID from AssistantInformation with (nolock)
 	where Name = @AssistantName
 	and IDNumber = @IDNumber
 )";
