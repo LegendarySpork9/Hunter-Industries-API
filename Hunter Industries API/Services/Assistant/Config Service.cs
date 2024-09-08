@@ -32,12 +32,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             SqlDataReader dataReader;
 
             // Obtaines and returns all the rows in the AssistantInformation table.
-            string sqlQuery = @"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from Assistant_Information AI
-join [Location] L on AI.LocationID = L.LocationID
-join Deletion D on AI.DeletionStatusID = D.StatusID
-join [Version] V on AI.VersionID = V.VersionID
-join [User] U on AI.UserID = U.UserID
-where AI.Name is not null";
+            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantConfig.SQL"));
 
             if (!string.IsNullOrEmpty(assistantName))
             {
@@ -115,11 +110,7 @@ where AI.Name is not null";
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;
-                command.CommandText = command.CommandText.Replace(@"select AI.Name, IDNumber, U.Name, L.HostName, D.Value, V.Value from Assistant_Information AI
-join [Location] L on AI.LocationID = L.LocationID
-join Deletion D on AI.DeletionStatusID = D.StatusID
-join [Version] V on AI.VersionID = V.VersionID
-join [User] U on AI.UserID = U.UserID", "select count(*) from Assistant_Information AI");
+                command.CommandText = "select count(*) from AssistantInformation AI with (nolock)";
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -152,7 +143,7 @@ join [User] U on AI.UserID = U.UserID", "select count(*) from Assistant_Informat
             SqlDataReader dataReader;
 
             // Obtaines and returns the latest version.
-            string sqlQuery = @"select top 1 Value from [Version]
+            string sqlQuery = @"select top 1 Value from [Version] with (nolock)
 order by VersionID desc";
 
             try
@@ -196,13 +187,7 @@ order by VersionID desc";
             SqlDataReader dataReader;
 
             // Obtaines and returns all the rows in the AssistantInformation table.
-            string sqlQuery = @"select AI.Name, AI.IDNumber from Assistant_Information AI
-join [Location] L on AI.LocationID = L.LocationID
-join Deletion D on AI.DeletionStatusID = D.StatusID
-join [Version] V on AI.VersionID = V.VersionID
-join [User] U on AI.UserID = U.UserID
-where AI.Name = @AssistantName
-or AI.IDNumber = @AssistantID";
+            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\AssistantExists.SQL"));
 
             try
             {
@@ -290,8 +275,8 @@ values (@Name)";
 
                     if (created)
                     {
-                        sqlQuery = @"insert into [Assistant_Information] (LocationID, DeletionStatusID, VersionID, UserID, Name, IDNumber)
-values (@LocationID, 2, (select top 1 VersionID from [Version] order by VersionID desc), @UserID, @AssistantName, @IDNumber)";
+                        sqlQuery = @"insert into [AssistantInformation] (LocationID, DeletionStatusID, VersionID, UserID, Name, IDNumber)
+values (@LocationID, 2, (select top 1 VersionID from [Version] with (nolock) order by VersionID desc), @UserID, @AssistantName, @IDNumber)";
                         rowsAffected = 0;
 
                         command = new SqlCommand(sqlQuery, connection);

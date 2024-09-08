@@ -157,7 +157,7 @@ namespace HunterIndustriesAPI.Services
             SqlDataReader dataReader;
 
             // Obtaines and returns all the users in the API_User table.
-            string sqlQuery = "select * from API_User";
+            string sqlQuery = "select * from APIUser with (nolock)";
 
             try
             {
@@ -197,7 +197,7 @@ namespace HunterIndustriesAPI.Services
             SqlDataReader dataReader;
 
             // Obtaines and returns all the phrases in the Authorisation table.
-            string sqlQuery = "select * from Authorisation";
+            string sqlQuery = "select * from Authorisation with (nolock)";
 
             try
             {
@@ -238,14 +238,16 @@ namespace HunterIndustriesAPI.Services
             SqlDataReader dataReader;
 
             // Obtaines and returns the application name for the given phrase.
-            string sqlQuery = $"select Name from Applications where PhraseID = (select PhraseID from Authorisation where phrase = @phrase)";
+            string sqlQuery = @"select Name from Applications with (nolock)
+join Authorisation with (nolock) on Applications.PhraseID = Authorisation.PhraseID
+where Phrase = @Phrase";
 
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@phrase", phrase));
+                command.Parameters.Add(new SqlParameter("@Phrase", phrase));
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())

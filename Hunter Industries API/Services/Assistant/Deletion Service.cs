@@ -29,10 +29,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             SqlDataReader dataReader;
 
             // Obtaines and returns all the rows in the AssistantInformation table.
-            string sqlQuery = @"select AI.Name, AI.IDNumber, D.Value from Assistant_Information AI
-join Deletion D on AI.DeletionStatusID = D.StatusID
-where AI.Name = @AssistantName
-and AI.IDNumber = @AssistantID";
+            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantDeletion.SQL"));
 
             try
             {
@@ -80,7 +77,7 @@ and AI.IDNumber = @AssistantID";
             SqlCommand command;
 
             // Updates the deletionStatusID column on the AssistantInformation table.
-            string sqlQuery = @"update Assistant_Information set DeletionStatusID = (select StatusID from [Deletion] where Value = @Deletion)
+            string sqlQuery = @"update AssistantInformation set DeletionStatusID = (select StatusID from [Deletion] with (nolock) where Value = @Deletion)
 where Name = @AssistantName
 and IDNumber = @IDNumber";
             int rowsAffected;
