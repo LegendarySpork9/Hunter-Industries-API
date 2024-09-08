@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AIAccess")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Assistant")]
     [Route("api/assistant/[controller]")]
     [ApiController]
     public class VersionController : ControllerBase
@@ -42,11 +42,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ModelValidationService _modelValidator = new();
             VersionService _versionService = new(_logger);
 
-            ResponseModel response = new();
+            ResponseModel response;
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Version (Get) endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
 
-            // Checks if the request contains the needed filters.
             if (!_modelValidator.IsValid(filters, true))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), 
@@ -68,10 +67,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.AssistantName, filters.AssistantId });
 
-            // Gets the version from the Assistant_Information table.
             VersionResponseModel versionResponse = _versionService.GetAssistantVersion(filters.AssistantName, filters.AssistantId);
 
-            // Checks if data was returned.
             if (versionResponse == new VersionResponseModel())
             {
                 response = new()
@@ -132,11 +129,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             VersionService _versionService = new(_logger);
             ChangeService _changeService = new(_logger);
 
-            ResponseModel response = new();
+            ResponseModel response;
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Version (Patch) endpoint called with the following parameters {_logger.FormatParameters(request)}, {_logger.FormatParameters(filters)}.");
 
-            // Checks whether all requireds are present.
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(filters, true))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
@@ -155,12 +151,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 return StatusCode(response.StatusCode, response.Data);
             }
 
-            // Checks if a config exists.
             if (_configService.AssistantExists(filters.AssistantName, filters.AssistantId))
             {
                 VersionResponseModel versionResponse = _versionService.GetAssistantVersion(filters.AssistantName, filters.AssistantId);
 
-                // Updates the version and returns the result.
                 if (_versionService.AssistantVersionUpdated(filters.AssistantName, filters.AssistantId, request.Version))
                 {
                     var auditID = _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/version"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),

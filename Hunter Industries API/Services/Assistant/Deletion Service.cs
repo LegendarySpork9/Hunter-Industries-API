@@ -2,7 +2,6 @@
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Responses.Assistant;
-using System;
 using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Services.Assistant
@@ -16,19 +15,16 @@ namespace HunterIndustriesAPI.Services.Assistant
             Logger = _logger;
         }
 
-        // Gets the deletion status of the given assistant.
         public DeletionResponseModel GetAssistantDeletion(string assistantName, string assistantId)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             DeletionResponseModel deletion = new();
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the rows in the AssistantInformation table.
             string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantDeletion.SQL"));
 
             try
@@ -65,18 +61,15 @@ namespace HunterIndustriesAPI.Services.Assistant
             return deletion;
         }
 
-        // Updates the deletion status of the given assistant.
-        public bool AssistantDeletionUpdated(string assistantName, string idNumber, bool deletion)
+        public bool AssistantDeletionUpdated(string assistantName, string assistantId, bool deletion)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, idNumber, deletion.ToString() })}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId, deletion.ToString() })}.");
 
             bool updated = true;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
 
-            // Updates the deletionStatusID column on the AssistantInformation table.
             string sqlQuery = @"update AssistantInformation set DeletionStatusID = (select StatusID from [Deletion] with (nolock) where Value = @Deletion)
 where Name = @AssistantName
 and IDNumber = @IDNumber";
@@ -89,7 +82,7 @@ and IDNumber = @IDNumber";
                 command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@Deletion", deletion));
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@IDNumber", idNumber));
+                command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
                 rowsAffected = command.ExecuteNonQuery();
 
                 if (rowsAffected != 1)

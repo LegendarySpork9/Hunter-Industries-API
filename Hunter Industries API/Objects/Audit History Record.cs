@@ -1,5 +1,4 @@
 ﻿// Copyright © - unpublished - Toby Hunter
-
 namespace HunterIndustriesAPI.Objects
 {
     public record AuditHistoryRecord

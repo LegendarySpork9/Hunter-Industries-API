@@ -47,11 +47,9 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.AssistantName, filters.AssistantId });
 
-            // Gets the config(s) from the AssistantInformation table.
             var result = _configService.GetAssistantConfig(filters.AssistantName, filters.AssistantId);
             List<AssistantConfiguration> assistantConfigurations = result.Item1;
 
-            // Checks if data was returned.
             if (assistantConfigurations.Count == 0)
             {
                 response = new()
@@ -118,11 +116,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ModelValidationService _modelValidator = new();
             ConfigService _configService = new(_logger);
 
-            ResponseModel response = new();
+            ResponseModel response;
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint called with the following parameters {_logger.FormatParameters(request)}.");
 
-            // Checks if the request contains a body.
             if (!_modelValidator.IsValid(request, true))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
@@ -141,7 +138,6 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 return StatusCode(response.StatusCode, response.Data);
             }
 
-            // Checks if a config already exists.
             if (_configService.AssistantExists(request.AssistantName, request.IdNumber))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"), 
@@ -160,7 +156,6 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 return StatusCode(response.StatusCode, response.Data);
             }
 
-            // Creates the config and returns the result.
             if (!_configService.AssistantConfigCreated(request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), 

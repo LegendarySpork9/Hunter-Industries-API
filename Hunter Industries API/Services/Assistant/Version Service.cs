@@ -15,19 +15,16 @@ namespace HunterIndustriesAPI.Services.Assistant
             Logger = _logger;
         }
 
-        // Gets the version number of the given assistant.
         public VersionResponseModel GetAssistantVersion(string assistantName, string assistantId)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             VersionResponseModel version = new();
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the rows in the AssistantInformation table.
             string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantVersion.SQL"));
 
             try
@@ -64,18 +61,15 @@ namespace HunterIndustriesAPI.Services.Assistant
             return version;
         }
 
-        // Updates the version number of the given assistant.
-        public bool AssistantVersionUpdated(string assistantName, string idNumber, string version)
+        public bool AssistantVersionUpdated(string assistantName, string assistantId, string version)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, idNumber, version })}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId, version })}.");
 
             bool updated = true;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
 
-            // Updates the VersionID column on the Assistant_Information table.
             string sqlQuery = @"update AssistantInformation set VersionID = (select VersionID from [Version] with (nolock) where Value = @Version)
 where Name = @AssistantName
 and IDNumber = @IDNumber";
@@ -88,7 +82,7 @@ and IDNumber = @IDNumber";
                 command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@Version", version));
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@IDNumber", idNumber));
+                command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
                 rowsAffected = command.ExecuteNonQuery();
 
                 if (rowsAffected != 1)

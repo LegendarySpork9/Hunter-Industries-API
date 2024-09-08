@@ -1,9 +1,8 @@
 ﻿// Copyright © - unpublished - Toby Hunter
-using System;
-using System.Data.SqlClient;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects.Assistant;
+using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
@@ -16,7 +15,6 @@ namespace HunterIndustriesAPI.Services.Assistant
             Logger = _logger;
         }
 
-        // Gets the config(s) from the database.
         public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string? assistantName, string? assistantId)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
@@ -26,12 +24,10 @@ namespace HunterIndustriesAPI.Services.Assistant
             int totalConfigs = 0;
             string mostRecentVersion = string.Empty;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the rows in the AssistantInformation table.
             string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantConfig.SQL"));
 
             if (!string.IsNullOrEmpty(assistantName))
@@ -95,18 +91,15 @@ namespace HunterIndustriesAPI.Services.Assistant
             return (assistantConfigurations, totalConfigs, mostRecentVersion);
         }
 
-        // Gets the total number of records in the AssistantInformation table.
         private int GetTotalConfigs(SqlCommand command)
         {
             int totalRecords = 0;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlDataReader dataReader;
 
             try
             {
-                // Obtaines and returns the number of rows in the AuditHistory table.
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;
@@ -132,17 +125,14 @@ namespace HunterIndustriesAPI.Services.Assistant
             return totalRecords;
         }
 
-        // Gets the most recent release version in the Versions table.
         public string GetMostRecentVersion()
         {
             string version = string.Empty;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns the latest version.
             string sqlQuery = @"select top 1 Value from [Version] with (nolock)
 order by VersionID desc";
 
@@ -172,7 +162,6 @@ order by VersionID desc";
             return version;
         }
 
-        // Checks whether the given assistant already exists in the table.
         public bool AssistantExists(string assistantName, string assistantId)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
@@ -181,12 +170,10 @@ order by VersionID desc";
             string? idNumber = null;
             bool exists = false;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the rows in the AssistantInformation table.
             string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\AssistantExists.SQL"));
 
             try
@@ -224,18 +211,15 @@ order by VersionID desc";
             return exists;
         }
 
-        // Inserts the new config into the relevant tables.
-        public bool AssistantConfigCreated(string assistantName, string idNumber, string assignedUser, string hostName)
+        public bool AssistantConfigCreated(string assistantName, string assistantId, string assignedUser, string hostName)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {Logger.FormatParameters(new string[] { assistantName, idNumber, assignedUser, hostName })}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
 
             bool created = true;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
 
-            // Inserts the values into the relevant tables to create the config.
             string sqlQuery = @"insert into [Location] (HostName, IPAddress)
 output inserted.LocationID
 values (@Hostname, @IPAddress)";
@@ -283,7 +267,7 @@ values (@LocationID, 2, (select top 1 VersionID from [Version] with (nolock) ord
                         command.Parameters.Add(new SqlParameter("@LocationID", locationId));
                         command.Parameters.Add(new SqlParameter("@UserID", userId));
                         command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                        command.Parameters.Add(new SqlParameter("@IDNumber", idNumber));
+                        command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
                         rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected != 1)

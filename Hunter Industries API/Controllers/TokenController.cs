@@ -58,7 +58,6 @@ namespace HunterIndustriesAPI.Controllers
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint called with the following parameters {_logger.FormatParameters(request)}.");
 
-            // Checks if the request is valid.
             if (!_modelValidator.IsValid(request, true, validationIgnore))
             {
                 auditId = _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"), null).Item2;
@@ -79,7 +78,6 @@ namespace HunterIndustriesAPI.Controllers
 
             TokenService _tokenService = new(request.Phrase, _logger);
 
-            // Obtains the headers on the request.
             (request.Username, request.Password) = _tokenService.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
 
             if (!_modelValidator.IsValid(request, true))
@@ -101,10 +99,8 @@ namespace HunterIndustriesAPI.Controllers
                 return StatusCode(response.StatusCode, response.Data);
             }
 
-            // Checks if the user is valid.
             if (_tokenService.IsValidUser(request.Username, request.Password, request.Phrase))
             {
-                // Creates the token.
                 var claims = _tokenService.GetClaims(request.Username);
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));

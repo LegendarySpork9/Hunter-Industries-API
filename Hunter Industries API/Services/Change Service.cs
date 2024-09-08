@@ -14,18 +14,15 @@ namespace HunterIndustriesAPI.Services
             Logger = _logger;
         }
 
-        // Logs any changes to the data.
         public bool LogChange(int endpointId, int auditId, string field, string oldValue, string newValue)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {Logger.FormatParameters(new string[] { endpointId.ToString(), auditId.ToString(), field, oldValue, newValue })}.");
 
             bool successful = false;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
 
-            // Inserts the record into the Change table.
             string sqlQuery = @"insert into [Change] (EndpointID, AuditID, Field, OldValue, NewValue)
 values (@EndpointID, @AuditID, @Field, @OldValue, @NewValue)";
 

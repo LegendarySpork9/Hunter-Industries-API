@@ -1,9 +1,9 @@
 ﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Models.Requests.Filters;
-using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Objects;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Models.Responses;
+using HunterIndustriesAPI.Objects;
+using HunterIndustriesAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ using System.Globalization;
 
 namespace HunterIndustriesAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AssistantControlPanel")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "APIControlPanel")]
     [Route("api/AuditHistory")]
     [ApiController]
     public class AuditController : ControllerBase
@@ -39,11 +39,10 @@ namespace HunterIndustriesAPI.Controllers
             AuditHistoryConverter _auditHistoryConverter = new();
             ModelValidationService _modelValidator = new();
 
-            ResponseModel response = new();
+            ResponseModel response;
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
 
-            // Checks if there are filter values.
             if (!_modelValidator.IsValid(filters))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("BadRequest"), null);
@@ -64,11 +63,9 @@ namespace HunterIndustriesAPI.Controllers
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
-            // Gets the data from the AuditHistory table.
             var result = _auditHistoryService.GetAuditHistory(filters.IPAddress, filters.Endpoint, DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), filters.PageSize, filters.PageNumber);
             List<AuditHistoryRecord> auditHistories = result.Item1;
 
-            // Checks if data was returned.
             if (auditHistories.Count == 0)
             {
                 response = new()

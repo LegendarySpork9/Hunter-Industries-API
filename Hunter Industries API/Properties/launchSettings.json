@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "HunterIndustriesAPI": {
+    "Development": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
@@ -19,10 +19,31 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "QA": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "api/swagger",
+      "applicationUrl": "http://hunter-industries.co.uk:80",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Staging"
+      }
+    },
+    "Production": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "api/swagger",
+      "applicationUrl": "http://hunter-industries.co.uk:80",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": false,
       "launchUrl": "api/swagger",
+      "applicationUrl": "http://hunter-industries.co.uk:80",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
