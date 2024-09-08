@@ -1,5 +1,4 @@
-﻿/* Removes the interactive buttons. */
-.try-out {
+﻿.try-out {
     display: none;
 }
 
@@ -15,7 +14,6 @@
     display: none;
 }
 
-/* Sets up the look of the page. */
 .swagger-ui .topbar {
     background: #130f3c;
 }

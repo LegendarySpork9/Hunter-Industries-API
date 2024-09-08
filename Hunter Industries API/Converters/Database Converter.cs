@@ -3,7 +3,6 @@ namespace HunterIndustriesAPI.Converters
 {
     public class DatabaseConverter
     {
-        // Formats the given parameters.
         public string? FormatParameters(string[]? parameters)
         {
             string? data = null;

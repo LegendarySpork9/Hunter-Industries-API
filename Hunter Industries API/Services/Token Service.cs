@@ -12,21 +12,18 @@ namespace HunterIndustriesAPI.Services
         private readonly string ProgramName;
         private readonly LoggerService Logger;
 
-        // Sets the application name upon initialisation. 
         public TokenService(string phrase, LoggerService _logger)
         {
             Logger = _logger;
             ProgramName = GetApplicationName(phrase);
         }
 
-        // Returns the application name.
         public string ApplicationName()
         {
             return ProgramName;
         }
 
-        // Obtains the header data from the request.
-        public (string username, string password) ExtractCredentialsFromBasicAuth(string authHeaderValue)
+        public (string, string) ExtractCredentialsFromBasicAuth(string authHeaderValue)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth called with the header value \"{authHeaderValue}\".");
 
@@ -57,20 +54,15 @@ namespace HunterIndustriesAPI.Services
             return (username, password);
         }
 
-        // Checks if the details are provided are valid.
         public bool IsValidUser(string usernameInput, string passwordInput, string phraseInput)
         {
             bool valid = false;
 
-            // Gets the APIUser table data.
             var result = GetUsers();
             string[] usernames = result.Item1;
             string[] passwords = result.Item2;
-
-            // Gets the Authorisation table data.
             string[] phrases = GetAuthorisationPhrases();
 
-            // Checks the details provided against the accepted details.
             foreach (string username in usernames)
             {
                 if (username == usernameInput)
@@ -94,7 +86,6 @@ namespace HunterIndustriesAPI.Services
             return valid;
         }
 
-        // Gets the claims for the token generation.
         public Claim[] GetClaims(string username)
         {
             switch (IsAdmin())
@@ -105,8 +96,8 @@ namespace HunterIndustriesAPI.Services
                     {
                         new Claim(ClaimTypes.Name, username),
                         new Claim("scope", "Assistant API"),
-                        new Claim("scope", "Assistant Control Panel API"),
-                        new Claim("scope", "Book Reader API")
+                        new Claim("scope", "Book Reader API"),
+                        new Claim("scope", "Control Panel API")
                     };
 
                     return claims;
@@ -123,7 +114,6 @@ namespace HunterIndustriesAPI.Services
             }
         }
 
-        // Checks if the user is the admin.
         private bool IsAdmin()
         {
             return ProgramName switch
@@ -133,7 +123,6 @@ namespace HunterIndustriesAPI.Services
             };
         }
 
-        // Gets the scope for the given phrase.
         private string GetScope()
         {
             return ProgramName switch
@@ -143,20 +132,15 @@ namespace HunterIndustriesAPI.Services
             };
         }
 
-        //* SQL *//
-
-        // Gets the users from the database.
         private (string[], string[]) GetUsers()
         {
             string[] usernames = Array.Empty<string>();
             string[] passwords = Array.Empty<string>();
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the users in the API_User table.
             string sqlQuery = "select * from APIUser with (nolock)";
 
             try
@@ -186,17 +170,14 @@ namespace HunterIndustriesAPI.Services
             return (usernames, passwords);
         }
 
-        // Gets the phrases used for authorisation from the database.
         private string[] GetAuthorisationPhrases()
         {
             string[] phrases = Array.Empty<string>();
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the phrases in the Authorisation table.
             string sqlQuery = "select * from Authorisation with (nolock)";
 
             try
@@ -225,20 +206,17 @@ namespace HunterIndustriesAPI.Services
             return phrases;
         }
 
-        // Gets the application names from the database.
         private string GetApplicationName(string phrase)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase \"{phrase}\".");
 
             string name = string.Empty;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns the application name for the given phrase.
-            string sqlQuery = @"select Name from Applications with (nolock)
+            string sqlQuery = @"select Name from Application with (nolock)
 join Authorisation with (nolock) on Applications.PhraseID = Authorisation.PhraseID
 where Phrase = @Phrase";
 

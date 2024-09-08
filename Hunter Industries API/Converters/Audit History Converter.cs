@@ -3,7 +3,6 @@ namespace HunterIndustriesAPI.Converters
 {
     public class AuditHistoryConverter
     {
-        // Returns the endpoint ID that relates to the given endpoint.
         public int GetEndpointID(string endpoint)
         {
             return endpoint switch
@@ -18,7 +17,6 @@ namespace HunterIndustriesAPI.Converters
             };
         }
 
-        // Returns the method ID that relates to the given method.
         public int GetMethodID(string method)
         {
             return method switch
@@ -30,7 +28,6 @@ namespace HunterIndustriesAPI.Converters
             };
         }
 
-        // Returns the status ID that relates to the response given.
         public int GetStatusID(string status)
         {
             return status switch
@@ -46,7 +43,6 @@ namespace HunterIndustriesAPI.Converters
             };
         }
 
-        // Formats the parameters.
         public string[] FormatParameters(string parameters)
         {
             string[] splitParams = parameters.Split("\",\"");

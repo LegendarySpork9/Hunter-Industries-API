@@ -19,7 +19,6 @@ namespace HunterIndustriesAPI
             LoggerService _logger = new("Application");
             _logger.LogMessage(StandardValues.LoggerValues.Info, "Logging Started");
 
-            // Access the json inside the appsettings file.
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings - Development.json")
@@ -34,13 +33,11 @@ namespace HunterIndustriesAPI
             _logger.LogMessage(StandardValues.LoggerValues.Debug, $"Valid Token Audience: {ValidationModel.Audience}");
             _logger.LogMessage(StandardValues.LoggerValues.Debug, $"Valid Token Security Key: {ValidationModel.SecretKey}");
 
-            // Builds the web application.
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
-            // Sets up the swagger page.
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -94,7 +91,6 @@ namespace HunterIndustriesAPI
                 builder => builder.WithOrigins("https://hunter-industries.co.uk").AllowAnyHeader().AllowAnyMethod());
             });
 
-            // Sets up the authentication token and Scopes.
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -124,23 +120,22 @@ namespace HunterIndustriesAPI
                     policy.RequireClaim("scope", "Book Reader API");
                 });
 
-                options.AddPolicy("AssistantControlPanel", policy =>
+                options.AddPolicy("APIControlPanel", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "Assistant Control Panel API");
+                    policy.RequireClaim("scope", "Control Panel API");
                 });
 
                 options.AddPolicy("AIAccess", policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireAssertion(context =>
-                        context.User.HasClaim(c => (c.Type == "scope" && c.Value == "Assistant API") || (c.Type == "scope" && c.Value == "Assistant Control Panel API")));
+                        context.User.HasClaim(c => (c.Type == "scope" && c.Value == "Assistant API") || (c.Type == "scope" && c.Value == "Control Panel API")));
                 });
             });
 
             _logger.LogMessage(StandardValues.LoggerValues.Debug, "Authentication Configured.");
 
-            // Runs the web application.
             var app = builder.Build();
 
             app.UseStaticFiles(new StaticFileOptions
@@ -170,6 +165,7 @@ namespace HunterIndustriesAPI
                 if (app.Environment.IsStaging())
                 {
                     options.SwaggerEndpoint("https://hunter-industries.co.uk/qa/api/swagger/v1/swagger.json", "V1.0.0");
+                    app.UsePathBase("/qa");
                 }
 
                 else

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AIAccess")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Assistant")]
     [Route("api/assistant/[controller]")]
     [ApiController]
     public class LocationController : ControllerBase
@@ -42,11 +42,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ModelValidationService _modelValidator = new();
             LocationService _locationService = new(_logger);
 
-            ResponseModel response = new();
+            ResponseModel response;
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
 
-            // Checks if the request contains the needed filters.
             if (!_modelValidator.IsValid(filters, true))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), 
@@ -68,10 +67,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.AssistantName, filters.AssistantId });
 
-            // Gets the location from the Assistant_Information table.
             LocationResponseModel locationResponse = _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantId);
 
-            // Checks if data was returned.
             if (locationResponse == new LocationResponseModel())
             {
                 response = new()
@@ -132,11 +129,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             LocationService _locationService = new(_logger);
             ChangeService _changeService = new(_logger);
 
-            ResponseModel response = new();
+            ResponseModel response;
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint called with the following parameters {_logger.FormatParameters(request)}, {_logger.FormatParameters(filters)}.");
 
-            // Checks whether all requireds are present.
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(filters, true))
             {
                 _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
@@ -155,12 +151,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 return StatusCode(response.StatusCode, response.Data);
             }
 
-            // Checks if a config exists.
             if (_configService.AssistantExists(filters.AssistantName, filters.AssistantId))
             {
                 LocationResponseModel locationResponse = _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantId);
 
-                // Updates the location and returns the result.
                 if (_locationService.AssistantLocationUpdated(filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress))
                 {
                     var auditID = _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"), 

@@ -15,7 +15,6 @@ namespace HunterIndustriesAPI.Services
             Logger = _logger;
         }
 
-        // Logs the call to the AuditHistory table.
         public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[]? parameters)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), Logger.FormatParameters(parameters) })}.");
@@ -27,11 +26,9 @@ namespace HunterIndustriesAPI.Services
 
             string? formattedParameters = _databaseConverter.FormatParameters(parameters);
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
 
-            // Inserts the record into the AuditHistory table.
             string sqlQuery = @"insert into AuditHistory (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
 output inserted.AuditID
 values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
@@ -68,16 +65,13 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
             return (logged, auditId);
         }
 
-        // Logs a login attempt.
         public void LogLoginAttempt(int auditId, bool isSuccessful, string? username = null, string? password = null, string? phrase = null)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {Logger.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
 
-            // Inserts the record into the AuditHistory table.
             string sqlQuery = @"insert into LoginAttempt (UserID, PhraseID, AuditID, DateOccured, IsSuccessful)
 values ((select UserID from APIUser with (nolock) where Username = @Username and Password = @Password), (select PhraseID from Authorisation with (nolock) where Phrase = @Phrase), @AuditID, GetDate(), @IsSuccessful)";
 
@@ -104,7 +98,6 @@ values ((select UserID from APIUser with (nolock) where Username = @Username and
             }
         }
 
-        // Gets the audit history data from the database.
         public (List<AuditHistoryRecord>, int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
@@ -114,12 +107,10 @@ values ((select UserID from APIUser with (nolock) where Username = @Username and
 
             int totalRecords = 0;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the rows in the AuditHistory table.
             string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAuditHistory.SQL"));
 
             if (!string.IsNullOrEmpty(ipAddress))
@@ -204,18 +195,15 @@ fetch next @PageSize rows only";
             return (auditHistories, totalRecords);
         }
 
-        // Gets the total number of records in the AuditHistory table.
         private int GetTotalAuditHistory(SqlCommand command)
         {
             int totalRecords = 0;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlDataReader dataReader;
 
             try
             {
-                // Obtaines and returns the number of rows in the AuditHistory table.
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;

@@ -15,19 +15,16 @@ namespace HunterIndustriesAPI.Services.Assistant
             Logger = _logger;
         }
 
-        // Gets the host name and ip address of the given assistant.
         public LocationResponseModel GetAssistantLocation(string assistantName, string assistantId)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             LocationResponseModel location = new();
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            // Obtaines and returns all the rows in the Assistant_Information table.
             string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantLocation.SQL"));
 
             try
@@ -65,18 +62,15 @@ namespace HunterIndustriesAPI.Services.Assistant
             return location;
         }
 
-        // Updates the host name or ip address of the given assistant.
         public bool AssistantLocationUpdated(string assistantName, string assistantId, string? hostName, string? ipAddress)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
 
             bool updated = true;
 
-            // Creates the variables for the SQL queries.
             SqlConnection connection;
             SqlCommand command;
 
-            // Updates the HostName or the IPAddress on the Location table.
             string sqlQuery = @"update [Location] set HostName = @HostName, IPAddress = @IPAddress
 where LocationID = (
 	select LocationID from AssistantInformation with (nolock)
