@@ -45,7 +45,7 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
                 command.Parameters.Add(new SqlParameter("@MethodID", methodId));
                 command.Parameters.Add(new SqlParameter("@StatusID", statusId));
-                command.Parameters.Add(new SqlParameter("@Parameters", formattedParameters));
+                command.Parameters.Add(new SqlParameter("@Parameters", formattedParameters != null ? formattedParameters : DBNull.Value));
                 var result = command.ExecuteScalar();
 
                 if (result != null)
@@ -59,12 +59,49 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run AuditHistoryService.LogRequest.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run AuditHistoryService.LogRequest.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest returned {logged} | {auditId}.");
             return (logged, auditId);
+        }
+
+        // Logs a login attempt.
+        public void LogLoginAttempt(int auditId, bool isSuccessful, string? username = null, string? password = null, string? phrase = null)
+        {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {Logger.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
+
+            // Creates the variables for the SQL queries.
+            SqlConnection connection;
+            SqlCommand command;
+
+            // Inserts the record into the AuditHistory table.
+            string sqlQuery = @"insert into LoginAttempt (UserID, PhraseID, AuditID, DateOccured, IsSuccessful)
+values ((select UserID from API_User where Username = @Username and Password = @Password), (select PhraseID from Authorisation where Phrase = @Phrase), @AuditID, GetDate(), @IsSuccessful)";
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+                command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.Add(new SqlParameter("@Username", username != null ? username : DBNull.Value));
+                command.Parameters.Add(new SqlParameter("@Password", password != null ? password : DBNull.Value));
+                command.Parameters.Add(new SqlParameter("@Phrase", phrase != null ? phrase : DBNull.Value));
+                command.Parameters.Add(new SqlParameter("@AuditID", auditId));
+                command.Parameters.Add(new SqlParameter("@IsSuccessful", isSuccessful));
+                int rowsAffected = command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run AuditHistoryService.LogLoginAttempt.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+            }
         }
 
         // Gets the audit history data from the database.
@@ -162,8 +199,9 @@ fetch next @PageSize rows only";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run AuditHistoryService.GetAuditHistory.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run AuditHistoryService.GetAuditHistory.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory returned {auditHistories.Count} records | {totalRecords}");
@@ -205,8 +243,9 @@ fetch next @PageSize rows only", "");
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run AuditHistoryService.GetTotalAuditHistory.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run AuditHistoryService.GetTotalAuditHistory.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return totalRecords;

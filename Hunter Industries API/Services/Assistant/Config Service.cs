@@ -91,8 +91,9 @@ where AI.Name is not null";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run ConfigService.GetAssistantConfig.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run ConfigService.GetAssistantConfig.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {Logger.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
@@ -132,8 +133,9 @@ join [User] U on AI.UserID = U.UserID", "select count(*) from Assistant_Informat
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run ConfigService.GetTotalConfigs.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run ConfigService.GetTotalConfigs.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return totalRecords;
@@ -171,8 +173,9 @@ order by VersionID desc";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run ConfigService.GetMostRecentVersion.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run ConfigService.GetMostRecentVersion.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return version;
@@ -227,8 +230,9 @@ or AI.IDNumber = @AssistantID";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run ConfigService.AssistantExists.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run ConfigService.AssistantExists.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists returned {exists}.");
@@ -310,8 +314,9 @@ values (@LocationID, 2, (select top 1 VersionID from [Version] order by VersionI
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run ConfigService.AssistantConfigCreated.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run ConfigService.AssistantConfigCreated.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated returned {created}.");

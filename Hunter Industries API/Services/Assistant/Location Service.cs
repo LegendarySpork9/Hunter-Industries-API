@@ -59,8 +59,9 @@ and AI.IDNumber = @AssistantID";
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run LocationService.GetAssistantLocation.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run LocationService.GetAssistantLocation.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {Logger.FormatParameters(location)}.");
@@ -128,8 +129,9 @@ where LocationID = (
 
             catch (Exception ex)
             {
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, $"An error occured when trying to run LocationService.AssistantLocationUpdated.");
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                string message = "An error occured when trying to run LocationService.AssistantLocationUpdated.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated returned {updated}.");
