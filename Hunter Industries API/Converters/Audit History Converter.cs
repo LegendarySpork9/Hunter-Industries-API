@@ -1,51 +1,67 @@
-﻿// Copyright © - unpublished - Toby Hunter
+﻿using System;
+using System.Linq;
+
 namespace HunterIndustriesAPI.Converters
 {
+    /// <summary>
+    /// </summary>
     public class AuditHistoryConverter
     {
+        /// <summary>
+        /// Returns the endpoint id number.
+        /// </summary>
         public int GetEndpointID(string endpoint)
         {
-            return endpoint switch
+            switch (endpoint)
             {
-                "token" => 1,
-                "audithistory" => 2,
-                "assistant/config" => 3,
-                "assistant/version" => 4,
-                "assistant/deletion" => 5,
-                "assistant/location" => 6,
-                _ => 0
-            };
+                case "token": return 1;
+                case "audithistory": return 2;
+                case "assistant/config": return 3;
+                case "assistant/version": return 4;
+                case "assistant/deletion": return 5;
+                case "assistant/location": return 6;
+                default: return 0;
+            }
         }
 
+        /// <summary>
+        /// Returns the method id number.
+        /// </summary>
         public int GetMethodID(string method)
         {
-            return method switch
+            switch (method)
             {
-                "GET" => 1,
-                "POST" => 2,
-                "PATCH" => 3,
-                _ => 0
-            };
+                case "GET": return 1;
+                case "POST": return 2;
+                case "PATCH": return 3;
+                default: return 0;
+            }
         }
 
+        /// <summary>
+        /// Returns the status id number.
+        /// </summary>
         public int GetStatusID(string status)
         {
-            return status switch
+            switch (status)
             {
-                "OK" => 1,
-                "Created" => 2,
-                "BadRequest" => 3,
-                "Unauthorized" => 4,
-                "Forbidden" => 5,
-                "NotFound" => 6,
-                "InternalServerError" => 7,
-                _ => 0
-            };
+                case "OK": return 1;
+                case "Created": return 2;
+                case "BadRequest": return 3;
+                case "Unauthorized": return 4;
+                case "Forbidden": return 5;
+                case "NotFound": return 6;
+                case "InternalServerError": return 7;
+                default: return 0;
+            }
         }
 
+        /// <summary>
+        /// Converts the parameters from the stored SQL format to the output format.
+        /// </summary>
         public string[] FormatParameters(string parameters)
         {
-            string[] splitParams = parameters.Split("\",\"");
+            string[] splitParams = parameters.Split(new string[] { "\",\"" }, StringSplitOptions.None);
             string[] formattedParams = Array.Empty<string>();
 
             if (parameters != String.Empty)

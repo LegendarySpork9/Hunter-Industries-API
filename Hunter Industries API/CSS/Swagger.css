@@ -1,26 +1,21 @@
-﻿.try-out {
-    display: none;
+﻿.swagger-section #header {
+    background-color: #130f3c;
+    padding-bottom: 9px;
+    height: 40px;
 }
 
-.btn.authorize.unlocked {
-    display: none;
-}
-
-.authorization__btn.unlocked {
-    display: none;
-}
-
-.view-line-link.copy-to-clipboard {
-    display: none;
-}
-
-.swagger-ui .topbar {
-    background: #130f3c;
-}
-
-img[alt="Swagger UI"] {
+.swagger-section #header #logo .logo__img {
     display: block;
     content: url('/Content/HI Tech Logo NBG.png');
     width: 140px;
     height: 40px;
+    margin-top: 0px;
+}
+
+.swagger-section #api_selector input {
+    display: none;
+}
+
+.swagger-section #explore, .swagger-section #auth_container .authorize__btn {
+    display: none;
 }

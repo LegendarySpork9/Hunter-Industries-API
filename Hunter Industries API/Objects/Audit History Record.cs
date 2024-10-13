@@ -1,14 +1,38 @@
-﻿// Copyright © - unpublished - Toby Hunter
+﻿using System;
+
 namespace HunterIndustriesAPI.Objects
 {
-    public record AuditHistoryRecord
+    /// <summary>
+    /// </summary>
+    public class AuditHistoryRecord
     {
-        public int? Id { get; set; }
-        public string? IPAddress { get; set; }
-        public string? Endpoint { get; set; }
-        public string? Method { get; set; }
-        public string? Status { get; set; }
-        public DateTime? OccuredAt { get; set; }
-        public string[]? Paramaters { get; set; }
+        /// <summary>
+        /// Id of the record.
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
+        /// IP Address the call was made from.
+        /// </summary>
+        public string IPAddress { get; set; }
+        /// <summary>
+        /// The endpoint that was called.
+        /// </summary>
+        public string Endpoint { get; set; }
+        /// <summary>
+        /// The method of the call.
+        /// </summary>
+        public string Method { get; set; }
+        /// <summary>
+        /// The status the call returned.
+        /// </summary>
+        public string Status { get; set; }
+        /// <summary>
+        /// The date and time the call was made.
+        /// </summary>
+        public DateTime OccuredAt { get; set; }
+        /// <summary>
+        /// Any filters or body input attached to the call.
+        /// </summary>
+        public string[] Paramaters { get; set; } = null;
     }
 }

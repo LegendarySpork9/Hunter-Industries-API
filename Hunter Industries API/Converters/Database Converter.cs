@@ -1,11 +1,17 @@
-﻿// Copyright © - unpublished - Toby Hunter
+﻿using System;
+
 namespace HunterIndustriesAPI.Converters
 {
+    /// <summary>
+    /// </summary>
     public class DatabaseConverter
     {
-        public string? FormatParameters(string[]? parameters)
+        /// <summary>
+        /// Converts parameters from the input format to the stored SQL format.
+        /// </summary>
+        public string FormatParameters(string[] parameters = null)
         {
-            string? data = null;
+            string data = null;
 
             if (parameters != null)
             {

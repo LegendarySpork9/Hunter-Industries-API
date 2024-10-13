@@ -1,19 +1,26 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using log4net;
+﻿using log4net;
 using System.Reflection;
 
 namespace HunterIndustriesAPI.Services
 {
+    /// <summary>
+    /// </summary>
     public class LoggerService
     {
         private readonly string Identifier;
         private readonly ILog Logger = LogManager.GetLogger("APILog");
 
+        /// <summary>
+        /// Sets the class's global variables.
+        /// </summary>
         public LoggerService(string id)
         {
             Identifier = id;
         }
 
+        /// <summary>
+        /// Converts the model into a log friendly format.
+        /// </summary>
         public string FormatParameters(object model)
         {
             string formattedParameters = string.Empty;
@@ -34,7 +41,10 @@ namespace HunterIndustriesAPI.Services
             return formattedParameters;
         }
 
-        public string FormatParameters(string[]? parameters)
+        /// <summary>
+        /// Converts the parameters into a log friendly format.
+        /// </summary>
+        public string FormatParameters(string[] parameters = null)
         {
             string formattedParameters = string.Empty;
 
@@ -57,7 +67,10 @@ namespace HunterIndustriesAPI.Services
             return formattedParameters;
         }
 
-        public void LogMessage(string level, string message, string? summary = null)
+        /// <summary>
+        /// Adds the message to the log file and SQL table.
+        /// </summary>
+        public void LogMessage(string level, string message, string summary = null)
         {
             switch (level)
             {

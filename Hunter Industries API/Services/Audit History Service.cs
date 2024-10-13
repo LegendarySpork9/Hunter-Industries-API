@@ -1,30 +1,40 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+﻿using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace HunterIndustriesAPI.Services
 {
+    /// <summary>
+    /// </summary>
     public class AuditHistoryService
     {
         private readonly LoggerService Logger;
 
+        /// <summary>
+        /// Sets the class's global variables.
+        /// </summary>
         public AuditHistoryService(LoggerService _logger)
         {
             Logger = _logger;
         }
 
-        public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[]? parameters)
+        /// <summary>
+        /// Logs the call made to the database.
+        /// </summary>
+        public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[] parameters = null)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), Logger.FormatParameters(parameters) })}.");
 
             bool logged = false;
             int auditId = 0;
 
-            DatabaseConverter _databaseConverter = new();
+            DatabaseConverter _databaseConverter = new DatabaseConverter();
 
-            string? formattedParameters = _databaseConverter.FormatParameters(parameters);
+            string formattedParameters = _databaseConverter.FormatParameters(parameters);
 
             SqlConnection connection;
             SqlCommand command;
@@ -42,7 +52,7 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
                 command.Parameters.Add(new SqlParameter("@MethodID", methodId));
                 command.Parameters.Add(new SqlParameter("@StatusID", statusId));
-                command.Parameters.Add(new SqlParameter("@Parameters", formattedParameters != null ? formattedParameters : DBNull.Value));
+                command.Parameters.Add(new SqlParameter("@Parameters", formattedParameters ?? DBNull.Value.ToString()));
                 var result = command.ExecuteScalar();
 
                 if (result != null)
@@ -65,7 +75,10 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
             return (logged, auditId);
         }
 
-        public void LogLoginAttempt(int auditId, bool isSuccessful, string? username = null, string? password = null, string? phrase = null)
+        /// <summary>
+        /// Logs any authorisation calls made to the database.
+        /// </summary>
+        public void LogLoginAttempt(int auditId, bool isSuccessful, string username = null, string password = null, string phrase = null)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {Logger.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
 
@@ -80,9 +93,9 @@ values ((select UserID from APIUser with (nolock) where Username = @Username and
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Username", username != null ? username : DBNull.Value));
-                command.Parameters.Add(new SqlParameter("@Password", password != null ? password : DBNull.Value));
-                command.Parameters.Add(new SqlParameter("@Phrase", phrase != null ? phrase : DBNull.Value));
+                command.Parameters.Add(new SqlParameter("@Username", username ?? DBNull.Value.ToString()));
+                command.Parameters.Add(new SqlParameter("@Password", password ?? DBNull.Value.ToString()));
+                command.Parameters.Add(new SqlParameter("@Phrase", phrase ?? DBNull.Value.ToString()));
                 command.Parameters.Add(new SqlParameter("@AuditID", auditId));
                 command.Parameters.Add(new SqlParameter("@IsSuccessful", isSuccessful));
                 int rowsAffected = command.ExecuteNonQuery();
@@ -98,12 +111,15 @@ values ((select UserID from APIUser with (nolock) where Username = @Username and
             }
         }
 
+        /// <summary>
+        /// Returns all audit history records that match the parameters.
+        /// </summary>
         public (List<AuditHistoryRecord>, int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
-            AuditHistoryConverter _auditHistoryConverter = new();
-            List<AuditHistoryRecord> auditHistories = new();
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            List<AuditHistoryRecord> auditHistories = new List<AuditHistoryRecord>();
 
             int totalRecords = 0;
 
@@ -160,7 +176,7 @@ fetch next @PageSize rows only";
 
                 while (dataReader.Read())
                 {
-                    AuditHistoryRecord auditHistory = new()
+                    AuditHistoryRecord auditHistory = new AuditHistoryRecord()
                     {
                         Id = dataReader.GetInt32(0),
                         IPAddress = dataReader.GetString(1),
@@ -195,6 +211,9 @@ fetch next @PageSize rows only";
             return (auditHistories, totalRecords);
         }
 
+        /// <summary>
+        /// Returns the number of audit history records that match the parameters.
+        /// </summary>
         private int GetTotalAuditHistory(SqlCommand command)
         {
             int totalRecords = 0;

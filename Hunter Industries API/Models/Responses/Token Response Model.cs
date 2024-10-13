@@ -1,13 +1,26 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Objects;
+﻿using HunterIndustriesAPI.Objects;
 
 namespace HunterIndustriesAPI.Models.Responses
 {
-    public record TokenResponseModel
+    /// <summary>
+    /// </summary>
+    public class TokenResponseModel
     {
-        public string? Type { get; set; }
-        public string? Token { get; set; }
-        public int? ExpiresIn { get; set; }
-        public TokenInfo? Info { get; set; }
+        /// <summary>
+        /// The type of token.
+        /// </summary>
+        public string Type { get; set; }
+        /// <summary>
+        /// The value of the token.
+        /// </summary>
+        public string Token { get; set; }
+        /// <summary>
+        /// The time until expiration.
+        /// </summary>
+        public int ExpiresIn { get; set; }
+        /// <summary>
+        /// The information about the token.
+        /// </summary>
+        public TokenInfo Info { get; set; }
     }
 }

@@ -1,0 +1,278 @@
+2024-10-13 17:10:59,873 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:10:59,885 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 17:11:02,349 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4100.
+2024-10-13 17:11:02,350 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4100", "False".
+2024-10-13 17:11:02,957 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 17:12:27,884 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:16:15,307 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:16:15,328 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:16:16,858 WARN - ::1 - An error occured when trying to run TokenService.GetApplicationName.
+2024-10-13 17:16:16,889 ERROR - System.Data.SqlClient.SqlException (0x80131904): The multi-part identifier "Applications.PhraseID" could not be bound.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader()
+   at HunterIndustriesAPI.Services.TokenService.GetApplicationName(String phrase) in D:\System Folders\Documents\GitHub\Hunter-Industries-API\Hunter Industries API\Services\Token Service.cs:line 230
+ClientConnectionId:3294ef21-c8ad-4d0a-8241-7da892e5d46d
+Error Number:4104,State:1,Class:16
+2024-10-13 17:16:16,936 DEBUG - ::1 - TokenService.GetApplicationName returned .
+2024-10-13 17:16:16,936 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:16:16,936 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:16:17,057 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:16:17,359 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4101.
+2024-10-13 17:16:17,359 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4101", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:16:17,802 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:33,777 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:33,792 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:34,394 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:34,409 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:34,409 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:34,472 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:34,596 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4102.
+2024-10-13 17:23:34,596 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4102", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:34,596 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:40,167 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:40,167 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:40,168 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:40,168 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:40,168 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:40,169 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:40,172 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4103.
+2024-10-13 17:23:40,172 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4103", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:40,173 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:41,116 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:41,117 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:41,117 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:41,117 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:41,118 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:41,118 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:41,119 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4104.
+2024-10-13 17:23:41,119 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4104", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:41,119 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:41,875 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:41,876 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:41,877 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:41,877 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:41,877 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:41,878 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:41,878 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4105.
+2024-10-13 17:23:41,878 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4105", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:41,880 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:42,557 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:42,557 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:42,558 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:42,558 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:42,558 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:42,559 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:42,560 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4106.
+2024-10-13 17:23:42,560 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4106", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:42,561 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:43,210 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:44,716 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:44,717 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:44,717 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:44,717 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:44,718 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:45,524 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4107.
+2024-10-13 17:23:45,524 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4107", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:45,525 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:46,923 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:46,923 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:46,924 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:46,924 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:46,925 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:46,926 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:46,939 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4108.
+2024-10-13 17:23:46,939 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4108", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:46,940 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:47,873 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:47,874 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:47,874 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:47,874 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:47,875 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:47,875 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:47,877 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4109.
+2024-10-13 17:23:47,877 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4109", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:47,878 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:23:48,970 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:49,466 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:49,467 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 17:23:49,467 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:23:49,467 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 17:23:49,468 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:49,766 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4110.
+2024-10-13 17:23:49,767 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4110", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 17:23:50,085 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 17:24:41,653 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "".
+2024-10-13 17:24:41,685 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 17:24:41,970 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4111.
+2024-10-13 17:24:41,970 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4111", "False".
+2024-10-13 17:24:41,970 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 17:24:50,701 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 17:24:50,702 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 17:24:50,772 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4112.
+2024-10-13 17:24:50,773 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4112", "False".
+2024-10-13 17:24:50,779 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 18:09:59,505 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:09:59,630 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:10:00,016 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 18:10:00,016 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:10:00,016 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 18:10:00,125 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:10:00,168 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4113.
+2024-10-13 18:10:00,168 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4113", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:10:00,201 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 18:10:54,250 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:10:54,251 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 18:10:54,417 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4114.
+2024-10-13 18:10:54,418 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4114", "False".
+2024-10-13 18:10:54,447 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 18:11:00,212 INFO - ::1 - Token endpoint called with the following parameters "".
+2024-10-13 18:11:00,213 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 18:11:00,216 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4115.
+2024-10-13 18:11:00,216 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4115", "False".
+2024-10-13 18:11:00,221 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 18:11:04,541 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "".
+2024-10-13 18:11:04,541 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 18:11:04,542 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4116.
+2024-10-13 18:11:04,542 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4116", "False".
+2024-10-13 18:11:04,543 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 18:11:08,795 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:11:08,796 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:11:08,857 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 18:11:08,858 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:11:08,858 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 18:11:08,859 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:11:08,862 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4117.
+2024-10-13 18:11:08,862 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4117", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:11:08,932 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 18:12:37,028 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:12:37,039 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:12:37,342 WARN - ::1 - An error occured when trying to run TokenService.GetApplicationName.
+2024-10-13 18:12:37,342 ERROR - System.Data.SqlClient.SqlException (0x80131904): The multi-part identifier "Applications.PhraseID" could not be bound.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader()
+   at HunterIndustriesAPI.Services.TokenService.GetApplicationName(String phrase) in D:\System Folders\Documents\GitHub\Hunter-Industries-API\Hunter Industries API\Services\Token Service.cs:line 230
+ClientConnectionId:cb3e1fb7-97f5-4fbb-8423-5d027c19dbf9
+Error Number:4104,State:1,Class:16
+2024-10-13 18:12:37,358 DEBUG - ::1 - TokenService.GetApplicationName returned .
+2024-10-13 18:12:37,358 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:12:37,358 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 18:12:37,472 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:12:37,486 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4118.
+2024-10-13 18:12:37,488 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4118", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:12:37,494 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 18:14:18,137 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:14:18,156 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:14:19,415 WARN - ::1 - An error occured when trying to run TokenService.GetApplicationName.
+2024-10-13 18:14:19,415 ERROR - System.Data.SqlClient.SqlException (0x80131904): The multi-part identifier "Applications.PhraseID" could not be bound.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader()
+   at HunterIndustriesAPI.Services.TokenService.GetApplicationName(String phrase) in D:\System Folders\Documents\GitHub\Hunter-Industries-API\Hunter Industries API\Services\Token Service.cs:line 230
+ClientConnectionId:f72cb6d9-aa5e-4266-969c-bdd8a8ba5403
+Error Number:4104,State:1,Class:16
+2024-10-13 18:14:19,445 DEBUG - ::1 - TokenService.GetApplicationName returned .
+2024-10-13 18:14:19,446 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:14:19,446 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 18:14:19,526 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:14:19,573 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4119.
+2024-10-13 18:14:19,573 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4119", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:14:19,588 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 18:16:17,134 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:16:17,149 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:16:17,394 WARN - ::1 - An error occured when trying to run TokenService.GetApplicationName.
+2024-10-13 18:16:17,417 ERROR - System.Data.SqlClient.SqlException (0x80131904): The multi-part identifier "Applications.PhraseID" could not be bound.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader()
+   at HunterIndustriesAPI.Services.TokenService.GetApplicationName(String phrase) in D:\System Folders\Documents\GitHub\Hunter-Industries-API\Hunter Industries API\Services\Token Service.cs:line 230
+ClientConnectionId:09096205-66f7-45a5-957e-b6ff22143263
+Error Number:4104,State:1,Class:16
+2024-10-13 18:16:17,540 DEBUG - ::1 - TokenService.GetApplicationName returned .
+2024-10-13 18:16:17,541 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 18:16:17,541 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 18:16:17,633 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:16:17,640 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4120.
+2024-10-13 18:16:17,643 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4120", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 18:16:17,652 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 19:09:58,585 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 19:09:58,596 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 19:09:58,726 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4121.
+2024-10-13 19:09:58,726 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4121", "False".
+2024-10-13 19:09:58,745 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 19:56:01,914 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 19:56:01,925 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 19:56:02,036 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4122.
+2024-10-13 19:56:02,037 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4122", "False".
+2024-10-13 19:56:02,064 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 19:56:10,086 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 19:56:10,086 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 19:56:10,284 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4123.
+2024-10-13 19:56:10,284 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4123", "False".
+2024-10-13 19:56:10,286 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 19:57:52,909 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 19:57:52,925 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 19:57:53,003 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4124.
+2024-10-13 19:57:53,003 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4124", "False".
+2024-10-13 19:57:53,018 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 19:58:27,696 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 19:58:27,696 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 19:58:27,697 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4125.
+2024-10-13 19:58:27,698 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4125", "False".
+2024-10-13 19:58:27,699 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 20:00:55,457 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 20:00:55,472 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 20:00:55,550 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 20:00:55,550 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 20:00:55,550 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 20:00:55,593 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 20:00:55,594 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4126.
+2024-10-13 20:00:55,594 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4126", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 20:00:55,594 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel
+2024-10-13 20:01:00,074 INFO - ::1 - Token endpoint called with the following parameters "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 20:01:00,074 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "3".
+2024-10-13 20:01:00,077 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4127.
+2024-10-13 20:01:00,077 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4127", "False".
+2024-10-13 20:01:00,082 INFO - ::1 - Token endpoint returned a 400 with the data { error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }
+2024-10-13 20:01:02,324 INFO - ::1 - Token endpoint called with the following parameters "Success is not final, failure is not fatal: It is the courage to continue that counts.", "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 20:01:02,324 DEBUG - ::1 - TokenService.GetApplicationName called with authorisation phrase "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 20:01:02,325 DEBUG - ::1 - TokenService.GetApplicationName returned API Admin.
+2024-10-13 20:01:02,325 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth called with the header value "Basic SElBUElBZG1pbjp9VWVhNVosM31oMyVWemZvZXd4aQ==".
+2024-10-13 20:01:02,326 DEBUG - ::1 - TokenService.ExtractCredentialsFromBasicAuth returned HIAPIAdmin | }Uea5Z,3}h3%Vzfoewxi.
+2024-10-13 20:01:02,326 DEBUG - ::1 - AuditHistoryService.LogRequest called with the parameters "::1", "1", "2", "1", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 20:01:02,327 DEBUG - ::1 - AuditHistoryService.LogRequest returned True | 4128.
+2024-10-13 20:01:02,328 DEBUG - ::1 - AuditHistoryService.LogLoginAttempt called with the parameters "4128", "True", "HIAPIAdmin", "}Uea5Z,3}h3%Vzfoewxi", "Success is not final, failure is not fatal: It is the courage to continue that counts.".
+2024-10-13 20:01:02,328 INFO - ::1 - Token endpoint returned a 200 with the data HunterIndustriesAPI.Models.Responses.TokenResponseModel

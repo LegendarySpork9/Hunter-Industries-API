@@ -1,28 +1,40 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+﻿using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models;
+using System;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
 namespace HunterIndustriesAPI.Services
 {
+    /// <summary>
+    /// </summary>
     public class TokenService
     {
         private readonly string ProgramName;
         private readonly LoggerService Logger;
 
+        /// <summary>
+        /// Sets the class's global variables.
+        /// </summary>
         public TokenService(string phrase, LoggerService _logger)
         {
             Logger = _logger;
             ProgramName = GetApplicationName(phrase);
         }
 
+        /// <summary>
+        /// Returns the name of the application making the call.
+        /// </summary>
         public string ApplicationName()
         {
             return ProgramName;
         }
 
+        /// <summary>
+        /// Returns the username and password from the decoded header.
+        /// </summary>
         public (string, string) ExtractCredentialsFromBasicAuth(string authHeaderValue)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth called with the header value \"{authHeaderValue}\".");
@@ -54,6 +66,9 @@ namespace HunterIndustriesAPI.Services
             return (username, password);
         }
 
+        /// <summary>
+        /// Returns whether the details passed are valid.
+        /// </summary>
         public bool IsValidUser(string usernameInput, string passwordInput, string phraseInput)
         {
             bool valid = false;
@@ -86,6 +101,9 @@ namespace HunterIndustriesAPI.Services
             return valid;
         }
 
+        /// <summary>
+        /// Converts the scope into a claim.
+        /// </summary>
         public Claim[] GetClaims(string username)
         {
             switch (IsAdmin())
@@ -114,24 +132,33 @@ namespace HunterIndustriesAPI.Services
             }
         }
 
+        /// <summary>
+        /// Returns whether the user is an admin.
+        /// </summary>
         private bool IsAdmin()
         {
-            return ProgramName switch
+            switch (ProgramName)
             {
-                "API Admin" => true,
-                _ => false
-            };
+                case "API Admin": return true;
+                default: return false;
+            }
         }
 
+        /// <summary>
+        /// Returns the scope based on the application name.
+        /// </summary>
         private string GetScope()
         {
-            return ProgramName switch
+            switch (ProgramName)
             {
-                "Virtual Assistant" => "Assistant API",
-                _ => string.Empty
-            };
+                case "Virtual Assistant": return "Assistant API";
+                default: return string.Empty;
+            }
         }
 
+        /// <summary>
+        /// Returns all username and passwords.
+        /// </summary>
         private (string[], string[]) GetUsers()
         {
             string[] usernames = Array.Empty<string>();
@@ -170,6 +197,9 @@ namespace HunterIndustriesAPI.Services
             return (usernames, passwords);
         }
 
+        /// <summary>
+        /// Returns all application phrases.
+        /// </summary>
         private string[] GetAuthorisationPhrases()
         {
             string[] phrases = Array.Empty<string>();
@@ -206,6 +236,9 @@ namespace HunterIndustriesAPI.Services
             return phrases;
         }
 
+        /// <summary>
+        /// Gets the application name from the database.
+        /// </summary>
         private string GetApplicationName(string phrase)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase \"{phrase}\".");
@@ -217,7 +250,7 @@ namespace HunterIndustriesAPI.Services
             SqlDataReader dataReader;
 
             string sqlQuery = @"select Name from Application with (nolock)
-join Authorisation with (nolock) on Applications.PhraseID = Authorisation.PhraseID
+join Authorisation with (nolock) on Application.PhraseID = Authorisation.PhraseID
 where Phrase = @Phrase";
 
             try

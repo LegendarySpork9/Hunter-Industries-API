@@ -1,11 +1,27 @@
-﻿// Copyright © - unpublished - Toby Hunter
+﻿using System;
+using System.Collections.Generic;
+
 namespace HunterIndustriesAPI.Objects
 {
-    public record TokenInfo
+    /// <summary>
+    /// </summary>
+    public class TokenInfo
     {
-        public string? ApplicationName { get; set; }
-        public IEnumerable<string>? Scope { get; set; }
-        public DateTime? Issued { get; set; }
-        public DateTime? Expires { get; set; }
+        /// <summary>
+        /// The application the call was made from.
+        /// </summary>
+        public string ApplicationName { get; set; }
+        /// <summary>
+        /// The scopes the token can access.
+        /// </summary>
+        public IEnumerable<string> Scope { get; set; }
+        /// <summary>
+        /// The date and time it was issued.
+        /// </summary>
+        public DateTime Issued { get; set; }
+        /// <summary>
+        /// The date and time it expires.
+        /// </summary>
+        public DateTime Expires { get; set; }
     }
 }

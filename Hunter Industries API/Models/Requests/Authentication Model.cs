@@ -1,16 +1,26 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using Microsoft.Extensions.Primitives;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Primitives;
 
 namespace HunterIndustriesAPI.Models.Requests
 {
+    /// <summary>
+    /// </summary>
     public class AuthenticationModel
     {
-        [Required]
-        public string? Phrase { get; set; }
-        [Required]
-        public StringValues? AuthHeader { get; set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
+        /// <summary>
+        /// The application identifier.
+        /// </summary>
+        public string Phrase { get; set; }
+        /// <summary>
+        /// The basic authorisation header.
+        /// </summary>
+        public StringValues AuthHeader { get; set; }
+        /// <summary>
+        /// The decoded username.
+        /// </summary>
+        public string Username { get; set; }
+        /// <summary>
+        /// The decoded password.
+        /// </summary>
+        public string Password { get; set; }
     }
 }
