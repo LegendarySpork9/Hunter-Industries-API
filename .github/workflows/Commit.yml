@@ -16,8 +16,9 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    - name: Install MSBuild
-      run: choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.WebBuildTools"
+    - name: Setup ASP.NET Web Build Tools
+      run: |
+        choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.WebBuildTools"
 
     - name: Restore dependencies
       run: dotnet restore
