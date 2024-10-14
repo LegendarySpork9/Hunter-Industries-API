@@ -24,4 +24,5 @@ jobs:
       run: dotnet restore
 
     - name: Build solution
-      run: dotnet build --configuration Release --no-restore
+      run: |
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" ./Hunter Industries API.sln /p:Configuration=Release
