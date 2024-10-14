@@ -18,6 +18,10 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
+    - name: Install .NET Core Build Tools
+      run: |
+        choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.WebBuildTools"
+
     - name: Restore dependencies
       run: dotnet restore
 
