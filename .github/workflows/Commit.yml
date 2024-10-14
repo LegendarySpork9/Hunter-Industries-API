@@ -16,6 +16,15 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1
 
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0'
+      
+    - name: Install .NET Framework Targeting Pack 4.7.2
+      run: |
+        choco install netfx-4.7.2-devpack
+
     - name: Restore dependencies
       run: dotnet restore
 
