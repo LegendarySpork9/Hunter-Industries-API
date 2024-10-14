@@ -16,13 +16,8 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    - name: Setup ASP.NET Web Build Tools
-      run: |
-        choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.WebBuildTools"
-
     - name: Restore dependencies
       run: dotnet restore
 
     - name: Build solution
-      run: |
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" "`"Hunter Industries API.sln`"" /p:Configuration=Release
+      run: dotnet build --configuration Release --no-restore
