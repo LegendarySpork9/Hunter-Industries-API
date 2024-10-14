@@ -16,10 +16,10 @@ jobs:
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Navigate to Workspace
+    - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
 
-    - name: Create Build Directory
+    - name: Create build directory
       run: mkdir _build
 
     - name: Build solution
