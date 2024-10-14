@@ -18,12 +18,14 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Install .NET Core Build Tools
-      run: |
-        choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.WebBuildTools"
+    - name: Setup Visual Studio
+      uses: microsoft/setup-visualstudio@v1
+      with:
+        vs-version: 2022
+        components: Microsoft.VisualStudio.Workload.WebBuildTools
 
     - name: Restore dependencies
       run: dotnet restore
 
     - name: Build solution
-      run: dotnet build --configuration Release --no-restore
+      run: msbuild "Hunter Industries API.sln" /p:Configuration=Release
