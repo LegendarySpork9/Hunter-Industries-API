@@ -63,7 +63,7 @@
             <remarks>
             Sample Request:
             
-                POST /token
+                POST /auth/token
                 Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
                 Content-Type: application/json
                 {
@@ -188,6 +188,20 @@
         <member name="M:HunterIndustriesAPI.Filters.Operation.ResponseExampleOperationFilter.Apply(Swashbuckle.Swagger.Operation,Swashbuckle.Swagger.SchemaRegistry,System.Web.Http.Description.ApiDescription)">
             <summary>
             Adds the response examples to the Swagger UI.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.EnvironmentRouteFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.EnvironmentRouteFunction.#ctor">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.EnvironmentRouteFunction.Match(System.Net.Http.HttpRequestMessage,System.Web.Http.Routing.IHttpRoute,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.Web.Http.Routing.HttpRouteDirection)">
+            <summary>
+            Adds the environment prefix if the value matches in app settings.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.WebApiApplication">

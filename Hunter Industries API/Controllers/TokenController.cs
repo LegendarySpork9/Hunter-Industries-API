@@ -28,7 +28,7 @@ namespace HunterIndustriesAPI.Controllers
         /// <remarks>
         /// Sample Request:
         /// 
-        ///     POST /token
+        ///     POST /auth/token
         ///     Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
         ///     Content-Type: application/json
         ///     {
