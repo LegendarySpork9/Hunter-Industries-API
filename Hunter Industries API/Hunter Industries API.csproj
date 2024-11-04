@@ -332,11 +332,14 @@
     <Compile Include="Converters\Audit History Converter.cs" />
     <Compile Include="Converters\Database Converter.cs" />
     <Compile Include="Converters\Standard Values.cs" />
+    <Compile Include="Converters\Token Converter.cs" />
     <Compile Include="Filters\Document\Base Url Document Filter.cs" />
     <Compile Include="Filters\Operation\Parameter Detail Operation Filter.cs" />
     <Compile Include="Filters\Operation\Required Header Filter.cs" />
     <Compile Include="Filters\Operation\Required Parameter Operation Filter.cs" />
     <Compile Include="Filters\Operation\Response Example Operation Filter.cs" />
+    <Compile Include="Functions\Hash Function.cs" />
+    <Compile Include="Functions\Token Function.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

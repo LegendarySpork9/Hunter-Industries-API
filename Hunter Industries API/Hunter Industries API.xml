@@ -141,6 +141,30 @@
             <summary>
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Converters.TokenConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.#ctor(HunterIndustriesAPI.Services.TokenService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetClaims(System.String)">
+            <summary>
+            Converts the scope into a claim.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.IsAdmin">
+            <summary>
+            Returns whether the user is an admin.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetScope">
+            <summary>
+            Returns the scope based on the application name.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Filters.Document.BaseUrlDocumentFilter">
             <summary>
             </summary>
@@ -190,18 +214,32 @@
             Adds the response examples to the Swagger UI.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Functions.EnvironmentRouteFunction">
+        <member name="T:HunterIndustriesAPI.Functions.HashFunction">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.EnvironmentRouteFunction.#ctor">
+        <member name="M:HunterIndustriesAPI.Functions.HashFunction.HashString(System.String)">
+            <summary>
+            Takes the given value and hashes it.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.TokenFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.#ctor(HunterIndustriesAPI.Services.TokenService,HunterIndustriesAPI.Services.LoggerService)">
             <summary>
             Sets the class's global variables.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.EnvironmentRouteFunction.Match(System.Net.Http.HttpRequestMessage,System.Web.Http.Routing.IHttpRoute,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.Web.Http.Routing.HttpRouteDirection)">
+        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.ExtractCredentialsFromBasicAuth(System.String)">
             <summary>
-            Adds the environment prefix if the value matches in app settings.
+            Returns the username and password from the decoded header.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.IsValidUser(System.String,System.String,System.String)">
+            <summary>
+            Returns whether the details passed are valid.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.WebApiApplication">
@@ -459,31 +497,6 @@
         <member name="M:HunterIndustriesAPI.Services.TokenService.ApplicationName">
             <summary>
             Returns the name of the application making the call.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.TokenService.ExtractCredentialsFromBasicAuth(System.String)">
-            <summary>
-            Returns the username and password from the decoded header.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.TokenService.IsValidUser(System.String,System.String,System.String)">
-            <summary>
-            Returns whether the details passed are valid.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.TokenService.GetClaims(System.String)">
-            <summary>
-            Converts the scope into a claim.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.TokenService.IsAdmin">
-            <summary>
-            Returns whether the user is an admin.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.TokenService.GetScope">
-            <summary>
-            Returns the scope based on the application name.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.TokenService.GetUsers">

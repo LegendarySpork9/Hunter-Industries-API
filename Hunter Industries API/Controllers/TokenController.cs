@@ -1,4 +1,5 @@
 ﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Requests;
 using HunterIndustriesAPI.Models.Responses;
@@ -83,8 +84,10 @@ namespace HunterIndustriesAPI.Controllers
             }
 
             TokenService _tokenService = new TokenService(request.Phrase, _logger);
+            TokenConverter _tokenConverter = new TokenConverter(_tokenService);
+            TokenFunction _tokenFunction = new TokenFunction(_tokenService, _logger);
 
-            (request.Username, request.Password) = _tokenService.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
+            (request.Username, request.Password) = _tokenFunction.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
 
             if (!_modelValidator.IsValid(request, true))
             {
@@ -105,9 +108,9 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            if (_tokenService.IsValidUser(request.Username, request.Password, request.Phrase))
+            if (_tokenFunction.IsValidUser(request.Username, request.Password, request.Phrase))
             {
-                var claims = _tokenService.GetClaims(request.Username);
+                var claims = _tokenConverter.GetClaims(request.Username);
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

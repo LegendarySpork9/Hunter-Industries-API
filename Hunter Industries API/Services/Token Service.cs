@@ -3,8 +3,6 @@ using HunterIndustriesAPI.Models;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 
 namespace HunterIndustriesAPI.Services
 {
@@ -33,133 +31,9 @@ namespace HunterIndustriesAPI.Services
         }
 
         /// <summary>
-        /// Returns the username and password from the decoded header.
-        /// </summary>
-        public (string, string) ExtractCredentialsFromBasicAuth(string authHeaderValue)
-        {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth called with the header value \"{authHeaderValue}\".");
-
-            string username = string.Empty;
-            string password = string.Empty;
-
-            try
-            {
-                var encodedCredentials = authHeaderValue.Replace("Basic ", string.Empty);
-                var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
-                var credentialsArray = decodedCredentials.Split(':');
-
-                if (credentialsArray.Length == 2)
-                {
-                    username = credentialsArray[0];
-                    password = credentialsArray[1];
-                }
-            }
-
-            catch (Exception ex)
-            {
-                string message = "Failed to extract the username and password from the basic header.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-            }
-
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.ExtractCredentialsFromBasicAuth returned {username} | {password}.");
-            return (username, password);
-        }
-
-        /// <summary>
-        /// Returns whether the details passed are valid.
-        /// </summary>
-        public bool IsValidUser(string usernameInput, string passwordInput, string phraseInput)
-        {
-            bool valid = false;
-
-            var result = GetUsers();
-            string[] usernames = result.Item1;
-            string[] passwords = result.Item2;
-            string[] phrases = GetAuthorisationPhrases();
-
-            foreach (string username in usernames)
-            {
-                if (username == usernameInput)
-                {
-                    foreach (string password in passwords)
-                    {
-                        if (password == passwordInput)
-                        {
-                            foreach (string phrase in phrases)
-                            {
-                                if (phrase == phraseInput)
-                                {
-                                    valid = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return valid;
-        }
-
-        /// <summary>
-        /// Converts the scope into a claim.
-        /// </summary>
-        public Claim[] GetClaims(string username)
-        {
-            switch (IsAdmin())
-            {
-                case true:
-
-                    var claims = new[]
-                    {
-                        new Claim(ClaimTypes.Name, username),
-                        new Claim("scope", "Assistant API"),
-                        new Claim("scope", "Book Reader API"),
-                        new Claim("scope", "Control Panel API")
-                    };
-
-                    return claims;
-
-                default:
-
-                    claims = new[]
-                    {
-                        new Claim(ClaimTypes.Name, username),
-                        new Claim("scope", GetScope())
-                    };
-
-                    return claims;
-            }
-        }
-
-        /// <summary>
-        /// Returns whether the user is an admin.
-        /// </summary>
-        private bool IsAdmin()
-        {
-            switch (ProgramName)
-            {
-                case "API Admin": return true;
-                default: return false;
-            }
-        }
-
-        /// <summary>
-        /// Returns the scope based on the application name.
-        /// </summary>
-        private string GetScope()
-        {
-            switch (ProgramName)
-            {
-                case "Virtual Assistant": return "Assistant API";
-                default: return string.Empty;
-            }
-        }
-
-        /// <summary>
         /// Returns all username and passwords.
         /// </summary>
-        private (string[], string[]) GetUsers()
+        public (string[], string[]) GetUsers()
         {
             string[] usernames = Array.Empty<string>();
             string[] passwords = Array.Empty<string>();
@@ -200,7 +74,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all application phrases.
         /// </summary>
-        private string[] GetAuthorisationPhrases()
+        public string[] GetAuthorisationPhrases()
         {
             string[] phrases = Array.Empty<string>();
 
