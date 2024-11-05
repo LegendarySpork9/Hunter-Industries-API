@@ -1,4 +1,5 @@
 ﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using System;
 using System.Data.SqlClient;
@@ -115,7 +116,9 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         private string GetApplicationName(string phrase)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase \"{phrase}\".");
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase {_parameterFunction.FormatParameters(phrase)}.");
 
             string name = string.Empty;
 

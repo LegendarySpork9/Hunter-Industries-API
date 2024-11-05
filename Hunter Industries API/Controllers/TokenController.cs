@@ -44,9 +44,11 @@ namespace HunterIndustriesAPI.Controllers
         public IHttpActionResult Post([FromBody, Required] AuthenticationModel request)
         {
             LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
+            ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response = new ResponseModel();
 
@@ -63,11 +65,11 @@ namespace HunterIndustriesAPI.Controllers
             string[] validationIgnore = { "Username", "Password" };
             int auditId = 0;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint called with the following parameters {_logger.FormatParameters(request)}.");
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request, true, validationIgnore))
             {
-                auditId = _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"), null).Item2;
+                auditId = _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("token"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"), _parameterFunction.FormatParameters(null, request)).Item2;
 
                 response = new ResponseModel()
                 {
@@ -78,8 +80,8 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _auditHistoryService.LogLoginAttempt(auditId, false);
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+                _auditHistoryService.LogLoginAttempt(auditId, false, request.Username, request.Password, request.Phrase);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -104,7 +106,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 _auditHistoryService.LogLoginAttempt(auditId, false, request.Username, request.Password, request.Phrase);
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -119,7 +121,7 @@ namespace HunterIndustriesAPI.Controllers
                     ValidationModel.Issuer,
                     ValidationModel.Audience,
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(15),
+                    expires: DateTime.UtcNow.AddMinutes(15),
                     signingCredentials: creds
                 ));
 
@@ -138,14 +140,14 @@ namespace HunterIndustriesAPI.Controllers
                         {
                             ApplicationName = _tokenService.ApplicationName(),
                             Scope = claims.Where(c => c.Type == "scope").Select(c => c.Value),
-                            Issued = DateTime.Now,
-                            Expires = DateTime.Now.AddMinutes(15)
+                            Issued = DateTime.UtcNow,
+                            Expires = DateTime.UtcNow.AddMinutes(15)
                         }
                     }
                 };
 
                 _auditHistoryService.LogLoginAttempt(auditId, true, request.Username, request.Password, request.Phrase);
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -162,7 +164,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             _auditHistoryService.LogLoginAttempt(auditId, false, request.Username, request.Password, request.Phrase);
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {response.Data}");
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.Unauthorized, response.Data);
         }
     }

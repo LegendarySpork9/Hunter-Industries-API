@@ -13,7 +13,7 @@ namespace HunterIndustriesAPI.Models.Requests
         /// <summary>
         /// The basic authorisation header.
         /// </summary>
-        public StringValues AuthHeader { get; set; }
+        public StringValues? AuthHeader { get; set; } = null;
         /// <summary>
         /// The decoded username.
         /// </summary>

@@ -119,20 +119,6 @@
             Returns the status id number.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.AuditHistoryConverter.FormatParameters(System.String)">
-            <summary>
-            Converts the parameters from the stored SQL format to the output format.
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Converters.DatabaseConverter">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.DatabaseConverter.FormatParameters(System.String[])">
-            <summary>
-            Converts parameters from the input format to the stored SQL format.
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Converters.StandardValues">
             <summary>
             </summary>
@@ -221,6 +207,34 @@
         <member name="M:HunterIndustriesAPI.Functions.HashFunction.HashString(System.String)">
             <summary>
             Takes the given value and hashes it.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.ParameterFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String,System.Object)">
+            <summary>
+            Converts the parameters from the stored SQL format to the output format or converts the model into a string array.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String[],System.Boolean)">
+            <summary>
+            Converts the parameters into a log/SQL friendly format.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object)">
+            <summary>
+            Converts the model into a log friendly format.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.ResponseFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ResponseFunction.GetModelJSON(System.Object)">
+            <summary>
+            Converts the object to a JSON string.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.TokenFunction">
@@ -439,16 +453,6 @@
         <member name="M:HunterIndustriesAPI.Services.LoggerService.#ctor(System.String)">
             <summary>
             Sets the class's global variables.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.LoggerService.FormatParameters(System.Object)">
-            <summary>
-            Converts the model into a log friendly format.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.LoggerService.FormatParameters(System.String[])">
-            <summary>
-            Converts the parameters into a log friendly format.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.LoggerService.LogMessage(System.String,System.String,System.String)">

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace HunterIndustriesAPI.Converters
+﻿namespace HunterIndustriesAPI.Converters
 {
     /// <summary>
     /// </summary>
@@ -54,27 +51,6 @@ namespace HunterIndustriesAPI.Converters
                 case "InternalServerError": return 7;
                 default: return 0;
             }
-        }
-
-        /// <summary>
-        /// Converts the parameters from the stored SQL format to the output format.
-        /// </summary>
-        public string[] FormatParameters(string parameters)
-        {
-            string[] splitParams = parameters.Split(new string[] { "\",\"" }, StringSplitOptions.None);
-            string[] formattedParams = Array.Empty<string>();
-
-            if (parameters != String.Empty)
-            {
-                foreach (string parameter in splitParams)
-                {
-                    string param = parameter.Replace("\"", "");
-
-                    formattedParams = formattedParams.Append(param).ToArray();
-                }
-            }
-
-            return formattedParams;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects;
 using System;
@@ -27,14 +28,14 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[] parameters = null)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), Logger.FormatParameters(parameters) })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {_parameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), _parameterFunction.FormatParameters(parameters) })}.");
 
             bool logged = false;
             int auditId = 0;
 
-            DatabaseConverter _databaseConverter = new DatabaseConverter();
-
-            string formattedParameters = _databaseConverter.FormatParameters(parameters);
+            string formattedParameters = _parameterFunction.FormatParameters(parameters, true);
 
             SqlConnection connection;
             SqlCommand command;
@@ -52,7 +53,7 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
                 command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
                 command.Parameters.Add(new SqlParameter("@MethodID", methodId));
                 command.Parameters.Add(new SqlParameter("@StatusID", statusId));
-                command.Parameters.Add(new SqlParameter("@Parameters", formattedParameters ?? DBNull.Value.ToString()));
+                command.Parameters.Add(new SqlParameter("@Parameters", (object)formattedParameters ?? DBNull.Value));
                 var result = command.ExecuteScalar();
 
                 if (result != null)
@@ -80,7 +81,9 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
         /// </summary>
         public void LogLoginAttempt(int auditId, bool isSuccessful, string username = null, string password = null, string phrase = null)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {Logger.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {_parameterFunction.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
 
             SqlConnection connection;
             SqlCommand command;
@@ -93,9 +96,9 @@ values ((select UserID from APIUser with (nolock) where Username = @Username and
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Username", username ?? DBNull.Value.ToString()));
-                command.Parameters.Add(new SqlParameter("@Password", password ?? DBNull.Value.ToString()));
-                command.Parameters.Add(new SqlParameter("@Phrase", phrase ?? DBNull.Value.ToString()));
+                command.Parameters.Add(new SqlParameter("@Username", (object)username ?? DBNull.Value));
+                command.Parameters.Add(new SqlParameter("@Password", (object)password ?? DBNull.Value));
+                command.Parameters.Add(new SqlParameter("@Phrase", (object)phrase ?? DBNull.Value));
                 command.Parameters.Add(new SqlParameter("@AuditID", auditId));
                 command.Parameters.Add(new SqlParameter("@IsSuccessful", isSuccessful));
                 int rowsAffected = command.ExecuteNonQuery();
@@ -116,9 +119,10 @@ values ((select UserID from APIUser with (nolock) where Username = @Username and
         /// </summary>
         public (List<AuditHistoryRecord>, int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {Logger.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
 
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {_parameterFunction.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+
             List<AuditHistoryRecord> auditHistories = new List<AuditHistoryRecord>();
 
             int totalRecords = 0;
@@ -188,7 +192,7 @@ fetch next @PageSize rows only";
 
                     if (!dataReader.IsDBNull(6))
                     {
-                        auditHistory.Paramaters = _auditHistoryConverter.FormatParameters(dataReader.GetString(6));
+                        auditHistory.Paramaters = _parameterFunction.FormatParameters(dataReader.GetString(6));
                     }
 
                     auditHistories.Add(auditHistory);
