@@ -1,0 +1,1 @@
+﻿select count(*) from AuditHistory AH with (nolock)

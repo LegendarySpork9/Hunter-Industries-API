@@ -273,6 +273,11 @@
             The connection string for the SQL database.
             </summary>
         </member>
+        <member name="F:HunterIndustriesAPI.Models.DatabaseModel.SQLFiles">
+            <summary>
+            The location of the SQL query files.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.AuthenticationModel">
             <summary>
             </summary>

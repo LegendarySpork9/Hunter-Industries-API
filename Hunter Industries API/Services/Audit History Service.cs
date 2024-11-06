@@ -40,15 +40,11 @@ namespace HunterIndustriesAPI.Services
             SqlConnection connection;
             SqlCommand command;
 
-            string sqlQuery = @"insert into AuditHistory (IPAddress, EndpointID, MethodID, StatusID, DateOccured, [Parameters])
-output inserted.AuditID
-values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
-
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\LogRequest.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@IPAddress", ipAddress));
                 command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
                 command.Parameters.Add(new SqlParameter("@MethodID", methodId));
@@ -88,14 +84,11 @@ values (@IPAddress, @EndpointID, @MethodID, @StatusID, GetDate(), @Parameters)";
             SqlConnection connection;
             SqlCommand command;
 
-            string sqlQuery = @"insert into LoginAttempt (UserID, PhraseID, AuditID, DateOccured, IsSuccessful)
-values ((select UserID from APIUser with (nolock) where Username = @Username and Password = @Password), (select PhraseID from Authorisation with (nolock) where Phrase = @Phrase), @AuditID, GetDate(), @IsSuccessful)";
-
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\LogLoginAttempt.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@Username", (object)username ?? DBNull.Value));
                 command.Parameters.Add(new SqlParameter("@Password", (object)password ?? DBNull.Value));
                 command.Parameters.Add(new SqlParameter("@Phrase", (object)phrase ?? DBNull.Value));
@@ -131,7 +124,7 @@ values ((select UserID from APIUser with (nolock) where Username = @Username and
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAuditHistory.SQL"));
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\GetAuditHistory.sql");
 
             if (!string.IsNullOrEmpty(ipAddress))
             {
@@ -230,7 +223,7 @@ fetch next @PageSize rows only";
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;
-                command.CommandText = "select count(*) from AuditHistory AH with (nolock)";
+                command.CommandText = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\GetTotalAuditHistory.sql");
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())

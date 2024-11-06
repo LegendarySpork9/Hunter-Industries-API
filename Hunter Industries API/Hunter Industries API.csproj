@@ -364,6 +364,13 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Hunter Industries API.xml" />
+    <Content Include="SQL\Audit History\GetAuditHistory.sql" />
+    <Content Include="SQL\Audit History\GetTotalAuditHistory.sql" />
+    <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
+    <Content Include="SQL\Audit History\LogRequest.sql" />
+    <Content Include="SQL\Token\GetApplicationName.sql" />
+    <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
+    <Content Include="SQL\Token\GetUsers.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

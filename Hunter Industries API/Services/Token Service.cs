@@ -3,6 +3,7 @@ using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using System;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 
 namespace HunterIndustriesAPI.Services
@@ -43,13 +44,11 @@ namespace HunterIndustriesAPI.Services
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = "select * from APIUser with (nolock)";
-
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetUsers.SQL"), connection);
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -83,13 +82,11 @@ namespace HunterIndustriesAPI.Services
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = "select * from Authorisation with (nolock)";
-
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetAuthorisationPhrases.SQL"), connection);
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -126,15 +123,11 @@ namespace HunterIndustriesAPI.Services
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = @"select Name from Application with (nolock)
-join Authorisation with (nolock) on Application.PhraseID = Authorisation.PhraseID
-where Phrase = @Phrase";
-
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetApplicationName.SQL"), connection);
                 command.Parameters.Add(new SqlParameter("@Phrase", phrase));
                 dataReader = command.ExecuteReader();
 
