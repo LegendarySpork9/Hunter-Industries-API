@@ -1,5 +1,6 @@
 ﻿using HunterIndustriesAPI.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,10 @@ namespace HunterIndustriesAPI
             config.Formatters.Add(new JsonMediaTypeFormatter());
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
+
+            config.SuppressDefaultHostAuthentication();
+
+            config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
             config.MapHttpAttributeRoutes();
 

@@ -82,11 +82,14 @@ namespace HunterIndustriesAPI.Functions
         {
             string formattedParameters = string.Empty;
 
-            foreach (PropertyInfo property in model.GetType().GetProperties())
+            if (model != null)
             {
-                if (property.GetValue(model) != null)
+                foreach (PropertyInfo property in model.GetType().GetProperties())
                 {
-                    formattedParameters += $"\"{property.GetValue(model)}\", ";
+                    if (property.GetValue(model) != null)
+                    {
+                        formattedParameters += $"\"{property.GetValue(model)}\", ";
+                    }
                 }
             }
 

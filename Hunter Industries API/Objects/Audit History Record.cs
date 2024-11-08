@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HunterIndustriesAPI.Objects
 {
@@ -34,5 +35,13 @@ namespace HunterIndustriesAPI.Objects
         /// Any filters or body input attached to the call.
         /// </summary>
         public string[] Paramaters { get; set; } = null;
+        /// <summary>
+        /// The login attempt record.
+        /// </summary>
+        public LoginAttemptRecord LoginAttempt { get; set; }
+        /// <summary>
+        /// The change records.
+        /// </summary>
+        public List<ChangeRecord> Change { get; set; }
     }
 }

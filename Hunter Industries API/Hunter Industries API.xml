@@ -44,6 +44,21 @@
             <summary>
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.AuditController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.AuditController.Get(HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel)">
+            <summary>
+            Returns a collection of calls made to the api.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /audithistory?FromDate=02/11/2024&amp;Endpoint=https://hunter-industries.co.uk/api/auth/token
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.HomeController">
             <summary>
             </summary>
@@ -200,6 +215,25 @@
             Adds the response examples to the Swagger UI.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.#ctor(System.String)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.OnAuthorization(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            Checks if the token has the required claim to access the endpoint.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.ValidScope(System.String,System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Checks if the token has a valid claim.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Functions.HashFunction">
             <summary>
             </summary>
@@ -302,6 +336,69 @@
             The decoded password.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.FromDate">
+            <summary>
+            The date from which to pull records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.IPAddress">
+            <summary>
+            The IP address the records were made from.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.Endpoint">
+            <summary>
+            The endpoint which the calls were made to.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.PageSize">
+            <summary>
+            The number of records to pull per page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.PageNumber">
+            <summary>
+            The number of the page to pull.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel.Entries">
+            <summary>
+            The audit history records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.ResponseModel">
             <summary>
             </summary>
@@ -396,6 +493,69 @@
         <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Paramaters">
             <summary>
             Any filters or body input attached to the call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.LoginAttempt">
+            <summary>
+            The login attempt record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Change">
+            <summary>
+            The change records.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ChangeRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Endpoint">
+            <summary>
+            The endpoint that was called.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Field">
+            <summary>
+            The field which was updated.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.OldValue">
+            <summary>
+            The previous value of the field.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.NewValue">
+            <summary>
+            The new value of the field.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.LoginAttemptRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.LoginAttemptRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.LoginAttemptRecord.Username">
+            <summary>
+            The name of the user attempting to log in.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.LoginAttemptRecord.Phrase">
+            <summary>
+            The phrase the user used to log in.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.LoginAttemptRecord.IsSuccessful">
+            <summary>
+            Whether the attempt was successful.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.TokenInfo">
@@ -524,10 +684,6 @@
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Startup">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             </summary>
         </member>

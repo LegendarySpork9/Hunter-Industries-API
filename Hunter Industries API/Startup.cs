@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Formatting;
@@ -11,49 +13,19 @@ using HunterIndustriesAPI.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Newtonsoft.Json.Serialization;
 using Owin;
 
+[assembly: OwinStartup(typeof(HunterIndustriesAPI.Startup))]
 namespace HunterIndustriesAPI
 {
     /// <summary>
     /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// </summary>
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Assistant", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "Assistant API");
-                });
-
-                options.AddPolicy("BookReader", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "Book Reader API");
-                });
-
-                options.AddPolicy("APIControlPanel", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "Control Panel API");
-                });
-
-                options.AddPolicy("AIAccess", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireAssertion(context =>
-                        context.User.HasClaim(c => (c.Type == "scope" && c.Value == "Assistant API") || (c.Type == "scope" && c.Value == "Control Panel API")));
-                });
-            });
-        }
-
         /// <summary>
         /// </summary>
         public void Configuration(IAppBuilder app)
@@ -64,8 +36,8 @@ namespace HunterIndustriesAPI
 
             app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
             {
-                AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
-                TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                AuthenticationMode = AuthenticationMode.Active,
+                TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,

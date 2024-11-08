@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Net;
 
 namespace HunterIndustriesAPI.Services
 {
@@ -171,25 +172,92 @@ fetch next @PageSize rows only";
 
                 dataReader = command.ExecuteReader();
 
+                AuditHistoryRecord auditHistory = new AuditHistoryRecord();
+                List<ChangeRecord> changes = new List<ChangeRecord>();
+
                 while (dataReader.Read())
                 {
-                    AuditHistoryRecord auditHistory = new AuditHistoryRecord()
+                    if (dataReader.GetInt32(0) == auditHistory.Id)
                     {
-                        Id = dataReader.GetInt32(0),
-                        IPAddress = dataReader.GetString(1),
-                        Endpoint = dataReader.GetString(2),
-                        Method = dataReader.GetString(3),
-                        Status = dataReader.GetString(4),
-                        OccuredAt = dataReader.GetDateTime(5)
-                    };
+                        ChangeRecord change = new ChangeRecord()
+                        {
+                            Id = dataReader.GetInt32(11),
+                            Endpoint = dataReader.GetString(12),
+                            Field = dataReader.GetString(13),
+                            OldValue = dataReader.GetString(14),
+                            NewValue = dataReader.GetString(15),
+                        };
 
-                    if (!dataReader.IsDBNull(6))
-                    {
-                        auditHistory.Paramaters = _parameterFunction.FormatParameters(dataReader.GetString(6));
+                        changes.Add(change);
                     }
 
-                    auditHistories.Add(auditHistory);
+                    else
+                    {
+                        if (auditHistory.Id != 0)
+                        {
+                            auditHistory.Change = changes;
+                            auditHistories.Add(auditHistory);
+
+                            changes = new List<ChangeRecord>();
+                        }
+
+                        auditHistory = new AuditHistoryRecord()
+                        {
+                            Id = dataReader.GetInt32(0),
+                            IPAddress = dataReader.GetString(1),
+                            Endpoint = dataReader.GetString(2),
+                            Method = dataReader.GetString(3),
+                            Status = dataReader.GetString(4),
+                            OccuredAt = dataReader.GetDateTime(5),
+                            Paramaters = Array.Empty<string>()
+                        };
+
+                        if (!dataReader.IsDBNull(6))
+                        {
+                            auditHistory.Paramaters = _parameterFunction.FormatParameters(dataReader.GetString(6));
+                        }
+
+                        LoginAttemptRecord loginAttempt = null;
+
+                        if (!dataReader.IsDBNull(7))
+                        {
+                            loginAttempt = new LoginAttemptRecord()
+                            {
+                                Id = dataReader.GetInt32(7),
+                                IsSuccessful = dataReader.GetBoolean(10)
+                            };
+
+                            if (!dataReader.IsDBNull(8))
+                            {
+                                loginAttempt.Username = dataReader.GetString(8);
+                            }
+
+                            if (!dataReader.IsDBNull(9))
+                            {
+                                loginAttempt.Phrase = dataReader.GetString(9);
+                            }
+                        }
+
+                        auditHistory.LoginAttempt = loginAttempt;
+
+                        if (!dataReader.IsDBNull(11))
+                        {
+                            ChangeRecord change = new ChangeRecord()
+                            {
+                                Id = dataReader.GetInt32(11),
+                                Endpoint = dataReader.GetString(12),
+                                Field = dataReader.GetString(13),
+                                OldValue = dataReader.GetString(14),
+                                NewValue = dataReader.GetString(15),
+                            };
+
+                            changes.Add(change);
+                        }
+                    }
                 }
+
+                auditHistory.Change = changes;
+                auditHistories.Add(auditHistory);
 
                 dataReader.Close();
                 connection.Close();
@@ -204,7 +272,7 @@ fetch next @PageSize rows only";
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory returned {auditHistories.Count} records | {totalRecords}");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory returned {auditHistories.Count} records | {totalRecords} total records.");
             return (auditHistories, totalRecords);
         }
 
@@ -224,6 +292,22 @@ fetch next @PageSize rows only";
                 connection.Open();
                 command.Connection = connection;
                 command.CommandText = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\GetTotalAuditHistory.sql");
+
+                if (command.Parameters.Contains("@IPAddress"))
+                {
+                    command.CommandText += "\nand AH.IPAddress = @IPAddress";
+                }
+
+                if (command.Parameters.Contains("@Endpoint"))
+                {
+                    command.CommandText += "\nand E.Value = @Endpoint";
+                }
+
+                if (command.Parameters.Contains("@FromDate"))
+                {
+                    command.CommandText += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
+                }
+
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())

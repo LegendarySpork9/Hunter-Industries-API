@@ -326,6 +326,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -337,6 +338,7 @@
     <Compile Include="Filters\Operation\Required Header Filter.cs" />
     <Compile Include="Filters\Operation\Required Parameter Operation Filter.cs" />
     <Compile Include="Filters\Operation\Response Example Operation Filter.cs" />
+    <Compile Include="Filters\Required Policy Authorisation Attribute Filter.cs" />
     <Compile Include="Functions\Hash Function.cs" />
     <Compile Include="Functions\Parameter Function.cs" />
     <Compile Include="Functions\Response Function.cs" />
@@ -346,10 +348,14 @@
     </Compile>
     <Compile Include="Models\Database Model.cs" />
     <Compile Include="Models\Requests\Authentication Model.cs" />
+    <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
+    <Compile Include="Models\Responses\Audit History Response Model.cs" />
     <Compile Include="Models\Responses\Response Model.cs" />
     <Compile Include="Models\Responses\Token Response Model.cs" />
     <Compile Include="Models\Validation Model.cs" />
     <Compile Include="Objects\Audit History Record.cs" />
+    <Compile Include="Objects\Change Record.cs" />
+    <Compile Include="Objects\Login Attempt Record.cs" />
     <Compile Include="Objects\Token Info.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Audit History Service.cs" />
