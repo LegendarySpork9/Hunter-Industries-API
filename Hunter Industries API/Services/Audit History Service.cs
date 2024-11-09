@@ -111,11 +111,11 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all audit history records that match the parameters.
         /// </summary>
-        public (List<AuditHistoryRecord>, int) GetAuditHistory(string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
+        public (List<AuditHistoryRecord>, int) GetAuditHistory(int auditId, string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {_parameterFunction.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {_parameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<AuditHistoryRecord> auditHistories = new List<AuditHistoryRecord>();
 
@@ -126,6 +126,11 @@ namespace HunterIndustriesAPI.Services
             SqlDataReader dataReader;
 
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\GetAuditHistory.sql");
+
+            if (auditId != 0)
+            {
+                sqlQuery += "\nand AH.AuditID = @AuditId";
+            }
 
             if (!string.IsNullOrEmpty(ipAddress))
             {
@@ -154,6 +159,11 @@ fetch next @PageSize rows only";
                 command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@PageSize", pageSize));
                 command.Parameters.Add(new SqlParameter("@PageNumber", pageNumber));
+
+                if (sqlQuery.Contains("@AuditId"))
+                {
+                    command.Parameters.Add(new SqlParameter("@AuditId", auditId));
+                }
 
                 if (sqlQuery.Contains("@IPAddress"))
                 {

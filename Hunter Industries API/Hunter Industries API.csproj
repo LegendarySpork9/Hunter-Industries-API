@@ -370,6 +370,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Hunter Industries API.xml" />
+    <EmbeddedResource Include="JavaScript\SwaggerHeader.js" />
     <Content Include="SQL\Audit History\GetAuditHistory.sql" />
     <Content Include="SQL\Audit History\GetTotalAuditHistory.sql" />
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
