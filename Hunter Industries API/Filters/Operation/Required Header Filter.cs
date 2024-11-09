@@ -21,7 +21,7 @@ namespace HunterIndustriesAPI.Filters.Operation
                     @in = "header",
                     required = true,
                     type = "string",
-                    description = "Authorization header in the format: Basic {encodedCredentials}"
+                    description = "Authorization header in the format: Basic {encodedCredentials}."
                 });
             }
         }

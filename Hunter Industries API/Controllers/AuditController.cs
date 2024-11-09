@@ -17,7 +17,6 @@ namespace HunterIndustriesAPI.Controllers
 {
     /// <summary>
     /// </summary>
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "APIControlPanel")]
     [Authorize]
     [RequiredPolicyAuthorisationAttributeFilter("APIControlPanel")]
     public class AuditController : ApiController

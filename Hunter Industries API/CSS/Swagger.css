@@ -23,3 +23,11 @@
 .swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.content div.sandbox_header input.submit {
     display: none;
 }
+
+.swagger-section .swagger-ui-wrap b, .swagger-section .swagger-ui-wrap strong {
+    font-weight: normal;
+}
+
+.swagger-section .swagger-ui-wrap .code {
+    font-weight: normal;
+}

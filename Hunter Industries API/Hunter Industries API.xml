@@ -44,6 +44,40 @@
             <summary>
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.Assistant.ConfigController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.Get(HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel)">
+            <summary>
+            Returns a collection of assistant configurations.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /assistant/config?AssistantName=Test&amp;AssistantID=TST 1456-4
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.Post(HunterIndustriesAPI.Models.Requests.Bodies.Assistant.ConfigModel)">
+            <summary>
+            Creates a new assistant configuration.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                POST /assistant/config
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "AssistantName": "Test",
+                    "IDNumber": "TST 1419-9",
+                    "AssignedUser": "Tester",
+                    "HostName": "PlaceHolder"
+                }
+            </remarks>
+            <param name="request">An object containing the basic assistant configuration information.</param>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.AuditController">
             <summary>
             </summary>
@@ -97,34 +131,6 @@
                 }
             </remarks>
             <param name="request">The application identifier.</param>
-        </member>
-        <member name="T:HunterIndustriesAPI.Controllers.ValuesController">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ValuesController.Get">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ValuesController.Get(System.Int32)">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ValuesController.Post(System.String)">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ValuesController.Put(System.Int32,System.String)">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ValuesController.Delete(System.Int32)">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ValuesController.Patch(System.Int32,System.String)">
-            <summary>
-            </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.AuditHistoryConverter">
             <summary>
@@ -347,6 +353,44 @@
             The decoded password.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.ConfigModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.ConfigModel.AssistantName">
+            <summary>
+            The name of the assistant.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.ConfigModel.IdNumber">
+            <summary>
+            The id of the assistant.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.ConfigModel.AssignedUser">
+            <summary>
+            The user that the assistant is assigned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.ConfigModel.HostName">
+            <summary>
+            The name of the machine where the assistant is assigned.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel.AssistantName">
+            <summary>
+            The name of the assistant.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel.AssistantId">
+            <summary>
+            The id of the assistant.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel">
             <summary>
             </summary>
@@ -374,6 +418,30 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.PageNumber">
             <summary>
             The number of the page to pull.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel.LatestRelease">
+            <summary>
+            The latest assistant release version.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel.AssistantConfigurations">
+            <summary>
+            The configuration records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel.ConfigCount">
+            <summary>
+            The number of configurations returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel.TotalCount">
+            <summary>
+            The total number of configurations.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel">
@@ -465,6 +533,40 @@
         <member name="P:HunterIndustriesAPI.Models.ValidationModel.SecretKey">
             <summary>
             The valid secret key of the token.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration.AssistantName">
+            <summary>
+            The name of the assistant.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration.IdNumber">
+            <summary>
+            The id of the assistant.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration.AssignedUser">
+            <summary>
+            The user that the assistant is assigned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration.HostName">
+            <summary>
+            The name of the machine where the assistant is assigned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration.Deletion">
+            <summary>
+            Whether the assistant should be deleted.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration.Version">
+            <summary>
+            The version of the assistant.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.AuditHistoryRecord">
@@ -591,6 +693,40 @@
         <member name="P:HunterIndustriesAPI.Objects.TokenInfo.Expires">
             <summary>
             The date and time it expires.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.Assistant.ConfigService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.GetAssistantConfig(System.String,System.String)">
+            <summary>
+            Returns all configuration records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.GetTotalConfigs(System.Data.SqlClient.SqlCommand)">
+            <summary>
+            Returns the number of configuration records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.GetMostRecentVersion">
+            <summary>
+            Returns the most recent version number.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.AssistantExists(System.String,System.String)">
+            <summary>
+            Returns whether a config already exists with the given details.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.AssistantConfigCreated(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates the assistant configuration.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.AuditHistoryService">

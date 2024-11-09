@@ -1,4 +1,5 @@
 ﻿using HunterIndustriesAPI.Controllers;
+using HunterIndustriesAPI.Controllers.Assistant;
 using Swashbuckle.Swagger;
 using System.Web.Http.Description;
 
@@ -53,6 +54,33 @@ namespace HunterIndustriesAPI.Filters.Operation
                     if (param.name == "filters.pageNumber")
                     {
                         param.name = "pageNumber";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ConfigController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "filters.assistantName")
+                    {
+                        param.name = "assistantName";
+                    }
+
+                    if (param.name == "filters.assistantId")
+                    {
+                        param.name = "assistantId";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ConfigController) && apiDescription.ActionDescriptor.ActionName == "Post")
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "assistant";
                     }
                 }
             }
