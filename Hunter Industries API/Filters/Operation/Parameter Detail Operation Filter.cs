@@ -105,6 +105,27 @@ namespace HunterIndustriesAPI.Filters.Operation
                     }
                 }
             }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(LocationController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "location";
+                    }
+
+                    if (param.name == "filters.assistantName")
+                    {
+                        param.name = "assistantName";
+                    }
+
+                    if (param.name == "filters.assistantId")
+                    {
+                        param.name = "assistantId";
+                    }
+                }
+            }
         }
     }
 }
