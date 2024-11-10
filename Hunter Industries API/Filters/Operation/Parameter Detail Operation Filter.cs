@@ -29,6 +29,8 @@ namespace HunterIndustriesAPI.Filters.Operation
 
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(AuditController))
             {
+                apiDescription.ActionDescriptor.ControllerDescriptor.ControllerName = "Audit History";
+
                 foreach (Parameter param in operation.parameters)
                 {
                     if (param.name == "filters.fromDate")
@@ -113,6 +115,27 @@ namespace HunterIndustriesAPI.Filters.Operation
                     if (param.name == "request")
                     {
                         param.name = "location";
+                    }
+
+                    if (param.name == "filters.assistantName")
+                    {
+                        param.name = "assistantName";
+                    }
+
+                    if (param.name == "filters.assistantId")
+                    {
+                        param.name = "assistantId";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(VersionController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "version";
                     }
 
                     if (param.name == "filters.assistantName")

@@ -328,6 +328,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Assistant\ConfigController.cs" />
     <Compile Include="Controllers\Assistant\DeletionController.cs" />
+    <Compile Include="Controllers\Assistant\VersionController.cs" />
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -353,11 +354,13 @@
     <Compile Include="Models\Requests\Bodies\Assistant\Config Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Deletion Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Location Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Assistant\Version Model.cs" />
     <Compile Include="Models\Requests\Filters\Assistant\Assistant Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
     <Compile Include="Models\Responses\Assistant\Config Response Model.cs" />
     <Compile Include="Models\Responses\Assistant\Deletion Response Model.cs" />
     <Compile Include="Models\Responses\Assistant\Location Response Model.cs" />
+    <Compile Include="Models\Responses\Assistant\Version Response Model.cs" />
     <Compile Include="Models\Responses\Audit History Response Model.cs" />
     <Compile Include="Models\Responses\Response Model.cs" />
     <Compile Include="Models\Responses\Token Response Model.cs" />
@@ -371,6 +374,7 @@
     <Compile Include="Services\Assistant\Config Service.cs" />
     <Compile Include="Services\Assistant\Deletion Service.cs" />
     <Compile Include="Services\Assistant\Location Service.cs" />
+    <Compile Include="Services\Assistant\Version Service.cs" />
     <Compile Include="Services\Audit History Service.cs" />
     <Compile Include="Services\Change Service.cs" />
     <Compile Include="Services\Logger Service.cs" />
@@ -395,6 +399,8 @@
     <Content Include="SQL\Assistant\Deletion\GetAssistantDeletion.sql" />
     <Content Include="SQL\Assistant\Location\AssistantLocationUpdated.sql" />
     <Content Include="SQL\Assistant\Location\GetAssistantLocation.sql" />
+    <Content Include="SQL\Assistant\Version\AssistantVersionUpdated.sql" />
+    <Content Include="SQL\Assistant\Version\GetAssistantVersion.sql" />
     <Content Include="SQL\Audit History\GetAuditHistory.sql" />
     <Content Include="SQL\Audit History\GetTotalAuditHistory.sql" />
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
