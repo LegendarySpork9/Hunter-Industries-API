@@ -29,8 +29,6 @@ namespace HunterIndustriesAPI.Filters.Operation
 
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(AuditController))
             {
-                apiDescription.ActionDescriptor.ControllerDescriptor.ControllerName = "Audit History";
-
                 foreach (Parameter param in operation.parameters)
                 {
                     if (param.name == "filters.fromDate")
