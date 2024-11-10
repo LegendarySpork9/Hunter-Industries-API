@@ -34,6 +34,7 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public IHttpActionResult Get([FromUri] AuditHistoryFilterModel filters)
         {
             LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
@@ -128,6 +129,7 @@ namespace HunterIndustriesAPI.Controllers
         [Route("api/audithistory/{id:int}")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryRecord), Description = "Returns the item matching the given id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public IHttpActionResult Get(int id)
         {
             LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);

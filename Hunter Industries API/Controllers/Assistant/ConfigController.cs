@@ -35,6 +35,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         /// </remarks>
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ConfigResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public IHttpActionResult Get([FromUri] AssistantFilterModel filters)
         {
             LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
@@ -100,7 +101,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     Content-Type: application/json
         ///     {
         ///         "AssistantName": "Test",
-        ///         "IDNumber": "TST 1419-9",
+        ///         "IDNumber": "TST 1456-4",
         ///         "AssignedUser": "Tester",
         ///         "HostName": "PlaceHolder"
         ///     }

@@ -71,6 +71,23 @@ namespace HunterIndustriesAPI.Filters.Operation
                 };
             }
 
+            if (operation.responses.TryGetValue("404", out existingResponse))
+            {
+                existingResponse.schema = new Schema
+                {
+                    type = "object",
+                    properties = new Dictionary<string, Schema>
+                    {
+                        {
+                            "Error", new Schema
+                            {
+                                type = "string"
+                            }
+                        }
+                    }
+                };
+            }
+
             if (operation.responses.TryGetValue("500", out existingResponse))
             {
                 existingResponse.schema = new Schema

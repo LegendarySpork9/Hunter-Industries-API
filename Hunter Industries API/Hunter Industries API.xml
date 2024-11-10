@@ -71,12 +71,43 @@
                 Content-Type: application/json
                 {
                     "AssistantName": "Test",
-                    "IDNumber": "TST 1419-9",
+                    "IDNumber": "TST 1456-4",
                     "AssignedUser": "Tester",
                     "HostName": "PlaceHolder"
                 }
             </remarks>
             <param name="request">An object containing the basic assistant configuration information.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.Assistant.DeletionController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.Get(HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel)">
+            <summary>
+            Returns the deletion value of an assistant.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /assistant/deletion?AssistantName=Test&amp;AssistantID=TST 1456-4
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.Patch(HunterIndustriesAPI.Models.Requests.Bodies.Assistant.DeletionModel,HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel)">
+            <summary>
+            Updates the deletion value for an assistant.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                PATCH /assistant/deletion?AssistantName=Test&amp;AssistantID=TST 1456-4
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "Deletion": "true"
+                }
+            </remarks>
+            <param name="request">An object containing the deletion value.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.AuditController">
             <summary>
@@ -377,6 +408,15 @@
             The name of the machine where the assistant is assigned.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.DeletionModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.DeletionModel.Deletion">
+            <summary>
+            Whether the assistant should be deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel">
             <summary>
             </summary>
@@ -442,6 +482,25 @@
         <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel.TotalCount">
             <summary>
             The total number of configurations.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Assistant.DeletionResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.DeletionResponseModel.AssistantName">
+            <summary>
+            The name of the assistant.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.DeletionResponseModel.IdNumber">
+            <summary>
+            The id of the assistant.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Assistant.DeletionResponseModel.Deletion">
+            <summary>
+            Whether the assistant should be deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel">
@@ -729,6 +788,25 @@
             Creates the assistant configuration.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Services.Assistant.DeletionService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.GetAssistantDeletion(System.String,System.String)">
+            <summary>
+            Returns the deletion information about the given assistant.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.AssistantDeletionUpdated(System.String,System.String,System.Boolean)">
+            <summary>
+            Updates the deletion status of the given assistant.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Services.AuditHistoryService">
             <summary>
             </summary>
@@ -756,6 +834,20 @@
         <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.Data.SqlClient.SqlCommand)">
             <summary>
             Returns the number of audit history records that match the parameters.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.ChangeService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ChangeService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Creates a record in the Change table.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.LoggerService">

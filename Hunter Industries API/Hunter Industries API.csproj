@@ -327,6 +327,7 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Assistant\ConfigController.cs" />
+    <Compile Include="Controllers\Assistant\DeletionController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
@@ -349,9 +350,11 @@
     <Compile Include="Models\Database Model.cs" />
     <Compile Include="Models\Requests\Authentication Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Config Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Assistant\Deletion Model.cs" />
     <Compile Include="Models\Requests\Filters\Assistant\Assistant Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
     <Compile Include="Models\Responses\Assistant\Config Response Model.cs" />
+    <Compile Include="Models\Responses\Assistant\Deletion Response Model.cs" />
     <Compile Include="Models\Responses\Audit History Response Model.cs" />
     <Compile Include="Models\Responses\Response Model.cs" />
     <Compile Include="Models\Responses\Token Response Model.cs" />
@@ -363,7 +366,9 @@
     <Compile Include="Objects\Token Info.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Assistant\Config Service.cs" />
+    <Compile Include="Services\Assistant\Deletion Service.cs" />
     <Compile Include="Services\Audit History Service.cs" />
+    <Compile Include="Services\Change Service.cs" />
     <Compile Include="Services\Logger Service.cs" />
     <Compile Include="Services\Model Validation Service.cs" />
     <Compile Include="Services\Token Service.cs" />
@@ -382,10 +387,13 @@
     <Content Include="SQL\Assistant\Configuration\GetAssistantConfig.sql" />
     <Content Include="SQL\Assistant\Configuration\GetMostRecentAssistantVersion.sql" />
     <Content Include="SQL\Assistant\Configuration\GetTotalAssistantConfig.sql" />
+    <Content Include="SQL\Assistant\Deletion\AssistantDeletionUpdated.sql" />
+    <Content Include="SQL\Assistant\Deletion\GetAssistantDeletion.sql" />
     <Content Include="SQL\Audit History\GetAuditHistory.sql" />
     <Content Include="SQL\Audit History\GetTotalAuditHistory.sql" />
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
     <Content Include="SQL\Audit History\LogRequest.sql" />
+    <Content Include="SQL\LogChange.sql" />
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />
