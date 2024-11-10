@@ -195,9 +195,6 @@ namespace HunterIndustriesAPI
 
                         c.ApiKey("Bearer").Description("JWT authorization header using the Bearer scheme.").Name("Authorization").In("header");
 
-                        // Apply security to all operations
-                        //c.OperationFilter(() => new ApplyApiKeySecurity());
-
                         c.OperationFilter<RequiredParameterOperationFilter>();
                         c.OperationFilter<RequiredHeaderFilter>();
                         c.OperationFilter<ParameterDetailOperationFilter>();

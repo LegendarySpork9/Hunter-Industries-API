@@ -10,6 +10,7 @@
     width: 140px;
     height: 40px;
     margin-top: 0px;
+    pointer-events: none;
 }
 
 .swagger-section #api_selector input {
