@@ -28,7 +28,7 @@ jobs:
 
     - name: Build solution
       run: |
-        msbuild.exe "Hunter Industries API.sln" /p:configuration="Release"
+        "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe" "Hunter Industries API.sln" /p:configuration="Release"
 
     - name: Run tests
       run: dotnet test --no-restore --verbosity normal
