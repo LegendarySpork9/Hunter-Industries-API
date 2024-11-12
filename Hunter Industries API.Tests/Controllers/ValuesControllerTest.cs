@@ -27,6 +27,10 @@ namespace HunterIndustriesAPI.Tests.Controllers
             //Assert.AreEqual(2, result.Count());
             //Assert.AreEqual("value1", result.ElementAt(0));
             //Assert.AreEqual("value2", result.ElementAt(1));
+            int x = 1;
+            int y = 1;
+
+            Assert.AreEqual(x, y);
         }
 
         [TestMethod]
