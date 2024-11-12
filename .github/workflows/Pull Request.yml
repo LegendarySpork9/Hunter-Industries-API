@@ -16,6 +16,10 @@ jobs:
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
 
+    - name: Install VS Build Tools
+      run: |
+        choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.WebBuildTools --includeRecommended --includeOptional"
+
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
 
