@@ -27,4 +27,4 @@ jobs:
         MSBuild.exe "Hunter Industries API.sln" /p:configuration="Release"
 
     - name: Run tests
-      run: vstest.console.exe ".\tests\Hunter Industries API.Tests\bin\Release\Hunter Industries API.Tests.dll"
+      run: vstest.console.exe "\Hunter Industries API.Tests\bin\Release\Hunter Industries API.Tests.dll"
