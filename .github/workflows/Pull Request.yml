@@ -16,19 +16,15 @@ jobs:
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Install VS Build Tools
-      run: |
-        choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.WebBuildTools --includeRecommended --includeOptional"
+    - name: Setup VSTest
+      uses: darenm/Setup-VSTest@v1
 
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
 
-    - name: Create build directory
-      run: mkdir _build
-
     - name: Build solution
       run: |
-        "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe" "Hunter Industries API.sln" /p:configuration="Release"
+        MSBuild.exe "Hunter Industries API.sln" /p:configuration="Release"
 
     - name: Run tests
-      run: dotnet test --no-restore --verbosity normal
+      run: vstest.console.exe .\tests\Hunter Industries API.Tests\bin\Release\Hunter Industries API.Tests.dll
