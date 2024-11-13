@@ -1,8 +1,12 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
+﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class DeletionModel
     {
-        public bool? Deletion { get; set; }
+        /// <summary>
+        /// Whether the assistant should be deleted.
+        /// </summary>
+        public bool Deletion { get; set; }
     }
 }

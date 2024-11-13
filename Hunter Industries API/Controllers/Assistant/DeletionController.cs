@@ -1,21 +1,26 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Filters;
+using HunterIndustriesAPI.Filters.Operation;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.Assistant;
 using HunterIndustriesAPI.Models.Requests.Filters.Assistant;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.Assistant;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+using Swashbuckle.Swagger.Annotations;
+using System.Net;
+using System.Web;
+using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
 {
-    [Route("api/assistant/[controller]")]
-    [ApiController]
-    public class DeletionController : ControllerBase
+    /// <summary>
+    /// </summary>
+    [Authorize]
+    [RequiredPolicyAuthorisationAttributeFilter("Assistant")]
+    [Route("api/assistant/deletion")]
+    public class DeletionController : ApiController
     {
         /// <summary>
         /// Returns the deletion value of an assistant.
@@ -26,33 +31,34 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     GET /assistant/deletion?AssistantName=Test&amp;AssistantID=TST 1456-4
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        /// <response code="200">Returns the assistant deletion value or nothing.</response>
-        /// <response code="400">If the filters are invalid.</response>
-        /// <response code="401">If the bearer token is expired or fails validation.</response>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Assistant")]
-        [HttpGet]
-        [MakeFiltersRequired]
-        [ProducesResponseType(typeof(DeletionResponseModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
-        [Produces("application/json")]
-        public IActionResult RequestDeletion([FromQuery] AssistantFilterModel filters)
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeletionResponseModel), Description = "Returns the item matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public IHttpActionResult Get([FromUri] AssistantFilterModel filters)
         {
-            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
-            AuditHistoryService _auditHistoryService = new(_logger);
-            AuditHistoryConverter _auditHistoryConverter = new();
-            ModelValidationService _modelValidator = new();
-            DeletionService _deletionService = new(_logger);
+            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ModelValidationService _modelValidator = new ModelValidationService();
+            DeletionService _deletionService = new DeletionService(_logger);
+            ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
+            if (filters == null)
+            {
+                filters = new AssistantFilterModel();
+            }
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint called with the following parameters {_parameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(filters, true))
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), 
-                    new string[] { filters.AssistantName, filters.AssistantId });
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), _parameterFunction.FormatParameters(null, filters));
 
-                response = new()
+                response = new ResponseModel()
                 {
                     StatusCode = 400,
                     Data = new
@@ -61,18 +67,17 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                   new string[] { filters.AssistantName, filters.AssistantId });
+            _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"), _parameterFunction.FormatParameters(null, filters));
 
             DeletionResponseModel deletionResponse = _deletionService.GetAssistantDeletion(filters.AssistantName, filters.AssistantId);
 
             if (deletionResponse == new DeletionResponseModel())
             {
-                response = new()
+                response = new ResponseModel()
                 {
                     StatusCode = 200,
                     Data = new
@@ -81,18 +86,18 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.OK, response.Data);
             }
 
-            response = new()
+            response = new ResponseModel()
             {
                 StatusCode = 200,
                 Data = deletionResponse
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
-            return StatusCode(response.StatusCode, response.Data);
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            return Content(HttpStatusCode.OK, response.Data);
         }
 
         /// <summary>
@@ -108,39 +113,49 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///         "Deletion": "true"
         ///     }
         /// </remarks>
-        /// <response code="200">If the deletion value is updated.</response>
-        /// <response code="400">If the body or filters are invalid.</response>
-        /// <response code="401">If the bearer token is expired or fails validation.</response>
-        /// <response code="404">If no configuration was found using the filters.</response>
-        /// <response code="500">If something went wrong on the server.</response>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AIAccess")]
-        [HttpPatch]
+        /// <param name="request">An object containing the deletion value.</param>
         [MakeFiltersRequired]
-        [ProducesResponseType(typeof(DeletionResponseModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status500InternalServerError)]
-        [Produces("application/json")]
-        public IActionResult UpdateDeletion([FromBody, Required] DeletionModel request, [FromQuery] AssistantFilterModel filters)
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DeletionResponseModel), Description = "Returns the updated item.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no configuration was found using the filters.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public IHttpActionResult Patch([FromBody] DeletionModel request, [FromUri] AssistantFilterModel filters)
         {
-            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
-            AuditHistoryService _auditHistoryService = new(_logger);
-            AuditHistoryConverter _auditHistoryConverter = new();
-            ModelValidationService _modelValidator = new();
-            ConfigService _configService = new(_logger);
-            DeletionService _deletionService = new(_logger);
-            ChangeService _changeService = new(_logger);
+            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ModelValidationService _modelValidator = new ModelValidationService();
+            ConfigService _configService = new ConfigService(_logger);
+            DeletionService _deletionService = new DeletionService(_logger);
+            ChangeService _changeService = new ChangeService(_logger);
+            ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint called with the following parameters {_logger.FormatParameters(request)}, {_logger.FormatParameters(filters)}.");
+            if (filters == null)
+            {
+                filters = new AssistantFilterModel();
+            }
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}, {_parameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(filters, true))
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
+                if (request == null)
+                {
+                    _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
+                        new string[] { filters.AssistantName, filters.AssistantId, null });
+                }
 
-                response = new()
+                else
+                {
+                    _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
+                        new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
+                }
+
+                response = new ResponseModel()
                 {
                     StatusCode = 400,
                     Data = new
@@ -149,8 +164,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
             if (_configService.AssistantExists(filters.AssistantName, filters.AssistantId))
@@ -159,8 +174,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
                 if (_deletionService.AssistantDeletionUpdated(filters.AssistantName, filters.AssistantId, bool.Parse(request.Deletion.ToString())))
                 {
-                    var auditID = _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
+                    var auditID = _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),
+                        new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
 
                     if (request.Deletion != deletionResponse.Deletion)
                     {
@@ -169,20 +184,20 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
                     deletionResponse.Deletion = request.Deletion;
 
-                    response = new()
+                    response = new ResponseModel()
                     {
                         StatusCode = 200,
                         Data = deletionResponse
                     };
 
-                    _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                    return StatusCode(response.StatusCode, response.Data);
+                    _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                    return Content(HttpStatusCode.OK, response.Data);
                 }
 
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"),
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"),
                         _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
 
-                response = new()
+                response = new ResponseModel()
                 {
                     StatusCode = 500,
                     Data = new
@@ -191,14 +206,14 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
+            _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/deletion"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
                     new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
 
-            response = new()
+            response = new ResponseModel()
             {
                 StatusCode = 404,
                 Data = new
@@ -207,8 +222,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {response.Data}");
-            return StatusCode(response.StatusCode, response.Data);
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            return Content(HttpStatusCode.NotFound, response.Data);
         }
     }
 }

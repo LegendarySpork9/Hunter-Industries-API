@@ -1,0 +1,1 @@
+﻿select * from Authorisation with (nolock)

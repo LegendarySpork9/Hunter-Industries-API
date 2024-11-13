@@ -1,9 +1,16 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
+﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class LocationModel
     {
-        public string? HostName { get; set; }
-        public string? IPAddress { get; set; }
+        /// <summary>
+        /// The name of the machine where the assistant is assigned.
+        /// </summary>
+        public string HostName { get; set; }
+        /// <summary>
+        /// The IP Address of the machine the assistant is located on.
+        /// </summary>
+        public string IPAddress { get; set; }
     }
 }

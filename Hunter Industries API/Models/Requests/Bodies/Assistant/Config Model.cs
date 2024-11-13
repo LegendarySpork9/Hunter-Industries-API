@@ -1,11 +1,24 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
+﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class ConfigModel
     {
-        public string? AssistantName { get; set; }
-        public string? IdNumber { get; set; }
-        public string? AssignedUser { get; set; }
-        public string? HostName { get; set; }
+        /// <summary>
+        /// The name of the assistant.
+        /// </summary>
+        public string AssistantName { get; set; }
+        /// <summary>
+        /// The id of the assistant.
+        /// </summary>
+        public string IdNumber { get; set; }
+        /// <summary>
+        /// The user that the assistant is assigned.
+        /// </summary>
+        public string AssignedUser { get; set; }
+        /// <summary>
+        /// The name of the machine where the assistant is assigned.
+        /// </summary>
+        public string HostName { get; set; }
     }
 }

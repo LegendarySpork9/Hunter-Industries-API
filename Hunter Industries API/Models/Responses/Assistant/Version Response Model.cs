@@ -1,10 +1,20 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models.Responses.Assistant
+﻿namespace HunterIndustriesAPI.Models.Responses.Assistant
 {
-    public record VersionResponseModel
+    /// <summary>
+    /// </summary>
+    public class VersionResponseModel
     {
-        public string? AssistantName { get; set; }
-        public string? IdNumber { get; set; }
-        public string? Version { get; set; }
+        /// <summary>
+        /// The name of the assistant.
+        /// </summary>
+        public string AssistantName { get; set; }
+        /// <summary>
+        /// The id of the assistant.
+        /// </summary>
+        public string IdNumber { get; set; }
+        /// <summary>
+        /// The version of the assistant.
+        /// </summary>
+        public string Version { get; set; }
     }
 }

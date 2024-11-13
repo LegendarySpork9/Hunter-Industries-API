@@ -1,15 +1,35 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Objects;
+﻿using HunterIndustriesAPI.Objects;
+using System.Collections.Generic;
 
 namespace HunterIndustriesAPI.Models.Responses
 {
-    public record AuditHistoryResponseModel
+    /// <summary>
+    /// </summary>
+    public class AuditHistoryResponseModel
     {
-        public List<AuditHistoryRecord>? Entries { get; set; }
-        public int? EntryCount { get; set; }
-        public int? PageNumber { get; set; }
-        public int? PageSize { get; set; }
-        public int? TotalPageCount { get; set; }
-        public int? TotalCount { get; set; }
+        /// <summary>
+        /// The audit history records.
+        /// </summary>
+        public List<AuditHistoryRecord> Entries { get; set; }
+        /// <summary>
+        /// The number of records in the page.
+        /// </summary>
+        public int EntryCount { get; set; }
+        /// <summary>
+        /// The current page number.
+        /// </summary>
+        public int PageNumber { get; set; }
+        /// <summary>
+        /// The current page size.
+        /// </summary>
+        public int PageSize { get; set; }
+        /// <summary>
+        /// The total number of pages returned.
+        /// </summary>
+        public int TotalPageCount { get; set; }
+        /// <summary>
+        /// The total number of records returned.
+        /// </summary>
+        public int TotalCount { get; set; }
     }
 }

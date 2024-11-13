@@ -1,10 +1,20 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models
+﻿namespace HunterIndustriesAPI.Models
 {
-    public class ValidationModel
+    /// <summary>
+    /// </summary>
+    public static class ValidationModel
     {
-        public static string? Issuer { get; set; }
-        public static string? Audience { get; set; }
-        public static string? SecretKey { get; set; }
+        /// <summary>
+        /// The valid issuer of the token.
+        /// </summary>
+        public static string Issuer { get; set; }
+        /// <summary>
+        /// The valid audience of the token.
+        /// </summary>
+        public static string Audience { get; set; }
+        /// <summary>
+        /// The valid secret key of the token.
+        /// </summary>
+        public static string SecretKey { get; set; }
     }
 }

@@ -1,25 +1,38 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects.Assistant;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class ConfigService
     {
         private readonly LoggerService Logger;
 
+        /// <summary>
+        /// Sets the class's global variables.
+        /// </summary>
         public ConfigService(LoggerService _logger)
         {
             Logger = _logger;
         }
 
-        public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string? assistantName, string? assistantId)
+        /// <summary>
+        /// Returns all configuration records that match the parameters.
+        /// </summary>
+        public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string assistantName, string assistantId)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
 
-            List<AssistantConfiguration> assistantConfigurations = new();
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+
+            List<AssistantConfiguration> assistantConfigurations = new List<AssistantConfiguration>();
 
             int totalConfigs = 0;
             string mostRecentVersion = string.Empty;
@@ -28,7 +41,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantConfig.SQL"));
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetAssistantConfig.sql");
 
             if (!string.IsNullOrEmpty(assistantName))
             {
@@ -60,7 +73,7 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 while (dataReader.Read())
                 {
-                    AssistantConfiguration configuration = new()
+                    AssistantConfiguration configuration = new AssistantConfiguration()
                     {
                         AssistantName = dataReader.GetString(0),
                         IdNumber = dataReader.GetString(1),
@@ -69,7 +82,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                         Deletion = bool.Parse(dataReader.GetString(4)),
                         Version = dataReader.GetString(5)
                     };
-                    
+
                     assistantConfigurations.Add(configuration);
                 }
 
@@ -87,10 +100,13 @@ namespace HunterIndustriesAPI.Services.Assistant
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {Logger.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {_parameterFunction.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
             return (assistantConfigurations, totalConfigs, mostRecentVersion);
         }
 
+        /// <summary>
+        /// Returns the number of configuration records that match the parameters.
+        /// </summary>
         private int GetTotalConfigs(SqlCommand command)
         {
             int totalRecords = 0;
@@ -103,7 +119,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
                 command.Connection = connection;
-                command.CommandText = "select count(*) from AssistantInformation AI with (nolock)";
+                command.CommandText = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetTotalAssistantConfig.sql");
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -125,6 +141,9 @@ namespace HunterIndustriesAPI.Services.Assistant
             return totalRecords;
         }
 
+        /// <summary>
+        /// Returns the most recent version number.
+        /// </summary>
         public string GetMostRecentVersion()
         {
             string version = string.Empty;
@@ -133,8 +152,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = @"select top 1 Value from [Version] with (nolock)
-order by VersionID desc";
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetMostRecentAssistantVersion.sql");
 
             try
             {
@@ -162,19 +180,22 @@ order by VersionID desc";
             return version;
         }
 
+        /// <summary>
+        /// Returns whether a config already exists with the given details.
+        /// </summary>
         public bool AssistantExists(string assistantName, string assistantId)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
 
-            string? name = null;
-            string? idNumber = null;
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+
             bool exists = false;
 
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\AssistantExists.SQL"));
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\AssistantExists.sql");
 
             try
             {
@@ -187,8 +208,8 @@ order by VersionID desc";
 
                 while (dataReader.Read())
                 {
-                    name = dataReader.GetString(0);
-                    idNumber = dataReader.GetString(1);
+                    string name = dataReader.GetString(0);
+                    string idNumber = dataReader.GetString(1);
 
                     if ((name == assistantName && idNumber == assistantId) || idNumber == assistantId)
                     {
@@ -211,18 +232,21 @@ order by VersionID desc";
             return exists;
         }
 
+        /// <summary>
+        /// Creates the assistant configuration.
+        /// </summary>
         public bool AssistantConfigCreated(string assistantName, string assistantId, string assignedUser, string hostName)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
 
             bool created = true;
 
             SqlConnection connection;
             SqlCommand command;
 
-            string sqlQuery = @"insert into [Location] (HostName, IPAddress)
-output inserted.LocationID
-values (@Hostname, @IPAddress)";
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\CreateLocation.sql");
             int rowsAffected;
 
             try
@@ -242,9 +266,7 @@ values (@Hostname, @IPAddress)";
 
                 if (created)
                 {
-                    sqlQuery = @"insert into [User] (Name)
-output inserted.UserID
-values (@Name)";
+                    sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\CreateUser.sql");
                     rowsAffected = 0;
 
                     command = new SqlCommand(sqlQuery, connection);
@@ -259,8 +281,7 @@ values (@Name)";
 
                     if (created)
                     {
-                        sqlQuery = @"insert into [AssistantInformation] (LocationID, DeletionStatusID, VersionID, UserID, Name, IDNumber)
-values (@LocationID, 2, (select top 1 VersionID from [Version] with (nolock) order by VersionID desc), @UserID, @AssistantName, @IDNumber)";
+                        sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\CreateAssistantConfiguration.sql");
                         rowsAffected = 0;
 
                         command = new SqlCommand(sqlQuery, connection);
@@ -286,6 +307,8 @@ values (@LocationID, 2, (select top 1 VersionID from [Version] with (nolock) ord
                 string message = "An error occured when trying to run ConfigService.AssistantConfigCreated.";
                 Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                created = false;
             }
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated returned {created}.");

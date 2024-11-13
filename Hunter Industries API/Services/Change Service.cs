@@ -1,30 +1,39 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
+using System;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace HunterIndustriesAPI.Services
 {
+    /// <summary>
+    /// </summary>
     public class ChangeService
     {
         private readonly LoggerService Logger;
 
+        /// <summary>
+        /// Sets the class's global variables.
+        /// </summary>
         public ChangeService(LoggerService _logger)
         {
             Logger = _logger;
         }
 
+        /// <summary>
+        /// Creates a record in the Change table.
+        /// </summary>
         public bool LogChange(int endpointId, int auditId, string field, string oldValue, string newValue)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {Logger.FormatParameters(new string[] { endpointId.ToString(), auditId.ToString(), field, oldValue, newValue })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {_parameterFunction.FormatParameters(new string[] { endpointId.ToString(), auditId.ToString(), field, oldValue, newValue })}.");
 
             bool successful = false;
 
             SqlConnection connection;
             SqlCommand command;
-
-            string sqlQuery = @"insert into [Change] (EndpointID, AuditID, Field, OldValue, NewValue)
-values (@EndpointID, @AuditID, @Field, @OldValue, @NewValue)";
 
             int rowsAffected;
 
@@ -32,7 +41,7 @@ values (@EndpointID, @AuditID, @Field, @OldValue, @NewValue)";
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\LogChange.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
                 command.Parameters.Add(new SqlParameter("@AuditID", auditId));
                 command.Parameters.Add(new SqlParameter("@Field", field));

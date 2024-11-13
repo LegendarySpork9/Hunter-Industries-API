@@ -1,44 +1,54 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Models;
+﻿using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models.Responses.Assistant;
+using HunterIndustriesAPI.Models;
+using System;
 using System.Data.SqlClient;
+using System.IO;
+using HunterIndustriesAPI.Functions;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class VersionService
     {
         private readonly LoggerService Logger;
 
+        /// <summary>
+        /// Sets the class's global variables.
+        /// </summary>
         public VersionService(LoggerService _logger)
         {
             Logger = _logger;
         }
 
+        /// <summary>
+        /// Retrns the version information for the given assistant.
+        /// </summary>
         public VersionResponseModel GetAssistantVersion(string assistantName, string assistantId)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
 
-            VersionResponseModel version = new();
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+
+            VersionResponseModel version = new VersionResponseModel();
 
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantVersion.SQL"));
-
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\GetAssistantVersion.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                 command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
                 {
-                    version = new()
+                    version = new VersionResponseModel()
                     {
                         AssistantName = dataReader.GetString(0),
                         IdNumber = dataReader.GetString(1),
@@ -57,29 +67,31 @@ namespace HunterIndustriesAPI.Services.Assistant
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion returned {Logger.FormatParameters(version)}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion returned {_parameterFunction.FormatParameters(version)}.");
             return version;
         }
 
+        /// <summary>
+        /// Updates the version number of the given assistant.
+        /// </summary>
         public bool AssistantVersionUpdated(string assistantName, string assistantId, string version)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId, version })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, version })}.");
 
             bool updated = true;
 
             SqlConnection connection;
             SqlCommand command;
 
-            string sqlQuery = @"update AssistantInformation set VersionID = (select VersionID from [Version] with (nolock) where Value = @Version)
-where Name = @AssistantName
-and IDNumber = @IDNumber";
             int rowsAffected;
 
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\AssistantVersionUpdated.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@Version", version));
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                 command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));

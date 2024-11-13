@@ -1,44 +1,54 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Responses.Assistant;
+using System;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class LocationService
     {
         private readonly LoggerService Logger;
 
+        /// <summary>
+        /// Sets the class's global variables.
+        /// </summary>
         public LocationService(LoggerService _logger)
         {
             Logger = _logger;
         }
 
+        /// <summary>
+        /// Returns the location information about the given assistant.
+        /// </summary>
         public LocationResponseModel GetAssistantLocation(string assistantName, string assistantId)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
 
-            LocationResponseModel location = new();
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+
+            LocationResponseModel location = new LocationResponseModel();
 
             SqlConnection connection;
             SqlCommand command;
             SqlDataReader dataReader;
 
-            string sqlQuery = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, @"\SQL\GetAssistantLocation.SQL"));
-
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\GetAssistantLocation.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                 command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
                 {
-                    location = new()
+                    location = new LocationResponseModel()
                     {
                         AssistantName = dataReader.GetString(0),
                         IdNumber = dataReader.GetString(1),
@@ -58,25 +68,25 @@ namespace HunterIndustriesAPI.Services.Assistant
                 Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {Logger.FormatParameters(location)}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {_parameterFunction.FormatParameters(location)}.");
             return location;
         }
 
-        public bool AssistantLocationUpdated(string assistantName, string assistantId, string? hostName, string? ipAddress)
+        /// <summary>
+        /// Updates the location information of the given assistant.
+        /// </summary>
+        public bool AssistantLocationUpdated(string assistantName, string assistantId, string hostName, string ipAddress)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {Logger.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
 
             bool updated = true;
 
             SqlConnection connection;
             SqlCommand command;
 
-            string sqlQuery = @"update [Location] set HostName = @HostName, IPAddress = @IPAddress
-where LocationID = (
-	select LocationID from AssistantInformation with (nolock)
-	where Name = @AssistantName
-	and IDNumber = @IDNumber
-)";
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\AssistantLocationUpdated.sql");
             int rowsAffected;
 
             if (string.IsNullOrEmpty(hostName))

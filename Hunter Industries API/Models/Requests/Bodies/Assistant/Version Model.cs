@@ -1,8 +1,12 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
+﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class VersionModel
     {
-        public string? Version { get; set; }
+        /// <summary>
+        /// The version of the assistant.
+        /// </summary>
+        public string Version { get; set; }
     }
 }

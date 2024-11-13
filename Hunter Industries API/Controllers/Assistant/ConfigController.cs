@@ -1,5 +1,6 @@
-﻿// Copyright © - unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Filters;
+using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.Assistant;
 using HunterIndustriesAPI.Models.Requests.Filters.Assistant;
 using HunterIndustriesAPI.Models.Responses;
@@ -7,17 +8,21 @@ using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Objects.Assistant;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.Assistant;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.Swagger.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Web;
+using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AIAccess")]
-    [Route("api/assistant/[controller]")]
-    [ApiController]
-    public class ConfigController : ControllerBase
+    /// <summary>
+    /// </summary>
+    [Authorize]
+    [RequiredPolicyAuthorisationAttributeFilter("AIAccess")]
+    [Route("api/assistant/config")]
+    public class ConfigController : ApiController
     {
         /// <summary>
         /// Returns a collection of assistant configurations.
@@ -28,31 +33,35 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     GET /assistant/config?AssistantName=Test&amp;AssistantID=TST 1456-4
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        /// <response code="200">Returns the assistant configuration collection or nothing.</response>
-        /// <response code="401">If the bearer token is expired or fails validation.</response>
-        [HttpGet]
-        [ProducesResponseType(typeof(ConfigResponseModel), StatusCodes.Status200OK)]
-        [Produces("application/json")]
-        public IActionResult RequestConfig([FromQuery] AssistantFilterModel filters)
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ConfigResponseModel), Description = "Returns the item(s) matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public IHttpActionResult Get([FromUri] AssistantFilterModel filters)
         {
-            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
-            AuditHistoryService _auditHistoryService = new(_logger);
-            AuditHistoryConverter _auditHistoryConverter = new();
-            ConfigService _configService = new(_logger);
+            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ConfigService _configService = new ConfigService(_logger);
+            ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint called with the following parameters {_logger.FormatParameters(filters)}.");
+            if (filters == null)
+            {
+                filters = new AssistantFilterModel();
+            }
 
-            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.AssistantName, filters.AssistantId });
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint called with the following parameters {_parameterFunction.FormatParameters(filters)}.");
+
+            _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"), _parameterFunction.FormatParameters(null, filters));
 
             var result = _configService.GetAssistantConfig(filters.AssistantName, filters.AssistantId);
             List<AssistantConfiguration> assistantConfigurations = result.Item1;
 
             if (assistantConfigurations.Count == 0)
             {
-                response = new()
+                response = new ResponseModel()
                 {
                     StatusCode = 200,
                     Data = new
@@ -61,11 +70,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.OK, response.Data);
             }
 
-            response = new()
+            response = new ResponseModel()
             {
                 StatusCode = 200,
                 Data = new ConfigResponseModel()
@@ -77,8 +86,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {response.Data}");
-            return StatusCode(response.StatusCode, response.Data);
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            return Content(HttpStatusCode.OK, response.Data);
         }
 
         /// <summary>
@@ -92,40 +101,42 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     Content-Type: application/json
         ///     {
         ///         "AssistantName": "Test",
-        ///         "IDNumber": "TST 1419-9",
+        ///         "IDNumber": "TST 1456-4",
         ///         "AssignedUser": "Tester",
         ///         "HostName": "PlaceHolder"
         ///     }
         /// </remarks>
-        /// <response code="200">If the a configuration matching the name and id number already exists.</response>
-        /// <response code="201">If the configuration is successfuly created.</response>
-        /// <response code="400">If the body is invalid.</response>
-        /// <response code="401">If the bearer token is expired or fails validation.</response>
-        /// <response code="500">If something went wrong on the server.</response>
-        [HttpPost]
-        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(AssistantConfiguration), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status500InternalServerError)]
-        [Produces("application/json")]
-        public IActionResult CreateConfig([FromBody, Required] ConfigModel request)
+        /// <param name="request">An object containing the basic assistant configuration information.</param>
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a configuration matching the name and id number already exists.")]
+        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(AssistantConfiguration), Description = "If the configuration is successfuly created.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public IHttpActionResult Post([FromBody, Required] ConfigModel request)
         {
-            LoggerService _logger = new(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
-            AuditHistoryService _auditHistoryService = new(_logger);
-            AuditHistoryConverter _auditHistoryConverter = new();
-            ModelValidationService _modelValidator = new();
-            ConfigService _configService = new(_logger);
+            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ModelValidationService _modelValidator = new ModelValidationService();
+            ConfigService _configService = new ConfigService(_logger);
+            ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint called with the following parameters {_logger.FormatParameters(request)}.");
+            if (request == null)
+            {
+                request = new ConfigModel();
+            }
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request, true))
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
                     null);
 
-                response = new()
+                response = new ResponseModel()
                 {
                     StatusCode = 400,
                     Data = new
@@ -134,16 +145,15 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
             if (_configService.AssistantExists(request.AssistantName, request.IdNumber))
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"), 
-                    new string[] { request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName });
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"), _parameterFunction.FormatParameters(null, request));
 
-                response = new()
+                response = new ResponseModel()
                 {
                     StatusCode = 200,
                     Data = new
@@ -152,16 +162,15 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.OK, response.Data);
             }
 
             if (!_configService.AssistantConfigCreated(request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName))
             {
-                _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), 
-                    new string[] { request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName });
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), _parameterFunction.FormatParameters(null, request));
 
-                response = new()
+                response = new ResponseModel()
                 {
                     Data = new
                     {
@@ -169,16 +178,15 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
-                return StatusCode(response.StatusCode, response.Data);
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            _auditHistoryService.LogRequest(HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"),
-                    new string[] { request.AssistantName, request.IdNumber, request.AssignedUser, request.HostName });
+            _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/config"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"), _parameterFunction.FormatParameters(null, request));
 
             string version = _configService.GetMostRecentVersion();
 
-            response = new()
+            response = new ResponseModel()
             {
                 StatusCode = 201,
                 Data = new AssistantConfiguration()
@@ -192,8 +200,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {response.Data}");
-            return StatusCode(response.StatusCode, response.Data);
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            return Content(HttpStatusCode.Created, response.Data);
         }
     }
 }

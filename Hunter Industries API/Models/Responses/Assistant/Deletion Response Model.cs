@@ -1,10 +1,20 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models.Responses.Assistant
+﻿namespace HunterIndustriesAPI.Models.Responses.Assistant
 {
-    public record DeletionResponseModel
+    /// <summary>
+    /// </summary>
+    public class DeletionResponseModel
     {
-        public string? AssistantName { get; set; }
-        public string? IdNumber { get; set; }
-        public bool? Deletion { get; set; }
+        /// <summary>
+        /// The name of the assistant.
+        /// </summary>
+        public string AssistantName { get; set; }
+        /// <summary>
+        /// The id of the assistant.
+        /// </summary>
+        public string IdNumber { get; set; }
+        /// <summary>
+        /// Whether the assistant should be deleted.
+        /// </summary>
+        public bool Deletion { get; set; }
     }
 }

@@ -1,9 +1,16 @@
-﻿// Copyright © - unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Models.Requests.Filters.Assistant
+﻿namespace HunterIndustriesAPI.Models.Requests.Filters.Assistant
 {
+    /// <summary>
+    /// </summary>
     public class AssistantFilterModel
     {
-        public string? AssistantName { get; set; }
-        public string? AssistantId { get; set; }
+        /// <summary>
+        /// The name of the assistant.
+        /// </summary>
+        public string AssistantName { get; set; }
+        /// <summary>
+        /// The id of the assistant.
+        /// </summary>
+        public string AssistantId { get; set; }
     }
 }
