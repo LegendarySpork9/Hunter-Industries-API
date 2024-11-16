@@ -188,7 +188,7 @@ namespace HunterIndustriesAPI
                         c.SingleApiVersion("v1", "Hunter Industries API").Description("This is the OpenAPI documentation for the Hunter Industries API.").Contact(contact =>
                         {
                             contact.Email("Development Team");
-                            contact.Name("Toby.Hunter@Hunter-Industries.co.uk");
+                            contact.Name("");
                         });
 
                         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{thisAssembly.GetName().Name}.xml"));

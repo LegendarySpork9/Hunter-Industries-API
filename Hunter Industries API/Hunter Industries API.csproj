@@ -331,7 +331,6 @@
     <Compile Include="Controllers\Assistant\VersionController.cs" />
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Converters\Audit History Converter.cs" />
     <Compile Include="Converters\Standard Values.cs" />
