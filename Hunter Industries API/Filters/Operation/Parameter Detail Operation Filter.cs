@@ -147,6 +147,33 @@ namespace HunterIndustriesAPI.Filters.Operation
                     }
                 }
             }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserController))
+            {
+                foreach(Parameter param in operation.parameters)
+                {
+                    if (param.name == "filters.id")
+                    {
+                        param.name = "id";
+                    }
+
+                    if (param.name == "filters.username")
+                    {
+                        param.name = "username";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserController) && apiDescription.ActionDescriptor.ActionName == "Post")
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "user";
+                    }
+                }
+            }
         }
     }
 }

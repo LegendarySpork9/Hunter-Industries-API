@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Controllers.Assistant;
+﻿using HunterIndustriesAPI.Controllers;
+using HunterIndustriesAPI.Controllers.Assistant;
 using Swashbuckle.Swagger;
 using System.Collections.Generic;
 using System.Web.Http.Description;
@@ -30,6 +31,27 @@ namespace HunterIndustriesAPI.Filters.Operation
                                 {
                                     type = "string",
                                     example = "A config with the name and/or ID already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserController))
+            {
+                if (operation.responses.TryGetValue("200", out existingResponse))
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "A user with the username already exists."
                                 }
                             }
                         }

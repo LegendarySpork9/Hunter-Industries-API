@@ -217,6 +217,49 @@
             </remarks>
             <param name="request">The application identifier.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.UserController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.UserController.Get(HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel)">
+            <summary>
+            Returns a collection of users.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /User?Username=TestUser
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.UserController.Get(System.Int32)">
+            <summary>
+            Returns the record matching the given id.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /User/1
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.UserController.Post(HunterIndustriesAPI.Models.Requests.Bodies.UserModel)">
+            <summary>
+            Creates a new user.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                POST /user
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "Username": "TestUser",
+                    "Password": "Password"
+                }
+            </remarks>
+            <param name="request">An object containing the user information.</param>
+        </member>
         <member name="T:HunterIndustriesAPI.Converters.AuditHistoryConverter">
             <summary>
             </summary>
@@ -494,6 +537,20 @@
             The version of the assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.UserModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.UserModel.Username">
+            <summary>
+            The name of the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.UserModel.Password">
+            <summary>
+            The password of the user.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel">
             <summary>
             </summary>
@@ -535,6 +592,20 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.PageNumber">
             <summary>
             The number of the page to pull.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.Id">
+            <summary>
+            The id number of the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.Username">
+            <summary>
+            The name of the user.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel">
@@ -874,6 +945,25 @@
             The date and time it expires.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.UserRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Id">
+            <summary>
+            The id number of the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Username">
+            <summary>
+            The name of the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Password">
+            <summary>
+            The password of the user.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Services.Assistant.ConfigService">
             <summary>
             </summary>
@@ -1078,6 +1168,30 @@
         <member name="M:HunterIndustriesAPI.Services.TokenService.GetApplicationName(System.String)">
             <summary>
             Gets the application name from the database.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.UserService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.GetUsers(System.Int32,System.String)">
+            <summary>
+            Returns all user records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.UserExists(System.String)">
+            <summary>
+            Returns whether a user already exists with the given details.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.UserCreated(System.String,System.String)">
+            <summary>
+            Creates the user.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Startup">
