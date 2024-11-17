@@ -332,6 +332,7 @@
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Converters\Audit History Converter.cs" />
     <Compile Include="Converters\Standard Values.cs" />
     <Compile Include="Converters\Token Converter.cs" />
@@ -354,8 +355,10 @@
     <Compile Include="Models\Requests\Bodies\Assistant\Deletion Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Location Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Version Model.cs" />
+    <Compile Include="Models\Requests\Bodies\User Model.cs" />
     <Compile Include="Models\Requests\Filters\Assistant\Assistant Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
+    <Compile Include="Models\Requests\Filters\User Filter Model.cs" />
     <Compile Include="Models\Responses\Assistant\Config Response Model.cs" />
     <Compile Include="Models\Responses\Assistant\Deletion Response Model.cs" />
     <Compile Include="Models\Responses\Assistant\Location Response Model.cs" />
@@ -369,6 +372,7 @@
     <Compile Include="Objects\Change Record.cs" />
     <Compile Include="Objects\Login Attempt Record.cs" />
     <Compile Include="Objects\Token Info.cs" />
+    <Compile Include="Objects\User Record.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Assistant\Config Service.cs" />
     <Compile Include="Services\Assistant\Deletion Service.cs" />
@@ -379,6 +383,7 @@
     <Compile Include="Services\Logger Service.cs" />
     <Compile Include="Services\Model Validation Service.cs" />
     <Compile Include="Services\Token Service.cs" />
+    <Compile Include="Services\User Service.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -408,6 +413,9 @@
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />
+    <Content Include="SQL\User\CreateUser.sql" />
+    <Content Include="SQL\User\GetUsers.sql" />
+    <Content Include="SQL\User\UserExists.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

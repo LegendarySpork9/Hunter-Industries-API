@@ -17,6 +17,7 @@
                 case "assistant/version": return 4;
                 case "assistant/deletion": return 5;
                 case "assistant/location": return 6;
+                case "user": return 7;
                 default: return 0;
             }
         }
