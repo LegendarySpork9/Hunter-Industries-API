@@ -1,6 +1,7 @@
 ﻿using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
 using Swashbuckle.Swagger;
+using System.Collections.Generic;
 using System.Web.Http.Description;
 
 namespace HunterIndustriesAPI.Filters.Operation
@@ -21,8 +22,19 @@ namespace HunterIndustriesAPI.Filters.Operation
                     if (param.name == "request")
                     {
                         param.name = "phrase";
-                        param.type = "string";
-                        param.schema = null;
+                        param.schema = new Schema
+                        {
+                            type = "object",
+                            properties = new Dictionary<string, Schema>
+                            {
+                                {
+                                    "phrase", new Schema
+                                    {
+                                        type = "string"
+                                    }
+                                }
+                            }
+                        };
                     }
                 }
             }
