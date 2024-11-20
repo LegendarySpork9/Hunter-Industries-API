@@ -1,2 +1,2 @@
-﻿select UserID from APIUser
+﻿select UserID from APIUser with (nolock)
 where Username = @Username
