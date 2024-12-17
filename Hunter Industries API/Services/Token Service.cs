@@ -115,7 +115,7 @@ namespace HunterIndustriesAPI.Services
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase {_parameterFunction.FormatParameters(phrase)}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase {_parameterFunction.FormatParameters(new[] { phrase })}.");
 
             string name = string.Empty;
 
