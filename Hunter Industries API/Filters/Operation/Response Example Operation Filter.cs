@@ -40,7 +40,7 @@ namespace HunterIndustriesAPI.Filters.Operation
 
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserController))
             {
-                if (operation.responses.TryGetValue("200", out existingResponse))
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "User_Post")
                 {
                     existingResponse.schema = new Schema
                     {
