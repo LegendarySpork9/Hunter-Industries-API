@@ -1,6 +1,6 @@
-USE [APIDev]
+USE [HunterIndustriesAPI]
 GO
-/****** Object:  Table [dbo].[APIUser]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[APIUser]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[APIUser](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Application]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Application]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -30,7 +30,7 @@ CREATE TABLE [dbo].[Application](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AssistantInformation]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[AssistantInformation]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -49,7 +49,7 @@ CREATE TABLE [dbo].[AssistantInformation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AuditHistory]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[AuditHistory]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -68,7 +68,7 @@ CREATE TABLE [dbo].[AuditHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Authorisation]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Authorisation]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -82,7 +82,7 @@ CREATE TABLE [dbo].[Authorisation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Change]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Change]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -100,7 +100,7 @@ CREATE TABLE [dbo].[Change](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Deletion]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Deletion]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -114,7 +114,7 @@ CREATE TABLE [dbo].[Deletion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Endpoint]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Endpoint]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -128,7 +128,7 @@ CREATE TABLE [dbo].[Endpoint](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ErrorLog]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[ErrorLog]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -145,7 +145,7 @@ CREATE TABLE [dbo].[ErrorLog](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Location]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Location]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -160,7 +160,7 @@ CREATE TABLE [dbo].[Location](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[LoginAttempt]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[LoginAttempt]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -178,7 +178,7 @@ CREATE TABLE [dbo].[LoginAttempt](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Method]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Method]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -192,7 +192,7 @@ CREATE TABLE [dbo].[Method](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[StatusCode]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[StatusCode]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -206,7 +206,7 @@ CREATE TABLE [dbo].[StatusCode](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[User]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -220,7 +220,7 @@ CREATE TABLE [dbo].[User](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Version]    Script Date: 08/09/2024 12:19:58 ******/
+/****** Object:  Table [dbo].[Version]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -299,77 +299,43 @@ REFERENCES [dbo].[User] ([UserID])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_User]
 GO
-SET IDENTITY_INSERT [dbo].[Authorisation] ON 
+INSERT [dbo].[Deletion] ([Value]) VALUES ('True')
 GO
-INSERT [dbo].[Authorisation] ([PhraseID], [Phrase]) VALUES (1, N'Do or do not. There is no try.')
+INSERT [dbo].[Deletion] ([Value]) VALUES ('False')
 GO
-INSERT [dbo].[Authorisation] ([PhraseID], [Phrase]) VALUES (2, N'Hello There. General Kenobi.')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/auth/token')
 GO
-SET IDENTITY_INSERT [dbo].[Authorisation] OFF
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/audithistory')
 GO
-SET IDENTITY_INSERT [dbo].[Application] ON 
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/config')
 GO
-INSERT [dbo].[Application] ([ApplicationID], [PhraseID], [Name]) VALUES (1, 1, N'Virtual Assistant')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/version')
 GO
-INSERT [dbo].[Application] ([ApplicationID], [PhraseID], [Name]) VALUES (2, 2, N'API Admin')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/deletion')
 GO
-SET IDENTITY_INSERT [dbo].[Application] OFF
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/location')
 GO
-SET IDENTITY_INSERT [dbo].[Deletion] ON 
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/user')
 GO
-INSERT [dbo].[Deletion] ([StatusID], [Value]) VALUES (1, N'True')
+INSERT [dbo].[Method] ([Value]) VALUES ('GET')
 GO
-INSERT [dbo].[Deletion] ([StatusID], [Value]) VALUES (2, N'False')
+INSERT [dbo].[Method] ([Value]) VALUES ('POST')
 GO
-SET IDENTITY_INSERT [dbo].[Deletion] OFF
+INSERT [dbo].[Method] ([Value]) VALUES ('PATCH')
 GO
-SET IDENTITY_INSERT [dbo].[Endpoint] ON 
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('200 OK')
 GO
-INSERT [dbo].[Endpoint] ([EndpointID], [Value]) VALUES (1, N'https://hunter-industries.co.uk/api/auth/token')
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('201 Created')
 GO
-INSERT [dbo].[Endpoint] ([EndpointID], [Value]) VALUES (2, N'https://hunter-industries.co.uk/api/audithistory')
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('400 Bad Request')
 GO
-INSERT [dbo].[Endpoint] ([EndpointID], [Value]) VALUES (3, N'https://hunter-industries.co.uk/api/assistant/config')
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('401 Unauthorized')
 GO
-INSERT [dbo].[Endpoint] ([EndpointID], [Value]) VALUES (4, N'https://hunter-industries.co.uk/api/assistant/version')
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('403 Forbidden')
 GO
-INSERT [dbo].[Endpoint] ([EndpointID], [Value]) VALUES (5, N'https://hunter-industries.co.uk/api/assistant/deletion')
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('404 Not Found')
 GO
-INSERT [dbo].[Endpoint] ([EndpointID], [Value]) VALUES (6, N'https://hunter-industries.co.uk/api/assistant/location')
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('500 Internal Server Error')
 GO
-SET IDENTITY_INSERT [dbo].[Endpoint] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Method] ON 
-GO
-INSERT [dbo].[Method] ([MethodID], [Value]) VALUES (1, N'GET')
-GO
-INSERT [dbo].[Method] ([MethodID], [Value]) VALUES (2, N'POST')
-GO
-INSERT [dbo].[Method] ([MethodID], [Value]) VALUES (3, N'PATCH')
-GO
-SET IDENTITY_INSERT [dbo].[Method] OFF
-GO
-SET IDENTITY_INSERT [dbo].[StatusCode] ON 
-GO
-INSERT [dbo].[StatusCode] ([StatusID], [Value]) VALUES (1, N'200 OK')
-GO
-INSERT [dbo].[StatusCode] ([StatusID], [Value]) VALUES (2, N'201 Created')
-GO
-INSERT [dbo].[StatusCode] ([StatusID], [Value]) VALUES (3, N'400 Bad Request')
-GO
-INSERT [dbo].[StatusCode] ([StatusID], [Value]) VALUES (4, N'401 Unauthorized')
-GO
-INSERT [dbo].[StatusCode] ([StatusID], [Value]) VALUES (5, N'403 Forbidden')
-GO
-INSERT [dbo].[StatusCode] ([StatusID], [Value]) VALUES (6, N'404 Not Found')
-GO
-INSERT [dbo].[StatusCode] ([StatusID], [Value]) VALUES (7, N'500 Internal Server Error')
-GO
-SET IDENTITY_INSERT [dbo].[StatusCode] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Version] ON 
-GO
-INSERT [dbo].[Version] ([VersionID], [Value]) VALUES (1, N'0.0.0')
-GO
-SET IDENTITY_INSERT [dbo].[Version] OFF
+INSERT [dbo].[Version] ([Value]) VALUES ('0.0.0')
 GO
