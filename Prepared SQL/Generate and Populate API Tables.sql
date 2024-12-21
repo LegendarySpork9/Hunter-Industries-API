@@ -294,8 +294,8 @@ REFERENCES [dbo].[Authorisation] ([PhraseID])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_Authorisation]
 GO
-ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_User] FOREIGN KEY([UserID])
-REFERENCES [dbo].[User] ([UserID])
+ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_APIUser] FOREIGN KEY([UserID])
+REFERENCES [dbo].[APIUser] ([UserID])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_User]
 GO
