@@ -297,7 +297,7 @@ GO
 ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_APIUser] FOREIGN KEY([UserID])
 REFERENCES [dbo].[APIUser] ([UserID])
 GO
-ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_User]
+ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_APIUser]
 GO
 INSERT [dbo].[Deletion] ([Value]) VALUES ('True')
 GO
