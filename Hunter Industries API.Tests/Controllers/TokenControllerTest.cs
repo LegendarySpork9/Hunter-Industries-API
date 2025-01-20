@@ -45,6 +45,24 @@ namespace HunterIndustriesAPI.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostBadRequestMissingAll()
+        {
+            TokenController controller = new TokenController();
+            (HttpRequestMessage request, HttpControllerContext context) = MockAPICallFunction.SetUpCall("http://localhost/api/auth/token", HttpMethod.Post);
+
+            controller.Request = request;
+            controller.ControllerContext = context;
+
+            IHttpActionResult result = controller.Post(new AuthenticationModel());
+            var resultContent = result as NegotiatedContentResult<object>;
+            object error = resultContent.Content;
+
+            Assert.IsTrue(resultContent.StatusCode == System.Net.HttpStatusCode.BadRequest);
+            Assert.IsNotNull(resultContent.Content);
+            Assert.IsTrue(error.ToString() == "{ error = Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present. }");
+        }
+
+        [TestMethod]
         public void PostBadRequestMissingPhrase()
         {
             JObject authJSON = JSONLoaderFunction.LoadJSON("Token/PostBadRequestMissingPhrase.json");
