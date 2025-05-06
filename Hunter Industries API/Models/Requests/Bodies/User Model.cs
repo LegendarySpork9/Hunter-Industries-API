@@ -1,4 +1,6 @@
-﻿namespace HunterIndustriesAPI.Models.Requests.Bodies
+﻿using System.Collections.Generic;
+
+namespace HunterIndustriesAPI.Models.Requests.Bodies
 {
     /// <summary>
     /// </summary>
@@ -12,5 +14,9 @@
         /// The password of the user.
         /// </summary>
         public string Password { get; set; }
+        /// <summary>
+        /// The scopes applied to the user.
+        /// </summary>
+        public List<string> Scopes { get; set; }
     }
 }

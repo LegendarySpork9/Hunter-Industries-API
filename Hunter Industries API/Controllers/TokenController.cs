@@ -86,8 +86,9 @@ namespace HunterIndustriesAPI.Controllers
             }
 
             TokenService _tokenService = new TokenService(request.Phrase, _logger);
-            TokenConverter _tokenConverter = new TokenConverter(_tokenService);
+            TokenConverter _tokenConverter = new TokenConverter();
             TokenFunction _tokenFunction = new TokenFunction(_tokenService, _logger);
+            UserService _userService = new UserService(_logger);
 
             (request.Username, request.Password) = _tokenFunction.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
 
@@ -112,7 +113,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (_tokenFunction.IsValidUser(request.Username, request.Password, request.Phrase))
             {
-                var claims = _tokenConverter.GetClaims(request.Username);
+                var claims = _tokenConverter.GetClaims(_userService.GetUserScopes(0, request.Username));
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

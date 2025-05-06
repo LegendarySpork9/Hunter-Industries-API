@@ -413,8 +413,10 @@
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />
+    <Content Include="SQL\User\CreateUserScope.sql" />
     <Content Include="SQL\User\CreateUser.sql" />
     <Content Include="SQL\User\GetUsers.sql" />
+    <Content Include="SQL\User\GetUserScopes.sql" />
     <Content Include="SQL\User\UserExists.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

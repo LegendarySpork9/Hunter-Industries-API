@@ -74,7 +74,8 @@ namespace HunterIndustriesAPI.Services
                     {
                         Id = dataReader.GetInt32(0),
                         Username = dataReader.GetString(1),
-                        Password = dataReader.GetString(2)
+                        Password = dataReader.GetString(2),
+                        Scopes = GetUserScopes(dataReader.GetInt32(0))
                     };
 
                     users.Add(user);
@@ -186,6 +187,120 @@ namespace HunterIndustriesAPI.Services
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserCreated returned {created}.");
             return (created, userId);
+        }
+
+        /// <summary>
+        /// Creates the user scopes.
+        /// </summary>
+        public bool UserScopeCreated(int id, List<string> scopes)
+        {
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            HashFunction _hashFunction = new HashFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), _parameterFunction.FormatParameters(scopes.ToArray()) })}.");
+
+            bool created = true;
+
+            SqlConnection connection;
+            SqlCommand command;
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+                
+                foreach (string scope in scopes)
+                {
+                    command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\CreateUserScope.sql"), connection);
+                    command.Parameters.Add(new SqlParameter("@UserID", id));
+                    command.Parameters.Add(new SqlParameter("@Scope", scope));
+                    var result = command.ExecuteScalar();
+
+                    if (result == null)
+                    {
+                        created = false;
+                    }
+                }
+
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.UserScopeCreated.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                created = false;
+            }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated returned {created}.");
+            return created;
+        }
+
+        /// <summary>
+        /// Gets the scopes assigned to the user.
+        /// </summary>
+        public List<string> GetUserScopes(int id = 0, string username = null)
+        {
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUserScopes called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
+
+            List<string> scopes = new List<string>();
+
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\GetUserScopes.sql");
+
+            if (id != 0)
+            {
+                sqlQuery += "\nand APIUser.UserID = @id";
+            }
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                sqlQuery += "\nand APIUser.Username = @Username";
+            }
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+                command = new SqlCommand(sqlQuery, connection);
+
+                if (sqlQuery.Contains("@id"))
+                {
+                    command.Parameters.Add(new SqlParameter("@id", id));
+                }
+
+                if (sqlQuery.Contains("@Username"))
+                {
+                    command.Parameters.Add(new SqlParameter("@Username", username));
+                }
+
+                dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    scopes.Add(dataReader.GetString(0));
+                }
+
+                dataReader.Close();
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.GetUserScopes.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+            }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUserScopes returned {scopes.Count} records.");
+            return scopes;
         }
     }
 }

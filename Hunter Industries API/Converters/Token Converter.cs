@@ -1,4 +1,6 @@
-﻿using HunterIndustriesAPI.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace HunterIndustriesAPI.Converters
@@ -7,69 +9,19 @@ namespace HunterIndustriesAPI.Converters
     /// </summary>
     public class TokenConverter
     {
-        private readonly TokenService TokenService;
-
-        /// <summary>
-        /// Sets the class's global variables.
-        /// </summary>
-        public TokenConverter(TokenService _tokenService)
-        {
-            TokenService = _tokenService;
-        }
-
         /// <summary>
         /// Converts the scope into a claim.
         /// </summary>
-        public Claim[] GetClaims(string username)
+        public Claim[] GetClaims(List<string> scopes)
         {
-            switch (IsAdmin())
+            Claim[] claims = Array.Empty<Claim>();
+
+            foreach (string scope in scopes)
             {
-                case true:
-
-                    var claims = new[]
-                    {
-                        new Claim(ClaimTypes.Name, username),
-                        new Claim("scope", "Assistant API"),
-                        new Claim("scope", "Book Reader API"),
-                        new Claim("scope", "Control Panel API")
-                    };
-
-                    return claims;
-
-                default:
-
-                    claims = new[]
-                    {
-                        new Claim(ClaimTypes.Name, username),
-                        new Claim("scope", GetScope())
-                    };
-
-                    return claims;
+                claims = claims.Append(new Claim("scope", scope)).ToArray();
             }
-        }
 
-        /// <summary>
-        /// Returns whether the user is an admin.
-        /// </summary>
-        private bool IsAdmin()
-        {
-            switch (TokenService.ApplicationName())
-            {
-                case "API Admin": return true;
-                default: return false;
-            }
-        }
-
-        /// <summary>
-        /// Returns the scope based on the application name.
-        /// </summary>
-        private string GetScope()
-        {
-            switch (TokenService.ApplicationName())
-            {
-                case "Virtual Assistant": return "Assistant API";
-                default: return string.Empty;
-            }
+            return claims;
         }
     }
 }

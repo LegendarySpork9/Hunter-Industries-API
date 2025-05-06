@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -106,6 +107,11 @@ namespace HunterIndustriesAPI.Services
             if (value.GetType() == typeof(bool))
             {
                 valueConfirmed = bool.TryParse(value.ToString(), out _);
+            }
+
+            if (value is IList list)
+            {
+                valueConfirmed = list.Count > 0 && list.Cast<object>().All(item => item != null);
             }
 
             return valueConfirmed;
