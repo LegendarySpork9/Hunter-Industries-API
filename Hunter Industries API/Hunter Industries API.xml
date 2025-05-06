@@ -255,7 +255,10 @@
                 Content-Type: application/json
                 {
                     "Username": "TestUser",
-                    "Password": "Password"
+                    "Password": "Password",
+                    "Scopes": [
+                        "Assistant API"
+                    ]
                 }
             </remarks>
             <param name="request">An object containing the user information.</param>
@@ -291,24 +294,9 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.#ctor(HunterIndustriesAPI.Services.TokenService)">
-            <summary>
-            Sets the class's global variables.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetClaims(System.String)">
+        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetClaims(System.Collections.Generic.List{System.String})">
             <summary>
             Converts the scope into a claim.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.IsAdmin">
-            <summary>
-            Returns whether the user is an admin.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetScope">
-            <summary>
-            Returns the scope based on the application name.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Filters.Document.BaseUrlDocumentFilter">
@@ -549,6 +537,11 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.UserModel.Password">
             <summary>
             The password of the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.UserModel.Scopes">
+            <summary>
+            The scopes applied to the user.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel">
@@ -964,6 +957,11 @@
             The password of the user.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Scopes">
+            <summary>
+            The scopes applied to the user.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Services.Assistant.ConfigService">
             <summary>
             </summary>
@@ -1192,6 +1190,16 @@
         <member name="M:HunterIndustriesAPI.Services.UserService.UserCreated(System.String,System.String)">
             <summary>
             Creates the user.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.UserScopeCreated(System.Int32,System.Collections.Generic.List{System.String})">
+            <summary>
+            Creates the user scopes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.GetUserScopes(System.Int32,System.String)">
+            <summary>
+            Gets the scopes assigned to the user.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Startup">

@@ -171,7 +171,10 @@ namespace HunterIndustriesAPI.Controllers
         ///     Content-Type: application/json
         ///     {
         ///         "Username": "TestUser",
-        ///         "Password": "Password"
+        ///         "Password": "Password",
+        ///         "Scopes": [
+        ///             "Assistant API"
+        ///         ]
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the user information.</param>
@@ -254,6 +257,24 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
+            created = _userService.UserScopeCreated(id, request.Scopes);
+
+            if (!created)
+            {
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), _parameterFunction.FormatParameters(null, request));
+
+                response = new ResponseModel()
+                {
+                    Data = new
+                    {
+                        error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
+                    }
+                };
+
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.InternalServerError, response.Data);
+            }
+
             _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"), _parameterFunction.FormatParameters(null, request));
 
             response = new ResponseModel()
@@ -263,7 +284,8 @@ namespace HunterIndustriesAPI.Controllers
                 {
                     Id = id,
                     Username = request.Username,
-                    Password = _hashFunction.HashString(request.Password)
+                    Password = _hashFunction.HashString(request.Password),
+                    Scopes = request.Scopes
                 }
             };
 

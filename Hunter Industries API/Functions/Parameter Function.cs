@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 
@@ -36,7 +37,18 @@ namespace HunterIndustriesAPI.Functions
                 {
                     if (property.GetValue(model) != null)
                     {
-                        formattedParameters = formattedParameters.Append(property.GetValue(model).ToString()).ToArray();
+                        if (property.GetValue(model) is IList list)
+                        {
+                            foreach (object item in list)
+                            {
+                                formattedParameters = formattedParameters.Append(item.ToString()).ToArray();
+                            }
+                        }
+
+                        else
+                        {
+                            formattedParameters = formattedParameters.Append(property.GetValue(model).ToString()).ToArray();
+                        }
                     }
                 }
             }
@@ -88,7 +100,18 @@ namespace HunterIndustriesAPI.Functions
                 {
                     if (property.GetValue(model) != null)
                     {
-                        formattedParameters += $"\"{property.GetValue(model)}\", ";
+                        if (property.GetValue(model) is IList list)
+                        {
+                            foreach (object item in list)
+                            {
+                                formattedParameters += $"\"{item}\", ";
+                            }
+                        }
+
+                        else
+                        {
+                            formattedParameters += $"\"{property.GetValue(model)}\", ";
+                        }
                     }
                 }
             }
