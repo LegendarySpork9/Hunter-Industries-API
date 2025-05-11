@@ -32,6 +32,7 @@
                 case "GET": return 1;
                 case "POST": return 2;
                 case "PATCH": return 3;
+                case "DELETE": return 4;
                 default: return 0;
             }
         }

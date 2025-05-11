@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
 namespace HunterIndustriesAPI.Services
 {
@@ -42,7 +43,7 @@ namespace HunterIndustriesAPI.Services
 
             if (id != 0)
             {
-                sqlQuery += "\nand UserID = @id";
+                sqlQuery += "\nand UserID = @Id";
             }
 
             if (!string.IsNullOrEmpty(username))
@@ -56,9 +57,9 @@ namespace HunterIndustriesAPI.Services
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
 
-                if (sqlQuery.Contains("@id"))
+                if (sqlQuery.Contains("@Id"))
                 {
-                    command.Parameters.Add(new SqlParameter("@id", id));
+                    command.Parameters.Add(new SqlParameter("@Id", id));
                 }
 
                 if (sqlQuery.Contains("@Username"))
@@ -97,7 +98,7 @@ namespace HunterIndustriesAPI.Services
         }
 
         /// <summary>
-        /// Returns whether a user already exists with the given details.
+        /// Returns whether a user already exists with the given username.
         /// </summary>
         public bool UserExists(string username)
         {
@@ -111,12 +112,61 @@ namespace HunterIndustriesAPI.Services
             SqlCommand command;
             SqlDataReader dataReader;
 
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserExists.sql");
+            sqlQuery += "\nwhere Username = @Username";
+
             try
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserExists.sql"), connection);
+                command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.Add(new SqlParameter("@Username", username));
+                dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    exists = true;
+                }
+
+                dataReader.Close();
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.UserExists.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+            }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists returned {exists}.");
+            return exists;
+        }
+
+        /// <summary>
+        /// Returns whether a user already exists with the given id.
+        /// </summary>
+        public bool UserExists(int id)
+        {
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+
+            bool exists = false;
+
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserExists.sql");
+            sqlQuery += "\nand UserID = @Id";
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+                command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.Add(new SqlParameter("@Id", id));
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -197,7 +247,7 @@ namespace HunterIndustriesAPI.Services
             ParameterFunction _parameterFunction = new ParameterFunction();
             HashFunction _hashFunction = new HashFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), _parameterFunction.FormatParameters(scopes.ToArray()) })}.");
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), _parameterFunction.FormatParameters(scopes, false) })}.");
 
             bool created = true;
 
@@ -257,7 +307,7 @@ namespace HunterIndustriesAPI.Services
 
             if (id != 0)
             {
-                sqlQuery += "\nand APIUser.UserID = @id";
+                sqlQuery += "\nand APIUser.UserID = @Id";
             }
 
             if (!string.IsNullOrEmpty(username))
@@ -271,9 +321,9 @@ namespace HunterIndustriesAPI.Services
                 connection.Open();
                 command = new SqlCommand(sqlQuery, connection);
 
-                if (sqlQuery.Contains("@id"))
+                if (sqlQuery.Contains("@Id"))
                 {
-                    command.Parameters.Add(new SqlParameter("@id", id));
+                    command.Parameters.Add(new SqlParameter("@Id", id));
                 }
 
                 if (sqlQuery.Contains("@Username"))
@@ -301,6 +351,170 @@ namespace HunterIndustriesAPI.Services
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUserScopes returned {scopes.Count} records.");
             return scopes;
+        }
+
+        /// <summary>
+        /// Updates the details of the given user.
+        /// </summary>
+        public bool UserUpdated(int id, string username, string password, List<KeyValuePair<string, string>> scopes)
+        {
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            HashFunction _hashFunction = new HashFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), username, password, _parameterFunction.FormatParameters(scopes, true) })}.");
+
+            bool updated = true;
+
+            SqlConnection connection;
+            SqlCommand command;
+
+            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserUpdated.sql");
+            int rowsAffected;
+
+            if (string.IsNullOrEmpty(username))
+            {
+                sqlQuery = sqlQuery.Replace("Username = @username,", "");
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                sqlQuery = sqlQuery.Replace(", [Password] = @password", "");
+            }
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+                command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.Add(new SqlParameter("@userId", id));
+
+                if (!string.IsNullOrEmpty(username))
+                {
+                    command.Parameters.Add(new SqlParameter("@username", username));
+                }
+
+                if (!string.IsNullOrEmpty(password))
+                {
+                    command.Parameters.Add(new SqlParameter("@password", password));
+                }
+
+                rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected != 1)
+                {
+                    connection.Close();
+                    updated = false;
+                }
+
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.UserUpdated.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                updated = false;
+            }
+
+            updated = UserScopeCreated(id, scopes.Where(c => c.Key == "Add").Select(c => c.Value).ToList());
+            updated = UserScopeDeleted(id, scopes.Where(c => c.Key == "Remove").Select(c => c.Value).ToList());
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated returned {updated}.");
+            return updated;
+        }
+
+        /// <summary>
+        /// Deletes the user scopes.
+        /// </summary>
+        private bool UserScopeDeleted(int id, List<string> scopes)
+        {
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            HashFunction _hashFunction = new HashFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeDeleted called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), _parameterFunction.FormatParameters(scopes, false) })}.");
+
+            bool deleted = true;
+
+            SqlConnection connection;
+            SqlCommand command;
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+
+                foreach (string scope in scopes)
+                {
+                    command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\DeleteUserScope.sql"), connection);
+                    command.Parameters.Add(new SqlParameter("@UserID", id));
+                    command.Parameters.Add(new SqlParameter("@Scope", scope));
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected != 1)
+                    {
+                        connection.Close();
+                        deleted = false;
+                    }
+                }
+
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.UserScopeDeleted.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                deleted = false;
+            }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeDeleted returned {deleted}.");
+            return deleted;
+        }
+
+        /// <summary>
+        /// Sets the user to deleted.
+        /// </summary>
+        public bool UserDeleted(int id)
+        {
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserDeleted called with the parameters \"{id}\".");
+
+            bool deleted = true;
+
+            SqlConnection connection;
+            SqlCommand command;
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserDeleted.sql"), connection);
+                command.Parameters.Add(new SqlParameter("@UserID", id));
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected != 1)
+                {
+                    connection.Close();
+                    deleted = false;
+                }
+
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.UserDeleted.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                deleted = false;
+            }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserDeleted returned {deleted}.");
+            return deleted;
         }
     }
 }

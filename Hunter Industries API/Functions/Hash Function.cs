@@ -12,17 +12,24 @@ namespace HunterIndustriesAPI.Functions
         /// </summary>
         public string HashString(string value)
         {
-            StringBuilder hashedValue = new StringBuilder();
-            SHA512 shaHash = SHA512.Create();
+            string hashString = null;
 
-            byte[] hashBytes = shaHash.ComputeHash(Encoding.UTF8.GetBytes(value));
-
-            for (int i = 0; i < hashBytes.Length; i++)
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                hashedValue.Append(hashBytes[i].ToString("x2"));
+                StringBuilder hashedValue = new StringBuilder();
+                SHA512 shaHash = SHA512.Create();
+
+                byte[] hashBytes = shaHash.ComputeHash(Encoding.UTF8.GetBytes(value));
+
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    hashedValue.Append(hashBytes[i].ToString("x2"));
+                }
+
+                hashString = hashedValue.ToString();
             }
 
-            return hashedValue.ToString();
+            return hashString;
         }
     }
 }

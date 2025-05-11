@@ -9,6 +9,7 @@ using HunterIndustriesAPI.Services;
 using Swashbuckle.Swagger.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
@@ -111,6 +112,7 @@ namespace HunterIndustriesAPI.Controllers
         ///     GET /User/1
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
+        /// <param name="id">The id number of the user.</param>
         [Route("api/user/{id:int}")]
         [SwaggerOperation("GetUserById")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserRecord), Description = "Returns the item matching the given id.")]
@@ -291,6 +293,218 @@ namespace HunterIndustriesAPI.Controllers
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.Created, response.Data);
+        }
+
+        /// <summary>
+        /// Updates the details of the user.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     PATCH /user/1
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        ///     Content-Type: application/json
+        ///     {
+        ///         "Password": "Password2"
+        ///     }
+        /// </remarks>
+        /// <param name="id">The id number of the user.</param>
+        /// <param name="request">An object containing the user data.</param>
+        [Route("api/user/{id:int}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserRecord), Description = "Returns the update item.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no user was found matching the id.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public IHttpActionResult Patch(int id, [FromBody, Required] UserModel request)
+        {
+            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ModelValidationService _modelValidator = new ModelValidationService();
+            UserService _userService = new UserService(_logger);
+            ResponseFunction _responseFunction = new ResponseFunction();
+            UserFunction _userFunction = new UserFunction();
+            HashFunction _hashFunction = new HashFunction();
+            ChangeService _changeService = new ChangeService(_logger);
+
+            ResponseModel response;
+
+            if (request == null)
+            {
+                request = new UserModel();
+            }
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint called with the following parameters \"{id}\", {_parameterFunction.FormatParameters(null, request)}.");
+
+            if (!_modelValidator.IsValid(request))
+            {
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
+                    null);
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "Invalid request, check the following. A body is provided with the correct tags."
+                    }
+                };
+
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.BadRequest, response.Data);
+            }
+
+            if (_userService.UserExists(id))
+            {
+                UserRecord userRecord = _userService.GetUsers(id, null)[0];
+
+                if (_userService.UserUpdated(id, request.Username, _hashFunction.HashString(request.Password), _userFunction.GetScopesUpdateList(userRecord.Scopes, request.Scopes)))
+                {
+                    var auditID = _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),
+                        new string[] { id.ToString(), request.Username, _hashFunction.HashString(request.Password), _parameterFunction.FormatParameters(request.Scopes.ToList<object>(), true) });
+
+                    if (!string.IsNullOrEmpty(request.Username) && request.Username != userRecord.Username)
+                    {
+                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("user"), auditID.Item2, "Username", userRecord.Username, request.Username);
+                        userRecord.Username = request.Username;
+                    }
+
+                    if (!string.IsNullOrEmpty(request.Password) && _hashFunction.HashString(request.Password) != userRecord.Password)
+                    {
+                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("user"), auditID.Item2, "Password", userRecord.Password, _hashFunction.HashString(request.Password));
+                        userRecord.Password = _hashFunction.HashString(request.Password);
+                    }
+
+                    if (request.Scopes != null && !Enumerable.SequenceEqual(request.Scopes, userRecord.Scopes))
+                    {
+                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("user"), auditID.Item2, "Scopes", _parameterFunction.FormatParameters(userRecord.Scopes.ToList<object>()), _parameterFunction.FormatParameters(request.Scopes.ToList<object>()));
+                        userRecord.Scopes = request.Scopes;
+                    }
+
+                    response = new ResponseModel()
+                    {
+                        StatusCode = 200,
+                        Data = userRecord
+                    };
+
+                    _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                    return Content(HttpStatusCode.OK, response.Data);
+                }
+
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("PATCH"),
+                        _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { id.ToString(), request.Username, _hashFunction.HashString(request.Password), _parameterFunction.FormatParameters(request.Scopes.ToList(), true) });
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 500,
+                    Data = new
+                    {
+                        error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
+                    }
+                };
+
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.InternalServerError, response.Data);
+            }
+
+            _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
+                new string[] { id.ToString(), request.Username, _hashFunction.HashString(request.Password), _parameterFunction.FormatParameters(request.Scopes.ToList<object>(), true) });
+
+            response = new ResponseModel()
+            {
+                StatusCode = 404,
+                Data = new
+                {
+                    information = "No user exists with the given id."
+                }
+            };
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            return Content(HttpStatusCode.NotFound, response.Data);
+        }
+
+        /// <summary>
+        /// Deletes the user.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     Delete /user/1
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        /// </remarks>
+        /// <param name="id">The id number of the user.</param>
+        [Route("api/user/{id:int}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "Returns a confirmation that the user was deleted.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no user was found matching the id.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public IHttpActionResult Delete(int id)
+        {
+            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            UserService _userService = new UserService(_logger);
+            ResponseFunction _responseFunction = new ResponseFunction();
+            ChangeService _changeService = new ChangeService(_logger);
+
+            ResponseModel response;
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Delete) endpoint called with the following parameters \"{id}\".");
+
+            if (_userService.UserExists(id))
+            {
+                if (_userService.UserDeleted(id))
+                {
+                    var auditID = _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("DELETE"), _auditHistoryConverter.GetStatusID("OK"),
+                        new string[] { id.ToString() });
+
+                    _changeService.LogChange(_auditHistoryConverter.GetEndpointID("user"), auditID.Item2, "IsDeleted", "0", "1");
+
+                    response = new ResponseModel()
+                    {
+                        StatusCode = 200,
+                        Data = new
+                        {
+                            information = "The given user has been deleted."
+                        }
+                    };
+
+                    _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Delete) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                    return Content(HttpStatusCode.OK, response.Data);
+                }
+
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("DELETE"),
+                        _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { id.ToString() });
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 500,
+                    Data = new
+                    {
+                        error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
+                    }
+                };
+
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Delete) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.InternalServerError, response.Data);
+            }
+
+            _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("DELETE"), _auditHistoryConverter.GetStatusID("NotFound"),
+                new string[] { id.ToString() });
+
+            response = new ResponseModel()
+            {
+                StatusCode = 404,
+                Data = new
+                {
+                    information = "No user exists with the given id."
+                }
+            };
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Delete) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            return Content(HttpStatusCode.NotFound, response.Data);
         }
     }
 }
