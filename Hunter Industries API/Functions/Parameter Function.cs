@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -119,6 +120,77 @@ namespace HunterIndustriesAPI.Functions
             if (!string.IsNullOrWhiteSpace(formattedParameters))
             {
                 formattedParameters = formattedParameters.Trim().Remove(formattedParameters.LastIndexOf(","));
+            }
+
+            return formattedParameters;
+        }
+
+        /// <summary>
+        /// Converts the list into a log friendly format.
+        /// </summary>
+        public string FormatParameters(object listObject, bool isKeyPair)
+        {
+            string formattedParameters = string.Empty;
+
+            if (listObject != null)
+            {
+                if (isKeyPair)
+                {
+                    if (listObject is IList<KeyValuePair<string, string>> list)
+                    {
+                        foreach (KeyValuePair<string, string> item in list)
+                        {
+                            formattedParameters += $"\"{item.Value}\", ";
+                        }
+                    }
+                }
+
+                else
+                {
+                    if (listObject is IList list)
+                    {
+                        foreach (object item in list)
+                        {
+                            formattedParameters += $"\"{item}\", ";
+                        }
+                    }
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(formattedParameters))
+            {
+                formattedParameters = formattedParameters.Trim().Remove(formattedParameters.LastIndexOf(","));
+            }
+
+            return formattedParameters;
+        }
+
+        /// <summary>
+        /// Converts the list into a SQL friendly format.
+        /// </summary>
+        public string FormatParameters(List<object> list, bool forAudit = false)
+        {
+            string formattedParameters = null;
+
+            if (list != null)
+            {
+                foreach (object item in list)
+                {
+                    if (forAudit)
+                    {
+                        formattedParameters += $"\"{item}\",";
+                    }
+
+                    else
+                    {
+                        formattedParameters += $"{item}, ";
+                    }
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(formattedParameters))
+            {
+                formattedParameters = formattedParameters.Trim().Remove(formattedParameters.LastIndexOf(",")).Replace("\"\"", "\"");
             }
 
             return formattedParameters;

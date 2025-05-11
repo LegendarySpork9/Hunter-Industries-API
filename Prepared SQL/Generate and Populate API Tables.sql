@@ -9,11 +9,15 @@ CREATE TABLE [dbo].[APIUser](
 	[UserID] [int] IDENTITY(1,1) NOT NULL,
 	[Username] [varchar](255) NOT NULL,
 	[Password] [varchar](255) NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_APIUser] PRIMARY KEY CLUSTERED 
 (
 	[UserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[APIUser] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 /****** Object:  Table [dbo].[Application]    Script Date: 18/12/2024 21:19:28 ******/
 SET ANSI_NULLS ON
@@ -185,10 +189,24 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Method](
 	[MethodID] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](5) NOT NULL,
+	[Value] [varchar](6) NOT NULL,
  CONSTRAINT [PK_Methods] PRIMARY KEY CLUSTERED 
 (
 	[MethodID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Scope]    Script Date: 10/05/2025 20:22:36 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Scope](
+	[ScopeID] [int] IDENTITY(1,1) NOT NULL,
+	[Value] [varchar](255) NOT NULL,
+ CONSTRAINT [PK_Scope] PRIMARY KEY CLUSTERED 
+(
+	[ScopeID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -217,6 +235,21 @@ CREATE TABLE [dbo].[User](
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[UserID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[UserScope]    Script Date: 10/05/2025 20:22:36 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UserScope](
+	[UserScopeID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[ScopeID] [int] NOT NULL,
+ CONSTRAINT [PK_UserScope] PRIMARY KEY CLUSTERED 
+(
+	[UserScopeID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -299,6 +332,16 @@ REFERENCES [dbo].[APIUser] ([UserID])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_APIUser]
 GO
+ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_Scope] FOREIGN KEY([ScopeID])
+REFERENCES [dbo].[Scope] ([ScopeID])
+GO
+ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_Scope]
+GO
+ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([UserID])
+GO
+ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_User]
+GO
 INSERT [dbo].[Deletion] ([Value]) VALUES ('True')
 GO
 INSERT [dbo].[Deletion] ([Value]) VALUES ('False')
@@ -323,6 +366,8 @@ INSERT [dbo].[Method] ([Value]) VALUES ('POST')
 GO
 INSERT [dbo].[Method] ([Value]) VALUES ('PATCH')
 GO
+INSERT [dbo].[Method] ([Value]) VALUES ('DELETE')
+GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('200 OK')
 GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('201 Created')
@@ -338,4 +383,10 @@ GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('500 Internal Server Error')
 GO
 INSERT [dbo].[Version] ([Value]) VALUES ('0.0.0')
+GO
+INSERT [dbo].[Scope] ([Value]) VALUES ('Assistant API')
+GO
+INSERT [dbo].[Scope] ([Value]) VALUES ('Book Reader API')
+GO
+INSERT [dbo].[Scope] ([Value]) VALUES ('Control Panel API')
 GO

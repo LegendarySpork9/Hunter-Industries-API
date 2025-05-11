@@ -176,7 +176,7 @@ namespace HunterIndustriesAPI.Filters.Operation
                 }
             }
 
-            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserController) && apiDescription.ActionDescriptor.ActionName == "Post")
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserController) && (apiDescription.ActionDescriptor.ActionName == "Post" || apiDescription.ActionDescriptor.ActionName == "Patch"))
             {
                 foreach (Parameter param in operation.parameters)
                 {

@@ -19,7 +19,7 @@ namespace HunterIndustriesAPI.Filters.Operation
 
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ConfigController))
             {
-                if (operation.responses.TryGetValue("200", out existingResponse))
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Config_Post")
                 {
                     existingResponse.schema = new Schema
                     {
@@ -52,6 +52,24 @@ namespace HunterIndustriesAPI.Filters.Operation
                                 {
                                     type = "string",
                                     example = "A user with the username already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "User_Delete")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "The given user has been deleted."
                                 }
                             }
                         }

@@ -346,6 +346,7 @@
     <Compile Include="Functions\Parameter Function.cs" />
     <Compile Include="Functions\Response Function.cs" />
     <Compile Include="Functions\Token Function.cs" />
+    <Compile Include="Functions\User Function.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -415,9 +416,12 @@
     <Content Include="SQL\Token\GetUsers.sql" />
     <Content Include="SQL\User\CreateUserScope.sql" />
     <Content Include="SQL\User\CreateUser.sql" />
+    <Content Include="SQL\User\DeleteUserScope.sql" />
     <Content Include="SQL\User\GetUsers.sql" />
     <Content Include="SQL\User\GetUserScopes.sql" />
+    <Content Include="SQL\User\UserDeleted.sql" />
     <Content Include="SQL\User\UserExists.sql" />
+    <Content Include="SQL\User\UserUpdated.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

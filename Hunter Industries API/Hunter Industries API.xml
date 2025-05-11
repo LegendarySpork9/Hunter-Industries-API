@@ -196,6 +196,7 @@
                 GET /audithistory/1
                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
             </remarks>
+            <param name="id">The id number of the user.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.TokenController">
             <summary>
@@ -242,6 +243,7 @@
                 GET /User/1
                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
             </remarks>
+            <param name="id">The id number of the user.</param>
         </member>
         <member name="M:HunterIndustriesAPI.Controllers.UserController.Post(HunterIndustriesAPI.Models.Requests.Bodies.UserModel)">
             <summary>
@@ -262,6 +264,35 @@
                 }
             </remarks>
             <param name="request">An object containing the user information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.UserController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.UserModel)">
+            <summary>
+            Updates the details of the user.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                PATCH /user/1
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "Password": "Password2"
+                }
+            </remarks>
+            <param name="id">The id number of the user.</param>
+            <param name="request">An object containing the user data.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.UserController.Delete(System.Int32)">
+            <summary>
+            Deletes the user.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                Delete /user/1
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+            <param name="id">The id number of the user.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.AuditHistoryConverter">
             <summary>
@@ -395,6 +426,16 @@
             Converts the model into a log friendly format.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.Boolean)">
+            <summary>
+            Converts the list into a log friendly format.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Collections.Generic.List{System.Object},System.Boolean)">
+            <summary>
+            Converts the list into a SQL friendly format.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Functions.ResponseFunction">
             <summary>
             </summary>
@@ -421,6 +462,15 @@
         <member name="M:HunterIndustriesAPI.Functions.TokenFunction.IsValidUser(System.String,System.String,System.String)">
             <summary>
             Returns whether the details passed are valid.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.UserFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.UserFunction.GetScopesUpdateList(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the scopes and generates the update list.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.WebApiApplication">
@@ -1184,7 +1234,12 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.UserService.UserExists(System.String)">
             <summary>
-            Returns whether a user already exists with the given details.
+            Returns whether a user already exists with the given username.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.UserExists(System.Int32)">
+            <summary>
+            Returns whether a user already exists with the given id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.UserService.UserCreated(System.String,System.String)">
@@ -1200,6 +1255,21 @@
         <member name="M:HunterIndustriesAPI.Services.UserService.GetUserScopes(System.Int32,System.String)">
             <summary>
             Gets the scopes assigned to the user.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.UserUpdated(System.Int32,System.String,System.String,System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Updates the details of the given user.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.UserScopeDeleted(System.Int32,System.Collections.Generic.List{System.String})">
+            <summary>
+            Deletes the user scopes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.UserService.UserDeleted(System.Int32)">
+            <summary>
+            Sets the user to deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Startup">
