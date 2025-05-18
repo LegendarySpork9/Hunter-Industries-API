@@ -5,6 +5,7 @@ using HunterIndustriesAPI.Models.Requests;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Objects;
 using HunterIndustriesAPI.Services;
+using HunterIndustriesAPI.Services.User;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.Swagger.Annotations;
 using System;

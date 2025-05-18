@@ -18,6 +18,7 @@
                 case "assistant/deletion": return 5;
                 case "assistant/location": return 6;
                 case "user": return 7;
+                case "usersettings": return 8;
                 default: return 0;
             }
         }

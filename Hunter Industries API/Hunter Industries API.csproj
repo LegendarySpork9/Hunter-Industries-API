@@ -332,7 +332,8 @@
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\User\UserController.cs" />
+    <Compile Include="Controllers\User\UserSettingsController.cs" />
     <Compile Include="Converters\Audit History Converter.cs" />
     <Compile Include="Converters\Standard Values.cs" />
     <Compile Include="Converters\Token Converter.cs" />
@@ -356,7 +357,9 @@
     <Compile Include="Models\Requests\Bodies\Assistant\Deletion Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Location Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Version Model.cs" />
-    <Compile Include="Models\Requests\Bodies\User Model.cs" />
+    <Compile Include="Models\Requests\Bodies\User\Setting Update Model.cs" />
+    <Compile Include="Models\Requests\Bodies\User\User Model.cs" />
+    <Compile Include="Models\Requests\Bodies\User\User Settings Model.cs" />
     <Compile Include="Models\Requests\Filters\Assistant\Assistant Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\User Filter Model.cs" />
@@ -373,7 +376,9 @@
     <Compile Include="Objects\Change Record.cs" />
     <Compile Include="Objects\Login Attempt Record.cs" />
     <Compile Include="Objects\Token Info.cs" />
-    <Compile Include="Objects\User Record.cs" />
+    <Compile Include="Objects\User\User Record.cs" />
+    <Compile Include="Objects\User\Setting Record.cs" />
+    <Compile Include="Objects\User\User Setting Record.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Assistant\Config Service.cs" />
     <Compile Include="Services\Assistant\Deletion Service.cs" />
@@ -384,7 +389,8 @@
     <Compile Include="Services\Logger Service.cs" />
     <Compile Include="Services\Model Validation Service.cs" />
     <Compile Include="Services\Token Service.cs" />
-    <Compile Include="Services\User Service.cs" />
+    <Compile Include="Services\User\User Service.cs" />
+    <Compile Include="Services\User\User Settings Service.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -419,6 +425,12 @@
     <Content Include="SQL\User\DeleteUserScope.sql" />
     <Content Include="SQL\User\GetUsers.sql" />
     <Content Include="SQL\User\GetUserScopes.sql" />
+    <Content Include="SQL\User\User Settings\GetUserSetting.sql" />
+    <Content Include="SQL\User\User Settings\GetUserSettings.sql" />
+    <Content Include="SQL\User\User Settings\UserSettingAdded.sql" />
+    <Content Include="SQL\User\User Settings\UserSettingExistsById.sql" />
+    <Content Include="SQL\User\User Settings\UserSettingExists.sql" />
+    <Content Include="SQL\User\User Settings\UserSettingUpdated.sql" />
     <Content Include="SQL\User\UserDeleted.sql" />
     <Content Include="SQL\User\UserExists.sql" />
     <Content Include="SQL\User\UserUpdated.sql" />
