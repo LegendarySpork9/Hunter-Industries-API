@@ -114,7 +114,6 @@ namespace HunterIndustriesAPI.Controllers.User
             ModelValidationService _modelValidator = new ModelValidationService();
             UserSettingsService _userSettingsService = new UserSettingsService(_logger);
             ResponseFunction _responseFunction = new ResponseFunction();
-            HashFunction _hashFunction = new HashFunction();
 
             ResponseModel response;
 
@@ -127,7 +126,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
             if (!_modelValidator.IsValid(request, true))
             {
-                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("user"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
+                _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("usersettings"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
                     null);
 
                 response = new ResponseModel()

@@ -331,6 +331,7 @@
     <Compile Include="Controllers\Assistant\VersionController.cs" />
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
+    <Compile Include="Controllers\Server Status\ServerInformationController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Controllers\User\UserController.cs" />
     <Compile Include="Controllers\User\UserSettingsController.cs" />
@@ -357,6 +358,7 @@
     <Compile Include="Models\Requests\Bodies\Assistant\Deletion Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Location Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Version Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Server Status\Server Information Model.cs" />
     <Compile Include="Models\Requests\Bodies\User\Setting Update Model.cs" />
     <Compile Include="Models\Requests\Bodies\User\User Model.cs" />
     <Compile Include="Models\Requests\Bodies\User\User Settings Model.cs" />
@@ -375,6 +377,7 @@
     <Compile Include="Objects\Audit History Record.cs" />
     <Compile Include="Objects\Change Record.cs" />
     <Compile Include="Objects\Login Attempt Record.cs" />
+    <Compile Include="Objects\Server Status\Server Information Record.cs" />
     <Compile Include="Objects\Token Info.cs" />
     <Compile Include="Objects\User\User Record.cs" />
     <Compile Include="Objects\User\Setting Record.cs" />
@@ -388,6 +391,7 @@
     <Compile Include="Services\Change Service.cs" />
     <Compile Include="Services\Logger Service.cs" />
     <Compile Include="Services\Model Validation Service.cs" />
+    <Compile Include="Services\Server Status\Server Information Service.cs" />
     <Compile Include="Services\Token Service.cs" />
     <Compile Include="Services\User\User Service.cs" />
     <Compile Include="Services\User\User Settings Service.cs" />
@@ -417,6 +421,9 @@
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
     <Content Include="SQL\Audit History\LogRequest.sql" />
     <Content Include="SQL\LogChange.sql" />
+    <Content Include="SQL\Server Status\Server Information\GetServers.sql" />
+    <Content Include="SQL\Server Status\Server Information\ServerAdded.sql" />
+    <Content Include="SQL\Server Status\Server Information\ServerExists.sql" />
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />

@@ -19,6 +19,7 @@
                 case "assistant/location": return 6;
                 case "user": return 7;
                 case "usersettings": return 8;
+                case "serverstatus/serverinformation": return 9;
                 default: return 0;
             }
         }

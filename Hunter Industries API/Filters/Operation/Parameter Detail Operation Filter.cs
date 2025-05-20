@@ -1,5 +1,6 @@
 ﻿using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
+using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Controllers.User;
 using Swashbuckle.Swagger;
 using System.Collections.Generic;
@@ -203,6 +204,17 @@ namespace HunterIndustriesAPI.Filters.Operation
                         {
                             param.name = "value";
                         }
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerInformationController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "server";
                     }
                 }
             }

@@ -433,11 +433,15 @@ CREATE TABLE [dbo].[ServerInformation](
 	[GameID] [int] NOT NULL,
 	[GameVersion] [varchar](20) NOT NULL,
 	[IPAddress] [varchar](13) NOT NULL,
+	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
 	[ServerInformationID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((0)) FOR [IsActive]
 GO
 
 /* Constraints */
@@ -611,6 +615,8 @@ GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/user')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/usersettings')
+GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverinformation')
 GO
 INSERT [dbo].[Game] ([Name]) VALUES ('Minecraft')
 GO

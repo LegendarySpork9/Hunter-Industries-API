@@ -1,4 +1,5 @@
 ﻿using HunterIndustriesAPI.Controllers.Assistant;
+using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Controllers.User;
 using Swashbuckle.Swagger;
 using System.Collections.Generic;
@@ -91,6 +92,27 @@ namespace HunterIndustriesAPI.Filters.Operation
                                 {
                                     type = "string",
                                     example = "A user setting with the setting name for the application already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerInformationController))
+            {
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "ServerInformation_Post")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "A server with the details provided already exists."
                                 }
                             }
                         }
