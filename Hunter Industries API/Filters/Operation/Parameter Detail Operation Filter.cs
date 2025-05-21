@@ -218,6 +218,17 @@ namespace HunterIndustriesAPI.Filters.Operation
                     }
                 }
             }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerEventController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "event";
+                    }
+                }
+            }
         }
     }
 }

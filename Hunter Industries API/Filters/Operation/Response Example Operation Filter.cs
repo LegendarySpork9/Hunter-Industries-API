@@ -120,6 +120,14 @@ namespace HunterIndustriesAPI.Filters.Operation
                 }
             }
 
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerEventController))
+            {
+                if (operation.operationId == "ServerEvent_Post")
+                {
+                    operation.responses.Remove("200");
+                }
+            }
+
             if (operation.responses.TryGetValue("400", out existingResponse))
             {
                 existingResponse.schema = new Schema

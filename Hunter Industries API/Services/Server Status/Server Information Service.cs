@@ -88,6 +88,51 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         }
 
         /// <summary>
+        /// Returns the id of the server with the given values.
+        /// </summary>
+        public int GetServer(string hostName, string game, string gameVersion)
+        {
+            ParameterFunction _parameterFunction = new ParameterFunction();
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer called with the parameters {_parameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
+
+            int serverId = 0;
+
+            SqlConnection connection;
+            SqlCommand command;
+            SqlDataReader dataReader;
+
+            try
+            {
+                connection = new SqlConnection(DatabaseModel.ConnectionString);
+                connection.Open();
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\GetServer.sql"), connection);
+                command.Parameters.Add(new SqlParameter("@HostName", hostName));
+                command.Parameters.Add(new SqlParameter("@Game", game));
+                command.Parameters.Add(new SqlParameter("@GameVersion", gameVersion));
+                dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    serverId = dataReader.GetInt32(0);
+                }
+
+                dataReader.Close();
+                connection.Close();
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ServerInformationService.GetServer.";
+                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+            }
+
+            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer returned {serverId}.");
+            return serverId;
+        }
+
+        /// <summary>
         /// Returns whether a server already exists with the given values.
         /// </summary>
         public bool ServerExists(string hostName, string game, string gameVersion)

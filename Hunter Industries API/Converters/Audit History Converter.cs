@@ -20,6 +20,7 @@
                 case "user": return 7;
                 case "usersettings": return 8;
                 case "serverstatus/serverinformation": return 9;
+                case "serverstatus/serverevent": return 10;
                 default: return 0;
             }
         }

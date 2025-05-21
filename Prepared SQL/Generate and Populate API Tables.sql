@@ -334,7 +334,7 @@ CREATE TABLE [dbo].[ComponentInformation](
 	[ServerInformationID] [int] NOT NULL,
 	[ComponentID] [int] NOT NULL,
 	[ComponentStatusID] [int] NOT NULL,
-	[DateOccured] [date] NOT NULL,
+	[DateOccured] [datetime] NOT NULL,
  CONSTRAINT [PK_ComponentInformation] PRIMARY KEY CLUSTERED 
 (
 	[ComponentInformationID] ASC
@@ -399,7 +399,7 @@ CREATE TABLE [dbo].[ServerAlerts](
 	[ComponentID] [int] NOT NULL,
 	[ComponentStatusID] [int] NOT NULL,
 	[AlertStatusID] [int] NOT NULL,
-	[DateOccured] [date] NOT NULL,
+	[DateOccured] [datetime] NOT NULL,
  CONSTRAINT [PK_ServerAlerts] PRIMARY KEY CLUSTERED 
 (
 	[ServerAlertsID] ASC
@@ -617,6 +617,8 @@ GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/usersettings')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverinformation')
+GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverevent')
 GO
 INSERT [dbo].[Game] ([Name]) VALUES ('Minecraft')
 GO
