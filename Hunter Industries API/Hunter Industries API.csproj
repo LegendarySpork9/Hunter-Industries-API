@@ -331,6 +331,7 @@
     <Compile Include="Controllers\Assistant\VersionController.cs" />
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
+    <Compile Include="Controllers\Server Status\ServerAlertController.cs" />
     <Compile Include="Controllers\Server Status\ServerEventController.cs" />
     <Compile Include="Controllers\Server Status\ServerInformationController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
@@ -359,6 +360,8 @@
     <Compile Include="Models\Requests\Bodies\Assistant\Deletion Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Location Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Version Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Server Status\Alert Update Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Server Status\Server Alert Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Server Event Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Server Information Model.cs" />
     <Compile Include="Models\Requests\Bodies\User\Setting Update Model.cs" />
@@ -373,6 +376,8 @@
     <Compile Include="Models\Responses\Assistant\Version Response Model.cs" />
     <Compile Include="Models\Responses\Audit History Response Model.cs" />
     <Compile Include="Models\Responses\Response Model.cs" />
+    <Compile Include="Models\Responses\Server Status\Server Alert Response Model.cs" />
+    <Compile Include="Objects\Server Status\Server Alert Record.cs" />
     <Compile Include="Objects\Server Status\Server Event Record.cs" />
     <Compile Include="Models\Responses\Token Response Model.cs" />
     <Compile Include="Models\Validation Model.cs" />
@@ -395,6 +400,7 @@
     <Compile Include="Services\Change Service.cs" />
     <Compile Include="Services\Logger Service.cs" />
     <Compile Include="Services\Model Validation Service.cs" />
+    <Compile Include="Services\Server Status\Server Alert Service.cs" />
     <Compile Include="Services\Server Status\Server Event Service.cs" />
     <Compile Include="Services\Server Status\Server Information Service.cs" />
     <Compile Include="Services\Token Service.cs" />
@@ -426,12 +432,18 @@
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
     <Content Include="SQL\Audit History\LogRequest.sql" />
     <Content Include="SQL\LogChange.sql" />
+    <Content Include="SQL\Server Status\GetServerAlert.sql" />
+    <Content Include="SQL\Server Status\GetServerAlerts.sql" />
+    <Content Include="SQL\Server Status\GetTotalServerAlerts.sql" />
+    <Content Include="SQL\Server Status\LogServerAlert.sql" />
     <Content Include="SQL\Server Status\Server Event\GetServerEvents.sql" />
     <Content Include="SQL\Server Status\Server Event\LogServerEvent.sql" />
     <Content Include="SQL\Server Status\Server Information\GetServer.sql" />
     <Content Include="SQL\Server Status\Server Information\GetServers.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerAdded.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerExists.sql" />
+    <Content Include="SQL\Server Status\ServerAlertExists.sql" />
+    <Content Include="SQL\Server Status\ServerAlertUpdated.sql" />
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />
@@ -459,6 +471,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="SQL\Server Status\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
