@@ -229,31 +229,6 @@ namespace HunterIndustriesAPI.Filters.Operation
                     }
                 }
             }
-
-            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerAlertController))
-            {
-                if (apiDescription.ActionDescriptor.ActionName == "Post")
-                {
-                    foreach (Parameter param in operation.parameters)
-                    {
-                        if (param.name == "request")
-                        {
-                            param.name = "alert";
-                        }
-                    }
-                }
-
-                if (apiDescription.ActionDescriptor.ActionName == "Patch")
-                {
-                    foreach (Parameter param in operation.parameters)
-                    {
-                        if (param.name == "request")
-                        {
-                            param.name = "status";
-                        }
-                    }
-                }
-            }
         }
     }
 }

@@ -38,6 +38,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         public IHttpActionResult Get([FromUri] bool isActive = false)
         {
             LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ServerInformationService _serverInformationService = new ServerInformationService(_logger);

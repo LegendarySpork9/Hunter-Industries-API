@@ -1,1 +1,0 @@
-﻿select count(*) from ServerAlerts with (nolock)

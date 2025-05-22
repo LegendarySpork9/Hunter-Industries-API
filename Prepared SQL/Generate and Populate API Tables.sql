@@ -620,8 +620,6 @@ INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/s
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverevent')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serveralert')
-GO
 INSERT [dbo].[Game] ([Name]) VALUES ('Minecraft')
 GO
 INSERT [dbo].[Machine] ([HostName]) VALUES ('Hunter-NAS')

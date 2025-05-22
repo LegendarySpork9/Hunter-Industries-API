@@ -1,3 +1,0 @@
-﻿insert into ServerAlerts (ServerInformationID, UserSettingsID, ComponentID, ComponentStatusID, AlertStatusID, DateOccured)
-output inserted.ServerAlertsID
-values (@ServerID, (select UserSettingsID from UserSettings with (nolock) where ApplicationID = (select ApplicationID from [Application] with (nolock) where [Name] = 'Server Status Site') and [Name] = 'DiscordName' and [Value] = @Reporter), (select ComponentID from Component with (nolock) where [Name] = @Component), (select ComponentStatusID from ComponentStatus with (nolock) where [Value] = @ComponentStatus), (select AlertStatusID from ServerAlertStatus with (nolock) where [Value] = @AlertStatus), getdate())

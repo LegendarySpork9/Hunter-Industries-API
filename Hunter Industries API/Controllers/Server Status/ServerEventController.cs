@@ -33,7 +33,6 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         /// </remarks>
         /// <param name="component">Which component you want the status for.</param>
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ServerEventRecord>), Description = "Returns the item matching the given parameters.")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public IHttpActionResult Get([FromUri] string component)
@@ -42,6 +41,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
             ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ModelValidationService _modelValidator = new ModelValidationService();
             ServerEventService _serverEventService = new ServerEventService(_logger);
             ResponseFunction _responseFunction = new ResponseFunction();
 

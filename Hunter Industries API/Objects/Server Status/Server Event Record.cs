@@ -13,7 +13,7 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// </summary>
         public string Status { get; set; }
         /// <summary>
-        /// The server information the event relates to.
+        /// The server information the components relates to.
         /// </summary>
         public RelatedServerRecord Server { get; set; }
     }

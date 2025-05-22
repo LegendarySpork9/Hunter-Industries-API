@@ -198,60 +198,6 @@
             </remarks>
             <param name="id">The id number of the user.</param>
         </member>
-        <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.Get(System.Int32,System.Int32)">
-            <summary>
-            Returns a collection of the server alerts.
-            </summary>
-            <remarks>
-            Sample Request:
-            
-                GET /serverstatus/serveralert
-                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
-            </remarks>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.Post(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel)">
-            <summary>
-            Logs a new server alert.
-            </summary>
-            <remarks>
-            Sample Request:
-            
-                POST /serverstatus/serveralert
-                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
-                Content-Type: application/json
-                {
-                    "reporter": "tester",
-                    "component": "PC Status",
-                    "componentStatus": "Unknown",
-                    "alertStatus": "Reported",
-                    "hostName": "Test",
-                    "game": "Minecraft",
-                    "gameVersion": "1.7.10"
-                }
-            </remarks>
-            <param name="request">An object containing the alert.</param>
-        </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel)">
-            <summary>
-            Updates the status of the alert.
-            </summary>
-            <remarks>
-            Sample Request:
-            
-                PATCH /serverstatus/serveralert/1
-                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
-                Content-Type: application/json
-                {
-                    "status": "Resolved"
-                }
-            </remarks>
-            <param name="id">The id number of the server alert.</param>
-            <param name="request">An object containing the new status value.</param>
-        </member>
         <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController">
             <summary>
             </summary>
@@ -756,50 +702,6 @@
             The version of the assistant.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel.Status">
-            <summary>
-            The status of the alert.
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel">
-            <summary>
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Reporter">
-            <summary>
-            The name of the reporter.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Component">
-            <summary>
-            The name of the component.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.ComponentStatus">
-            <summary>
-            The status of the component.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.AlertStatus">
-            <summary>
-            The status of the alert.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.HostName">
-            <summary>
-            The name of the server.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Game">
-            <summary>
-            The name of the game.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.GameVersion">
-            <summary>
-            The version of the game.
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel">
             <summary>
             </summary>
@@ -1096,40 +998,6 @@
             The resulting message or model.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel">
-            <summary>
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.Entries">
-            <summary>
-            The server alert records.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.EntryCount">
-            <summary>
-            The number of records in the page.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.PageNumber">
-            <summary>
-            The current page number.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.PageSize">
-            <summary>
-            The current page size.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.TotalPageCount">
-            <summary>
-            The total number of pages returned.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.TotalCount">
-            <summary>
-            The total number of records returned.
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.TokenResponseModel">
             <summary>
             </summary>
@@ -1173,45 +1041,6 @@
             The valid secret key of the token.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord">
-            <summary>
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.AlertId">
-            <summary>
-            The id number of the alert.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.Reporter">
-            <summary>
-            The name of the reporter.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.Component">
-            <summary>
-            The name of the component.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.ComponentStatus">
-            <summary>
-            The status of the component.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.AlertStatus">
-            <summary>
-            The status of the alert.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.AlertDate">
-            <summary>
-            The date and time the alert occured.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.server">
-            <summary>
-            The server information the alert relates to.
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord">
             <summary>
             </summary>
@@ -1228,7 +1057,7 @@
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.Server">
             <summary>
-            The server information the event relates to.
+            The server information the components relates to.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord">
@@ -1676,45 +1505,6 @@
         <member name="M:HunterIndustriesAPI.Services.ModelValidationService.ModelValidity(System.Boolean[],System.Boolean)">
             <summary>
             Decides if the model is valid.
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
-            <summary>
-            Sets the class's global variables.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetServerAlerts(System.Int32,System.Int32)">
-            <summary>
-            Returns all server alert records that match the parameters.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetServerAlert(System.Int32)">
-            <summary>
-            Returns the server alert record for the given id.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetTotalServerAlerts">
-            <summary>
-            Returns the number of server alert records in the table.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.LogServerAlert(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel)">
-            <summary>
-            Logs the server alert.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertExists(System.Int32)">
-            <summary>
-            Returns whether a server alert exists with the given id.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertUpdated(System.Int32,System.String)">
-            <summary>
-            Updates the status of the server alert.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ServerStatus.ServerEventService">
