@@ -1,11 +1,12 @@
 ﻿using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Models.Requests.Bodies;
+using HunterIndustriesAPI.Models.Requests.Bodies.User;
 using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Models.Responses;
-using HunterIndustriesAPI.Objects;
+using HunterIndustriesAPI.Objects.User;
 using HunterIndustriesAPI.Services;
+using HunterIndustriesAPI.Services.User;
 using Swashbuckle.Swagger.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +15,7 @@ using System.Net;
 using System.Web;
 using System.Web.Http;
 
-namespace HunterIndustriesAPI.Controllers
+namespace HunterIndustriesAPI.Controllers.User
 {
     /// <summary>
     /// </summary>
@@ -311,7 +312,7 @@ namespace HunterIndustriesAPI.Controllers
         /// <param name="id">The id number of the user.</param>
         /// <param name="request">An object containing the user data.</param>
         [Route("api/user/{id:int}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserRecord), Description = "Returns the update item.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserRecord), Description = "Returns the updated item.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no user was found matching the id.")]

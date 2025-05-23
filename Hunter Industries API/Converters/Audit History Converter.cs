@@ -18,6 +18,10 @@
                 case "assistant/deletion": return 5;
                 case "assistant/location": return 6;
                 case "user": return 7;
+                case "usersettings": return 8;
+                case "serverstatus/serverinformation": return 9;
+                case "serverstatus/serverevent": return 10;
+                case "serverstatus/serveralert": return 11;
                 default: return 0;
             }
         }

@@ -198,6 +198,131 @@
             </remarks>
             <param name="id">The id number of the user.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.Get(System.Int32,System.Int32)">
+            <summary>
+            Returns a collection of the server alerts.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /serverstatus/serveralert
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.Post(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel)">
+            <summary>
+            Logs a new server alert.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                POST /serverstatus/serveralert
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "reporter": "tester",
+                    "component": "PC Status",
+                    "componentStatus": "Unknown",
+                    "alertStatus": "Reported",
+                    "hostName": "Test",
+                    "game": "Minecraft",
+                    "gameVersion": "1.7.10"
+                }
+            </remarks>
+            <param name="request">An object containing the alert.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel)">
+            <summary>
+            Updates the status of the alert.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                PATCH /serverstatus/serveralert/1
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "status": "Resolved"
+                }
+            </remarks>
+            <param name="id">The id number of the server alert.</param>
+            <param name="request">An object containing the new status value.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.Get(System.String)">
+            <summary>
+            Returns the server events for the given component.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /serverstatus/serverevent?Component=PC Status
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+            <param name="component">Which component you want the status for.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.Post(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel)">
+            <summary>
+            Logs a new server event.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                POST /serverstatus/serverevent
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "component": "PC Status",
+                    "status": "Online",
+                    "hostName": "Test",
+                    "game": "Minecraft",
+                    "gameVersion": "1.7.10"
+                }
+            </remarks>
+            <param name="request">An object containing the event.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.Get(System.Boolean)">
+            <summary>
+            Returns the collection of servers.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /serverstatus/serverinformation?isActive=true
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+            <param name="isActive">Whether the servers are active or not.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.Post(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel)">
+            <summary>
+            Adds a new server.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                POST /serverstatus/serverinformation
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "hostName": "Test",
+                    "game": "Minecraft",
+                    "gameVersion": "1.7.10",
+                    "ipAddress": "127.0.0.1"
+                }
+            </remarks>
+            <param name="request">An object containing the server information.</param>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.TokenController">
             <summary>
             </summary>
@@ -218,11 +343,11 @@
             </remarks>
             <param name="request">The application identifier.</param>
         </member>
-        <member name="T:HunterIndustriesAPI.Controllers.UserController">
+        <member name="T:HunterIndustriesAPI.Controllers.User.UserController">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.UserController.Get(HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.Get(HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel)">
             <summary>
             Returns a collection of users.
             </summary>
@@ -233,7 +358,7 @@
                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
             </remarks>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.UserController.Get(System.Int32)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.Get(System.Int32)">
             <summary>
             Returns the record matching the given id.
             </summary>
@@ -245,7 +370,7 @@
             </remarks>
             <param name="id">The id number of the user.</param>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.UserController.Post(HunterIndustriesAPI.Models.Requests.Bodies.UserModel)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.Post(HunterIndustriesAPI.Models.Requests.Bodies.User.UserModel)">
             <summary>
             Creates a new user.
             </summary>
@@ -265,7 +390,7 @@
             </remarks>
             <param name="request">An object containing the user information.</param>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.UserController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.UserModel)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.User.UserModel)">
             <summary>
             Updates the details of the user.
             </summary>
@@ -282,7 +407,7 @@
             <param name="id">The id number of the user.</param>
             <param name="request">An object containing the user data.</param>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.UserController.Delete(System.Int32)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.Delete(System.Int32)">
             <summary>
             Deletes the user.
             </summary>
@@ -293,6 +418,62 @@
                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
             </remarks>
             <param name="id">The id number of the user.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.User.UserSettingsController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.Get(System.Int32,System.String)">
+            <summary>
+            Returns the collection of settings for given id.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                GET /UserSettings/1?application=test
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+            </remarks>
+            <param name="id">The id number of the user.</param>
+            <param name="application">The application the settings relate to.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.Post(HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel)">
+            <summary>
+            Adds a new user setting.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                POST /usersettings
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "application": "test",
+                    "settings": [
+                        {
+                            "name": "DarkMode",
+                            "value": "True"
+                        }
+                    ]
+                }
+            </remarks>
+            <param name="request">An object containing the user setting information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel)">
+            <summary>
+            Updates the value of the setting.
+            </summary>
+            <remarks>
+            Sample Request:
+            
+                PATCH /usersettings/1
+                Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                Content-Type: application/json
+                {
+                    "Value": "False"
+                }
+            </remarks>
+            <param name="id">The id number of the user setting.</param>
+            <param name="request">An object containing the new setting value.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.AuditHistoryConverter">
             <summary>
@@ -575,23 +756,153 @@
             The version of the assistant.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.UserModel">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel.Status">
+            <summary>
+            The status of the alert.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.UserModel.Username">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Reporter">
+            <summary>
+            The name of the reporter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Component">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.ComponentStatus">
+            <summary>
+            The status of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.AlertStatus">
+            <summary>
+            The status of the alert.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.HostName">
+            <summary>
+            The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Game">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.GameVersion">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Component">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Status">
+            <summary>
+            The status of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.HostName">
+            <summary>
+            The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Game">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.GameVersion">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.HostName">
+            <summary>
+            The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Game">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.GameVersion">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.IPAddress">
+            <summary>
+            The IPAddress of the game
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel.Value">
+            <summary>
+            The new value of the setting.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.UserModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.UserModel.Username">
             <summary>
             The name of the user.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.UserModel.Password">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.UserModel.Password">
             <summary>
             The password of the user.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.UserModel.Scopes">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.UserModel.Scopes">
             <summary>
             The scopes applied to the user.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel.Username">
+            <summary>
+            The name of the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel.Application">
+            <summary>
+            The application the settings relate to.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel.SettingName">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel.SettingValue">
+            <summary>
+            The value of the setting.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel">
@@ -785,6 +1096,40 @@
             The resulting message or model.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.Entries">
+            <summary>
+            The server alert records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.TokenResponseModel">
             <summary>
             </summary>
@@ -826,6 +1171,122 @@
         <member name="P:HunterIndustriesAPI.Models.ValidationModel.SecretKey">
             <summary>
             The valid secret key of the token.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.AlertId">
+            <summary>
+            The id number of the alert.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.Reporter">
+            <summary>
+            The name of the reporter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.Component">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.ComponentStatus">
+            <summary>
+            The status of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.AlertStatus">
+            <summary>
+            The status of the alert.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.AlertDate">
+            <summary>
+            The date and time the alert occured.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.server">
+            <summary>
+            The server information the alert relates to.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.Component">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.Status">
+            <summary>
+            The status of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.DateOccured">
+            <summary>
+            When the event occured.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.Server">
+            <summary>
+            The server information the event relates to.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.HostName">
+            <summary>
+            The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.Game">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.GameVersion">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Id">
+            <summary>
+            The id number of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.HostName">
+            <summary>
+            The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Game">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.GameVersion">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IPAddress">
+            <summary>
+            The IPAddress of the game
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IsActive">
+            <summary>
+            Whether the server is active.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.Assistant.AssistantConfiguration">
@@ -988,28 +1449,61 @@
             The date and time it expires.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.UserRecord">
+        <member name="T:HunterIndustriesAPI.Objects.User.UserRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.User.UserRecord.Id">
             <summary>
             The id number of the user.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Username">
+        <member name="P:HunterIndustriesAPI.Objects.User.UserRecord.Username">
             <summary>
             The name of the user.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Password">
+        <member name="P:HunterIndustriesAPI.Objects.User.UserRecord.Password">
             <summary>
             The password of the user.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.UserRecord.Scopes">
+        <member name="P:HunterIndustriesAPI.Objects.User.UserRecord.Scopes">
             <summary>
             The scopes applied to the user.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.User.SettingRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.User.SettingRecord.Id">
+            <summary>
+            The id number of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.User.SettingRecord.Name">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.User.SettingRecord.Value">
+            <summary>
+            The value of the setting.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.User.UserSettingRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.User.UserSettingRecord.Application">
+            <summary>
+            The application the settings relate to.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.User.UserSettingRecord.Settings">
+            <summary>
+            The settings applied to the user.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.Assistant.ConfigService">
@@ -1189,6 +1683,93 @@
             Decides if the model is valid.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetServerAlerts(System.Int32,System.Int32)">
+            <summary>
+            Returns all server alert records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetServerAlert(System.Int32)">
+            <summary>
+            Returns the server alert record for the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetTotalServerAlerts">
+            <summary>
+            Returns the number of server alert records in the table.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.LogServerAlert(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel)">
+            <summary>
+            Logs the server alert.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertExists(System.Int32)">
+            <summary>
+            Returns whether a server alert exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertUpdated(System.Int32,System.String)">
+            <summary>
+            Updates the status of the server alert.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.ServerStatus.ServerEventService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.GetServerEvents(System.String)">
+            <summary>
+            Returns the latest component information record that matches the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.LogServerEvent(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel)">
+            <summary>
+            Logs the server event.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServers(System.Boolean)">
+            <summary>
+            Returns all the servers that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServer(System.String,System.String,System.String)">
+            <summary>
+            Returns the id of the server with the given values.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerExists(System.String,System.String,System.String)">
+            <summary>
+            Returns whether a server already exists with the given values.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerAdded(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel)">
+            <summary>
+            Adds the server.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Services.TokenService">
             <summary>
             </summary>
@@ -1218,58 +1799,97 @@
             Gets the application name from the database.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Services.UserService">
+        <member name="T:HunterIndustriesAPI.Services.User.UserService">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
             <summary>
             Sets the class's global variables.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.GetUsers(System.Int32,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.Int32,System.String)">
             <summary>
             Returns all user records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.UserExists(System.String)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.UserExists(System.String)">
             <summary>
             Returns whether a user already exists with the given username.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.UserExists(System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.UserExists(System.Int32)">
             <summary>
             Returns whether a user already exists with the given id.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.UserCreated(System.String,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.UserCreated(System.String,System.String)">
             <summary>
             Creates the user.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.UserScopeCreated(System.Int32,System.Collections.Generic.List{System.String})">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.UserScopeCreated(System.Int32,System.Collections.Generic.List{System.String})">
             <summary>
             Creates the user scopes.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.GetUserScopes(System.Int32,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUserScopes(System.Int32,System.String)">
             <summary>
             Gets the scopes assigned to the user.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.UserUpdated(System.Int32,System.String,System.String,System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.UserUpdated(System.Int32,System.String,System.String,System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <summary>
             Updates the details of the given user.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.UserScopeDeleted(System.Int32,System.Collections.Generic.List{System.String})">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.UserScopeDeleted(System.Int32,System.Collections.Generic.List{System.String})">
             <summary>
             Deletes the user scopes.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.UserService.UserDeleted(System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.UserDeleted(System.Int32)">
             <summary>
             Sets the user to deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.User.UserSettingsService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.GetUserSettings(System.Int32,System.String)">
+            <summary>
+            Returns all user settings that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.GetUserSetting(System.Int32)">
+            <summary>
+            Returns the setting that matches the id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.UserSettingExists(System.String,System.String,System.String)">
+            <summary>
+            Returns whether a user setting already exists with the given values.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.UserSettingExists(System.Int32)">
+            <summary>
+            Returns whether a user setting already exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.UserSettingAdded(HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel)">
+            <summary>
+            Adds the user setting.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.UserSettingUpdated(System.Int32,System.String)">
+            <summary>
+            Updates the value of the given setting.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Startup">

@@ -44,6 +44,7 @@ namespace HunterIndustriesAPI.Filters
                 case "BookReader": valid = principal.HasClaim("scope", "Book Reader API"); break;
                 case "APIControlPanel": valid = principal.HasClaim("scope", "Control Panel API"); break;
                 case "AIAccess": valid = principal.HasClaim("scope", "Assistant API") || principal.HasClaim("scope", "Control Panel API"); break;
+                case "ServerStatus": valid = principal.HasClaim("scope", "Server Status API"); break;
             }
 
             return valid;

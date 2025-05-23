@@ -1,14 +1,14 @@
 ﻿using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
-using HunterIndustriesAPI.Objects;
+using HunterIndustriesAPI.Objects.User;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
-namespace HunterIndustriesAPI.Services
+namespace HunterIndustriesAPI.Services.User
 {
     /// <summary>
     /// </summary>

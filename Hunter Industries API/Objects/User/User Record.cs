@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace HunterIndustriesAPI.Models.Requests.Bodies
+namespace HunterIndustriesAPI.Objects.User
 {
     /// <summary>
     /// </summary>
-    public class UserModel
+    public class UserRecord
     {
+        /// <summary>
+        /// The id number of the user.
+        /// </summary>
+        public int Id { get; set; }
         /// <summary>
         /// The name of the user.
         /// </summary>

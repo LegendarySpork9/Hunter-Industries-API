@@ -1,5 +1,7 @@
 ﻿using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
+using HunterIndustriesAPI.Controllers.ServerStatus;
+using HunterIndustriesAPI.Controllers.User;
 using Swashbuckle.Swagger;
 using System.Collections.Generic;
 using System.Web.Http.Description;
@@ -84,10 +86,7 @@ namespace HunterIndustriesAPI.Filters.Operation
                         param.name = "assistantId";
                     }
                 }
-            }
 
-            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ConfigController) && apiDescription.ActionDescriptor.ActionName == "Post")
-            {
                 foreach (Parameter param in operation.parameters)
                 {
                     if (param.name == "request")
@@ -174,15 +173,84 @@ namespace HunterIndustriesAPI.Filters.Operation
                         param.name = "username";
                     }
                 }
-            }
 
-            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserController) && (apiDescription.ActionDescriptor.ActionName == "Post" || apiDescription.ActionDescriptor.ActionName == "Patch"))
-            {
                 foreach (Parameter param in operation.parameters)
                 {
                     if (param.name == "request")
                     {
                         param.name = "user";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(UserSettingsController))
+            {
+                if (apiDescription.ActionDescriptor.ActionName == "Post")
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "user setting";
+                        }
+                    }
+                }
+
+                if (apiDescription.ActionDescriptor.ActionName == "Patch")
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "value";
+                        }
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerInformationController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "server";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerEventController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "request")
+                    {
+                        param.name = "event";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerAlertController))
+            {
+                if (apiDescription.ActionDescriptor.ActionName == "Post")
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "alert";
+                        }
+                    }
+                }
+
+                if (apiDescription.ActionDescriptor.ActionName == "Patch")
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "status";
+                        }
                     }
                 }
             }
