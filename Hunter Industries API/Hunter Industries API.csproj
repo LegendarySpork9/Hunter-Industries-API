@@ -432,18 +432,18 @@
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
     <Content Include="SQL\Audit History\LogRequest.sql" />
     <Content Include="SQL\LogChange.sql" />
-    <Content Include="SQL\Server Status\GetServerAlert.sql" />
-    <Content Include="SQL\Server Status\GetServerAlerts.sql" />
-    <Content Include="SQL\Server Status\GetTotalServerAlerts.sql" />
-    <Content Include="SQL\Server Status\LogServerAlert.sql" />
+    <Content Include="SQL\Server Status\Server Alerts\GetServerAlert.sql" />
+    <Content Include="SQL\Server Status\Server Alerts\GetServerAlerts.sql" />
+    <Content Include="SQL\Server Status\Server Alerts\GetTotalServerAlerts.sql" />
+    <Content Include="SQL\Server Status\Server Alerts\LogServerAlert.sql" />
     <Content Include="SQL\Server Status\Server Event\GetServerEvents.sql" />
     <Content Include="SQL\Server Status\Server Event\LogServerEvent.sql" />
     <Content Include="SQL\Server Status\Server Information\GetServer.sql" />
     <Content Include="SQL\Server Status\Server Information\GetServers.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerAdded.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerExists.sql" />
-    <Content Include="SQL\Server Status\ServerAlertExists.sql" />
-    <Content Include="SQL\Server Status\ServerAlertUpdated.sql" />
+    <Content Include="SQL\Server Status\Server Alerts\ServerAlertExists.sql" />
+    <Content Include="SQL\Server Status\Server Alerts\ServerAlertUpdated.sql" />
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />
@@ -471,7 +471,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="SQL\Server Status\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
