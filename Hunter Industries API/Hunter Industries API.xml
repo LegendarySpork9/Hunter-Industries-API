@@ -1226,6 +1226,11 @@
             The status of the component.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.DateOccured">
+            <summary>
+            When the event occured.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.Server">
             <summary>
             The server information the event relates to.

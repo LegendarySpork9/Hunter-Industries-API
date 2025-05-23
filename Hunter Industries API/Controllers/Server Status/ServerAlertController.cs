@@ -259,7 +259,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
                     if (!string.IsNullOrEmpty(request.Status) && request.Status != alertRecord.AlertStatus)
                     {
-                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("usersettings"), auditID.Item2, "Alert Status", alertRecord.AlertStatus, request.Status);
+                        _changeService.LogChange(_auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), auditID.Item2, "Alert Status", alertRecord.AlertStatus, request.Status);
                         alertRecord.AlertStatus = request.Status;
                     }
 
