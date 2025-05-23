@@ -113,7 +113,7 @@ namespace HunterIndustriesAPI.Services.User
             SqlDataReader dataReader;
 
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserExists.sql");
-            sqlQuery += "\nwhere Username = @Username";
+            sqlQuery += "\nand Username = @Username";
 
             try
             {

@@ -566,8 +566,8 @@ REFERENCES [dbo].[Scope] ([ScopeID])
 GO
 ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_Scope]
 GO
-ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_User] FOREIGN KEY([UserID])
-REFERENCES [dbo].[User] ([UserID])
+ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_APIUser] FOREIGN KEY([UserID])
+REFERENCES [dbo].[APIUser] ([UserID])
 GO
 ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_User]
 GO
