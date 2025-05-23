@@ -656,6 +656,8 @@ INSERT [dbo].[StatusCode] ([Value]) VALUES ('500 Internal Server Error')
 GO
 INSERT [dbo].[Version] ([Value]) VALUES ('0.0.0')
 GO
+INSERT [dbo].[Scope] ([Value]) VALUES ('User')
+GO
 INSERT [dbo].[Scope] ([Value]) VALUES ('Assistant API')
 GO
 INSERT [dbo].[Scope] ([Value]) VALUES ('Book Reader API')
