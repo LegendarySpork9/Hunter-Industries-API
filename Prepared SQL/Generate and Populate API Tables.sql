@@ -569,7 +569,7 @@ GO
 ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_APIUser] FOREIGN KEY([UserID])
 REFERENCES [dbo].[APIUser] ([UserID])
 GO
-ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_User]
+ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_APIUser]
 GO
 ALTER TABLE [dbo].[UserSettings]  WITH CHECK ADD  CONSTRAINT [FK_UserSettings_APIUser] FOREIGN KEY([UserID])
 REFERENCES [dbo].[APIUser] ([UserID])
