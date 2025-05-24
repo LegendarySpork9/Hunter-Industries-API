@@ -7,6 +7,7 @@ using HunterIndustriesAPI.Objects.ServerStatus;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.ServerStatus;
 using Swashbuckle.Swagger.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -182,6 +183,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 {
                     Component = request.Component,
                     Status = request.Status,
+                    DateOccured = DateTime.Now,
                     Server = new RelatedServerRecord()
                     {
                         HostName = request.HostName,
