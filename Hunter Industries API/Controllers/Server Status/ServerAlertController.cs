@@ -33,6 +33,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     GET /serverstatus/serveralert
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
+        [SwaggerOperation("GetServerAlert")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerAlertResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -83,6 +84,64 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     TotalPageCount = totalPages,
                     TotalCount = totalAlerts
                 }
+            };
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            return Content(HttpStatusCode.OK, response.Data);
+        }
+
+        /// <summary>
+        /// Returns the server alert matching the id.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     GET /serverstatus/serveralert
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        /// </remarks>
+        /// <param name="id">The id number of the server alert.</param>
+        [Route("api/serverstatus/serveralert/{id:int}")]
+        [SwaggerOperation("GetServerAlertById")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerAlertRecord), Description = "Returns the item matching the given id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public IHttpActionResult Get(int id)
+        {
+            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            ParameterFunction _parameterFunction = new ParameterFunction();
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ServerAlertService _serverAlertService = new ServerAlertService(_logger);
+            ResponseFunction _responseFunction = new ResponseFunction();
+
+            ResponseModel response;
+
+            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint called with the following parameters \"{id}\".");
+
+            _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
+                    new string[] { id.ToString() });
+
+            ServerAlertRecord serverAlert = _serverAlertService.GetServerAlert(id);
+
+            if (serverAlert.AlertId == 0)
+            {
+                response = new ResponseModel()
+                {
+                    StatusCode = 200,
+                    Data = new
+                    {
+                        information = "No data returned by given parameters."
+                    }
+                };
+
+                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                return Content(HttpStatusCode.OK, response.Data);
+            }
+
+            response = new ResponseModel()
+            {
+                StatusCode = 200,
+                Data = serverAlert
             };
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");

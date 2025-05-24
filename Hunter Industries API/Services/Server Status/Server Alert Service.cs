@@ -45,7 +45,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alert\GetServerAlerts.sql"), connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlerts.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@PageSize", pageSize));
                 command.Parameters.Add(new SqlParameter("@PageNumber", pageNumber));
                 dataReader = command.ExecuteReader();
@@ -103,7 +103,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alert\GetServerAlert.sql"), connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlert.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@AlertID", id));
                 dataReader = command.ExecuteReader();
 
@@ -156,7 +156,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alert\GetTotalServerAlerts.sql"), connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetTotalServerAlerts.sql"), connection);
                 dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
@@ -198,7 +198,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alert\LogServerAlert.sql"), connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@ServerID", _serverInformationService.GetServer(serverAlert.HostName, serverAlert.Game, serverAlert.GameVersion)));
                 command.Parameters.Add(new SqlParameter("@Reporter", serverAlert.Reporter));
                 command.Parameters.Add(new SqlParameter("@Component", serverAlert.Component));
@@ -250,7 +250,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alert\ServerAlertExists.sql"), connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@AlertID", id));
                 dataReader = command.ExecuteReader();
 
@@ -292,7 +292,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 connection = new SqlConnection(DatabaseModel.ConnectionString);
                 connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alert\ServerAlertUpdated.sql"), connection);
+                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertUpdated.sql"), connection);
                 command.Parameters.Add(new SqlParameter("@AlertStatus", value));
                 command.Parameters.Add(new SqlParameter("@AlertID", id));
                 rowsAffected = command.ExecuteNonQuery();
