@@ -33,31 +33,31 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             VersionResponseModel version = new VersionResponseModel();
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\GetAssistantVersion.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    version = new VersionResponseModel()
-                    {
-                        AssistantName = dataReader.GetString(0),
-                        IdNumber = dataReader.GetString(1),
-                        Version = dataReader.GetString(2)
-                    };
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\GetAssistantVersion.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
+                        command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                version = new VersionResponseModel()
+                                {
+                                    AssistantName = dataReader.GetString(0),
+                                    IdNumber = dataReader.GetString(1),
+                                    Version = dataReader.GetString(2)
+                                };
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -81,29 +81,27 @@ namespace HunterIndustriesAPI.Services.Assistant
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, version })}.");
 
             bool updated = true;
-
-            SqlConnection connection;
-            SqlCommand command;
-
             int rowsAffected;
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\AssistantVersionUpdated.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@Version", version));
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    updated = false;
-                }
+                    connection.Open();
 
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\AssistantVersionUpdated.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Version", version));
+                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
+                        command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
+                        rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            updated = false;
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)

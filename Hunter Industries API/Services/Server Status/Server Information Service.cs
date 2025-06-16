@@ -34,11 +34,6 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameters \"{isActive}\".");
 
             List<ServerInformationRecord> servers = new List<ServerInformationRecord>();
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\GetServers.sql");
 
             if (isActive)
@@ -48,32 +43,34 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                
-                if (isActive)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command.Parameters.Add(new SqlParameter("@IsActive", isActive));
-                }
+                    connection.Open();
 
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    servers.Add(new ServerInformationRecord()
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
-                        Id = dataReader.GetInt32(0),
-                        HostName = dataReader.GetString(1),
-                        Game = dataReader.GetString(2),
-                        GameVersion = dataReader.GetString(3),
-                        IPAddress = dataReader.GetString(4),
-                        IsActive = dataReader.GetBoolean(5)
-                    });
-                }
+                        if (isActive)
+                        {
+                            command.Parameters.Add(new SqlParameter("@IsActive", isActive));
+                        }
 
-                dataReader.Close();
-                connection.Close();
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                servers.Add(new ServerInformationRecord()
+                                {
+                                    Id = dataReader.GetInt32(0),
+                                    HostName = dataReader.GetString(1),
+                                    Game = dataReader.GetString(2),
+                                    GameVersion = dataReader.GetString(3),
+                                    IPAddress = dataReader.GetString(4),
+                                    IsActive = dataReader.GetBoolean(5)
+                                });
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -98,27 +95,27 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             int serverId = 0;
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\GetServer.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@HostName", hostName));
-                command.Parameters.Add(new SqlParameter("@Game", game));
-                command.Parameters.Add(new SqlParameter("@GameVersion", gameVersion));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    serverId = dataReader.GetInt32(0);
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\GetServer.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@HostName", hostName));
+                        command.Parameters.Add(new SqlParameter("@Game", game));
+                        command.Parameters.Add(new SqlParameter("@GameVersion", gameVersion));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                serverId = dataReader.GetInt32(0);
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -143,27 +140,27 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             bool exists = false;
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\ServerExists.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@HostName", hostName));
-                command.Parameters.Add(new SqlParameter("@Game", game));
-                command.Parameters.Add(new SqlParameter("@GameVersion", gameVersion));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    exists = true;
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\ServerExists.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@HostName", hostName));
+                        command.Parameters.Add(new SqlParameter("@Game", game));
+                        command.Parameters.Add(new SqlParameter("@GameVersion", gameVersion));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                exists = true;
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -189,29 +186,30 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             bool added = true;
             int serverId = 0;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\ServerAdded.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@HostName", server.HostName));
-                command.Parameters.Add(new SqlParameter("@Game", server.Game));
-                command.Parameters.Add(new SqlParameter("@GameVersion", server.GameVersion));
-                command.Parameters.Add(new SqlParameter("@IPAddress", server.IPAddress));
-                var result = command.ExecuteScalar();
-
-                if (result == null)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    added = false;
-                }
+                    connection.Open();
 
-                else
-                {
-                    serverId = int.Parse(result.ToString());
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\ServerAdded.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@HostName", server.HostName));
+                        command.Parameters.Add(new SqlParameter("@Game", server.Game));
+                        command.Parameters.Add(new SqlParameter("@GameVersion", server.GameVersion));
+                        command.Parameters.Add(new SqlParameter("@IPAddress", server.IPAddress));
+                        var result = command.ExecuteScalar();
+
+                        if (result == null)
+                        {
+                            added = false;
+                        }
+
+                        else
+                        {
+                            serverId = int.Parse(result.ToString());
+                        }
+                    }
                 }
             }
 
