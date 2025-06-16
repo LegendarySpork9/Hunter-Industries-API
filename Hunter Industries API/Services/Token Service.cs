@@ -40,25 +40,24 @@ namespace HunterIndustriesAPI.Services
             string[] usernames = Array.Empty<string>();
             string[] passwords = Array.Empty<string>();
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetUsers.SQL"), connection);
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    usernames = usernames.Append(dataReader.GetString(1)).ToArray();
-                    passwords = passwords.Append(dataReader.GetString(2)).ToArray();
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetUsers.SQL"), connection))
+                    {
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                usernames = usernames.Append(dataReader.GetString(1)).ToArray();
+                                passwords = passwords.Append(dataReader.GetString(2)).ToArray();
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -78,24 +77,23 @@ namespace HunterIndustriesAPI.Services
         {
             string[] phrases = Array.Empty<string>();
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetAuthorisationPhrases.SQL"), connection);
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    phrases = phrases.Append(dataReader.GetString(1)).ToArray();
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetAuthorisationPhrases.SQL"), connection))
+                    {
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                phrases = phrases.Append(dataReader.GetString(1)).ToArray();
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -119,25 +117,25 @@ namespace HunterIndustriesAPI.Services
 
             string name = string.Empty;
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetApplicationName.SQL"), connection);
-                command.Parameters.Add(new SqlParameter("@Phrase", phrase));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    name = dataReader.GetString(0);
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetApplicationName.SQL"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Phrase", phrase));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                name = dataReader.GetString(0);
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)

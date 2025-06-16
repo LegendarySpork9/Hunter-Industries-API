@@ -34,11 +34,6 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSettings called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
 
             List<UserSettingRecord> userSettings = new List<UserSettingRecord>();
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\GetUserSettings.sql");
             string currentApplication = string.Empty;
             UserSettingRecord tempRecord = new UserSettingRecord();
@@ -55,57 +50,59 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-
-                if (sqlQuery.Contains("@Id"))
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command.Parameters.Add(new SqlParameter("@Id", id));
-                }
+                    connection.Open();
 
-                if (sqlQuery.Contains("@Application"))
-                {
-                    command.Parameters.Add(new SqlParameter("@Application", application));
-                }
-
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    if (string.IsNullOrEmpty(currentApplication) || currentApplication != dataReader.GetString(0))
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
-                        if (string.IsNullOrEmpty(currentApplication))
+                        if (sqlQuery.Contains("@Id"))
                         {
-                            tempRecord.Application = dataReader.GetString(0);
+                            command.Parameters.Add(new SqlParameter("@Id", id));
                         }
 
-                        else
+                        if (sqlQuery.Contains("@Application"))
                         {
-                            userSettings.Add(tempRecord);
-
-                            tempRecord.Application = dataReader.GetString(0);
-                            tempRecord.Settings.Clear();
+                            command.Parameters.Add(new SqlParameter("@Application", application));
                         }
 
-                        currentApplication = dataReader.GetString(0);
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                if (string.IsNullOrEmpty(currentApplication) || currentApplication != dataReader.GetString(0))
+                                {
+                                    if (string.IsNullOrEmpty(currentApplication))
+                                    {
+                                        tempRecord.Application = dataReader.GetString(0);
+                                    }
+
+                                    else
+                                    {
+                                        userSettings.Add(tempRecord);
+
+                                        tempRecord.Application = dataReader.GetString(0);
+                                        tempRecord.Settings.Clear();
+                                    }
+
+                                    currentApplication = dataReader.GetString(0);
+                                }
+
+                                tempRecord.Settings.Add(new SettingRecord()
+                                {
+                                    Id = dataReader.GetInt32(1),
+                                    Name = dataReader.GetString(2),
+                                    Value = dataReader.GetString(3)
+                                });
+                            }
+
+                            if (!string.IsNullOrEmpty(currentApplication))
+                            {
+                                userSettings.Add(tempRecord);
+                            }
+                        }
                     }
-
-                    tempRecord.Settings.Add(new SettingRecord()
-                    {
-                        Id = dataReader.GetInt32(1),
-                        Name = dataReader.GetString(2),
-                        Value = dataReader.GetString(3)
-                    }); 
                 }
-
-                if (!string.IsNullOrEmpty(currentApplication))
-                {
-                    userSettings.Add(tempRecord);
-                }
-
-                dataReader.Close();
-                connection.Close();
             }
 
             catch (Exception ex)
@@ -127,30 +124,29 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting called with the parameters \"{id}\".");
 
             SettingRecord setting = new SettingRecord();
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\GetUserSetting.sql");
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Id", id));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    setting.Id = dataReader.GetInt32(0);
-                    setting.Name = dataReader.GetString(1);
-                    setting.Value = dataReader.GetString(2);
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Id", id));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                setting.Id = dataReader.GetInt32(0);
+                                setting.Name = dataReader.GetString(1);
+                                setting.Value = dataReader.GetString(2);
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -174,30 +170,29 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {_parameterFunction.FormatParameters(new string[] { username, application, settingName })}.");
 
             bool exists = false;
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingExists.sql");
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Username", username));
-                command.Parameters.Add(new SqlParameter("@Application", application));
-                command.Parameters.Add(new SqlParameter("@Name", settingName));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    exists = true;
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Username", username));
+                        command.Parameters.Add(new SqlParameter("@Application", application));
+                        command.Parameters.Add(new SqlParameter("@Name", settingName));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                exists = true;
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -221,28 +216,27 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters \"{id}\".");
 
             bool exists = false;
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingExistsById.sql");
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Id", id));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    exists = true;
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Id", id));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                exists = true;
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -267,24 +261,25 @@ namespace HunterIndustriesAPI.Services.User
 
             bool added = true;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingAdded.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@Username", userSetting.Username));
-                command.Parameters.Add(new SqlParameter("@Application", userSetting.Application));
-                command.Parameters.Add(new SqlParameter("@Name", userSetting.SettingName));
-                command.Parameters.Add(new SqlParameter("@Value", userSetting.SettingValue));
-                int rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    added = false;
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingAdded.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Username", userSetting.Username));
+                        command.Parameters.Add(new SqlParameter("@Application", userSetting.Application));
+                        command.Parameters.Add(new SqlParameter("@Name", userSetting.SettingName));
+                        command.Parameters.Add(new SqlParameter("@Value", userSetting.SettingValue));
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            added = false;
+                        }
+                    }
                 }
             }
 
@@ -309,28 +304,26 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated called with the parameters \"{id}\", \"{value}\".");
 
             bool updated = true;
-
-            SqlConnection connection;
-            SqlCommand command;
-
             int rowsAffected;
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingUpdated.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@Value", value));
-                command.Parameters.Add(new SqlParameter("@Id", id));
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    updated = false;
-                }
+                    connection.Open();
 
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingUpdated.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Value", value));
+                        command.Parameters.Add(new SqlParameter("@Id", id));
+                        rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            updated = false;
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)

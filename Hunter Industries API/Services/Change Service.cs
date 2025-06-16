@@ -31,30 +31,29 @@ namespace HunterIndustriesAPI.Services
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {_parameterFunction.FormatParameters(new string[] { endpointId.ToString(), auditId.ToString(), field, oldValue, newValue })}.");
 
             bool successful = false;
-
-            SqlConnection connection;
-            SqlCommand command;
-
             int rowsAffected;
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\LogChange.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
-                command.Parameters.Add(new SqlParameter("@AuditID", auditId));
-                command.Parameters.Add(new SqlParameter("@Field", field));
-                command.Parameters.Add(new SqlParameter("@OldValue", oldValue));
-                command.Parameters.Add(new SqlParameter("@NewValue", newValue));
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected == 1)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    successful = true;
-                }
+                    connection.Open();
 
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\LogChange.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@EndpointID", endpointId));
+                        command.Parameters.Add(new SqlParameter("@AuditID", auditId));
+                        command.Parameters.Add(new SqlParameter("@Field", field));
+                        command.Parameters.Add(new SqlParameter("@OldValue", oldValue));
+                        command.Parameters.Add(new SqlParameter("@NewValue", newValue));
+                        rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected == 1)
+                        {
+                            successful = true;
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)

@@ -33,32 +33,32 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             LocationResponseModel location = new LocationResponseModel();
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\GetAssistantLocation.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    location = new LocationResponseModel()
-                    {
-                        AssistantName = dataReader.GetString(0),
-                        IdNumber = dataReader.GetString(1),
-                        HostName = dataReader.GetString(2),
-                        IPAddress = dataReader.GetString(3)
-                    };
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\GetAssistantLocation.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
+                        command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                location = new LocationResponseModel()
+                                {
+                                    AssistantName = dataReader.GetString(0),
+                                    IdNumber = dataReader.GetString(1),
+                                    HostName = dataReader.GetString(2),
+                                    IPAddress = dataReader.GetString(3)
+                                };
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -82,10 +82,6 @@ namespace HunterIndustriesAPI.Services.Assistant
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
 
             bool updated = true;
-
-            SqlConnection connection;
-            SqlCommand command;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\AssistantLocationUpdated.sql");
             int rowsAffected;
 
@@ -101,31 +97,33 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-
-                if (!string.IsNullOrEmpty(hostName))
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command.Parameters.Add(new SqlParameter("@HostName", hostName));
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
+                        command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
+
+                        if (!string.IsNullOrEmpty(hostName))
+                        {
+                            command.Parameters.Add(new SqlParameter("@HostName", hostName));
+                        }
+
+                        if (!string.IsNullOrEmpty(ipAddress))
+                        {
+                            command.Parameters.Add(new SqlParameter("@IPAddress", ipAddress));
+                        }
+
+                        rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            updated = false;
+                        }
+                    }
                 }
-
-                if (!string.IsNullOrEmpty(ipAddress))
-                {
-                    command.Parameters.Add(new SqlParameter("@IPAddress", ipAddress));
-                }
-
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
-                {
-                    connection.Close();
-                    updated = false;
-                }
-
-                connection.Close();
             }
 
             catch (Exception ex)

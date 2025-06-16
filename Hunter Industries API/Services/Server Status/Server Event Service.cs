@@ -35,36 +35,36 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             List<ServerEventRecord> serverEvents = new List<ServerEventRecord>();
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\GetServerEvents.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@Component", component));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    serverEvents.Add(new ServerEventRecord()
-                    {
-                        Component = dataReader.GetString(0),
-                        Status = dataReader.GetString(1),
-                        DateOccured = dataReader.GetDateTime(5),
-                        Server = new RelatedServerRecord()
-                        {
-                            HostName = dataReader.GetString(2),
-                            Game = dataReader.GetString(3),
-                            GameVersion = dataReader.GetString(4)
-                        }
-                    });
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\GetServerEvents.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Component", component));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                serverEvents.Add(new ServerEventRecord()
+                                {
+                                    Component = dataReader.GetString(0),
+                                    Status = dataReader.GetString(1),
+                                    DateOccured = dataReader.GetDateTime(5),
+                                    Server = new RelatedServerRecord()
+                                    {
+                                        HostName = dataReader.GetString(2),
+                                        Game = dataReader.GetString(3),
+                                        GameVersion = dataReader.GetString(4)
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -91,28 +91,29 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             bool logged = true;
             int componentInformationId = 0;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\LogServerEvent.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@ServerID", _serverInformationService.GetServer(serverEvent.HostName, serverEvent.Game, serverEvent.GameVersion)));
-                command.Parameters.Add(new SqlParameter("@Component", serverEvent.Component));
-                command.Parameters.Add(new SqlParameter("@Status", serverEvent.Status));
-                var result = command.ExecuteScalar();
-
-                if (result == null)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    logged = false;
-                }
+                    connection.Open();
 
-                else
-                {
-                    componentInformationId = int.Parse(result.ToString());
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\LogServerEvent.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@ServerID", _serverInformationService.GetServer(serverEvent.HostName, serverEvent.Game, serverEvent.GameVersion)));
+                        command.Parameters.Add(new SqlParameter("@Component", serverEvent.Component));
+                        command.Parameters.Add(new SqlParameter("@Status", serverEvent.Status));
+                        var result = command.ExecuteScalar();
+
+                        if (result == null)
+                        {
+                            logged = false;
+                        }
+
+                        else
+                        {
+                            componentInformationId = int.Parse(result.ToString());
+                        }
+                    }
                 }
             }
 

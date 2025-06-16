@@ -33,31 +33,31 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             DeletionResponseModel deletion = new DeletionResponseModel();
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Deletion\GetAssistantDeletion.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    deletion = new DeletionResponseModel()
-                    {
-                        AssistantName = dataReader.GetString(0),
-                        IdNumber = dataReader.GetString(1),
-                        Deletion = bool.Parse(dataReader.GetString(2))
-                    };
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Deletion\GetAssistantDeletion.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
+                        command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                deletion = new DeletionResponseModel()
+                                {
+                                    AssistantName = dataReader.GetString(0),
+                                    IdNumber = dataReader.GetString(1),
+                                    Deletion = bool.Parse(dataReader.GetString(2))
+                                };
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -81,29 +81,27 @@ namespace HunterIndustriesAPI.Services.Assistant
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, deletion.ToString() })}.");
 
             bool updated = true;
-
-            SqlConnection connection;
-            SqlCommand command;
-
             int rowsAffected;
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Deletion\AssistantDeletionUpdated.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@Deletion", deletion));
-                command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    updated = false;
-                }
+                    connection.Open();
 
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Deletion\AssistantDeletionUpdated.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Deletion", deletion));
+                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
+                        command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
+                        rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            updated = false;
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
