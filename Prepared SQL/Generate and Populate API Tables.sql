@@ -316,7 +316,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Component](
 	[ComponentID] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](14) NOT NULL,
+	[Name] [varchar](17) NOT NULL,
  CONSTRAINT [PK_Component] PRIMARY KEY CLUSTERED 
 (
 	[ComponentID] ASC
@@ -432,7 +432,7 @@ CREATE TABLE [dbo].[ServerInformation](
 	[MachineID] [int] NOT NULL,
 	[GameID] [int] NOT NULL,
 	[GameVersion] [varchar](20) NOT NULL,
-	[IPAddress] [varchar](13) NOT NULL,
+	[IPAddress] [varchar](50) NOT NULL,
 	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
@@ -586,9 +586,9 @@ GO
 
 INSERT [dbo].[Component] ([Name]) VALUES ('PC Status')
 GO
-INSERT [dbo].[Component] ([Name]) VALUES ('Hamachi Status')
-GO
 INSERT [dbo].[Component] ([Name]) VALUES ('Server Status')
+GO
+INSERT [dbo].[Component] ([Name]) VALUES ('Connection Status')
 GO
 INSERT [dbo].[ComponentStatus] ([Value]) VALUES ('Online')
 GO
