@@ -65,7 +65,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                                     Game = dataReader.GetString(2),
                                     GameVersion = dataReader.GetString(3),
                                     IPAddress = dataReader.GetString(4),
-                                    IsActive = dataReader.GetBoolean(5)
+                                    Port = dataReader.GetInt32(5),
+                                    IsActive = dataReader.GetBoolean(6)
                                 });
                             }
                         }
@@ -198,6 +199,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                         command.Parameters.Add(new SqlParameter("@Game", server.Game));
                         command.Parameters.Add(new SqlParameter("@GameVersion", server.GameVersion));
                         command.Parameters.Add(new SqlParameter("@IPAddress", server.IPAddress));
+                        command.Parameters.Add(new SqlParameter("@Port", server.Port));
                         var result = command.ExecuteScalar();
 
                         if (result == null)

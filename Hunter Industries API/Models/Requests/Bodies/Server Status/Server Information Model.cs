@@ -17,8 +17,12 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// </summary>
         public string GameVersion { get; set; }
         /// <summary>
-        /// The IPAddress of the game
+        /// The IPAddress of the game.
         /// </summary>
         public string IPAddress { get; set; }
+        /// <summary>
+        /// The Port the server runs on.
+        /// </summary>
+        public int Port { get; set; }
     }
 }

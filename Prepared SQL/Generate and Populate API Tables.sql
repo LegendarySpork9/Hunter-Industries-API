@@ -433,6 +433,7 @@ CREATE TABLE [dbo].[ServerInformation](
 	[GameID] [int] NOT NULL,
 	[GameVersion] [varchar](20) NOT NULL,
 	[IPAddress] [varchar](50) NOT NULL,
+	[Port] [int] NOT NULL,
 	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
