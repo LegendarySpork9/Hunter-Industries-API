@@ -34,11 +34,6 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUsers called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
             
             List<UserRecord> users = new List<UserRecord>();
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\GetUsers.sql");
 
             if (id != 0)
@@ -53,37 +48,39 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-
-                if (sqlQuery.Contains("@Id"))
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command.Parameters.Add(new SqlParameter("@Id", id));
-                }
+                    connection.Open();
 
-                if (sqlQuery.Contains("@Username"))
-                {
-                    command.Parameters.Add(new SqlParameter("@Username", username));
-                }
-
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    UserRecord user = new UserRecord
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
-                        Id = dataReader.GetInt32(0),
-                        Username = dataReader.GetString(1),
-                        Password = dataReader.GetString(2),
-                        Scopes = GetUserScopes(dataReader.GetInt32(0))
-                    };
+                        if (sqlQuery.Contains("@Id"))
+                        {
+                            command.Parameters.Add(new SqlParameter("@Id", id));
+                        }
 
-                    users.Add(user);
+                        if (sqlQuery.Contains("@Username"))
+                        {
+                            command.Parameters.Add(new SqlParameter("@Username", username));
+                        }
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                UserRecord user = new UserRecord
+                                {
+                                    Id = dataReader.GetInt32(0),
+                                    Username = dataReader.GetString(1),
+                                    Password = dataReader.GetString(2),
+                                    Scopes = GetUserScopes(dataReader.GetInt32(0))
+                                };
+
+                                users.Add(user);
+                            }
+                        }
+                    }
                 }
-
-                dataReader.Close();
-                connection.Close();
             }
 
             catch (Exception ex)
@@ -107,29 +104,28 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameters {_parameterFunction.FormatParameters(new string[] { username })}.");
 
             bool exists = false;
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserExists.sql");
             sqlQuery += "\nand Username = @Username";
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Username", username));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    exists = true;
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Username", username));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                exists = true;
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -153,29 +149,28 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             bool exists = false;
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserExists.sql");
             sqlQuery += "\nand UserID = @Id";
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@Id", id));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    exists = true;
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Id", id));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                exists = true;
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -202,27 +197,28 @@ namespace HunterIndustriesAPI.Services.User
             bool created = true;
             int userId = 0;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\CreateUser.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@Username", username));
-                command.Parameters.Add(new SqlParameter("@Password", _hashFunction.HashString(password)));
-                var result = command.ExecuteScalar();
-
-                if (result == null)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    created = false;
-                }
+                    connection.Open();
 
-                else
-                {
-                    userId = int.Parse(result.ToString());
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\CreateUser.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Username", username));
+                        command.Parameters.Add(new SqlParameter("@Password", _hashFunction.HashString(password)));
+                        var result = command.ExecuteScalar();
+
+                        if (result == null)
+                        {
+                            created = false;
+                        }
+
+                        else
+                        {
+                            userId = int.Parse(result.ToString());
+                        }
+                    }
                 }
             }
 
@@ -251,28 +247,27 @@ namespace HunterIndustriesAPI.Services.User
 
             bool created = true;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                
-                foreach (string scope in scopes)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\CreateUserScope.sql"), connection);
-                    command.Parameters.Add(new SqlParameter("@UserID", id));
-                    command.Parameters.Add(new SqlParameter("@Scope", scope));
-                    var result = command.ExecuteScalar();
+                    connection.Open();
 
-                    if (result == null)
+                    foreach (string scope in scopes)
                     {
-                        created = false;
+                        using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\CreateUserScope.sql"), connection))
+                        {
+                            command.Parameters.Add(new SqlParameter("@UserID", id));
+                            command.Parameters.Add(new SqlParameter("@Scope", scope));
+                            var result = command.ExecuteScalar();
+
+                            if (result == null)
+                            {
+                                created = false;
+                            }
+                        }
                     }
                 }
-
-                connection.Close();
             }
 
             catch (Exception ex)
@@ -298,11 +293,6 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUserScopes called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
 
             List<string> scopes = new List<string>();
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\GetUserScopes.sql");
 
             if (id != 0)
@@ -317,29 +307,31 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-
-                if (sqlQuery.Contains("@Id"))
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command.Parameters.Add(new SqlParameter("@Id", id));
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        if (sqlQuery.Contains("@Id"))
+                        {
+                            command.Parameters.Add(new SqlParameter("@Id", id));
+                        }
+
+                        if (sqlQuery.Contains("@Username"))
+                        {
+                            command.Parameters.Add(new SqlParameter("@Username", username));
+                        }
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                scopes.Add(dataReader.GetString(0));
+                            }
+                        }
+                    }
                 }
-
-                if (sqlQuery.Contains("@Username"))
-                {
-                    command.Parameters.Add(new SqlParameter("@Username", username));
-                }
-
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    scopes.Add(dataReader.GetString(0));
-                }
-
-                dataReader.Close();
-                connection.Close();
             }
 
             catch (Exception ex)
@@ -364,10 +356,6 @@ namespace HunterIndustriesAPI.Services.User
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), username, password, _parameterFunction.FormatParameters(scopes, true) })}.");
 
             bool updated = true;
-
-            SqlConnection connection;
-            SqlCommand command;
-
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserUpdated.sql");
             int rowsAffected;
 
@@ -383,30 +371,32 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.Add(new SqlParameter("@userId", id));
-
-                if (!string.IsNullOrEmpty(username))
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command.Parameters.Add(new SqlParameter("@username", username));
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@userId", id));
+
+                        if (!string.IsNullOrEmpty(username))
+                        {
+                            command.Parameters.Add(new SqlParameter("@username", username));
+                        }
+
+                        if (!string.IsNullOrEmpty(password))
+                        {
+                            command.Parameters.Add(new SqlParameter("@password", password));
+                        }
+
+                        rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            updated = false;
+                        }
+                    }
                 }
-
-                if (!string.IsNullOrEmpty(password))
-                {
-                    command.Parameters.Add(new SqlParameter("@password", password));
-                }
-
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
-                {
-                    connection.Close();
-                    updated = false;
-                }
-
-                connection.Close();
             }
 
             catch (Exception ex)
@@ -437,29 +427,27 @@ namespace HunterIndustriesAPI.Services.User
 
             bool deleted = true;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-
-                foreach (string scope in scopes)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\DeleteUserScope.sql"), connection);
-                    command.Parameters.Add(new SqlParameter("@UserID", id));
-                    command.Parameters.Add(new SqlParameter("@Scope", scope));
-                    int rowsAffected = command.ExecuteNonQuery();
+                    connection.Open();
 
-                    if (rowsAffected != 1)
+                    foreach (string scope in scopes)
                     {
-                        connection.Close();
-                        deleted = false;
+                        using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\DeleteUserScope.sql"), connection))
+                        {
+                            command.Parameters.Add(new SqlParameter("@UserID", id));
+                            command.Parameters.Add(new SqlParameter("@Scope", scope));
+                            int rowsAffected = command.ExecuteNonQuery();
+
+                            if (rowsAffected != 1)
+                            {
+                                deleted = false;
+                            }
+                        }
                     }
                 }
-
-                connection.Close();
             }
 
             catch (Exception ex)
@@ -484,24 +472,23 @@ namespace HunterIndustriesAPI.Services.User
 
             bool deleted = true;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserDeleted.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@UserID", id));
-                int rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    deleted = false;
-                }
+                    connection.Open();
 
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserDeleted.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@UserID", id));
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            deleted = false;
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)

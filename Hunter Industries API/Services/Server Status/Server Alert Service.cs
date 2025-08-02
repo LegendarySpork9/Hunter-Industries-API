@@ -34,43 +34,42 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlerts called with the parameters {_parameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<ServerAlertRecord> serverAlerts = new List<ServerAlertRecord>();
-
             int totalRecords = 0;
-
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlerts.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@PageSize", pageSize));
-                command.Parameters.Add(new SqlParameter("@PageNumber", pageNumber));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    serverAlerts.Add(new ServerAlertRecord()
-                    {
-                        AlertId = dataReader.GetInt32(0),
-                        Reporter = dataReader.GetString(1),
-                        Component = dataReader.GetString(2),
-                        ComponentStatus = dataReader.GetString(3),
-                        AlertStatus = dataReader.GetString(4),
-                        AlertDate = dataReader.GetDateTime(5),
-                        server = new RelatedServerRecord()
-                        {
-                            HostName = dataReader.GetString(6),
-                            Game = dataReader.GetString(7),
-                            GameVersion = dataReader.GetString(8)
-                        }
-                    });
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlerts.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@PageSize", pageSize));
+                        command.Parameters.Add(new SqlParameter("@PageNumber", pageNumber));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                serverAlerts.Add(new ServerAlertRecord()
+                                {
+                                    AlertId = dataReader.GetInt32(0),
+                                    Reporter = dataReader.GetString(1),
+                                    Component = dataReader.GetString(2),
+                                    ComponentStatus = dataReader.GetString(3),
+                                    AlertStatus = dataReader.GetString(4),
+                                    AlertDate = dataReader.GetDateTime(5),
+                                    server = new RelatedServerRecord()
+                                    {
+                                        HostName = dataReader.GetString(6),
+                                        Game = dataReader.GetString(7),
+                                        GameVersion = dataReader.GetString(8)
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
 
                 totalRecords = GetTotalServerAlerts();
             }
@@ -95,39 +94,39 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             ServerAlertRecord serverAlert = new ServerAlertRecord();
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlert.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@AlertID", id));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    serverAlert = new ServerAlertRecord()
-                    {
-                        AlertId = dataReader.GetInt32(0),
-                        Reporter = dataReader.GetString(1),
-                        Component = dataReader.GetString(2),
-                        ComponentStatus = dataReader.GetString(3),
-                        AlertStatus = dataReader.GetString(4),
-                        AlertDate = dataReader.GetDateTime(5),
-                        server = new RelatedServerRecord()
-                        {
-                            HostName = dataReader.GetString(6),
-                            Game = dataReader.GetString(7),
-                            GameVersion = dataReader.GetString(8)
-                        }
-                    };
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlert.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@AlertID", id));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                serverAlert = new ServerAlertRecord()
+                                {
+                                    AlertId = dataReader.GetInt32(0),
+                                    Reporter = dataReader.GetString(1),
+                                    Component = dataReader.GetString(2),
+                                    ComponentStatus = dataReader.GetString(3),
+                                    AlertStatus = dataReader.GetString(4),
+                                    AlertDate = dataReader.GetDateTime(5),
+                                    server = new RelatedServerRecord()
+                                    {
+                                        HostName = dataReader.GetString(6),
+                                        Game = dataReader.GetString(7),
+                                        GameVersion = dataReader.GetString(8)
+                                    }
+                                };
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -148,24 +147,23 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         {
             int totalRecords = 0;
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetTotalServerAlerts.sql"), connection);
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    totalRecords = dataReader.GetInt32(0);
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetTotalServerAlerts.sql"), connection))
+                    {
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                totalRecords = dataReader.GetInt32(0);
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -191,30 +189,31 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             bool logged = true;
             int serverAlertId = 0;
 
-            SqlConnection connection;
-            SqlCommand command;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@ServerID", _serverInformationService.GetServer(serverAlert.HostName, serverAlert.Game, serverAlert.GameVersion)));
-                command.Parameters.Add(new SqlParameter("@Reporter", serverAlert.Reporter));
-                command.Parameters.Add(new SqlParameter("@Component", serverAlert.Component));
-                command.Parameters.Add(new SqlParameter("@ComponentStatus", serverAlert.ComponentStatus));
-                command.Parameters.Add(new SqlParameter("@AlertStatus", serverAlert.AlertStatus));
-                var result = command.ExecuteScalar();
-
-                if (result == null)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    logged = false;
-                }
+                    connection.Open();
 
-                else
-                {
-                    serverAlertId = int.Parse(result.ToString());
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@ServerID", _serverInformationService.GetServer(serverAlert.HostName, serverAlert.Game, serverAlert.GameVersion)));
+                        command.Parameters.Add(new SqlParameter("@Reporter", serverAlert.Reporter));
+                        command.Parameters.Add(new SqlParameter("@Component", serverAlert.Component));
+                        command.Parameters.Add(new SqlParameter("@ComponentStatus", serverAlert.ComponentStatus));
+                        command.Parameters.Add(new SqlParameter("@AlertStatus", serverAlert.AlertStatus));
+                        var result = command.ExecuteScalar();
+
+                        if (result == null)
+                        {
+                            logged = false;
+                        }
+
+                        else
+                        {
+                            serverAlertId = int.Parse(result.ToString());
+                        }
+                    }
                 }
             }
 
@@ -242,25 +241,25 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             bool exists = false;
 
-            SqlConnection connection;
-            SqlCommand command;
-            SqlDataReader dataReader;
-
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@AlertID", id));
-                dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    exists = true;
-                }
+                    connection.Open();
 
-                dataReader.Close();
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@AlertID", id));
+
+                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                exists = true;
+                            }
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -282,28 +281,26 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated called with the parameters \"{id}\", \"{value}\".");
 
             bool updated = true;
-
-            SqlConnection connection;
-            SqlCommand command;
-
             int rowsAffected;
 
             try
             {
-                connection = new SqlConnection(DatabaseModel.ConnectionString);
-                connection.Open();
-                command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertUpdated.sql"), connection);
-                command.Parameters.Add(new SqlParameter("@AlertStatus", value));
-                command.Parameters.Add(new SqlParameter("@AlertID", id));
-                rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
+                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Close();
-                    updated = false;
-                }
+                    connection.Open();
 
-                connection.Close();
+                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertUpdated.sql"), connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@AlertStatus", value));
+                        command.Parameters.Add(new SqlParameter("@AlertID", id));
+                        rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1)
+                        {
+                            updated = false;
+                        }
+                    }
+                }
             }
 
             catch (Exception ex)
