@@ -183,6 +183,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     Game = request.Game,
                     GameVersion = request.GameVersion,
                     IPAddress = request.IPAddress,
+                    Port = request.Port,
                     IsActive = false
                 }
             };

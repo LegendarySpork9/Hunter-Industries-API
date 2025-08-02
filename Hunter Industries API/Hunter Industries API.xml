@@ -862,7 +862,12 @@
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.IPAddress">
             <summary>
-            The IPAddress of the game
+            The IPAddress of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Port">
+            <summary>
+            The Port the server runs on.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel">
@@ -1293,7 +1298,12 @@
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IPAddress">
             <summary>
-            The IPAddress of the game
+            The IPAddress of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Port">
+            <summary>
+            The Port the server runs on.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IsActive">
