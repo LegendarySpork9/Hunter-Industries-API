@@ -21,13 +21,13 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// </summary>
         public string GameVersion { get; set; }
         /// <summary>
-        /// The IPAddress of the game.
+        /// The connection details of the server.
         /// </summary>
-        public string IPAddress { get; set; }
+        public ConnectionRecord Connection { get; set; }
         /// <summary>
-        /// The Port the server runs on.
+        /// The expected daily downtime of the server.
         /// </summary>
-        public int Port { get; set; }
+        public DowntimeRecord Downtime { get; set; }
         /// <summary>
         /// Whether the server is active.
         /// </summary>

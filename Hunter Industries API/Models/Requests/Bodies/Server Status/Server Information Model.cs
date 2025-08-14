@@ -17,12 +17,16 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// </summary>
         public string GameVersion { get; set; }
         /// <summary>
-        /// The IPAddress of the game.
+        /// The ip address of the game.
         /// </summary>
         public string IPAddress { get; set; }
         /// <summary>
-        /// The Port the server runs on.
+        /// The port the server runs on.
         /// </summary>
         public int Port { get; set; }
+        /// <summary>
+        /// The time that the server goes offline.
+        /// </summary>
+        public string Time { get; set; }
     }
 }

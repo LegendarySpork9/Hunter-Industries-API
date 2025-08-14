@@ -90,7 +90,9 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///         "hostName": "Test",
         ///         "game": "Minecraft",
         ///         "gameVersion": "1.7.10",
-        ///         "ipAddress": "127.0.0.1"
+        ///         "ipAddress": "127.0.0.1",
+        ///         "port": 25565,
+        ///         "time": "02:00:00"
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the server information.</param>
@@ -173,6 +175,16 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"), _parameterFunction.FormatParameters(null, request));
 
+            DowntimeRecord downtime = null;
+
+            if (!string.IsNullOrWhiteSpace(request.Time))
+            {
+                downtime = new DowntimeRecord()
+                {
+                    Time = request.Time
+                };
+            }
+            
             response = new ResponseModel()
             {
                 StatusCode = 201,
@@ -182,8 +194,12 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     HostName = request.HostName,
                     Game = request.Game,
                     GameVersion = request.GameVersion,
-                    IPAddress = request.IPAddress,
-                    Port = request.Port,
+                    Connection = new ConnectionRecord()
+                    {
+                        IPAddress = request.IPAddress,
+                        Port = request.Port,
+                    },
+                    Downtime = downtime,
                     IsActive = false
                 }
             };
