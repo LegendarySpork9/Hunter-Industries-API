@@ -357,14 +357,52 @@ CREATE TABLE [dbo].[ComponentStatus](
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[Game]    Script Date: 17/05/2025 12:29:22 ******/
+/****** Object:  Table [dbo].[Connection]    Script Date: 14/08/2025 20:59:26 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
+CREATE TABLE [dbo].[Connection](
+	[ConnectionID] [int] IDENTITY(1,1) NOT NULL,
+	[IPAddress] [varchar](50) NOT NULL,
+	[Port] [int] NOT NULL,
+ CONSTRAINT [PK_Connection] PRIMARY KEY CLUSTERED 
+(
+	[ConnectionID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Downtime]    Script Date: 14/08/2025 20:59:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Downtime](
+	[DowntimeID] [int] IDENTITY(1,1) NOT NULL,
+	[Time] [varchar](8) NOT NULL,
+ CONSTRAINT [PK_Downtime] PRIMARY KEY CLUSTERED 
+(
+	[DowntimeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Game]    Script Date: 14/08/2025 21:00:01 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[Game](
 	[GameID] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](255) NOT NULL,
+	[Version] [varchar](20) NOT NULL,
  CONSTRAINT [PK_Game] PRIMARY KEY CLUSTERED 
 (
 	[GameID] ASC
@@ -422,18 +460,19 @@ CREATE TABLE [dbo].[ServerAlertStatus](
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[ServerInformation]    Script Date: 17/05/2025 12:29:22 ******/
+/****** Object:  Table [dbo].[ServerInformation]    Script Date: 14/08/2025 21:00:33 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[ServerInformation](
 	[ServerInformationID] [int] IDENTITY(1,1) NOT NULL,
 	[MachineID] [int] NOT NULL,
 	[GameID] [int] NOT NULL,
-	[GameVersion] [varchar](20) NOT NULL,
-	[IPAddress] [varchar](50) NOT NULL,
-	[Port] [int] NOT NULL,
+	[ConnectionID] [int] NOT NULL,
+	[DowntimeID] [int] NULL,
 	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
@@ -552,6 +591,16 @@ REFERENCES [dbo].[UserSettings] ([UserSettingsID])
 GO
 ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_UserSettings]
 GO
+ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Connection] FOREIGN KEY([ConnectionID])
+REFERENCES [dbo].[Connection] ([ConnectionID])
+GO
+ALTER TABLE [dbo].[ServerInformation] CHECK CONSTRAINT [FK_ServerInformation_Connection]
+GO
+ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Downtime] FOREIGN KEY([DowntimeID])
+REFERENCES [dbo].[Downtime] ([DowntimeID])
+GO
+ALTER TABLE [dbo].[ServerInformation] CHECK CONSTRAINT [FK_ServerInformation_Downtime]
+GO
 ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Game] FOREIGN KEY([GameID])
 REFERENCES [dbo].[Game] ([GameID])
 GO
@@ -623,7 +672,7 @@ INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/s
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serveralert')
 GO
-INSERT [dbo].[Game] ([Name]) VALUES ('Minecraft')
+INSERT [dbo].[Game] ([Name], [Version]) VALUES ('Minecraft', '1.7.10')
 GO
 INSERT [dbo].[Machine] ([HostName]) VALUES ('Hunter-NAS')
 GO
