@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns whether the model meets given requirements.
         /// </summary>
-        public bool IsValid(object model, bool allRequired = false, string[] ignoreProperties = null)
+        public bool IsValid(object model, bool allRequired = false, string[] ignoreProperties = null, string[] propertiesAllowedNulls = null)
         {
             bool validModel = false;
 
@@ -26,14 +26,21 @@ namespace HunterIndustriesAPI.Services
 
                 foreach (PropertyInfo property in properties)
                 {
+                    bool allowedNull = false;
+
+                    if (propertiesAllowedNulls != null)
+                    {
+                        allowedNull = propertiesAllowedNulls.Contains(property.Name);
+                    }
+
                     if (ignoreProperties != null && !ignoreProperties.Contains(property.Name))
                     {
-                        validProperties = validProperties.Append(HasValue(property.GetValue(model))).ToArray();
+                        validProperties = validProperties.Append(HasValue(property.GetValue(model), allowedNull)).ToArray();
                     }
 
                     if (ignoreProperties == null)
                     {
-                        validProperties = validProperties.Append(HasValue(property.GetValue(model))).ToArray();
+                        validProperties = validProperties.Append(HasValue(property.GetValue(model), allowedNull)).ToArray();
                     }
                 }
 
@@ -54,13 +61,18 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns whether the property has a value.
         /// </summary>
-        private bool HasValue(object value = null)
+        private bool HasValue(object value = null, bool allowedNull = false)
         {
             bool propertyHasValue = false;
 
             if (value != null)
             {
                 propertyHasValue = ConfirmValue(value);
+            }
+
+            if (allowedNull && value == null)
+            {
+                propertyHasValue = true;
             }
 
             return propertyHasValue;

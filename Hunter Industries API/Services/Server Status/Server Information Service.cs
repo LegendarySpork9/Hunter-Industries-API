@@ -214,7 +214,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                         command.Parameters.Add(new SqlParameter("@GameVersion", server.GameVersion));
                         command.Parameters.Add(new SqlParameter("@IPAddress", server.IPAddress));
                         command.Parameters.Add(new SqlParameter("@Port", server.Port));
-                        command.Parameters.Add(new SqlParameter("@Time", server.Time));
+                        command.Parameters.Add(new SqlParameter("@Time", server.Time ?? "null"));
                         var result = command.ExecuteScalar();
 
                         if (result == null)

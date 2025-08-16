@@ -120,7 +120,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}.");
 
-            if (!_modelValidator.IsValid(request, true))
+            if (!_modelValidator.IsValid(request, true, null, new string[] { "Time" }))
             {
                 _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
                     null);

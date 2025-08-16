@@ -1710,7 +1710,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.IsValid(System.Object,System.Boolean,System.String[])">
+        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.IsValid(System.Object,System.Boolean,System.String[],System.String[])">
             <summary>
             Returns whether the model meets given requirements.
             </summary>
@@ -1720,7 +1720,7 @@
             Returns all the properties in the model.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.HasValue(System.Object)">
+        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.HasValue(System.Object,System.Boolean)">
             <summary>
             Returns whether the property has a value.
             </summary>
