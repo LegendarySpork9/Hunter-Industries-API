@@ -58,15 +58,29 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                         {
                             while (dataReader.Read())
                             {
+                                DowntimeRecord downtime = null;
+
+                                if (!dataReader.IsDBNull(6) && !string.IsNullOrWhiteSpace(dataReader.GetString(6)))
+                                {
+                                    downtime = new DowntimeRecord()
+                                    {
+                                        Time = dataReader.GetString(6)
+                                    };
+                                }
+
                                 servers.Add(new ServerInformationRecord()
                                 {
                                     Id = dataReader.GetInt32(0),
                                     HostName = dataReader.GetString(1),
                                     Game = dataReader.GetString(2),
                                     GameVersion = dataReader.GetString(3),
-                                    IPAddress = dataReader.GetString(4),
-                                    Port = dataReader.GetInt32(5),
-                                    IsActive = dataReader.GetBoolean(6)
+                                    Connection = new ConnectionRecord()
+                                    {
+                                        IPAddress = dataReader.GetString(4),
+                                        Port = dataReader.GetInt32(5),
+                                    },
+                                    Downtime = downtime,
+                                    IsActive = dataReader.GetBoolean(7)
                                 });
                             }
                         }
@@ -200,6 +214,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                         command.Parameters.Add(new SqlParameter("@GameVersion", server.GameVersion));
                         command.Parameters.Add(new SqlParameter("@IPAddress", server.IPAddress));
                         command.Parameters.Add(new SqlParameter("@Port", server.Port));
+                        command.Parameters.Add(new SqlParameter("@Time", server.Time ?? "null"));
                         var result = command.ExecuteScalar();
 
                         if (result == null)

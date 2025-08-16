@@ -330,7 +330,9 @@
                     "hostName": "Test",
                     "game": "Minecraft",
                     "gameVersion": "1.7.10",
-                    "ipAddress": "127.0.0.1"
+                    "ipAddress": "127.0.0.1",
+                    "port": 25565,
+                    "time": "02:00:00"
                 }
             </remarks>
             <param name="request">An object containing the server information.</param>
@@ -862,12 +864,17 @@
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.IPAddress">
             <summary>
-            The IPAddress of the game.
+            The ip address of the game.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Port">
             <summary>
-            The Port the server runs on.
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Time">
+            <summary>
+            The time that the server goes offline.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel">
@@ -1190,6 +1197,29 @@
             The valid secret key of the token.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ConnectionRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ConnectionRecord.IPAddress">
+            <summary>
+            The ip address of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ConnectionRecord.Port">
+            <summary>
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord.Time">
+            <summary>
+            The time that the server goes offline.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord">
             <summary>
             </summary>
@@ -1296,14 +1326,14 @@
             The version of the game.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IPAddress">
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Connection">
             <summary>
-            The IPAddress of the game.
+            The connection details of the server.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Port">
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Downtime">
             <summary>
-            The Port the server runs on.
+            The expected daily downtime of the server.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IsActive">
@@ -1680,7 +1710,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.IsValid(System.Object,System.Boolean,System.String[])">
+        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.IsValid(System.Object,System.Boolean,System.String[],System.String[])">
             <summary>
             Returns whether the model meets given requirements.
             </summary>
@@ -1690,7 +1720,7 @@
             Returns all the properties in the model.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.HasValue(System.Object)">
+        <member name="M:HunterIndustriesAPI.Services.ModelValidationService.HasValue(System.Object,System.Boolean)">
             <summary>
             Returns whether the property has a value.
             </summary>

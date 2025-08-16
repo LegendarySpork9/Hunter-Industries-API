@@ -51,6 +51,11 @@ namespace HunterIndustriesAPI.Functions
                             formattedParameters = formattedParameters.Append(property.GetValue(model).ToString()).ToArray();
                         }
                     }
+
+                    else
+                    {
+                        formattedParameters = formattedParameters.Append("").ToArray();
+                    }
                 }
             }
 
@@ -76,6 +81,19 @@ namespace HunterIndustriesAPI.Functions
                     if (!string.IsNullOrWhiteSpace(parameter) && forSQL)
                     {
                         formattedParameters += $"\"{parameter}\",";
+                    }
+
+                    if (string.IsNullOrWhiteSpace(parameter))
+                    {
+                        if (forSQL)
+                        {
+                            formattedParameters += "\"null\",";
+                        }
+
+                        else
+                        {
+                            formattedParameters += "\"null\", ";
+                        }
                     }
                 }
             }
@@ -113,6 +131,11 @@ namespace HunterIndustriesAPI.Functions
                         {
                             formattedParameters += $"\"{property.GetValue(model)}\", ";
                         }
+                    }
+
+                    else
+                    {
+                        formattedParameters += "\"null\", ";
                     }
                 }
             }

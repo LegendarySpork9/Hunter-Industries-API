@@ -377,6 +377,8 @@
     <Compile Include="Models\Responses\Audit History Response Model.cs" />
     <Compile Include="Models\Responses\Response Model.cs" />
     <Compile Include="Models\Responses\Server Status\Server Alert Response Model.cs" />
+    <Compile Include="Objects\Server Status\Connection Record.cs" />
+    <Compile Include="Objects\Server Status\Downtime Record.cs" />
     <Compile Include="Objects\Server Status\Server Alert Record.cs" />
     <Compile Include="Objects\Server Status\Server Event Record.cs" />
     <Compile Include="Models\Responses\Token Response Model.cs" />
