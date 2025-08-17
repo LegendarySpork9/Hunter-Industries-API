@@ -4,10 +4,10 @@
 		CS.[Value] as [Status],
 		HostName,
 		Game.[Name] as Game,
-		GameVersion,
+		[Version],
 		DateOccured,
 		ROW_NUMBER() over (
-			partition by Component.[Name], HostName, Game.[Name], GameVersion
+			partition by Component.[Name], HostName, Game.[Name], [Version]
 			order by DateOccured desc
 		) as rn
 	from ComponentInformation CI with (nolock)
@@ -18,6 +18,6 @@
 	join Game with (nolock) on SI.GameID = Game.GameID
 	where Component.[Name] = @Component
 )
-select Component, [Status], HostName, Game, GameVersion, DateOccured from RankedComponentInformation
+select Component, [Status], HostName, Game, [Version], DateOccured from RankedComponentInformation
 where rn = 1
 order by 6 desc
