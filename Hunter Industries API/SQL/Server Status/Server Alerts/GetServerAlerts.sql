@@ -1,4 +1,14 @@
-﻿select ServerAlertsID, US.[Value], Component.[Name], CS.[Value], SAS.[Value], DateOccured, HostName, Game.[Name], [Version] from ServerAlerts SA with (nolock)
+﻿select
+	ServerAlertsID,
+	US.[Value],
+	Component.[Name],
+	CS.[Value],
+	SAS.[Value],
+	DateOccured,
+	HostName,
+	Game.[Name],
+	[Version]
+from ServerAlerts SA with (nolock)
 join UserSettings US with (nolock) on SA.UserSettingsID = US.UserSettingsID
 join Component with (nolock) on SA.ComponentID = Component.ComponentID
 join ComponentStatus CS with (nolock) on SA.ComponentStatusID = CS.ComponentStatusID

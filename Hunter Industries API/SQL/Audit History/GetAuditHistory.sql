@@ -1,4 +1,21 @@
-﻿select AH.AuditID, IPAddress, E.Value, M.Value, SC.Value, AH.DateOccured, [Parameters], AttemptID, Username, Phrase, IsSuccessful, ChangeID, CE.Value, Field, OldValue, NewValue from AuditHistory AH with (nolock)
+﻿select
+	AH.AuditID,
+	IPAddress,
+	E.[Value],
+	M.[Value],
+	SC.[Value],
+	AH.DateOccured,
+	[Parameters],
+	AttemptID,
+	Username,
+	Phrase,
+	IsSuccessful,
+	ChangeID,
+	CE.[Value],
+	Field,
+	OldValue,
+	NewValue
+from AuditHistory AH with (nolock)
 join [Endpoint] E with (nolock) on AH.EndpointID = E.EndpointID
 join Method M with (nolock) on AH.MethodID = M.MethodID
 join StatusCode SC with (nolock) on AH.StatusID = SC.StatusID

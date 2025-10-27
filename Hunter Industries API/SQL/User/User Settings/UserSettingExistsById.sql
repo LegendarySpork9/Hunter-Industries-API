@@ -1,2 +1,4 @@
-﻿select UserSettingsID from UserSettings with (nolock)
+﻿select
+	UserSettingsID
+from UserSettings with (nolock)
 where UserSettingsID = @Id
