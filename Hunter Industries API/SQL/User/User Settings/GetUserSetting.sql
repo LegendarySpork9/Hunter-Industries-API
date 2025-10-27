@@ -1,6 +1,6 @@
 ﻿select
 	UserSettingsID,
-	UserSettings.[Name],
+	UserSetting.[Name],
 	[Value]
-from UserSettings with (nolock)
+from UserSetting with (nolock)
 where UserSettingsID = @Id

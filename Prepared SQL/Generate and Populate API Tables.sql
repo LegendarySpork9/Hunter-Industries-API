@@ -206,18 +206,18 @@ CREATE TABLE [dbo].[UserScope](
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[UserSettings]    Script Date: 17/05/2025 12:29:22 ******/
+/****** Object:  Table [dbo].[UserSetting]    Script Date: 17/05/2025 12:29:22 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[UserSettings](
+CREATE TABLE [dbo].[UserSetting](
 	[UserSettingsID] [int] IDENTITY(1,1) NOT NULL,
 	[UserID] [int] NOT NULL,
 	[ApplicationID] [int] NOT NULL,
 	[Name] [varchar](255) NOT NULL,
 	[Value] [varchar](255) NOT NULL,
- CONSTRAINT [PK_UserSettings] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_UserSetting] PRIMARY KEY CLUSTERED 
 (
 	[UserSettingsID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -425,12 +425,12 @@ CREATE TABLE [dbo].[Machine](
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[ServerAlerts]    Script Date: 17/05/2025 12:29:22 ******/
+/****** Object:  Table [dbo].[ServerAlert]    Script Date: 17/05/2025 12:29:22 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[ServerAlerts](
+CREATE TABLE [dbo].[ServerAlert](
 	[ServerAlertsID] [int] IDENTITY(1,1) NOT NULL,
 	[ServerInformationID] [int] NOT NULL,
 	[UserSettingsID] [int] NOT NULL,
@@ -438,7 +438,7 @@ CREATE TABLE [dbo].[ServerAlerts](
 	[ComponentStatusID] [int] NOT NULL,
 	[AlertStatusID] [int] NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
- CONSTRAINT [PK_ServerAlerts] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ServerAlert] PRIMARY KEY CLUSTERED 
 (
 	[ServerAlertsID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -566,30 +566,30 @@ REFERENCES [dbo].[APIUser] ([UserID])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_APIUser]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_Component] FOREIGN KEY([ComponentID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_Component] FOREIGN KEY([ComponentID])
 REFERENCES [dbo].[Component] ([ComponentID])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_Component]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_Component]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_ComponentStatus] FOREIGN KEY([ComponentStatusID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_ComponentStatus] FOREIGN KEY([ComponentStatusID])
 REFERENCES [dbo].[ComponentStatus] ([ComponentStatusID])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_ComponentStatus]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_ComponentStatus]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_ServerAlertStatus] FOREIGN KEY([AlertStatusID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_ServerAlertStatus] FOREIGN KEY([AlertStatusID])
 REFERENCES [dbo].[ServerAlertStatus] ([AlertStatusID])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_ServerAlertStatus]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_ServerAlertStatus]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_ServerInformation] FOREIGN KEY([ServerInformationID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_ServerInformation] FOREIGN KEY([ServerInformationID])
 REFERENCES [dbo].[ServerInformation] ([ServerInformationID])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_ServerInformation]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_ServerInformation]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_UserSettings] FOREIGN KEY([UserSettingsID])
-REFERENCES [dbo].[UserSettings] ([UserSettingsID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_UserSetting] FOREIGN KEY([UserSettingsID])
+REFERENCES [dbo].[UserSetting] ([UserSettingsID])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_UserSettings]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_UserSetting]
 GO
 ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Connection] FOREIGN KEY([ConnectionID])
 REFERENCES [dbo].[Connection] ([ConnectionID])
@@ -621,15 +621,15 @@ REFERENCES [dbo].[APIUser] ([UserID])
 GO
 ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_APIUser]
 GO
-ALTER TABLE [dbo].[UserSettings]  WITH CHECK ADD  CONSTRAINT [FK_UserSettings_APIUser] FOREIGN KEY([UserID])
+ALTER TABLE [dbo].[UserSetting]  WITH CHECK ADD  CONSTRAINT [FK_UserSetting_APIUser] FOREIGN KEY([UserID])
 REFERENCES [dbo].[APIUser] ([UserID])
 GO
-ALTER TABLE [dbo].[UserSettings] CHECK CONSTRAINT [FK_UserSettings_APIUser]
+ALTER TABLE [dbo].[UserSetting] CHECK CONSTRAINT [FK_UserSetting_APIUser]
 GO
-ALTER TABLE [dbo].[UserSettings]  WITH CHECK ADD  CONSTRAINT [FK_UserSettings_Application] FOREIGN KEY([ApplicationID])
+ALTER TABLE [dbo].[UserSetting]  WITH CHECK ADD  CONSTRAINT [FK_UserSetting_Application] FOREIGN KEY([ApplicationID])
 REFERENCES [dbo].[Application] ([ApplicationID])
 GO
-ALTER TABLE [dbo].[UserSettings] CHECK CONSTRAINT [FK_UserSettings_Application]
+ALTER TABLE [dbo].[UserSetting] CHECK CONSTRAINT [FK_UserSetting_Application]
 GO
 
 /* Inserts */
@@ -664,7 +664,7 @@ INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/a
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/user')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/usersettings')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/UserSetting')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverinformation')
 GO

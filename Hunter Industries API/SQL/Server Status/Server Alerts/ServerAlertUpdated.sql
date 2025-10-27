@@ -1,4 +1,4 @@
-﻿update ServerAlerts set AlertStatusID = (
+﻿update ServerAlert set AlertStatusID = (
 	select
 		AlertStatusID
 	from ServerAlertStatus with (nolock)

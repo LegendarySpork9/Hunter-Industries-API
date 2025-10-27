@@ -1,11 +1,11 @@
-﻿insert into ServerAlerts (ServerInformationID, UserSettingsID, ComponentID, ComponentStatusID, AlertStatusID, DateOccured)
+﻿insert into ServerAlert (ServerInformationID, UserSettingsID, ComponentID, ComponentStatusID, AlertStatusID, DateOccured)
 output inserted.ServerAlertsID
 values (
 	@ServerID,
 	(
 		select
 			UserSettingsID
-		from UserSettings with (nolock)
+		from UserSetting with (nolock)
 		where ApplicationID = (
 			select
 				ApplicationID

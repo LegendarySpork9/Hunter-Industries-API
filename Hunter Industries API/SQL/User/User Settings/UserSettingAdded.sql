@@ -1,4 +1,4 @@
-﻿insert into UserSettings (UserID, ApplicationID, [Name], [Value])
+﻿insert into UserSetting (UserID, ApplicationID, [Name], [Value])
 output inserted.UserSettingsID
 values (
 	(

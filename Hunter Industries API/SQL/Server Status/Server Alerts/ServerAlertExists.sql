@@ -1,4 +1,4 @@
 ﻿select
 	ServerAlertsID
-from ServerAlerts with (nolock)
+from ServerAlert with (nolock)
 where ServerAlertsID = @AlertID
