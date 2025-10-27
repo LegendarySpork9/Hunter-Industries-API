@@ -1,7 +1,7 @@
 ﻿update [Location] set HostName = @HostName, IPAddress = @IPAddress
-where LocationID = (
+where LocationId = (
 	select
-		LocationID
+		LocationId
 	from AssistantInformation with (nolock)
 	where [Name] = @AssistantName
 	and IDNumber = @IDNumber

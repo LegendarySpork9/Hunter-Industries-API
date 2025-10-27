@@ -1,7 +1,7 @@
-﻿update ServerAlert set AlertStatusID = (
+﻿update ServerAlert set AlertStatusId = (
 	select
-		AlertStatusID
+		AlertStatusId
 	from ServerAlertStatus with (nolock)
 	where [Value] = @AlertStatus
 )
-where ServerAlertsID = @AlertID
+where ServerAlertId = @AlertId

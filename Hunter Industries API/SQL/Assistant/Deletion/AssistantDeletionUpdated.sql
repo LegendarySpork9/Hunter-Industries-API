@@ -1,6 +1,6 @@
-﻿update AssistantInformation set DeletionStatusID = (
+﻿update AssistantInformation set DeletionStatusId = (
 	select
-		StatusID
+		StatusId
 	from [Deletion] with (nolock)
 	where Value = @Deletion
 )

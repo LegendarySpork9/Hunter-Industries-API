@@ -1,14 +1,14 @@
-﻿insert into [AssistantInformation] (LocationID, DeletionStatusID, VersionID, UserID, [Name], IDNumber)
+﻿insert into [AssistantInformation] (LocationId, DeletionStatusId, VersionId, UserId, [Name], IDNumber)
 values (
-	@LocationID,
+	@LocationId,
 	2,
 	(
 		select top 1
-			VersionID
+			VersionId
 		from [Version] with (nolock)
-		order by VersionID desc
+		order by VersionId desc
 	),
-	@UserID,
+	@UserId,
 	@AssistantName,
 	@IDNumber
 )

@@ -1,15 +1,15 @@
 ﻿select
-	UserSettingsID
+	UserSettingId
 from UserSetting with (nolock)
-where UserID = (
+where UserId = (
 	select
-		UserID
+		UserId
 	from APIUser with (nolock)
 	where Username = @Username
 )
-and ApplicationID = (
+and ApplicationId = (
 	select
-		ApplicationID
+		ApplicationId
 	from [Application] with (nolock)
 	where [Name] = @Application
 )

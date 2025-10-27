@@ -1,5 +1,5 @@
 ﻿insert into APIUser (Username, [Password])
-output inserted.UserID
+output inserted.UserId
 values (
 	@Username,
 	@Password

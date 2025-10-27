@@ -1,6 +1,6 @@
-﻿update AssistantInformation set VersionID = (
+﻿update AssistantInformation set VersionId = (
 	select
-		VersionID
+		VersionId
 	from [Version] with (nolock)
 	where [Value] = @Version
 )

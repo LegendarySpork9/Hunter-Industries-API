@@ -11,11 +11,11 @@
 			order by DateOccured desc
 		) as rn
 	from ComponentInformation CI with (nolock)
-	join Component with (nolock) on CI.ComponentID = Component.ComponentID
-	join ComponentStatus CS with (nolock) on CI.ComponentStatusID = CS.ComponentStatusID
-	join ServerInformation SI with (nolock) on CI.ServerInformationID = SI.ServerInformationID
-	join Machine with (nolock) on SI.MachineID = Machine.MachineID
-	join Game with (nolock) on SI.GameID = Game.GameID
+	join Component with (nolock) on CI.ComponentId = Component.ComponentId
+	join ComponentStatus CS with (nolock) on CI.ComponentStatusId = CS.ComponentStatusId
+	join ServerInformation SI with (nolock) on CI.ServerInformationId = SI.ServerInformationId
+	join Machine with (nolock) on SI.MachineId = Machine.MachineId
+	join Game with (nolock) on SI.GameId = Game.GameId
 	where Component.[Name] = @Component
 )
 select

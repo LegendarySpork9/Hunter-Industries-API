@@ -1,5 +1,5 @@
 ﻿insert into [Location] (HostName, IPAddress)
-output inserted.LocationID
+output inserted.LocationId
 values (
 	@Hostname,
 	@IPAddress

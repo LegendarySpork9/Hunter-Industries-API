@@ -1,14 +1,14 @@
-﻿insert into ServerAlert (ServerInformationID, UserSettingsID, ComponentID, ComponentStatusID, AlertStatusID, DateOccured)
-output inserted.ServerAlertsID
+﻿insert into ServerAlert (ServerInformationId, UserSettingId, ComponentId, ComponentStatusId, AlertStatusId, DateOccured)
+output inserted.ServerAlertsId
 values (
-	@ServerID,
+	@ServerId,
 	(
 		select
-			UserSettingsID
+			UserSettingId
 		from UserSetting with (nolock)
-		where ApplicationID = (
+		where ApplicationId = (
 			select
-				ApplicationID
+				ApplicationId
 			from [Application] with (nolock)
 			where [Name] = 'Server Status Site'
 		)
@@ -17,19 +17,19 @@ values (
 	),
 	(
 		select
-			ComponentID
+			ComponentId
 		from Component with (nolock)
 		where [Name] = @Component
 	),
 	(
 		select
-			ComponentStatusID
+			ComponentStatusId
 		from ComponentStatus with (nolock)
 		where [Value] = @ComponentStatus
 	),
 	(
 		select
-			AlertStatusID
+			AlertStatusId
 		from ServerAlertStatus with (nolock)
 		where [Value] = @AlertStatus
 	),

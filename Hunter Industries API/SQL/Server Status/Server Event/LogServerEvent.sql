@@ -1,16 +1,16 @@
-﻿insert into ComponentInformation (ServerInformationID, ComponentID, ComponentStatusID, DateOccured)
-output inserted.ComponentInformationID
+﻿insert into ComponentInformation (ServerInformationId, ComponentId, ComponentStatusId, DateOccured)
+output inserted.ComponentInformationId
 values (
-	@ServerID,
+	@ServerId,
 	(
 		select
-			ComponentID
+			ComponentId
 		from Component with (nolock)
 		where [Name] = @Component
 	),
 	(
 		select
-			ComponentStatusID
+			ComponentStatusId
 		from ComponentStatus with (nolock)
 		where [Value] = @Status
 	),

@@ -3,6 +3,6 @@
 	AI.IDNumber,
 	D.[Value]
 from AssistantInformation AI with (nolock)
-join Deletion D with (nolock) on AI.DeletionStatusID = D.StatusID
+join Deletion D with (nolock) on AI.DeletionStatusId = D.StatusId
 where AI.[Name] = @AssistantName
-and AI.IDNumber = @AssistantID
+and AI.IDNumber = @AssistantId

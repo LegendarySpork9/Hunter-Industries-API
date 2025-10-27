@@ -1,19 +1,19 @@
-﻿insert into LoginAttempt (UserID, PhraseID, AuditID, DateOccured, IsSuccessful)
+﻿insert into LoginAttempt (UserId, PhraseId, AuditId, DateOccured, IsSuccessful)
 values (
 	(
 		select
-			UserID
+			UserId
 		from APIUser with (nolock)
 		where Username = @Username
 		and [Password] = @Password
 	),
 	(
 		select
-			PhraseID
+			PhraseId
 		from Authorisation with (nolock)
 		where Phrase = @Phrase
 	),
-	@AuditID,
+	@AuditId,
 	GETDATE(),
 	@IsSuccessful
 )

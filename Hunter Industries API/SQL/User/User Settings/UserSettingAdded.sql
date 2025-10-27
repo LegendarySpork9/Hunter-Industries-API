@@ -1,15 +1,15 @@
-﻿insert into UserSetting (UserID, ApplicationID, [Name], [Value])
-output inserted.UserSettingsID
+﻿insert into UserSetting (UserId, ApplicationId, [Name], [Value])
+output inserted.UserSettingId
 values (
 	(
 		select
-			UserID
+			UserId
 		from APIUser with (nolock)
 		where Username = @Username
 	),
 	(
 		select
-			ApplicationID
+			ApplicationId
 		from [Application] with (nolock)
 		where [Name] = @Application
 	),

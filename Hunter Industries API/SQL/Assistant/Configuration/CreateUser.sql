@@ -1,5 +1,5 @@
 ﻿insert into [User] (Name)
-output inserted.UserID
+output inserted.UserId
 values (
 	@Name
 )
