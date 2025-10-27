@@ -1,6 +1,8 @@
 ﻿delete from UserScope
-where UserID = @userId
-and ScopeID = (
-	select ScopeID from Scope with (nolock)
+where UserId = @userId
+and ScopeId = (
+	select
+		ScopeId
+	from Scope with (nolock)
 	where [Value] = @scope
 )

@@ -1,3 +1,8 @@
-﻿select [Application].[Name], UserSettingsID, UserSettings.[Name], [Value] from UserSettings with (nolock)
-join [Application] with (nolock) on UserSettings.ApplicationID = [Application].ApplicationID
-where UserSettingsID is not null
+﻿select
+	[Application].[Name],
+	UserSettingId,
+	UserSetting.[Name],
+	[Value]
+from UserSetting with (nolock)
+join [Application] with (nolock) on UserSetting.ApplicationId = [Application].ApplicationId
+where UserSettingId is not null

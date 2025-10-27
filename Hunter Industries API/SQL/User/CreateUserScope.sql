@@ -1,3 +1,11 @@
-﻿insert into UserScope (UserID, ScopeID)
-output inserted.UserScopeID
-values (@UserID, (select ScopeID from Scope with (nolock) where [Value] = @Scope))
+﻿insert into UserScope (UserId, ScopeId)
+output inserted.UserScopeId
+values (
+	@UserId,
+	(
+		select
+			ScopeId
+		from Scope with (nolock)
+		where [Value] = @Scope
+	)
+)

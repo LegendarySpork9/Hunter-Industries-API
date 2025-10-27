@@ -9,13 +9,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[APIUser](
-	[UserID] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] IDENTITY(1,1) NOT NULL,
 	[Username] [varchar](255) NOT NULL,
 	[Password] [varchar](255) NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_APIUser] PRIMARY KEY CLUSTERED 
 (
-	[UserID] ASC
+	[UserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -29,12 +29,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Application](
-	[ApplicationID] [int] IDENTITY(1,1) NOT NULL,
-	[PhraseID] [int] NOT NULL,
+	[ApplicationId] [int] IDENTITY(1,1) NOT NULL,
+	[PhraseId] [int] NOT NULL,
 	[Name] [varchar](50) NOT NULL,
  CONSTRAINT [PK_Applications] PRIMARY KEY CLUSTERED 
 (
-	[ApplicationID] ASC
+	[ApplicationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -45,16 +45,16 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AuditHistory](
-	[AuditID] [int] IDENTITY(1,1) NOT NULL,
-	[EndpointID] [int] NOT NULL,
-	[MethodID] [int] NOT NULL,
-	[StatusID] [int] NOT NULL,
+	[AuditId] [int] IDENTITY(1,1) NOT NULL,
+	[EndpointId] [int] NOT NULL,
+	[MethodId] [int] NOT NULL,
+	[StatusId] [int] NOT NULL,
 	[IPAddress] [varchar](15) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
 	[Parameters] [varchar](max) NULL,
  CONSTRAINT [PK_AuditHistory] PRIMARY KEY CLUSTERED 
 (
-	[AuditID] ASC
+	[AuditId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -65,11 +65,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Authorisation](
-	[PhraseID] [int] IDENTITY(1,1) NOT NULL,
+	[PhraseId] [int] IDENTITY(1,1) NOT NULL,
 	[Phrase] [varchar](max) NOT NULL,
  CONSTRAINT [PK_Authorisation] PRIMARY KEY CLUSTERED 
 (
-	[PhraseID] ASC
+	[PhraseId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -80,15 +80,15 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Change](
-	[ChangeID] [int] IDENTITY(1,1) NOT NULL,
-	[EndpointID] [int] NOT NULL,
-	[AuditID] [int] NOT NULL,
+	[ChangeId] [int] IDENTITY(1,1) NOT NULL,
+	[EndpointId] [int] NOT NULL,
+	[AuditId] [int] NOT NULL,
 	[Field] [varchar](50) NOT NULL,
 	[OldValue] [varchar](255) NOT NULL,
 	[NewValue] [varchar](255) NOT NULL,
  CONSTRAINT [PK_Change] PRIMARY KEY CLUSTERED 
 (
-	[ChangeID] ASC
+	[ChangeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -99,11 +99,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Endpoint](
-	[EndpointID] [int] IDENTITY(1,1) NOT NULL,
+	[EndpointId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](255) NOT NULL,
  CONSTRAINT [PK_Endpoint] PRIMARY KEY CLUSTERED 
 (
-	[EndpointID] ASC
+	[EndpointId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -114,14 +114,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ErrorLog](
-	[ErrorID] [int] IDENTITY(1,1) NOT NULL,
+	[ErrorId] [int] IDENTITY(1,1) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
 	[IPAddress] [varchar](15) NOT NULL,
 	[Summary] [varchar](255) NOT NULL,
 	[Message] [varchar](max) NOT NULL,
  CONSTRAINT [PK_ErrorLog] PRIMARY KEY CLUSTERED 
 (
-	[ErrorID] ASC
+	[ErrorId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -132,15 +132,15 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[LoginAttempt](
-	[AttemptID] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NULL,
-	[PhraseID] [int] NULL,
-	[AuditID] [int] NOT NULL,
+	[AttemptId] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NULL,
+	[PhraseId] [int] NULL,
+	[AuditId] [int] NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
 	[IsSuccessful] [bit] NOT NULL,
  CONSTRAINT [PK_LoginAttempt] PRIMARY KEY CLUSTERED 
 (
-	[AttemptID] ASC
+	[AttemptId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -151,11 +151,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Method](
-	[MethodID] [int] IDENTITY(1,1) NOT NULL,
+	[MethodId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](6) NOT NULL,
  CONSTRAINT [PK_Methods] PRIMARY KEY CLUSTERED 
 (
-	[MethodID] ASC
+	[MethodId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -166,11 +166,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Scope](
-	[ScopeID] [int] IDENTITY(1,1) NOT NULL,
+	[ScopeId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](255) NOT NULL,
  CONSTRAINT [PK_Scope] PRIMARY KEY CLUSTERED 
 (
-	[ScopeID] ASC
+	[ScopeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -181,11 +181,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[StatusCode](
-	[StatusID] [int] IDENTITY(1,1) NOT NULL,
+	[StatusId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](100) NOT NULL,
  CONSTRAINT [PK_StatusCode] PRIMARY KEY CLUSTERED 
 (
-	[StatusID] ASC
+	[StatusId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -196,30 +196,30 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[UserScope](
-	[UserScopeID] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NOT NULL,
-	[ScopeID] [int] NOT NULL,
+	[UserScopeId] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ScopeId] [int] NOT NULL,
  CONSTRAINT [PK_UserScope] PRIMARY KEY CLUSTERED 
 (
-	[UserScopeID] ASC
+	[UserScopeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[UserSettings]    Script Date: 17/05/2025 12:29:22 ******/
+/****** Object:  Table [dbo].[UserSetting]    Script Date: 17/05/2025 12:29:22 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[UserSettings](
-	[UserSettingsID] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NOT NULL,
-	[ApplicationID] [int] NOT NULL,
+CREATE TABLE [dbo].[UserSetting](
+	[UserSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ApplicationId] [int] NOT NULL,
 	[Name] [varchar](255) NOT NULL,
 	[Value] [varchar](255) NOT NULL,
- CONSTRAINT [PK_UserSettings] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_UserSetting] PRIMARY KEY CLUSTERED 
 (
-	[UserSettingsID] ASC
+	[UserSettingId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -232,16 +232,16 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AssistantInformation](
-	[AssistantID] [int] IDENTITY(1,1) NOT NULL,
-	[LocationID] [int] NOT NULL,
-	[DeletionStatusID] [int] NOT NULL,
-	[VersionID] [int] NOT NULL,
-	[UserID] [int] NOT NULL,
+	[AssistantId] [int] IDENTITY(1,1) NOT NULL,
+	[LocationId] [int] NOT NULL,
+	[DeletionStatusId] [int] NOT NULL,
+	[VersionId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
 	[Name] [varchar](50) NOT NULL,
 	[IDNumber] [varchar](10) NOT NULL,
  CONSTRAINT [PK_AssistantInformation] PRIMARY KEY CLUSTERED 
 (
-	[AssistantID] ASC
+	[AssistantId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -252,11 +252,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Deletion](
-	[StatusID] [int] IDENTITY(1,1) NOT NULL,
+	[StatusId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](5) NOT NULL,
  CONSTRAINT [PK_Deletion] PRIMARY KEY CLUSTERED 
 (
-	[StatusID] ASC
+	[StatusId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -267,12 +267,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Location](
-	[LocationID] [int] IDENTITY(1,1) NOT NULL,
+	[LocationId] [int] IDENTITY(1,1) NOT NULL,
 	[HostName] [varchar](100) NOT NULL,
 	[IPAddress] [varchar](15) NOT NULL,
  CONSTRAINT [PK_Location] PRIMARY KEY CLUSTERED 
 (
-	[LocationID] ASC
+	[LocationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -283,11 +283,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[User](
-	[UserID] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
-	[UserID] ASC
+	[UserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -298,11 +298,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Version](
-	[VersionID] [int] IDENTITY(1,1) NOT NULL,
+	[VersionId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](7) NULL,
  CONSTRAINT [PK_Version] PRIMARY KEY CLUSTERED 
 (
-	[VersionID] ASC
+	[VersionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -315,11 +315,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Component](
-	[ComponentID] [int] IDENTITY(1,1) NOT NULL,
+	[ComponentId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](17) NOT NULL,
  CONSTRAINT [PK_Component] PRIMARY KEY CLUSTERED 
 (
-	[ComponentID] ASC
+	[ComponentId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -330,14 +330,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ComponentInformation](
-	[ComponentInformationID] [int] IDENTITY(1,1) NOT NULL,
-	[ServerInformationID] [int] NOT NULL,
-	[ComponentID] [int] NOT NULL,
-	[ComponentStatusID] [int] NOT NULL,
+	[ComponentInformationId] [int] IDENTITY(1,1) NOT NULL,
+	[ServerInformationId] [int] NOT NULL,
+	[ComponentId] [int] NOT NULL,
+	[ComponentStatusId] [int] NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
  CONSTRAINT [PK_ComponentInformation] PRIMARY KEY CLUSTERED 
 (
-	[ComponentInformationID] ASC
+	[ComponentInformationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -348,11 +348,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ComponentStatus](
-	[ComponentStatusID] [int] IDENTITY(1,1) NOT NULL,
+	[ComponentStatusId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](7) NOT NULL,
  CONSTRAINT [PK_ComponentStatus] PRIMARY KEY CLUSTERED 
 (
-	[ComponentStatusID] ASC
+	[ComponentStatusId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -365,12 +365,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Connection](
-	[ConnectionID] [int] IDENTITY(1,1) NOT NULL,
+	[ConnectionId] [int] IDENTITY(1,1) NOT NULL,
 	[IPAddress] [varchar](50) NOT NULL,
 	[Port] [int] NOT NULL,
  CONSTRAINT [PK_Connection] PRIMARY KEY CLUSTERED 
 (
-	[ConnectionID] ASC
+	[ConnectionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -383,11 +383,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Downtime](
-	[DowntimeID] [int] IDENTITY(1,1) NOT NULL,
+	[DowntimeId] [int] IDENTITY(1,1) NOT NULL,
 	[Time] [varchar](8) NOT NULL,
  CONSTRAINT [PK_Downtime] PRIMARY KEY CLUSTERED 
 (
-	[DowntimeID] ASC
+	[DowntimeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -400,12 +400,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Game](
-	[GameID] [int] IDENTITY(1,1) NOT NULL,
+	[GameId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](255) NOT NULL,
 	[Version] [varchar](20) NOT NULL,
  CONSTRAINT [PK_Game] PRIMARY KEY CLUSTERED 
 (
-	[GameID] ASC
+	[GameId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -416,31 +416,31 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Machine](
-	[MachineID] [int] IDENTITY(1,1) NOT NULL,
+	[MachineId] [int] IDENTITY(1,1) NOT NULL,
 	[HostName] [varchar](255) NOT NULL,
  CONSTRAINT [PK_Machine] PRIMARY KEY CLUSTERED 
 (
-	[MachineID] ASC
+	[MachineId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[ServerAlerts]    Script Date: 17/05/2025 12:29:22 ******/
+/****** Object:  Table [dbo].[ServerAlert]    Script Date: 17/05/2025 12:29:22 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[ServerAlerts](
-	[ServerAlertsID] [int] IDENTITY(1,1) NOT NULL,
-	[ServerInformationID] [int] NOT NULL,
-	[UserSettingsID] [int] NOT NULL,
-	[ComponentID] [int] NOT NULL,
-	[ComponentStatusID] [int] NOT NULL,
-	[AlertStatusID] [int] NOT NULL,
+CREATE TABLE [dbo].[ServerAlert](
+	[ServerAlertId] [int] IDENTITY(1,1) NOT NULL,
+	[ServerInformationId] [int] NOT NULL,
+	[UserSettingsId] [int] NOT NULL,
+	[ComponentId] [int] NOT NULL,
+	[ComponentStatusId] [int] NOT NULL,
+	[AlertStatusId] [int] NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
- CONSTRAINT [PK_ServerAlerts] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ServerAlert] PRIMARY KEY CLUSTERED 
 (
-	[ServerAlertsID] ASC
+	[ServerAlertId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -451,11 +451,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ServerAlertStatus](
-	[AlertStatusID] [int] IDENTITY(1,1) NOT NULL,
+	[AlertStatusId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](13) NOT NULL,
  CONSTRAINT [PK_ServerAlertStatus] PRIMARY KEY CLUSTERED 
 (
-	[AlertStatusID] ASC
+	[AlertStatusId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -468,15 +468,15 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[ServerInformation](
-	[ServerInformationID] [int] IDENTITY(1,1) NOT NULL,
-	[MachineID] [int] NOT NULL,
-	[GameID] [int] NOT NULL,
-	[ConnectionID] [int] NOT NULL,
-	[DowntimeID] [int] NULL,
+	[ServerInformationId] [int] IDENTITY(1,1) NOT NULL,
+	[MachineId] [int] NOT NULL,
+	[GameId] [int] NOT NULL,
+	[ConnectionId] [int] NOT NULL,
+	[DowntimeId] [int] NULL,
 	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
-	[ServerInformationID] ASC
+	[ServerInformationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -486,150 +486,150 @@ GO
 
 /* Constraints */
 
-ALTER TABLE [dbo].[Application]  WITH CHECK ADD  CONSTRAINT [FK_Applications_Authorisation] FOREIGN KEY([PhraseID])
-REFERENCES [dbo].[Authorisation] ([PhraseID])
+ALTER TABLE [dbo].[Application]  WITH CHECK ADD  CONSTRAINT [FK_Applications_Authorisation] FOREIGN KEY([PhraseId])
+REFERENCES [dbo].[Authorisation] ([PhraseId])
 GO
 ALTER TABLE [dbo].[Application] CHECK CONSTRAINT [FK_Applications_Authorisation]
 GO
-ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Deletion] FOREIGN KEY([DeletionStatusID])
-REFERENCES [dbo].[Deletion] ([StatusID])
+ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Deletion] FOREIGN KEY([DeletionStatusId])
+REFERENCES [dbo].[Deletion] ([StatusId])
 GO
 ALTER TABLE [dbo].[AssistantInformation] CHECK CONSTRAINT [FK_AssistantInformation_Deletion]
 GO
-ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Location] FOREIGN KEY([LocationID])
-REFERENCES [dbo].[Location] ([LocationID])
+ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Location] FOREIGN KEY([LocationId])
+REFERENCES [dbo].[Location] ([LocationId])
 GO
 ALTER TABLE [dbo].[AssistantInformation] CHECK CONSTRAINT [FK_AssistantInformation_Location]
 GO
-ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_User] FOREIGN KEY([UserID])
-REFERENCES [dbo].[User] ([UserID])
+ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_User] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([UserId])
 GO
 ALTER TABLE [dbo].[AssistantInformation] CHECK CONSTRAINT [FK_AssistantInformation_User]
 GO
-ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Version] FOREIGN KEY([VersionID])
-REFERENCES [dbo].[Version] ([VersionID])
+ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Version] FOREIGN KEY([VersionId])
+REFERENCES [dbo].[Version] ([VersionId])
 GO
 ALTER TABLE [dbo].[AssistantInformation] CHECK CONSTRAINT [FK_AssistantInformation_Version]
 GO
-ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Endpoint] FOREIGN KEY([EndpointID])
-REFERENCES [dbo].[Endpoint] ([EndpointID])
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Endpoint] FOREIGN KEY([EndpointId])
+REFERENCES [dbo].[Endpoint] ([EndpointId])
 GO
 ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_Endpoint]
 GO
-ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Methods] FOREIGN KEY([MethodID])
-REFERENCES [dbo].[Method] ([MethodID])
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Methods] FOREIGN KEY([MethodId])
+REFERENCES [dbo].[Method] ([MethodId])
 GO
 ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_Methods]
 GO
-ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_StatusCode] FOREIGN KEY([StatusID])
-REFERENCES [dbo].[StatusCode] ([StatusID])
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_StatusCode] FOREIGN KEY([StatusId])
+REFERENCES [dbo].[StatusCode] ([StatusId])
 GO
 ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_StatusCode]
 GO
-ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Audit] FOREIGN KEY([AuditID])
-REFERENCES [dbo].[AuditHistory] ([AuditID])
+ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Audit] FOREIGN KEY([AuditId])
+REFERENCES [dbo].[AuditHistory] ([AuditId])
 GO
 ALTER TABLE [dbo].[Change] CHECK CONSTRAINT [FK_Change_Audit]
 GO
-ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Endpoint] FOREIGN KEY([EndpointID])
-REFERENCES [dbo].[Endpoint] ([EndpointID])
+ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Endpoint] FOREIGN KEY([EndpointId])
+REFERENCES [dbo].[Endpoint] ([EndpointId])
 GO
 ALTER TABLE [dbo].[Change] CHECK CONSTRAINT [FK_Change_Endpoint]
 GO
-ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_Component] FOREIGN KEY([ComponentID])
-REFERENCES [dbo].[Component] ([ComponentID])
+ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_Component] FOREIGN KEY([ComponentId])
+REFERENCES [dbo].[Component] ([ComponentId])
 GO
 ALTER TABLE [dbo].[ComponentInformation] CHECK CONSTRAINT [FK_ComponentInformation_Component]
 GO
-ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_ComponentStatus] FOREIGN KEY([ComponentStatusID])
-REFERENCES [dbo].[ComponentStatus] ([ComponentStatusID])
+ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_ComponentStatus] FOREIGN KEY([ComponentStatusId])
+REFERENCES [dbo].[ComponentStatus] ([ComponentStatusId])
 GO
 ALTER TABLE [dbo].[ComponentInformation] CHECK CONSTRAINT [FK_ComponentInformation_ComponentStatus]
 GO
-ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_ServerInformation] FOREIGN KEY([ServerInformationID])
-REFERENCES [dbo].[ServerInformation] ([ServerInformationID])
+ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_ServerInformation] FOREIGN KEY([ServerInformationId])
+REFERENCES [dbo].[ServerInformation] ([ServerInformationId])
 GO
 ALTER TABLE [dbo].[ComponentInformation] CHECK CONSTRAINT [FK_ComponentInformation_ServerInformation]
 GO
-ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_AuditHistory] FOREIGN KEY([AuditID])
-REFERENCES [dbo].[AuditHistory] ([AuditID])
+ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_AuditHistory] FOREIGN KEY([AuditId])
+REFERENCES [dbo].[AuditHistory] ([AuditId])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_AuditHistory]
 GO
-ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_Authorisation] FOREIGN KEY([PhraseID])
-REFERENCES [dbo].[Authorisation] ([PhraseID])
+ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_Authorisation] FOREIGN KEY([PhraseId])
+REFERENCES [dbo].[Authorisation] ([PhraseId])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_Authorisation]
 GO
-ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_APIUser] FOREIGN KEY([UserID])
-REFERENCES [dbo].[APIUser] ([UserID])
+ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_APIUser] FOREIGN KEY([UserId])
+REFERENCES [dbo].[APIUser] ([UserId])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_APIUser]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_Component] FOREIGN KEY([ComponentID])
-REFERENCES [dbo].[Component] ([ComponentID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_Component] FOREIGN KEY([ComponentId])
+REFERENCES [dbo].[Component] ([ComponentId])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_Component]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_Component]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_ComponentStatus] FOREIGN KEY([ComponentStatusID])
-REFERENCES [dbo].[ComponentStatus] ([ComponentStatusID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_ComponentStatus] FOREIGN KEY([ComponentStatusId])
+REFERENCES [dbo].[ComponentStatus] ([ComponentStatusId])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_ComponentStatus]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_ComponentStatus]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_ServerAlertStatus] FOREIGN KEY([AlertStatusID])
-REFERENCES [dbo].[ServerAlertStatus] ([AlertStatusID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_ServerAlertStatus] FOREIGN KEY([AlertStatusId])
+REFERENCES [dbo].[ServerAlertStatus] ([AlertStatusId])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_ServerAlertStatus]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_ServerAlertStatus]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_ServerInformation] FOREIGN KEY([ServerInformationID])
-REFERENCES [dbo].[ServerInformation] ([ServerInformationID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_ServerInformation] FOREIGN KEY([ServerInformationId])
+REFERENCES [dbo].[ServerInformation] ([ServerInformationId])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_ServerInformation]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_ServerInformation]
 GO
-ALTER TABLE [dbo].[ServerAlerts]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlerts_UserSettings] FOREIGN KEY([UserSettingsID])
-REFERENCES [dbo].[UserSettings] ([UserSettingsID])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_UserSetting] FOREIGN KEY([UserSettingsId])
+REFERENCES [dbo].[UserSetting] ([UserSettingsId])
 GO
-ALTER TABLE [dbo].[ServerAlerts] CHECK CONSTRAINT [FK_ServerAlerts_UserSettings]
+ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_UserSetting]
 GO
-ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Connection] FOREIGN KEY([ConnectionID])
-REFERENCES [dbo].[Connection] ([ConnectionID])
+ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Connection] FOREIGN KEY([ConnectionId])
+REFERENCES [dbo].[Connection] ([ConnectionId])
 GO
 ALTER TABLE [dbo].[ServerInformation] CHECK CONSTRAINT [FK_ServerInformation_Connection]
 GO
-ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Downtime] FOREIGN KEY([DowntimeID])
-REFERENCES [dbo].[Downtime] ([DowntimeID])
+ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Downtime] FOREIGN KEY([DowntimeId])
+REFERENCES [dbo].[Downtime] ([DowntimeId])
 GO
 ALTER TABLE [dbo].[ServerInformation] CHECK CONSTRAINT [FK_ServerInformation_Downtime]
 GO
-ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Game] FOREIGN KEY([GameID])
-REFERENCES [dbo].[Game] ([GameID])
+ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Game] FOREIGN KEY([GameId])
+REFERENCES [dbo].[Game] ([GameId])
 GO
 ALTER TABLE [dbo].[ServerInformation] CHECK CONSTRAINT [FK_ServerInformation_Game]
 GO
-ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Machine] FOREIGN KEY([MachineID])
-REFERENCES [dbo].[Machine] ([MachineID])
+ALTER TABLE [dbo].[ServerInformation]  WITH CHECK ADD  CONSTRAINT [FK_ServerInformation_Machine] FOREIGN KEY([MachineId])
+REFERENCES [dbo].[Machine] ([MachineId])
 GO
 ALTER TABLE [dbo].[ServerInformation] CHECK CONSTRAINT [FK_ServerInformation_Machine]
 GO
-ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_Scope] FOREIGN KEY([ScopeID])
-REFERENCES [dbo].[Scope] ([ScopeID])
+ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_Scope] FOREIGN KEY([ScopeId])
+REFERENCES [dbo].[Scope] ([ScopeId])
 GO
 ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_Scope]
 GO
-ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_APIUser] FOREIGN KEY([UserID])
-REFERENCES [dbo].[APIUser] ([UserID])
+ALTER TABLE [dbo].[UserScope]  WITH CHECK ADD  CONSTRAINT [FK_UserScope_APIUser] FOREIGN KEY([UserId])
+REFERENCES [dbo].[APIUser] ([UserId])
 GO
 ALTER TABLE [dbo].[UserScope] CHECK CONSTRAINT [FK_UserScope_APIUser]
 GO
-ALTER TABLE [dbo].[UserSettings]  WITH CHECK ADD  CONSTRAINT [FK_UserSettings_APIUser] FOREIGN KEY([UserID])
-REFERENCES [dbo].[APIUser] ([UserID])
+ALTER TABLE [dbo].[UserSetting]  WITH CHECK ADD  CONSTRAINT [FK_UserSetting_APIUser] FOREIGN KEY([UserId])
+REFERENCES [dbo].[APIUser] ([UserId])
 GO
-ALTER TABLE [dbo].[UserSettings] CHECK CONSTRAINT [FK_UserSettings_APIUser]
+ALTER TABLE [dbo].[UserSetting] CHECK CONSTRAINT [FK_UserSetting_APIUser]
 GO
-ALTER TABLE [dbo].[UserSettings]  WITH CHECK ADD  CONSTRAINT [FK_UserSettings_Application] FOREIGN KEY([ApplicationID])
-REFERENCES [dbo].[Application] ([ApplicationID])
+ALTER TABLE [dbo].[UserSetting]  WITH CHECK ADD  CONSTRAINT [FK_UserSetting_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
 GO
-ALTER TABLE [dbo].[UserSettings] CHECK CONSTRAINT [FK_UserSettings_Application]
+ALTER TABLE [dbo].[UserSetting] CHECK CONSTRAINT [FK_UserSetting_Application]
 GO
 
 /* Inserts */
@@ -664,7 +664,7 @@ INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/a
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/user')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/usersettings')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/UserSetting')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverinformation')
 GO
