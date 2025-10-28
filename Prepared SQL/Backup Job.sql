@@ -23,7 +23,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'Back Up Database - HunterInd
 		@delete_level=0, 
 		@description=N'No description available.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'HI-GameAppServe\HIAdministrator', @job_id = @jobId OUTPUT
+		@owner_login_name=N'Central\HICentralAdmin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 /****** Object:  Step [1]    Script Date: 12/20/2024 7:13:57 PM ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'1', 
@@ -36,9 +36,22 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'1',
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'BACKUP DATABASE [HunterIndustriesAPI] TO  DISK = N''K:\Programs\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HunterIndustriesAPI.bak'' WITH NOFORMAT, NOINIT,  NAME = N''HunterIndustriesAPI-Full Database Backup'', SKIP, NOREWIND, NOUNLOAD,  STATS = 10
-GO
-', 
+		@command=N'
+DECLARE @BackupFileName NVARCHAR(260);
+DECLARE @DateSuffix NVARCHAR(20);
+
+/* Format date as YYYYMMDD */
+SET @DateSuffix = CONVERT(NVARCHAR(8), GETDATE(), 112);
+
+/* Build full backup file path */
+SET @BackupFileName = N''L:\Program Files\Microsoft SQL Server\MSSQL16.LIVE\MSSQL\Backup\HunterIndustriesAPI_'' + @DateSuffix + ''.bak'';
+
+BACKUP DATABASE [HunterIndustriesAPI]
+TO DISK = @BackupFileName
+WITH NOFORMAT, NOINIT,
+     NAME = N''HunterIndustriesAPI-Full Database Backup'',
+     SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+',
 		@database_name=N'master', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
