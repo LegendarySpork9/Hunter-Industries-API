@@ -19,7 +19,7 @@ namespace HunterIndustriesAPI.Controllers.User
     /// </summary>
     [Authorize]
     [RequiredPolicyAuthorisationAttributeFilter("ServerStatus")]
-    [Route("api/usersettings/{id:int}")]
+    [VersionedRoute("usersettings/{id:int}", "2.0")]
     public class UserSettingsController : ApiController
     {
         /// <summary>
@@ -99,7 +99,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the user setting information.</param>
-        [Route("api/usersettings")]
+        [VersionedRoute("usersettings", "2.0")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a setting matching the name already exists for the application.")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(UserSettingRecord), Description = "If the setting is successfuly added.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]

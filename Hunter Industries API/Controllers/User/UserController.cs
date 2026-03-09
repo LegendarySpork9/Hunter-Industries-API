@@ -32,7 +32,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     GET /User?Username=TestUser
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        [Route("api/user")]
+        [VersionedRoute("user", "1.0")]
         [SwaggerOperation("GetUserList")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<UserRecord>), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
@@ -114,7 +114,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="id">The id number of the user.</param>
-        [Route("api/user/{id:int}")]
+        [VersionedRoute("user/{id:int}", "1.0")]
         [SwaggerOperation("GetUserById")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserRecord), Description = "Returns the item matching the given id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
@@ -181,7 +181,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the user information.</param>
-        [Route("api/user")]
+        [VersionedRoute("user", "1.0")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a user matching the username already exists.")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(UserRecord), Description = "If the user is successfuly created.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
@@ -311,7 +311,7 @@ namespace HunterIndustriesAPI.Controllers.User
         /// </remarks>
         /// <param name="id">The id number of the user.</param>
         /// <param name="request">An object containing the user data.</param>
-        [Route("api/user/{id:int}")]
+        [VersionedRoute("user/{id:int}", "2.0")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserRecord), Description = "Returns the updated item.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
@@ -436,7 +436,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="id">The id number of the user.</param>
-        [Route("api/user/{id:int}")]
+        [VersionedRoute("user/{id:int}", "2.0")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "Returns a confirmation that the user was deleted.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no user was found matching the id.")]

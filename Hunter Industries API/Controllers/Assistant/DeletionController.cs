@@ -19,7 +19,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
     /// </summary>
     [Authorize]
     [RequiredPolicyAuthorisationAttributeFilter("Assistant")]
-    [Route("api/assistant/deletion")]
+    [VersionedRoute("assistant/deletion", "1.0")]
     public class DeletionController : ApiController
     {
         /// <summary>
