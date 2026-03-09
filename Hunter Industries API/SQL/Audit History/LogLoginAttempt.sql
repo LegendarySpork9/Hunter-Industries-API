@@ -14,6 +14,6 @@ values (
 		where Phrase = @Phrase
 	),
 	@AuditId,
-	GETDATE(),
+	GETUTCDATE(),
 	@IsSuccessful
 )

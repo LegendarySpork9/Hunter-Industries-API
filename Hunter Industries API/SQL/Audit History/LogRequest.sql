@@ -5,6 +5,6 @@ values (
 	@EndpointId,
 	@MethodId,
 	@StatusId,
-	GETDATE(),
+	GETUTCDATE(),
 	@Parameters
 )

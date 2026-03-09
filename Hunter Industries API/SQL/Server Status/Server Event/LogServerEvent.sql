@@ -14,5 +14,5 @@ values (
 		from ComponentStatus with (nolock)
 		where [Value] = @Status
 	),
-	GETDATE()
+	GETUTCDATE()
 )
