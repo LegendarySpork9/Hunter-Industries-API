@@ -224,6 +224,22 @@ CREATE TABLE [dbo].[UserSetting](
 ) ON [PRIMARY]
 GO
 
+/****** Object:  Table [dbo].[VersionHistory]    Script Date: 09/03/2026 14:15:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[VersionHistory](
+	[VersionId] [int] IDENTITY(1,1) NOT NULL,
+	[ReleaseVersion] [varchar](11) NOT NULL,
+	[DateUpdated] [datetime] NOT NULL,
+ CONSTRAINT [PK_VersionHistory] PRIMARY KEY CLUSTERED 
+(
+	[VersionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /* Assistant API */
 
 /****** Object:  Table [dbo].[AssistantInformation]    Script Date: 18/12/2024 21:19:28 ******/
@@ -671,10 +687,6 @@ GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverevent')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serveralert')
-GO
-INSERT [dbo].[Game] ([Name], [Version]) VALUES ('Minecraft', '1.7.10')
-GO
-INSERT [dbo].[Machine] ([HostName]) VALUES ('Hunter-NAS')
 GO
 INSERT [dbo].[Method] ([Value]) VALUES ('GET')
 GO
