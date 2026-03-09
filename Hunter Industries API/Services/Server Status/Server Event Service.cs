@@ -53,7 +53,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                                 {
                                     Component = dataReader.GetString(0),
                                     Status = dataReader.GetString(1),
-                                    DateOccured = dataReader.GetDateTime(5),
+                                    DateOccured = DateTime.SpecifyKind(dataReader.GetDateTime(5), DateTimeKind.Utc),
                                     Server = new RelatedServerRecord()
                                     {
                                         HostName = dataReader.GetString(2),

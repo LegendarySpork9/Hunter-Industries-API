@@ -213,7 +213,7 @@ fetch next @PageSize rows only";
                                         Endpoint = dataReader.GetString(2),
                                         Method = dataReader.GetString(3),
                                         Status = dataReader.GetString(4),
-                                        OccuredAt = dataReader.GetDateTime(5),
+                                        OccuredAt = DateTime.SpecifyKind(dataReader.GetDateTime(5), DateTimeKind.Utc),
                                         Paramaters = Array.Empty<string>()
                                     };
 

@@ -33,5 +33,5 @@ values (
 		from ServerAlertStatus with (nolock)
 		where [Value] = @AlertStatus
 	),
-	GETDATE()
+	GETUTCDATE()
 )

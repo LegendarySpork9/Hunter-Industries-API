@@ -58,7 +58,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                                     Component = dataReader.GetString(2),
                                     ComponentStatus = dataReader.GetString(3),
                                     AlertStatus = dataReader.GetString(4),
-                                    AlertDate = dataReader.GetDateTime(5),
+                                    AlertDate = DateTime.SpecifyKind(dataReader.GetDateTime(5), DateTimeKind.Utc),
                                     server = new RelatedServerRecord()
                                     {
                                         HostName = dataReader.GetString(6),
@@ -115,7 +115,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                                     Component = dataReader.GetString(2),
                                     ComponentStatus = dataReader.GetString(3),
                                     AlertStatus = dataReader.GetString(4),
-                                    AlertDate = dataReader.GetDateTime(5),
+                                    AlertDate = DateTime.SpecifyKind(dataReader.GetDateTime(5), DateTimeKind.Utc),
                                     server = new RelatedServerRecord()
                                     {
                                         HostName = dataReader.GetString(6),

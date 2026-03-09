@@ -183,7 +183,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 {
                     Component = request.Component,
                     Status = request.Status,
-                    DateOccured = DateTime.Now,
+                    DateOccured = DateTime.UtcNow,
                     Server = new RelatedServerRecord()
                     {
                         HostName = request.HostName,

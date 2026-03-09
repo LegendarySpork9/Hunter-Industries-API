@@ -79,7 +79,7 @@ namespace HunterIndustriesAPI.Controllers
             _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
-            var result = _auditHistoryService.GetAuditHistory(0, filters.IPAddress, filters.Endpoint, DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), filters.PageSize, filters.PageNumber);
+            var result = _auditHistoryService.GetAuditHistory(0, filters.IPAddress, filters.Endpoint, DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), filters.PageSize, filters.PageNumber);
             List<AuditHistoryRecord> auditHistories = result.Item1;
 
             if (auditHistories.Count == 0)
@@ -148,7 +148,7 @@ namespace HunterIndustriesAPI.Controllers
             _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { id.ToString() });
 
-            var result = _auditHistoryService.GetAuditHistory(id, null, null, DateTime.ParseExact("01/01/1900", "dd/MM/yyyy", CultureInfo.InvariantCulture), 25, 1);
+            var result = _auditHistoryService.GetAuditHistory(id, null, null, DateTime.SpecifyKind(DateTime.ParseExact("01/01/1900", "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), 25, 1);
             List<AuditHistoryRecord> auditHistories = result.Item1;
 
             if (auditHistories.Count == 0)
