@@ -21,7 +21,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
     /// </summary>
     [Authorize]
     [RequiredPolicyAuthorisationAttributeFilter("AIAccess")]
-    [Route("api/assistant/config")]
+    [VersionedRoute("assistant/config", "1.0")]
     public class ConfigController : ApiController
     {
         /// <summary>

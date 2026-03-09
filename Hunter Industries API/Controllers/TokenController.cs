@@ -1,4 +1,5 @@
 ﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Requests;
@@ -21,7 +22,7 @@ namespace HunterIndustriesAPI.Controllers
 {
     /// <summary>
     /// </summary>
-    [Route("api/auth/token")]
+    [VersionedRoute("auth/token", "1.0")]
     public class TokenController : ApiController
     {
         /// <summary>

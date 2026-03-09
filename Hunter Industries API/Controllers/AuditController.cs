@@ -30,7 +30,7 @@ namespace HunterIndustriesAPI.Controllers
         ///     GET /audithistory?FromDate=02/11/2024&amp;Endpoint=https://hunter-industries.co.uk/api/auth/token
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        [Route("api/audithistory")]
+        [VersionedRoute("audithistory", "1.0")]
         [SwaggerOperation("GetAuditList")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
@@ -128,7 +128,7 @@ namespace HunterIndustriesAPI.Controllers
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="id">The id number of the user.</param>
-        [Route("api/audithistory/{id:int}")]
+        [VersionedRoute("audithistory/{id:int}", "1.0")]
         [SwaggerOperation("GetAuditById")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryRecord), Description = "Returns the item matching the given id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]

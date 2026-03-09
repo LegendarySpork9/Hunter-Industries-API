@@ -20,7 +20,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
     /// </summary>
     [Authorize]
     [RequiredPolicyAuthorisationAttributeFilter("ServerStatus")]
-    [Route("api/serverstatus/serverevent")]
+    [VersionedRoute("serverstatus/serverevent", "2.0")]
     public class ServerEventController : ApiController
     {
         /// <summary>

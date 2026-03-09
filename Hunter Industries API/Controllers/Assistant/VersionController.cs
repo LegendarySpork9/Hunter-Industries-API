@@ -19,7 +19,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
     /// </summary>
     [Authorize]
     [RequiredPolicyAuthorisationAttributeFilter("Assistant")]
-    [Route("api/assistant/version")]
+    [VersionedRoute("assistant/version", "1.0")]
     public class VersionController : ApiController
     {
         /// <summary>

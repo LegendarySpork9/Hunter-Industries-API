@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Models;
+﻿using HunterIndustriesAPI.Filters;
+using HunterIndustriesAPI.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
@@ -29,15 +30,7 @@ namespace HunterIndustriesAPI
 
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
-            config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: "DefaultAPI",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new
-                {
-                    id = RouteParameter.Optional
-                });
+            config.MapHttpAttributeRoutes(new VersionedDirectRouteProvider());
 
             DatabaseModel.ConnectionString = ConfigurationManager.AppSettings["SQLConnectionString"];
             DatabaseModel.SQLFiles = ConfigurationManager.AppSettings["SQLFiles"];

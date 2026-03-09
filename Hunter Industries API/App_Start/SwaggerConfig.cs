@@ -4,6 +4,7 @@ using HunterIndustriesAPI;
 using Swashbuckle.Application;
 using System.IO;
 using System;
+using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Filters.Document;
 using HunterIndustriesAPI.Filters.Operation;
 
@@ -185,11 +186,24 @@ namespace HunterIndustriesAPI
                         //
                         //c.CustomProvider((defaultProvider) => new CachingSwaggerProvider(defaultProvider));
 
-                        c.SingleApiVersion("v1", "Hunter Industries API").Description("This is the OpenAPI documentation for the Hunter Industries API.").Contact(contact =>
-                        {
-                            contact.Email("Development Team");
-                            contact.Name("");
-                        });
+                        c.MultipleApiVersions(
+                            (apiDesc, targetApiVersion) =>
+                            {
+                                var route = "/" + apiDesc.RelativePath.ToLower();
+                                return route.StartsWith($"/api/{targetApiVersion}/");
+                            },
+                            vc =>
+                            {
+                                for (int i = VersionedRouteAttribute.ApiVersions.Length - 1; i >= 0; i--)
+                                {
+                                    string version = VersionedRouteAttribute.ApiVersions[i];
+                                    vc.Version($"v{version}", $"Hunter Industries API V{version}").Description("This is the OpenAPI documentation for the Hunter Industries API.").Contact(contact =>
+                                    {
+                                        contact.Email("Development Team");
+                                        contact.Name("");
+                                    });
+                                }
+                            });
 
                         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{thisAssembly.GetName().Name}.xml"));
 
@@ -279,6 +293,8 @@ namespace HunterIndustriesAPI
 
                         c.DocumentTitle("Hunter Industries API");
                         c.InjectStylesheet(thisAssembly, "HunterIndustriesAPI.CSS.Swagger.css");
+                        c.InjectJavaScript(thisAssembly, "HunterIndustriesAPI.JS.VersionSelector.js");
+                        c.EnableDiscoveryUrlSelector();
                     });
         }
     }

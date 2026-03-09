@@ -593,6 +593,69 @@
             Checks if the token has a valid claim.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Filters.VersionedDirectRouteProvider">
+            <summary>
+            Expands VersionedRouteAttribute instances into individual version-specific routes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionedDirectRouteProvider.GetActionRouteFactories(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionedDirectRouteProvider.GetControllerRouteFactories(System.Web.Http.Controllers.HttpControllerDescriptor)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Filters.VersionSpecificRouteFactory">
+            <summary>
+            Creates a route entry for a specific versioned route template.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionSpecificRouteFactory.#ctor(System.String)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionSpecificRouteFactory.CreateRoute(System.Web.Http.Routing.DirectRouteFactoryContext)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Filters.VersionedRouteAttribute">
+            <summary>
+            A route attribute that automatically registers routes for all API versions
+            from the minimum version up to the current version.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Filters.VersionedRouteAttribute.ApiVersions">
+            <summary>
+            All known API versions in order. Add new versions to the end of this array.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Filters.VersionedRouteAttribute.Path">
+            <summary>
+            The route path without the api/vN.N/ prefix.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Filters.VersionedRouteAttribute.MinVersion">
+            <summary>
+            The minimum API version this route is available from.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Filters.VersionedRouteAttribute.MaxVersion">
+            <summary>
+            The maximum API version this route is available up to.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionedRouteAttribute.#ctor(System.String,System.String,System.String)">
+            <summary>
+            </summary>
+            <param name="path">The route path without the api/vN.N/ prefix.</param>
+            <param name="minVersion">The minimum API version this route is available from.</param>
+            <param name="maxVersion">The maximum API version this route is available up to. Defaults to the latest version.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionedRouteAttribute.System#Web#Http#Routing#IDirectRouteFactory#CreateRoute(System.Web.Http.Routing.DirectRouteFactoryContext)">
+            <summary>
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Functions.HashFunction">
             <summary>
             </summary>

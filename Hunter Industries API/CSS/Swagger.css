@@ -4,20 +4,28 @@
     height: 40px;
 }
 
+.swagger-section #header .swagger-ui-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .swagger-section #header #logo .logo__img {
-    display: block;
     content: url('/Content/HI Tech Logo NBG.png');
     width: 140px;
     height: 40px;
-    margin-top: 0px;
     pointer-events: none;
+}
+
+.swagger-section #header #logo .logo__title {
+    display: none;
 }
 
 .swagger-section #api_selector input {
     display: none;
 }
 
-.swagger-section #explore, .swagger-section #auth_container .authorize__btn {
+.swagger-section #auth_container .authorize__btn {
     display: none;
 }
 
