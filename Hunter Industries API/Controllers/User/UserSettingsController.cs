@@ -1,3 +1,4 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
@@ -20,9 +21,30 @@ namespace HunterIndustriesAPI.Controllers.User
     /// </summary>
     [Authorize]
     [RequiredPolicyAuthorisationAttributeFilter("ServerStatus")]
-    [VersionedRoute("usersettings/{id:int}", "2.0")]
+    [VersionedRoute("usersettings/{id:int}", "1.1")]
     public class UserSettingsController : ApiController
     {
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabase _Database;
+        private readonly IDatabaseOptions _Options;
+        private readonly IClock _Clock;
+
+        /// <summary>
+        /// </summary>
+        public UserSettingsController(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabase _database,
+            IDatabaseOptions _options,
+            IClock _clock)
+        {
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Database = _database;
+            _Options = _options;
+            _Clock = _clock;
+        }
+
         /// <summary>
         /// Returns the collection of settings for given id.
         /// </summary>
@@ -39,16 +61,15 @@ namespace HunterIndustriesAPI.Controllers.User
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(int id, [FromUri] string application = null)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
             ParameterFunction _parameterFunction = new ParameterFunction();
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
-            UserSettingsService _userSettingsService = new UserSettingsService(_logger);
+            UserSettingsService _userSettingsService = new UserSettingsService(_Logger, _FileSystem, _Options, _Database);
             ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (get) endpoint called with the following parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (get) endpoint called with the following parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("usersettings"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { id.ToString(), application });
@@ -66,7 +87,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -76,7 +97,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 Data = userSettings
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -100,7 +121,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the user setting information.</param>
-        [VersionedRoute("usersettings", "2.0")]
+        [VersionedRoute("usersettings", "1.1")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a setting matching the name already exists for the application.")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(UserSettingRecord), Description = "If the setting is successfuly added.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
@@ -108,12 +129,11 @@ namespace HunterIndustriesAPI.Controllers.User
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Post([FromBody, Required] UserSettingsModel request)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
             ParameterFunction _parameterFunction = new ParameterFunction();
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
-            UserSettingsService _userSettingsService = new UserSettingsService(_logger);
+            UserSettingsService _userSettingsService = new UserSettingsService(_Logger, _FileSystem, _Options, _Database);
             ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
@@ -123,7 +143,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 request = new UserSettingsModel();
             }
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request, true))
             {
@@ -139,7 +159,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -156,7 +176,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -172,7 +192,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
@@ -195,7 +215,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 }
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.Created, response.Data);
         }
 
@@ -221,18 +241,17 @@ namespace HunterIndustriesAPI.Controllers.User
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Patch(int id, [FromBody, Required] SettingUpdateModel request)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
             ParameterFunction _parameterFunction = new ParameterFunction();
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
-            UserSettingsService _userSettingsService = new UserSettingsService(_logger);
+            UserSettingsService _userSettingsService = new UserSettingsService(_Logger, _FileSystem, _Options, _Database);
             ResponseFunction _responseFunction = new ResponseFunction();
-            ChangeService _changeService = new ChangeService(_logger);
+            ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint called with the following parameters \"{id}\", {_parameterFunction.FormatParameters(null, request)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint called with the following parameters \"{id}\", {_parameterFunction.FormatParameters(null, request)}.");
 
             if (!_modelValidator.IsValid(request))
             {
@@ -248,7 +267,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -273,7 +292,7 @@ namespace HunterIndustriesAPI.Controllers.User
                         Data = setting
                     };
 
-                    _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                     return Content(HttpStatusCode.OK, response.Data);
                 }
 
@@ -289,7 +308,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
@@ -305,7 +324,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 }
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.NotFound, response.Data);
         }
     }

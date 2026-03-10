@@ -1,10 +1,10 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Models.Responses.Assistant;
-using HunterIndustriesAPI.Models;
-using System;
-using System.Data.SqlClient;
-using System.IO;
 using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPI.Models.Responses.Assistant;
+using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
@@ -13,14 +13,23 @@ namespace HunterIndustriesAPI.Services.Assistant
     /// </summary>
     public class VersionService
     {
-        private readonly LoggerService Logger;
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabaseOptions _Options;
+        private readonly IDatabase _Database;
 
         /// <summary>
         /// Sets the class's global variables.
         /// </summary>
-        public VersionService(LoggerService _logger)
+        public VersionService(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabaseOptions _options,
+            IDatabase _database)
         {
-            Logger = _logger;
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Options = _options;
+            _Database = _database;
         }
 
         /// <summary>
@@ -30,45 +39,47 @@ namespace HunterIndustriesAPI.Services.Assistant
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             VersionResponseModel version = new VersionResponseModel();
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Version\GetAssistantVersion.sql");
+                SqlParameter[] parameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                };
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\GetAssistantVersion.sql"), connection))
-                    {
-                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                        command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
+                (VersionResponseModel result, Exception ex) = await _Database.QuerySingle(sql, reader => new VersionResponseModel()
+                {
+                    AssistantName = reader.GetString(0),
+                    IdNumber = reader.GetString(1),
+                    Version = reader.GetString(2)
+                }, parameters);
 
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                version = new VersionResponseModel()
-                                {
-                                    AssistantName = dataReader.GetString(0),
-                                    IdNumber = dataReader.GetString(1),
-                                    Version = dataReader.GetString(2)
-                                };
-                            }
-                        }
-                    }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run VersionService.GetAssistantVersion.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (result != null)
+                {
+                    version = result;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run VersionService.GetAssistantVersion.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion returned {_parameterFunction.FormatParameters(version)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion returned {_parameterFunction.FormatParameters(version)}.");
             return version;
         }
 
@@ -79,40 +90,43 @@ namespace HunterIndustriesAPI.Services.Assistant
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, version })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, version })}.");
 
             bool updated = true;
-            int rowsAffected;
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Version\AssistantVersionUpdated.sql");
+                SqlParameter[] parameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@Version", SqlDbType.VarChar) { Value = version },
+                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                };
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\AssistantVersionUpdated.sql"), connection))
-                    {
-                        command.Parameters.Add(new SqlParameter("@Version", version));
-                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                        command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-                        rowsAffected = await command.ExecuteNonQueryAsync();
+                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
 
-                        if (rowsAffected != 1)
-                        {
-                            updated = false;
-                        }
-                    }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run VersionService.AssistantVersionUpdated.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (rowsAffected != 1)
+                {
+                    updated = false;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run VersionService.AssistantVersionUpdated.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated returned {updated}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated returned {updated}.");
             return updated;
         }
     }

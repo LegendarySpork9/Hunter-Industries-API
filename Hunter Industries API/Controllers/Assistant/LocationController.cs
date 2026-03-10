@@ -1,3 +1,4 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Filters.Operation;
@@ -23,6 +24,27 @@ namespace HunterIndustriesAPI.Controllers.Assistant
     [VersionedRoute("assistant/location", "1.0")]
     public class LocationController : ApiController
     {
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabase _Database;
+        private readonly IDatabaseOptions _Options;
+        private readonly IClock _Clock;
+
+        /// <summary>
+        /// </summary>
+        public LocationController(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabase _database,
+            IDatabaseOptions _options,
+            IClock _clock)
+        {
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Database = _database;
+            _Options = _options;
+            _Clock = _clock;
+        }
+
         /// <summary>
         /// Returns the location details of an assistants.
         /// </summary>
@@ -38,12 +60,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get([FromUri] AssistantFilterModel filters)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
             ParameterFunction _parameterFunction = new ParameterFunction();
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
-            LocationService _locationService = new LocationService(_logger);
+            LocationService _locationService = new LocationService(_Logger, _FileSystem, _Options, _Database);
             ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
@@ -53,7 +74,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 filters = new AssistantFilterModel();
             }
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint called with the following parameters {_parameterFunction.FormatParameters(filters)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint called with the following parameters {_parameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(filters, true))
             {
@@ -68,7 +89,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -87,7 +108,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -97,7 +118,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 Data = locationResponse
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -123,14 +144,13 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Patch([FromBody] LocationModel request, [FromUri] AssistantFilterModel filters)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
             ParameterFunction _parameterFunction = new ParameterFunction();
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
-            ConfigService _configService = new ConfigService(_logger);
-            LocationService _locationService = new LocationService(_logger);
-            ChangeService _changeService = new ChangeService(_logger);
+            ConfigService _configService = new ConfigService(_Logger, _FileSystem, _Options, _Database);
+            LocationService _locationService = new LocationService(_Logger, _FileSystem, _Options, _Database);
+            ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
             ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
@@ -140,7 +160,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 filters = new AssistantFilterModel();
             }
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}, {_parameterFunction.FormatParameters(filters)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}, {_parameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(filters, true))
             {
@@ -165,7 +185,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -196,7 +216,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                         Data = locationResponse
                     };
 
-                    _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                     return Content(HttpStatusCode.OK, response.Data);
                 }
 
@@ -212,7 +232,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
@@ -228,7 +248,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.NotFound, response.Data);
         }
     }

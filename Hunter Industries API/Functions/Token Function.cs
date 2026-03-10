@@ -1,5 +1,5 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Services;
 using System;
 using System.Text;
 
@@ -9,14 +9,15 @@ namespace HunterIndustriesAPI.Functions
     /// </summary>
     public class TokenFunction
     {
-        private readonly LoggerService Logger;
+        private readonly ILoggerService _Logger;
 
         /// <summary>
         /// Sets the class's global variables.
         /// </summary>
-        public TokenFunction(LoggerService _logger)
+        public TokenFunction(
+            ILoggerService _logger)
         {
-            Logger = _logger;
+            _Logger = _logger;
         }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace HunterIndustriesAPI.Functions
         /// </summary>
         public (string, string) ExtractCredentialsFromBasicAuth(string authHeaderValue)
         {
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenFunction.ExtractCredentialsFromBasicAuth called with the header value \"{authHeaderValue}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenFunction.ExtractCredentialsFromBasicAuth called with the header value \"{authHeaderValue}\".");
 
             HashFunction _hashFunction = new HashFunction();
 
@@ -47,11 +48,11 @@ namespace HunterIndustriesAPI.Functions
             catch (Exception ex)
             {
                 string message = "Failed to extract the username and password from the basic header.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenFunction.ExtractCredentialsFromBasicAuth returned {username} | {password}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenFunction.ExtractCredentialsFromBasicAuth returned {username} | {password}.");
             return (username, password);
         }
 

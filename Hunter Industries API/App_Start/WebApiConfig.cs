@@ -1,6 +1,9 @@
-﻿using HunterIndustriesAPI.Filters;
+﻿using HunterIndustriesAPI.Abstractions;
+using HunterIndustriesAPI.Filters;
+using HunterIndustriesAPI.Implementations;
 using HunterIndustriesAPI.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -31,6 +34,16 @@ namespace HunterIndustriesAPI
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
             config.MapHttpAttributeRoutes(new VersionedDirectRouteProvider());
+
+            ServiceCollection services = new ServiceCollection();
+            services.AddSingleton<IFileSystem, FileSystemWrapper>();
+            services.AddSingleton<IDatabaseOptions, DatabaseOptionsProvider>();
+            services.AddSingleton<IDatabase, DatabaseWrapper>();
+            services.AddSingleton<IClock, SystemClockProvider>();
+            services.AddTransient<ILoggerService, LoggerServiceWrapper>();
+
+            ServiceProvider provider = services.BuildServiceProvider();
+            config.DependencyResolver = new DependencyResolver(provider);
 
             DatabaseModel.ConnectionString = ConfigurationManager.AppSettings["SQLConnectionString"];
             DatabaseModel.SQLFiles = ConfigurationManager.AppSettings["SQLFiles"];

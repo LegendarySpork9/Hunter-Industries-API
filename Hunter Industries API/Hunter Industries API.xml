@@ -4,6 +4,71 @@
         <name>Hunter Industries API</name>
     </assembly>
     <members>
+        <member name="T:HunterIndustriesAPI.Abstractions.IClock">
+            <summary>
+            Interface for the DateTime object.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Abstractions.IClock.UtcNow">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Abstractions.IClock.DefaultDate">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Abstractions.IDatabase">
+            <summary>
+            Interface for the database.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.IDatabase.Query``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.IDatabase.QuerySingle``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.IDatabase.Execute(System.String,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.IDatabase.ExecuteScalar(System.String,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Abstractions.IDatabaseOptions">
+            <summary>
+            Interface for the database options.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Abstractions.IDatabaseOptions.ConnectionString">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Abstractions.IDatabaseOptions.SQLFiles">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Abstractions.IFileSystem">
+            <summary>
+            Interface for the file system operations.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.IFileSystem.ReadAllText(System.String)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Abstractions.ILoggerService">
+            <summary>
+            Interface for the logger service.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.ILoggerService.LogMessage(System.String,System.String,System.String)">
+            <summary>
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.BundleConfig">
             <summary>
             </summary>
@@ -48,6 +113,10 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.Get(HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel)">
              <summary>
              Returns a collection of assistant configurations.
@@ -82,6 +151,10 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.Get(HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel)">
              <summary>
              Returns the deletion value of an assistant.
@@ -110,6 +183,10 @@
              <param name="request">An object containing the deletion value.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.VersionController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.VersionController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -144,6 +221,10 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.LocationController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Controllers.Assistant.LocationController.Get(HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel)">
              <summary>
              Returns the location details of an assistants.
@@ -175,6 +256,10 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Controllers.AuditController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Controllers.AuditController.Get(HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel)">
              <summary>
              Returns a collection of calls made to the api.
@@ -199,6 +284,10 @@
              <param name="id">The id number of the user.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -268,6 +357,10 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.Get(System.String)">
              <summary>
              Returns the server events for the given component.
@@ -301,6 +394,10 @@
              <param name="request">An object containing the event.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -341,6 +438,10 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Controllers.TokenController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Controllers.TokenController.Post(HunterIndustriesAPI.Models.Requests.AuthenticationModel)">
              <summary>
              Creates a bearer token.
@@ -358,6 +459,10 @@
              <param name="request">The application identifier.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.User.UserController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -434,6 +539,10 @@
              <param name="id">The id number of the user.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.User.UserSettingsController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -574,6 +683,34 @@
             Adds the response examples to the Swagger UI.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Filters.DependencyResolver">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.#ctor(System.IServiceProvider)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.BeginScope">
+            <summary>
+            Creates a new dependency scope.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.GetService(System.Type)">
+            <summary>
+            Returns the service for the given type.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.GetServices(System.Type)">
+            <summary>
+            Returns all services for the given type.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.Dispose">
+            <summary>
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter">
             <summary>
             </summary>
@@ -707,7 +844,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -737,6 +874,76 @@
         </member>
         <member name="M:HunterIndustriesAPI.WebApiApplication.Application_Start">
             <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Implementations.DatabaseWrapper">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.Query``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Returns a list of the given model from the database.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.QuerySingle``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Returns the given field from the database.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.Execute(System.String,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Returns the result of the execution for given query.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.ExecuteScalar(System.String,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Returns the result of the execution for given query.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Implementations.DatabaseOptionsProvider">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Implementations.DatabaseOptionsProvider.ConnectionString">
+            <summary>
+            Returns the ConnectionString from the DatabaseModel.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Implementations.DatabaseOptionsProvider.SQLFiles">
+            <summary>
+            Returns the SQLFiles from the DatabaseModel.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Implementations.FileSystemWrapper">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.FileSystemWrapper.ReadAllText(System.String)">
+            <summary>
+            Returns the text in a given file.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Implementations.LoggerServiceWrapper">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.LoggerServiceWrapper.LogMessage(System.String,System.String,System.String)">
+            <summary>
+            Logs the given message to the log file.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Implementations.SystemClockProvider">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Implementations.SystemClockProvider.UtcNow">
+            <summary>
+            Returns the current UTC Date and time.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Implementations.SystemClockProvider.DefaultDate">
+            <summary>
+            Returns the default date and time.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.DatabaseModel">
@@ -1625,7 +1832,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1635,7 +1842,7 @@
             Returns all configuration records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.GetTotalConfigs(System.Data.SqlClient.SqlCommand)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.GetTotalConfigs(System.String,System.String)">
             <summary>
             Returns the number of configuration records that match the parameters.
             </summary>
@@ -1659,7 +1866,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1678,7 +1885,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.LocationService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.LocationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1697,7 +1904,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.VersionService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.VersionService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1716,7 +1923,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IClock)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1736,7 +1943,7 @@
             Returns all audit history records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.Data.SqlClient.SqlCommand)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.Int32,System.String,System.String,System.DateTime)">
             <summary>
             Returns the number of audit history records that match the parameters.
             </summary>
@@ -1745,7 +1952,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ChangeService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.ChangeService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1802,7 +2009,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Services.ServerStatus.ServerInformationService)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1841,7 +2048,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Services.ServerStatus.ServerInformationService)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1860,7 +2067,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1889,7 +2096,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.TokenService.#ctor(System.String,HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.TokenService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,System.String)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1918,7 +2125,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>
@@ -1972,7 +2179,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.#ctor(HunterIndustriesAPI.Services.LoggerService)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
             Sets the class's global variables.
             </summary>

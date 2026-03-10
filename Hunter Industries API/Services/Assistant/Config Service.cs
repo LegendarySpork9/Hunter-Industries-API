@@ -1,11 +1,11 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects.Assistant;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
@@ -14,14 +14,23 @@ namespace HunterIndustriesAPI.Services.Assistant
     /// </summary>
     public class ConfigService
     {
-        private readonly LoggerService Logger;
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabaseOptions _Options;
+        private readonly IDatabase _Database;
 
         /// <summary>
         /// Sets the class's global variables.
         /// </summary>
-        public ConfigService(LoggerService _logger)
+        public ConfigService(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabaseOptions _options,
+            IDatabase _database)
         {
-            Logger = _logger;
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Options = _options;
+            _Database = _database;
         }
 
         /// <summary>
@@ -31,109 +40,101 @@ namespace HunterIndustriesAPI.Services.Assistant
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             List<AssistantConfiguration> assistantConfigurations = new List<AssistantConfiguration>();
-
             int totalConfigs = 0;
             string mostRecentVersion = string.Empty;
-            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetAssistantConfig.sql");
-
-            if (!string.IsNullOrEmpty(assistantName))
-            {
-                sqlQuery += "\nand AI.Name = @AssistantName";
-            }
-
-            if (!string.IsNullOrEmpty(assistantId))
-            {
-                sqlQuery += "\nand AI.IDNumber = @AssistantID";
-            }
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\GetAssistantConfig.sql");
+                List<SqlParameter> parameterList = new List<SqlParameter>();
+
+                if (!string.IsNullOrEmpty(assistantName))
                 {
-                    await connection.OpenAsync();
-
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                    {
-                        if (sqlQuery.Contains("@AssistantName"))
-                        {
-                            command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                        }
-
-                        if (sqlQuery.Contains("@AssistantID"))
-                        {
-                            command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
-                        }
-
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                AssistantConfiguration configuration = new AssistantConfiguration()
-                                {
-                                    AssistantName = dataReader.GetString(0),
-                                    IdNumber = dataReader.GetString(1),
-                                    AssignedUser = dataReader.GetString(2),
-                                    HostName = dataReader.GetString(3),
-                                    Deletion = bool.Parse(dataReader.GetString(4)),
-                                    Version = dataReader.GetString(5)
-                                };
-
-                                assistantConfigurations.Add(configuration);
-                            }
-                        }
-
-                        connection.Close();
-
-                        totalConfigs = await GetTotalConfigs(command);
-                        mostRecentVersion = await GetMostRecentVersion();
-                    }
+                    sql += "\nand AI.Name = @AssistantName";
+                    parameterList.Add(new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName });
                 }
+
+                if (!string.IsNullOrEmpty(assistantId))
+                {
+                    sql += "\nand AI.IDNumber = @AssistantID";
+                    parameterList.Add(new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId });
+                }
+
+                (List<AssistantConfiguration> results, Exception ex) = await _Database.Query(sql, reader => new AssistantConfiguration()
+                {
+                    AssistantName = reader.GetString(0),
+                    IdNumber = reader.GetString(1),
+                    AssignedUser = reader.GetString(2),
+                    HostName = reader.GetString(3),
+                    Deletion = bool.Parse(reader.GetString(4)),
+                    Version = reader.GetString(5)
+                }, parameterList.ToArray());
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ConfigService.GetAssistantConfig.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                assistantConfigurations = results;
+                totalConfigs = await GetTotalConfigs(assistantName, assistantId);
+                mostRecentVersion = await GetMostRecentVersion();
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ConfigService.GetAssistantConfig.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {_parameterFunction.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {_parameterFunction.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
             return (assistantConfigurations, totalConfigs, mostRecentVersion);
         }
 
         /// <summary>
         /// Returns the number of configuration records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalConfigs(SqlCommand command)
+        private async Task<int> GetTotalConfigs(string assistantName, string assistantId)
         {
             int totalRecords = 0;
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
-                {
-                    await connection.OpenAsync();
-                    command.Connection = connection;
-                    command.CommandText = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetTotalAssistantConfig.sql");
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\GetTotalAssistantConfig.sql");
+                List<SqlParameter> parameterList = new List<SqlParameter>();
 
-                    using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                    {
-                        while (await dataReader.ReadAsync())
-                        {
-                            totalRecords = dataReader.GetInt32(0);
-                        }
-                    }
+                if (!string.IsNullOrEmpty(assistantName))
+                {
+                    parameterList.Add(new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName });
                 }
+
+                if (!string.IsNullOrEmpty(assistantId))
+                {
+                    parameterList.Add(new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId });
+                }
+
+                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ConfigService.GetTotalConfigs.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                totalRecords = result;
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ConfigService.GetTotalConfigs.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return totalRecords;
@@ -145,32 +146,30 @@ namespace HunterIndustriesAPI.Services.Assistant
         public async Task<string> GetMostRecentVersion()
         {
             string version = string.Empty;
-            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetMostRecentAssistantVersion.sql");
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
-                {
-                    await connection.OpenAsync();
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\GetMostRecentAssistantVersion.sql");
+                (string result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetString(0));
 
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                    {
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                version = dataReader.GetString(0);
-                            }
-                        }
-                    }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ConfigService.GetMostRecentVersion.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (result != null)
+                {
+                    version = result;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ConfigService.GetMostRecentVersion.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return version;
@@ -183,35 +182,33 @@ namespace HunterIndustriesAPI.Services.Assistant
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             bool exists = false;
-            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\AssistantExists.sql");
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\AssistantExists.sql");
+                SqlParameter[] parameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                };
 
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetString(1)), parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ConfigService.AssistantExists.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                foreach (var result in results)
+                {
+                    if ((result.Item1 == assistantName && result.Item2 == assistantId) || result.Item2 == assistantId)
                     {
-                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                        command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
-
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                string name = dataReader.GetString(0);
-                                string idNumber = dataReader.GetString(1);
-
-                                if ((name == assistantName && idNumber == assistantId) || idNumber == assistantId)
-                                {
-                                    exists = true;
-                                }
-                            }
-                        }
+                        exists = true;
                     }
                 }
             }
@@ -219,11 +216,11 @@ namespace HunterIndustriesAPI.Services.Assistant
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ConfigService.AssistantExists.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists returned {exists}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists returned {exists}.");
             return exists;
         }
 
@@ -234,64 +231,84 @@ namespace HunterIndustriesAPI.Services.Assistant
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
 
             bool created = true;
-            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\CreateLocation.sql");
-            int rowsAffected;
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateLocation.sql");
+                SqlParameter[] locationParameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@Hostname", SqlDbType.VarChar) { Value = hostName },
+                    new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = "PlaceHolder" }
+                };
 
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                (object locationId, Exception ex) = await _Database.ExecuteScalar(sql, locationParameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ConfigService.AssistantConfigCreated.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                    created = false;
+                }
+
+                if (locationId == null)
+                {
+                    created = false;
+                }
+
+                if (created)
+                {
+                    sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateUser.sql");
+                    SqlParameter[] userParameters =
                     {
-                        command.Parameters.Add(new SqlParameter("@Hostname", hostName));
-                        command.Parameters.Add(new SqlParameter("@IPAddress", "PlaceHolder"));
-                        var locationId = await command.ExecuteScalarAsync();
+                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = assignedUser }
+                    };
 
-                        if (locationId == null)
+                    (object userId, Exception ex2) = await _Database.ExecuteScalar(sql, userParameters);
+
+                    if (ex2 != null)
+                    {
+                        string message = "An error occured when trying to run ConfigService.AssistantConfigCreated.";
+                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex2.ToString(), message);
+
+                        created = false;
+                    }
+
+                    if (userId == null)
+                    {
+                        created = false;
+                    }
+
+                    if (created)
+                    {
+                        sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateAssistantConfiguration.sql");
+                        SqlParameter[] configParameters =
                         {
+                            new SqlParameter("@LocationID", SqlDbType.Int) { Value = locationId },
+                            new SqlParameter("@UserID", SqlDbType.Int) { Value = userId },
+                            new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
+                            new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                        };
+
+                        (int rowsAffected, Exception ex3) = await _Database.Execute(sql, configParameters);
+
+                        if (ex3 != null)
+                        {
+                            string message = "An error occured when trying to run ConfigService.AssistantConfigCreated.";
+                            _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                            _Logger.LogMessage(StandardValues.LoggerValues.Error, ex3.ToString(), message);
+
                             created = false;
                         }
 
-                        if (created)
+                        if (rowsAffected != 1)
                         {
-                            sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\CreateUser.sql");
-                            rowsAffected = 0;
-
-                            using (SqlCommand commandTwo = new SqlCommand(sqlQuery, connection))
-                            {
-                                commandTwo.Parameters.Add(new SqlParameter("@Name", assignedUser));
-                                var userId = await commandTwo.ExecuteScalarAsync();
-
-                                if (userId == null)
-                                {
-                                    created = false;
-                                }
-
-                                if (created)
-                                {
-                                    sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\CreateAssistantConfiguration.sql");
-                                    rowsAffected = 0;
-
-                                    using (SqlCommand commandThree = new SqlCommand(sqlQuery, connection))
-                                    {
-                                        commandThree.Parameters.Add(new SqlParameter("@LocationID", locationId));
-                                        commandThree.Parameters.Add(new SqlParameter("@UserID", userId));
-                                        commandThree.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                                        commandThree.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-                                        rowsAffected = await commandThree.ExecuteNonQueryAsync();
-
-                                        if (rowsAffected != 1)
-                                        {
-                                            created = false;
-                                        }
-                                    }
-                                }
-                            }
+                            created = false;
                         }
                     }
                 }
@@ -300,13 +317,13 @@ namespace HunterIndustriesAPI.Services.Assistant
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ConfigService.AssistantConfigCreated.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
 
                 created = false;
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated returned {created}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated returned {created}.");
             return created;
         }
     }

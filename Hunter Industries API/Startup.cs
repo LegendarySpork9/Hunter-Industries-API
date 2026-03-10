@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
-using System.Net.Http.Formatting;
-using System.Reflection;
-using System.Text;
-using System.Web;
+﻿using System.Text;
 using System.Web.Http;
 using HunterIndustriesAPI.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
-using Newtonsoft.Json.Serialization;
 using Owin;
 
 [assembly: OwinStartup(typeof(HunterIndustriesAPI.Startup))]
@@ -30,7 +18,7 @@ namespace HunterIndustriesAPI
         /// </summary>
         public void Configuration(IAppBuilder app)
         {
-            var config = new HttpConfiguration();
+            HttpConfiguration config = new HttpConfiguration();
 
             app.UseWebApi(config);
 

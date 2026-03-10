@@ -1,3 +1,4 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
@@ -22,6 +23,27 @@ namespace HunterIndustriesAPI.Controllers
     [RequiredPolicyAuthorisationAttributeFilter("APIControlPanel")]
     public class AuditController : ApiController
     {
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabase _Database;
+        private readonly IDatabaseOptions _Options;
+        private readonly IClock _Clock;
+
+        /// <summary>
+        /// </summary>
+        public AuditController(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabase _database,
+            IDatabaseOptions _options,
+            IClock _clock)
+        {
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Database = _database;
+            _Options = _options;
+            _Clock = _clock;
+        }
+
         /// <summary>
         /// Returns a collection of calls made to the api.
         /// </summary>
@@ -39,9 +61,8 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get([FromUri] AuditHistoryFilterModel filters)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
             ParameterFunction _parameterFunction = new ParameterFunction();
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
             ResponseFunction _responseFunction = new ResponseFunction();
@@ -58,7 +79,7 @@ namespace HunterIndustriesAPI.Controllers
                 filters.PageSize = 200;
             }
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {_parameterFunction.FormatParameters(filters)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {_parameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(filters))
             {
@@ -73,7 +94,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -94,7 +115,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -115,7 +136,7 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -136,20 +157,19 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(int id)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
             ParameterFunction _parameterFunction = new ParameterFunction();
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_logger);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {_parameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {_parameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("audithistory"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
                     new string[] { id.ToString() });
 
-            var result = await _auditHistoryService.GetAuditHistory(id, null, null, DateTime.SpecifyKind(DateTime.ParseExact("01/01/1900", "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), 25, 1);
+            var result = await _auditHistoryService.GetAuditHistory(id, null, null, _Clock.DefaultDate, 25, 1);
             List<AuditHistoryRecord> auditHistories = result.Item1;
 
             if (auditHistories.Count == 0)
@@ -163,7 +183,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -173,7 +193,7 @@ namespace HunterIndustriesAPI.Controllers
                 Data = auditHistories[0]
             };
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
             return Content(HttpStatusCode.OK, response.Data);
         }
     }

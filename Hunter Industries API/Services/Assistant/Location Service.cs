@@ -1,10 +1,11 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
@@ -13,14 +14,23 @@ namespace HunterIndustriesAPI.Services.Assistant
     /// </summary>
     public class LocationService
     {
-        private readonly LoggerService Logger;
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabaseOptions _Options;
+        private readonly IDatabase _Database;
 
         /// <summary>
         /// Sets the class's global variables.
         /// </summary>
-        public LocationService(LoggerService _logger)
+        public LocationService(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabaseOptions _options,
+            IDatabase _database)
         {
-            Logger = _logger;
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Options = _options;
+            _Database = _database;
         }
 
         /// <summary>
@@ -30,46 +40,48 @@ namespace HunterIndustriesAPI.Services.Assistant
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             LocationResponseModel location = new LocationResponseModel();
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Location\GetAssistantLocation.sql");
+                SqlParameter[] parameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                };
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\GetAssistantLocation.sql"), connection))
-                    {
-                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                        command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
+                (LocationResponseModel result, Exception ex) = await _Database.QuerySingle(sql, reader => new LocationResponseModel()
+                {
+                    AssistantName = reader.GetString(0),
+                    IdNumber = reader.GetString(1),
+                    HostName = reader.GetString(2),
+                    IPAddress = reader.GetString(3)
+                }, parameters);
 
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                location = new LocationResponseModel()
-                                {
-                                    AssistantName = dataReader.GetString(0),
-                                    IdNumber = dataReader.GetString(1),
-                                    HostName = dataReader.GetString(2),
-                                    IPAddress = dataReader.GetString(3)
-                                };
-                            }
-                        }
-                    }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run LocationService.GetAssistantLocation.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (result != null)
+                {
+                    location = result;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run LocationService.GetAssistantLocation.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {_parameterFunction.FormatParameters(location)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {_parameterFunction.FormatParameters(location)}.");
             return location;
         }
 
@@ -80,61 +92,63 @@ namespace HunterIndustriesAPI.Services.Assistant
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
 
             bool updated = true;
-            string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\AssistantLocationUpdated.sql");
-            int rowsAffected;
-
-            if (string.IsNullOrEmpty(hostName))
-            {
-                sqlQuery = sqlQuery.Replace("HostName = @HostName, ", "");
-            }
-
-            if (string.IsNullOrEmpty(ipAddress))
-            {
-                sqlQuery = sqlQuery.Replace(", IPAddress = @IPAddress", "");
-            }
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Location\AssistantLocationUpdated.sql");
+
+                if (string.IsNullOrEmpty(hostName))
                 {
-                    await connection.OpenAsync();
+                    sql = sql.Replace("HostName = @HostName, ", "");
+                }
 
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                    {
-                        command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
-                        command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
+                if (string.IsNullOrEmpty(ipAddress))
+                {
+                    sql = sql.Replace(", IPAddress = @IPAddress", "");
+                }
 
-                        if (!string.IsNullOrEmpty(hostName))
-                        {
-                            command.Parameters.Add(new SqlParameter("@HostName", hostName));
-                        }
+                List<SqlParameter> parameterList = new List<SqlParameter>
+                {
+                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                };
 
-                        if (!string.IsNullOrEmpty(ipAddress))
-                        {
-                            command.Parameters.Add(new SqlParameter("@IPAddress", ipAddress));
-                        }
+                if (!string.IsNullOrEmpty(hostName))
+                {
+                    parameterList.Add(new SqlParameter("@HostName", SqlDbType.VarChar) { Value = hostName });
+                }
 
-                        rowsAffected = await command.ExecuteNonQueryAsync();
+                if (!string.IsNullOrEmpty(ipAddress))
+                {
+                    parameterList.Add(new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress });
+                }
 
-                        if (rowsAffected != 1)
-                        {
-                            updated = false;
-                        }
-                    }
+                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameterList.ToArray());
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run LocationService.AssistantLocationUpdated.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (rowsAffected != 1)
+                {
+                    updated = false;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run LocationService.AssistantLocationUpdated.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated returned {updated}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated returned {updated}.");
             return updated;
         }
     }
