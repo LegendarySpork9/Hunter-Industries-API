@@ -1,4 +1,4 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects.Assistant;
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
@@ -26,7 +27,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Returns all configuration records that match the parameters.
         /// </summary>
-        public (List<AssistantConfiguration>, int, string) GetAssistantConfig(string assistantName, string assistantId)
+        public async Task<(List<AssistantConfiguration>, int, string)> GetAssistantConfig(string assistantName, string assistantId)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -52,7 +53,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -66,9 +67,9 @@ namespace HunterIndustriesAPI.Services.Assistant
                             command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
                         }
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 AssistantConfiguration configuration = new AssistantConfiguration()
                                 {
@@ -86,8 +87,8 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                         connection.Close();
 
-                        totalConfigs = GetTotalConfigs(command);
-                        mostRecentVersion = GetMostRecentVersion();
+                        totalConfigs = await GetTotalConfigs(command);
+                        mostRecentVersion = await GetMostRecentVersion();
                     }
                 }
             }
@@ -106,7 +107,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Returns the number of configuration records that match the parameters.
         /// </summary>
-        private int GetTotalConfigs(SqlCommand command)
+        private async Task<int> GetTotalConfigs(SqlCommand command)
         {
             int totalRecords = 0;
 
@@ -114,13 +115,13 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     command.Connection = connection;
                     command.CommandText = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetTotalAssistantConfig.sql");
 
-                    using (SqlDataReader dataReader = command.ExecuteReader())
+                    using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                     {
-                        while (dataReader.Read())
+                        while (await dataReader.ReadAsync())
                         {
                             totalRecords = dataReader.GetInt32(0);
                         }
@@ -141,7 +142,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Returns the most recent version number.
         /// </summary>
-        public string GetMostRecentVersion()
+        public async Task<string> GetMostRecentVersion()
         {
             string version = string.Empty;
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Configuration\GetMostRecentAssistantVersion.sql");
@@ -150,13 +151,13 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 version = dataReader.GetString(0);
                             }
@@ -178,7 +179,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Returns whether a config already exists with the given details.
         /// </summary>
-        public bool AssistantExists(string assistantName, string assistantId)
+        public async Task<bool> AssistantExists(string assistantName, string assistantId)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -191,16 +192,16 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                         command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 string name = dataReader.GetString(0);
                                 string idNumber = dataReader.GetString(1);
@@ -229,7 +230,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Creates the assistant configuration.
         /// </summary>
-        public bool AssistantConfigCreated(string assistantName, string assistantId, string assignedUser, string hostName)
+        public async Task<bool> AssistantConfigCreated(string assistantName, string assistantId, string assignedUser, string hostName)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -243,13 +244,13 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Hostname", hostName));
                         command.Parameters.Add(new SqlParameter("@IPAddress", "PlaceHolder"));
-                        var locationId = command.ExecuteScalar();
+                        var locationId = await command.ExecuteScalarAsync();
 
                         if (locationId == null)
                         {
@@ -264,7 +265,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                             using (SqlCommand commandTwo = new SqlCommand(sqlQuery, connection))
                             {
                                 commandTwo.Parameters.Add(new SqlParameter("@Name", assignedUser));
-                                var userId = commandTwo.ExecuteScalar();
+                                var userId = await commandTwo.ExecuteScalarAsync();
 
                                 if (userId == null)
                                 {
@@ -282,7 +283,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                                         commandThree.Parameters.Add(new SqlParameter("@UserID", userId));
                                         commandThree.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                                         commandThree.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-                                        rowsAffected = commandThree.ExecuteNonQuery();
+                                        rowsAffected = await commandThree.ExecuteNonQueryAsync();
 
                                         if (rowsAffected != 1)
                                         {

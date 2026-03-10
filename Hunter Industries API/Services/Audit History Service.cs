@@ -1,4 +1,4 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects;
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services
 {
@@ -26,7 +27,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Logs the call made to the database.
         /// </summary>
-        public (bool, int) LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[] parameters = null)
+        public async Task<(bool, int)> LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[] parameters = null)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -40,7 +41,7 @@ namespace HunterIndustriesAPI.Services
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\LogRequest.sql"), connection))
                     {
@@ -49,7 +50,7 @@ namespace HunterIndustriesAPI.Services
                         command.Parameters.Add(new SqlParameter("@MethodID", methodId));
                         command.Parameters.Add(new SqlParameter("@StatusID", statusId));
                         command.Parameters.Add(new SqlParameter("@Parameters", (object)formattedParameters ?? DBNull.Value));
-                        var result = command.ExecuteScalar();
+                        var result = await command.ExecuteScalarAsync();
 
                         if (result != null)
                         {
@@ -74,7 +75,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Logs any authorisation calls made to the database.
         /// </summary>
-        public void LogLoginAttempt(int auditId, bool isSuccessful, string username = null, string password = null, string phrase = null)
+        public async Task LogLoginAttempt(int auditId, bool isSuccessful, string username = null, string password = null, string phrase = null)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -84,7 +85,7 @@ namespace HunterIndustriesAPI.Services
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\LogLoginAttempt.sql"), connection))
                     {
@@ -93,7 +94,7 @@ namespace HunterIndustriesAPI.Services
                         command.Parameters.Add(new SqlParameter("@Phrase", (object)phrase ?? DBNull.Value));
                         command.Parameters.Add(new SqlParameter("@AuditID", auditId));
                         command.Parameters.Add(new SqlParameter("@IsSuccessful", isSuccessful));
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
                     }
                 }
             }
@@ -109,7 +110,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all audit history records that match the parameters.
         /// </summary>
-        public (List<AuditHistoryRecord>, int) GetAuditHistory(int auditId, string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
+        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId, string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -148,7 +149,7 @@ fetch next @PageSize rows only";
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -175,12 +176,12 @@ fetch next @PageSize rows only";
                             command.Parameters.Add(new SqlParameter("@FromDate", fromDate));
                         }
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
                             AuditHistoryRecord auditHistory = new AuditHistoryRecord();
                             List<ChangeRecord> changes = new List<ChangeRecord>();
 
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 if (dataReader.GetInt32(0) == auditHistory.Id)
                                 {
@@ -265,7 +266,7 @@ fetch next @PageSize rows only";
                             auditHistories.Add(auditHistory);
                         }
 
-                        totalRecords = GetTotalAuditHistory(command);
+                        totalRecords = await GetTotalAuditHistory(command);
                     }
                 }
             }
@@ -284,7 +285,7 @@ fetch next @PageSize rows only";
         /// <summary>
         /// Returns the number of audit history records that match the parameters.
         /// </summary>
-        private int GetTotalAuditHistory(SqlCommand command)
+        private async Task<int> GetTotalAuditHistory(SqlCommand command)
         {
             int totalRecords = 0;
 
@@ -292,7 +293,7 @@ fetch next @PageSize rows only";
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     command.Connection = connection;
                     command.CommandText = File.ReadAllText($@"{DatabaseModel.SQLFiles}\Audit History\GetTotalAuditHistory.sql");
@@ -312,9 +313,9 @@ fetch next @PageSize rows only";
                         command.CommandText += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
                     }
 
-                    using (SqlDataReader dataReader = command.ExecuteReader())
+                    using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                     {
-                        while (dataReader.Read())
+                        while (await dataReader.ReadAsync())
                         {
                             totalRecords = dataReader.GetInt32(0);
                         }

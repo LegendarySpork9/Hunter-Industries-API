@@ -1,4 +1,4 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.ServerStatus
 {
@@ -27,7 +28,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns all server alert records that match the parameters.
         /// </summary>
-        public (List<ServerAlertRecord>, int) GetServerAlerts(int pageSize, int pageNumber)
+        public async Task<(List<ServerAlertRecord>, int)> GetServerAlerts(int pageSize, int pageNumber)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -40,16 +41,16 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlerts.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@PageSize", pageSize));
                         command.Parameters.Add(new SqlParameter("@PageNumber", pageNumber));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 serverAlerts.Add(new ServerAlertRecord()
                                 {
@@ -71,7 +72,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     }
                 }
 
-                totalRecords = GetTotalServerAlerts();
+                totalRecords = await GetTotalServerAlerts();
             }
 
             catch (Exception ex)
@@ -88,7 +89,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns the server alert record for the given id.
         /// </summary>
-        public ServerAlertRecord GetServerAlert(int id)
+        public async Task<ServerAlertRecord> GetServerAlert(int id)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert called with the parameters \"{id}\".");
 
@@ -98,15 +99,15 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetServerAlert.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@AlertID", id));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 serverAlert = new ServerAlertRecord()
                                 {
@@ -143,7 +144,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns the number of server alert records in the table.
         /// </summary>
-        private int GetTotalServerAlerts()
+        private async Task<int> GetTotalServerAlerts()
         {
             int totalRecords = 0;
 
@@ -151,13 +152,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\GetTotalServerAlerts.sql"), connection))
                     {
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 totalRecords = dataReader.GetInt32(0);
                             }
@@ -179,7 +180,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Logs the server alert.
         /// </summary>
-        public (bool, int) LogServerAlert(ServerAlertModel serverAlert)
+        public async Task<(bool, int)> LogServerAlert(ServerAlertModel serverAlert)
         {
             ServerInformationService _serverInformationService = new ServerInformationService(Logger);
             ParameterFunction _parameterFunction = new ParameterFunction();
@@ -193,16 +194,16 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql"), connection))
                     {
-                        command.Parameters.Add(new SqlParameter("@ServerID", _serverInformationService.GetServer(serverAlert.HostName, serverAlert.Game, serverAlert.GameVersion)));
+                        command.Parameters.Add(new SqlParameter("@ServerID", await _serverInformationService.GetServer(serverAlert.HostName, serverAlert.Game, serverAlert.GameVersion)));
                         command.Parameters.Add(new SqlParameter("@Reporter", serverAlert.Reporter));
                         command.Parameters.Add(new SqlParameter("@Component", serverAlert.Component));
                         command.Parameters.Add(new SqlParameter("@ComponentStatus", serverAlert.ComponentStatus));
                         command.Parameters.Add(new SqlParameter("@AlertStatus", serverAlert.AlertStatus));
-                        var result = command.ExecuteScalar();
+                        var result = await command.ExecuteScalarAsync();
 
                         if (result == null)
                         {
@@ -233,7 +234,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns whether a server alert exists with the given id.
         /// </summary>
-        public bool ServerAlertExists(int id)
+        public async Task<bool> ServerAlertExists(int id)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -245,15 +246,15 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@AlertID", id));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 exists = true;
                             }
@@ -276,7 +277,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Updates the status of the server alert.
         /// </summary>
-        public bool ServerAlertUpdated(int id, string value)
+        public async Task<bool> ServerAlertUpdated(int id, string value)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated called with the parameters \"{id}\", \"{value}\".");
 
@@ -287,13 +288,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Alerts\ServerAlertUpdated.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@AlertStatus", value));
                         command.Parameters.Add(new SqlParameter("@AlertID", id));
-                        rowsAffected = command.ExecuteNonQuery();
+                        rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {

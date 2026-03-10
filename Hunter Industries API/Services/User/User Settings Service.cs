@@ -1,4 +1,4 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Requests.Bodies.User;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.User
 {
@@ -27,7 +28,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns all user settings that match the parameters.
         /// </summary>
-        public List<UserSettingRecord> GetUserSettings(int id, string application)
+        public async Task<List<UserSettingRecord>> GetUserSettings(int id, string application)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -52,7 +53,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -66,9 +67,9 @@ namespace HunterIndustriesAPI.Services.User
                             command.Parameters.Add(new SqlParameter("@Application", application));
                         }
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 if (string.IsNullOrEmpty(currentApplication) || currentApplication != dataReader.GetString(0))
                                 {
@@ -119,7 +120,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns the setting that matches the id.
         /// </summary>
-        public SettingRecord GetUserSetting(int id)
+        public async Task<SettingRecord> GetUserSetting(int id)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting called with the parameters \"{id}\".");
 
@@ -130,15 +131,15 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Id", id));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 setting.Id = dataReader.GetInt32(0);
                                 setting.Name = dataReader.GetString(1);
@@ -163,7 +164,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns whether a user setting already exists with the given values.
         /// </summary>
-        public bool UserSettingExists(string username, string application, string settingName)
+        public async Task<bool> UserSettingExists(string username, string application, string settingName)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -176,7 +177,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -184,9 +185,9 @@ namespace HunterIndustriesAPI.Services.User
                         command.Parameters.Add(new SqlParameter("@Application", application));
                         command.Parameters.Add(new SqlParameter("@Name", settingName));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 exists = true;
                             }
@@ -209,7 +210,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns whether a user setting already exists with the given id.
         /// </summary>
-        public bool UserSettingExists(int id)
+        public async Task<bool> UserSettingExists(int id)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -222,15 +223,15 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Id", id));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 exists = true;
                             }
@@ -253,7 +254,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Adds the user setting.
         /// </summary>
-        public bool UserSettingAdded(UserSettingsModel userSetting)
+        public async Task<bool> UserSettingAdded(UserSettingsModel userSetting)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -265,7 +266,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingAdded.sql"), connection))
                     {
@@ -273,7 +274,7 @@ namespace HunterIndustriesAPI.Services.User
                         command.Parameters.Add(new SqlParameter("@Application", userSetting.Application));
                         command.Parameters.Add(new SqlParameter("@Name", userSetting.SettingName));
                         command.Parameters.Add(new SqlParameter("@Value", userSetting.SettingValue));
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {
@@ -299,7 +300,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Updates the value of the given setting.
         /// </summary>
-        public bool UserSettingUpdated(int id, string value)
+        public async Task<bool> UserSettingUpdated(int id, string value)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated called with the parameters \"{id}\", \"{value}\".");
 
@@ -310,13 +311,13 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\User Settings\UserSettingUpdated.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Value", value));
                         command.Parameters.Add(new SqlParameter("@Id", id));
-                        rowsAffected = command.ExecuteNonQuery();
+                        rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {

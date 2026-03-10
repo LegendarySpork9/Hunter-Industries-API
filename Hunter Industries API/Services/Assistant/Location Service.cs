@@ -1,10 +1,11 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using System;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
@@ -25,7 +26,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Returns the location information about the given assistant.
         /// </summary>
-        public LocationResponseModel GetAssistantLocation(string assistantName, string assistantId)
+        public async Task<LocationResponseModel> GetAssistantLocation(string assistantName, string assistantId)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -37,16 +38,16 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Location\GetAssistantLocation.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                         command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 location = new LocationResponseModel()
                                 {
@@ -75,7 +76,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Updates the location information of the given assistant.
         /// </summary>
-        public bool AssistantLocationUpdated(string assistantName, string assistantId, string hostName, string ipAddress)
+        public async Task<bool> AssistantLocationUpdated(string assistantName, string assistantId, string hostName, string ipAddress)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -99,7 +100,7 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -116,7 +117,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                             command.Parameters.Add(new SqlParameter("@IPAddress", ipAddress));
                         }
 
-                        rowsAffected = command.ExecuteNonQuery();
+                        rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {
