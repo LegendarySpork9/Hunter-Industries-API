@@ -13,7 +13,7 @@ namespace HunterIndustriesAPI.Filters
         /// <summary>
         /// All known API versions in order. Add new versions to the end of this array.
         /// </summary>
-        public static readonly string[] ApiVersions = { "1.0", "2.0" };
+        public static readonly string[] ApiVersions = { "1.0", "1.1" };
 
         /// <summary>
         /// The route path without the api/vN.N/ prefix.

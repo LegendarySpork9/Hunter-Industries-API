@@ -1,12 +1,12 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.ServerStatus
@@ -15,14 +15,26 @@ namespace HunterIndustriesAPI.Services.ServerStatus
     /// </summary>
     public class ServerEventService
     {
-        private readonly LoggerService Logger;
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabaseOptions _Options;
+        private readonly IDatabase _Database;
+        private readonly ServerInformationService _ServerInformationService;
 
         /// <summary>
         /// Sets the class's global variables.
         /// </summary>
-        public ServerEventService(LoggerService _logger)
+        public ServerEventService(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabaseOptions _options,
+            IDatabase _database,
+            ServerInformationService _serverInformationService)
         {
-            Logger = _logger;
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Options = _options;
+            _Database = _database;
+            _ServerInformationService = _serverInformationService;
         }
 
         /// <summary>
@@ -32,50 +44,49 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents called with the parameters \"{component}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents called with the parameters \"{component}\".");
 
             List<ServerEventRecord> serverEvents = new List<ServerEventRecord>();
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Event\GetServerEvents.sql");
+                SqlParameter[] parameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@Component", SqlDbType.VarChar) { Value = component }
+                };
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\GetServerEvents.sql"), connection))
+                (List<ServerEventRecord> results, Exception ex) = await _Database.Query(sql, reader => new ServerEventRecord()
+                {
+                    Component = reader.GetString(0),
+                    Status = reader.GetString(1),
+                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
+                    Server = new RelatedServerRecord()
                     {
-                        command.Parameters.Add(new SqlParameter("@Component", component));
-
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                serverEvents.Add(new ServerEventRecord()
-                                {
-                                    Component = dataReader.GetString(0),
-                                    Status = dataReader.GetString(1),
-                                    DateOccured = DateTime.SpecifyKind(dataReader.GetDateTime(5), DateTimeKind.Utc),
-                                    Server = new RelatedServerRecord()
-                                    {
-                                        HostName = dataReader.GetString(2),
-                                        Game = dataReader.GetString(3),
-                                        GameVersion = dataReader.GetString(4)
-                                    }
-                                });
-                            }
-                        }
+                        HostName = reader.GetString(2),
+                        Game = reader.GetString(3),
+                        GameVersion = reader.GetString(4)
                     }
+                }, parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ServerEventService.GetServerEvents.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
                 }
+
+                serverEvents = results;
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerEventService.GetServerEvents.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents returned {serverEvents.Count} records.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents returned {serverEvents.Count} records.");
             return serverEvents;
         }
 
@@ -84,50 +95,55 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(bool, int)> LogServerEvent(ServerEventModel serverEvent)
         {
-            ServerInformationService _serverInformationService = new ServerInformationService(Logger);
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent called with the parameters {_parameterFunction.FormatParameters(serverEvent)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent called with the parameters {_parameterFunction.FormatParameters(serverEvent)}.");
 
             bool logged = true;
             int componentInformationId = 0;
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Event\LogServerEvent.sql");
+                SqlParameter[] parameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = await _ServerInformationService.GetServer(serverEvent.HostName, serverEvent.Game, serverEvent.GameVersion) },
+                    new SqlParameter("@Component", SqlDbType.VarChar) { Value = serverEvent.Component },
+                    new SqlParameter("@Status", SqlDbType.VarChar) { Value = serverEvent.Status }
+                };
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\LogServerEvent.sql"), connection))
-                    {
-                        command.Parameters.Add(new SqlParameter("@ServerID", await _serverInformationService.GetServer(serverEvent.HostName, serverEvent.Game, serverEvent.GameVersion)));
-                        command.Parameters.Add(new SqlParameter("@Component", serverEvent.Component));
-                        command.Parameters.Add(new SqlParameter("@Status", serverEvent.Status));
-                        var result = await command.ExecuteScalarAsync();
+                (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
 
-                        if (result == null)
-                        {
-                            logged = false;
-                        }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ServerEventService.LogServerEvent.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
 
-                        else
-                        {
-                            componentInformationId = int.Parse(result.ToString());
-                        }
-                    }
+                    logged = false;
+                }
+
+                if (result == null)
+                {
+                    logged = false;
+                }
+
+                else
+                {
+                    componentInformationId = int.Parse(result.ToString());
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerEventService.LogServerEvent.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
 
                 logged = false;
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent returned {logged}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent returned {logged}.");
             return (logged, componentInformationId);
         }
     }

@@ -199,8 +199,7 @@ namespace HunterIndustriesAPI
                                     string version = VersionedRouteAttribute.ApiVersions[i];
                                     vc.Version($"v{version}", $"Hunter Industries API V{version}").Description("This is the OpenAPI documentation for the Hunter Industries API.").Contact(contact =>
                                     {
-                                        contact.Email("Development Team");
-                                        contact.Name("");
+                                        contact.Email("api@hunter-industries.co.uk");
                                     });
                                 }
                             });

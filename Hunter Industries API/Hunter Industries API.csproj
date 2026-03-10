@@ -321,6 +321,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\IClock.cs" />
+    <Compile Include="Abstractions\IDatabase.cs" />
+    <Compile Include="Abstractions\IDatabase Options.cs" />
+    <Compile Include="Abstractions\IFile System.cs" />
+    <Compile Include="Abstractions\ILogger Service.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -345,6 +350,7 @@
     <Compile Include="Filters\Operation\Required Header Filter.cs" />
     <Compile Include="Filters\Operation\Required Parameter Operation Filter.cs" />
     <Compile Include="Filters\Operation\Response Example Operation Filter.cs" />
+    <Compile Include="Filters\Dependency Resolver.cs" />
     <Compile Include="Filters\Required Policy Authorisation Attribute Filter.cs" />
     <Compile Include="Filters\Versioned Direct Route Provider.cs" />
     <Compile Include="Filters\Versioned Route Attribute.cs" />
@@ -356,6 +362,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Implementations\Database Wrapper.cs" />
+    <Compile Include="Implementations\Database Options Provider.cs" />
+    <Compile Include="Implementations\File System Wrapper.cs" />
+    <Compile Include="Implementations\Logger Service Wrapper.cs" />
+    <Compile Include="Implementations\System Clock Provider.cs" />
     <Compile Include="Models\Database Model.cs" />
     <Compile Include="Models\Requests\Authentication Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Config Model.cs" />

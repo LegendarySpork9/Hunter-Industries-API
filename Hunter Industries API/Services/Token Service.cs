@@ -1,9 +1,10 @@
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Models;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,16 +14,27 @@ namespace HunterIndustriesAPI.Services
     /// </summary>
     public class TokenService
     {
+        private readonly ILoggerService _Logger;
+        private readonly IFileSystem _FileSystem;
+        private readonly IDatabaseOptions _Options;
+        private readonly IDatabase _Database;
         private readonly string Phrase;
+
         private string ProgramName;
-        private readonly LoggerService Logger;
 
         /// <summary>
         /// Sets the class's global variables.
         /// </summary>
-        public TokenService(string phrase, LoggerService _logger)
+        public TokenService(ILoggerService _logger,
+            IFileSystem _fileSystem,
+            IDatabaseOptions _options,
+            IDatabase _database,
+            string phrase)
         {
-            Logger = _logger;
+            _Logger = _logger;
+            _FileSystem = _fileSystem;
+            _Options = _options;
+            _Database = _database;
             Phrase = phrase;
         }
 
@@ -49,29 +61,25 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
-                {
-                    await connection.OpenAsync();
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetUsers.SQL");
+                (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(1), reader.GetString(2)));
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetUsers.SQL"), connection))
-                    {
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                usernames = usernames.Append(dataReader.GetString(1)).ToArray();
-                                passwords = passwords.Append(dataReader.GetString(2)).ToArray();
-                            }
-                        }
-                    }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run TokenService.GetUsers.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
                 }
+
+                usernames = results.Select(r => r.Item1).ToArray();
+                passwords = results.Select(r => r.Item2).ToArray();
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run TokenService.GetUsers.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return (usernames, passwords);
@@ -86,28 +94,24 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
-                {
-                    await connection.OpenAsync();
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetAuthorisationPhrases.SQL");
+                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(1));
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetAuthorisationPhrases.SQL"), connection))
-                    {
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                phrases = phrases.Append(dataReader.GetString(1)).ToArray();
-                            }
-                        }
-                    }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run TokenService.GetAuthorisationPhrases.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
                 }
+
+                phrases = results.ToArray();
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run TokenService.GetAuthorisationPhrases.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
             return phrases;
@@ -120,39 +124,38 @@ namespace HunterIndustriesAPI.Services
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase {_parameterFunction.FormatParameters(new[] { phrase })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase {_parameterFunction.FormatParameters(new[] { phrase })}.");
 
             string name = string.Empty;
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetApplicationName.SQL");
+                SqlParameter[] parameters =
                 {
-                    await connection.OpenAsync();
+                    new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = phrase }
+                };
 
-                    using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetApplicationName.SQL"), connection))
-                    {
-                        command.Parameters.Add(new SqlParameter("@Phrase", phrase));
+                (string result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetString(0), parameters);
 
-                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                name = dataReader.GetString(0);
-                            }
-                        }
-                    }
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run TokenService.GetApplicationName.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
                 }
+
+                name = result;
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run TokenService.GetApplicationName.";
-                Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName returned {name}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName returned {name}.");
             return name;
         }
     }
