@@ -1,10 +1,11 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using System;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services
 {
@@ -12,7 +13,8 @@ namespace HunterIndustriesAPI.Services
     /// </summary>
     public class TokenService
     {
-        private readonly string ProgramName;
+        private readonly string Phrase;
+        private string ProgramName;
         private readonly LoggerService Logger;
 
         /// <summary>
@@ -21,21 +23,26 @@ namespace HunterIndustriesAPI.Services
         public TokenService(string phrase, LoggerService _logger)
         {
             Logger = _logger;
-            ProgramName = GetApplicationName(phrase);
+            Phrase = phrase;
         }
 
         /// <summary>
         /// Returns the name of the application making the call.
         /// </summary>
-        public string ApplicationName()
+        public async Task<string> ApplicationName()
         {
+            if (ProgramName == null)
+            {
+                ProgramName = await GetApplicationName(Phrase);
+            }
+
             return ProgramName;
         }
 
         /// <summary>
         /// Returns all username and passwords.
         /// </summary>
-        public (string[], string[]) GetUsers()
+        public async Task<(string[], string[])> GetUsers()
         {
             string[] usernames = Array.Empty<string>();
             string[] passwords = Array.Empty<string>();
@@ -44,13 +51,13 @@ namespace HunterIndustriesAPI.Services
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetUsers.SQL"), connection))
                     {
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 usernames = usernames.Append(dataReader.GetString(1)).ToArray();
                                 passwords = passwords.Append(dataReader.GetString(2)).ToArray();
@@ -73,7 +80,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all application phrases.
         /// </summary>
-        public string[] GetAuthorisationPhrases()
+        public async Task<string[]> GetAuthorisationPhrases()
         {
             string[] phrases = Array.Empty<string>();
 
@@ -81,13 +88,13 @@ namespace HunterIndustriesAPI.Services
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetAuthorisationPhrases.SQL"), connection))
                     {
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 phrases = phrases.Append(dataReader.GetString(1)).ToArray();
                             }
@@ -109,7 +116,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Gets the application name from the database.
         /// </summary>
-        private string GetApplicationName(string phrase)
+        private async Task<string> GetApplicationName(string phrase)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -121,15 +128,15 @@ namespace HunterIndustriesAPI.Services
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Token\GetApplicationName.SQL"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Phrase", phrase));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 name = dataReader.GetString(0);
                             }

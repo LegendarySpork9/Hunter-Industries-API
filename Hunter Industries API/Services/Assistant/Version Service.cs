@@ -1,10 +1,11 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Models;
 using System;
 using System.Data.SqlClient;
 using System.IO;
 using HunterIndustriesAPI.Functions;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
@@ -25,7 +26,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Retrns the version information for the given assistant.
         /// </summary>
-        public VersionResponseModel GetAssistantVersion(string assistantName, string assistantId)
+        public async Task<VersionResponseModel> GetAssistantVersion(string assistantName, string assistantId)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -37,16 +38,16 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\GetAssistantVersion.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                         command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 version = new VersionResponseModel()
                                 {
@@ -74,7 +75,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Updates the version number of the given assistant.
         /// </summary>
-        public bool AssistantVersionUpdated(string assistantName, string assistantId, string version)
+        public async Task<bool> AssistantVersionUpdated(string assistantName, string assistantId, string version)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -87,14 +88,14 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Version\AssistantVersionUpdated.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Version", version));
                         command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                         command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-                        rowsAffected = command.ExecuteNonQuery();
+                        rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {

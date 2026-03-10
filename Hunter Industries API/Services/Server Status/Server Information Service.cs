@@ -1,4 +1,4 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.ServerStatus
 {
@@ -27,7 +28,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns all the servers that match the parameters.
         /// </summary>
-        public List<ServerInformationRecord> GetServers(bool isActive)
+        public async Task<List<ServerInformationRecord>> GetServers(bool isActive)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -45,7 +46,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -54,9 +55,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                             command.Parameters.Add(new SqlParameter("@IsActive", isActive));
                         }
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 DowntimeRecord downtime = null;
 
@@ -102,7 +103,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns the id of the server with the given values.
         /// </summary>
-        public int GetServer(string hostName, string game, string gameVersion)
+        public async Task<int> GetServer(string hostName, string game, string gameVersion)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -114,7 +115,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\GetServer.sql"), connection))
                     {
@@ -122,9 +123,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                         command.Parameters.Add(new SqlParameter("@Game", game));
                         command.Parameters.Add(new SqlParameter("@GameVersion", gameVersion));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 serverId = dataReader.GetInt32(0);
                             }
@@ -147,7 +148,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns whether a server already exists with the given values.
         /// </summary>
-        public bool ServerExists(string hostName, string game, string gameVersion)
+        public async Task<bool> ServerExists(string hostName, string game, string gameVersion)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -159,7 +160,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\ServerExists.sql"), connection))
                     {
@@ -167,9 +168,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                         command.Parameters.Add(new SqlParameter("@Game", game));
                         command.Parameters.Add(new SqlParameter("@GameVersion", gameVersion));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 exists = true;
                             }
@@ -192,7 +193,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Adds the server.
         /// </summary>
-        public (bool, int) ServerAdded(ServerInformationModel server)
+        public async Task<(bool, int)> ServerAdded(ServerInformationModel server)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -205,7 +206,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Information\ServerAdded.sql"), connection))
                     {
@@ -215,7 +216,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                         command.Parameters.Add(new SqlParameter("@IPAddress", server.IPAddress));
                         command.Parameters.Add(new SqlParameter("@Port", server.Port));
                         command.Parameters.Add(new SqlParameter("@Time", server.Time ?? "null"));
-                        var result = command.ExecuteScalar();
+                        var result = await command.ExecuteScalarAsync();
 
                         if (result == null)
                         {

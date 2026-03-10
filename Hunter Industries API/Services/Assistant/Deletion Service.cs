@@ -1,10 +1,11 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using System;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
 {
@@ -25,7 +26,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Returns the deletion information about the given assistant.
         /// </summary>
-        public DeletionResponseModel GetAssistantDeletion(string assistantName, string assistantId)
+        public async Task<DeletionResponseModel> GetAssistantDeletion(string assistantName, string assistantId)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -37,16 +38,16 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Deletion\GetAssistantDeletion.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                         command.Parameters.Add(new SqlParameter("@AssistantID", assistantId));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 deletion = new DeletionResponseModel()
                                 {
@@ -74,7 +75,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Updates the deletion status of the given assistant.
         /// </summary>
-        public bool AssistantDeletionUpdated(string assistantName, string assistantId, bool deletion)
+        public async Task<bool> AssistantDeletionUpdated(string assistantName, string assistantId, bool deletion)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -87,14 +88,14 @@ namespace HunterIndustriesAPI.Services.Assistant
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Assistant\Deletion\AssistantDeletionUpdated.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Deletion", deletion));
                         command.Parameters.Add(new SqlParameter("@AssistantName", assistantName));
                         command.Parameters.Add(new SqlParameter("@IDNumber", assistantId));
-                        rowsAffected = command.ExecuteNonQuery();
+                        rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {

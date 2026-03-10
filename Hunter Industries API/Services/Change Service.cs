@@ -1,9 +1,10 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using System;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services
 {
@@ -24,7 +25,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Creates a record in the Change table.
         /// </summary>
-        public bool LogChange(int endpointId, int auditId, string field, string oldValue, string newValue)
+        public async Task<bool> LogChange(int endpointId, int auditId, string field, string oldValue, string newValue)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -37,7 +38,7 @@ namespace HunterIndustriesAPI.Services
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\LogChange.sql"), connection))
                     {
@@ -46,7 +47,7 @@ namespace HunterIndustriesAPI.Services
                         command.Parameters.Add(new SqlParameter("@Field", field));
                         command.Parameters.Add(new SqlParameter("@OldValue", oldValue));
                         command.Parameters.Add(new SqlParameter("@NewValue", newValue));
-                        rowsAffected = command.ExecuteNonQuery();
+                        rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected == 1)
                         {

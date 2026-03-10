@@ -1,4 +1,4 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.ServerStatus
 {
@@ -27,7 +28,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns the latest component information record that matches the parameters.
         /// </summary>
-        public List<ServerEventRecord> GetServerEvents(string component)
+        public async Task<List<ServerEventRecord>> GetServerEvents(string component)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -39,15 +40,15 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\GetServerEvents.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Component", component));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 serverEvents.Add(new ServerEventRecord()
                                 {
@@ -81,7 +82,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Logs the server event.
         /// </summary>
-        public (bool, int) LogServerEvent(ServerEventModel serverEvent)
+        public async Task<(bool, int)> LogServerEvent(ServerEventModel serverEvent)
         {
             ServerInformationService _serverInformationService = new ServerInformationService(Logger);
             ParameterFunction _parameterFunction = new ParameterFunction();
@@ -95,14 +96,14 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\Server Status\Server Event\LogServerEvent.sql"), connection))
                     {
-                        command.Parameters.Add(new SqlParameter("@ServerID", _serverInformationService.GetServer(serverEvent.HostName, serverEvent.Game, serverEvent.GameVersion)));
+                        command.Parameters.Add(new SqlParameter("@ServerID", await _serverInformationService.GetServer(serverEvent.HostName, serverEvent.Game, serverEvent.GameVersion)));
                         command.Parameters.Add(new SqlParameter("@Component", serverEvent.Component));
                         command.Parameters.Add(new SqlParameter("@Status", serverEvent.Status));
-                        var result = command.ExecuteScalar();
+                        var result = await command.ExecuteScalarAsync();
 
                         if (result == null)
                         {

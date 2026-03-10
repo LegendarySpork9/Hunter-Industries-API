@@ -1,4 +1,4 @@
-﻿using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models;
 using HunterIndustriesAPI.Objects.User;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.User
 {
@@ -27,12 +28,12 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns all user records that match the parameters.
         /// </summary>
-        public List<UserRecord> GetUsers(int id, string username)
+        public async Task<List<UserRecord>> GetUsers(int id, string username)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUsers called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
-            
+
             List<UserRecord> users = new List<UserRecord>();
             string sqlQuery = File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\GetUsers.sql");
 
@@ -50,7 +51,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -64,16 +65,16 @@ namespace HunterIndustriesAPI.Services.User
                             command.Parameters.Add(new SqlParameter("@Username", username));
                         }
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 UserRecord user = new UserRecord
                                 {
                                     Id = dataReader.GetInt32(0),
                                     Username = dataReader.GetString(1),
                                     Password = dataReader.GetString(2),
-                                    Scopes = GetUserScopes(dataReader.GetInt32(0))
+                                    Scopes = await GetUserScopes(dataReader.GetInt32(0))
                                 };
 
                                 users.Add(user);
@@ -97,7 +98,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns whether a user already exists with the given username.
         /// </summary>
-        public bool UserExists(string username)
+        public async Task<bool> UserExists(string username)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -111,15 +112,15 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Username", username));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 exists = true;
                             }
@@ -142,7 +143,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns whether a user already exists with the given id.
         /// </summary>
-        public bool UserExists(int id)
+        public async Task<bool> UserExists(int id)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -156,15 +157,15 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Id", id));
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 exists = true;
                             }
@@ -187,7 +188,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Creates the user.
         /// </summary>
-        public (bool, int) UserCreated(string username, string password)
+        public async Task<(bool, int)> UserCreated(string username, string password)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
             HashFunction _hashFunction = new HashFunction();
@@ -201,13 +202,13 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\CreateUser.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@Username", username));
                         command.Parameters.Add(new SqlParameter("@Password", _hashFunction.HashString(password)));
-                        var result = command.ExecuteScalar();
+                        var result = await command.ExecuteScalarAsync();
 
                         if (result == null)
                         {
@@ -238,7 +239,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Creates the user scopes.
         /// </summary>
-        public bool UserScopeCreated(int id, List<string> scopes)
+        public async Task<bool> UserScopeCreated(int id, List<string> scopes)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
             HashFunction _hashFunction = new HashFunction();
@@ -251,7 +252,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     foreach (string scope in scopes)
                     {
@@ -259,7 +260,7 @@ namespace HunterIndustriesAPI.Services.User
                         {
                             command.Parameters.Add(new SqlParameter("@UserID", id));
                             command.Parameters.Add(new SqlParameter("@Scope", scope));
-                            var result = command.ExecuteScalar();
+                            var result = await command.ExecuteScalarAsync();
 
                             if (result == null)
                             {
@@ -286,7 +287,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Gets the scopes assigned to the user.
         /// </summary>
-        public List<string> GetUserScopes(int id = 0, string username = null)
+        public async Task<List<string>> GetUserScopes(int id = 0, string username = null)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
 
@@ -309,7 +310,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -323,9 +324,9 @@ namespace HunterIndustriesAPI.Services.User
                             command.Parameters.Add(new SqlParameter("@Username", username));
                         }
 
-                        using (SqlDataReader dataReader = command.ExecuteReader())
+                        using (SqlDataReader dataReader = (SqlDataReader)await command.ExecuteReaderAsync())
                         {
-                            while (dataReader.Read())
+                            while (await dataReader.ReadAsync())
                             {
                                 scopes.Add(dataReader.GetString(0));
                             }
@@ -348,7 +349,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Updates the details of the given user.
         /// </summary>
-        public bool UserUpdated(int id, string username, string password, List<KeyValuePair<string, string>> scopes)
+        public async Task<bool> UserUpdated(int id, string username, string password, List<KeyValuePair<string, string>> scopes)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
             HashFunction _hashFunction = new HashFunction();
@@ -373,7 +374,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
@@ -389,7 +390,7 @@ namespace HunterIndustriesAPI.Services.User
                             command.Parameters.Add(new SqlParameter("@password", password));
                         }
 
-                        rowsAffected = command.ExecuteNonQuery();
+                        rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {
@@ -408,8 +409,8 @@ namespace HunterIndustriesAPI.Services.User
                 updated = false;
             }
 
-            updated = UserScopeCreated(id, scopes.Where(c => c.Key == "Add").Select(c => c.Value).ToList());
-            updated = UserScopeDeleted(id, scopes.Where(c => c.Key == "Remove").Select(c => c.Value).ToList());
+            updated = await UserScopeCreated(id, scopes.Where(c => c.Key == "Add").Select(c => c.Value).ToList());
+            updated = await UserScopeDeleted(id, scopes.Where(c => c.Key == "Remove").Select(c => c.Value).ToList());
 
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated returned {updated}.");
             return updated;
@@ -418,7 +419,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Deletes the user scopes.
         /// </summary>
-        private bool UserScopeDeleted(int id, List<string> scopes)
+        private async Task<bool> UserScopeDeleted(int id, List<string> scopes)
         {
             ParameterFunction _parameterFunction = new ParameterFunction();
             HashFunction _hashFunction = new HashFunction();
@@ -431,7 +432,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     foreach (string scope in scopes)
                     {
@@ -439,7 +440,7 @@ namespace HunterIndustriesAPI.Services.User
                         {
                             command.Parameters.Add(new SqlParameter("@UserID", id));
                             command.Parameters.Add(new SqlParameter("@Scope", scope));
-                            int rowsAffected = command.ExecuteNonQuery();
+                            int rowsAffected = await command.ExecuteNonQueryAsync();
 
                             if (rowsAffected != 1)
                             {
@@ -466,7 +467,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Sets the user to deleted.
         /// </summary>
-        public bool UserDeleted(int id)
+        public async Task<bool> UserDeleted(int id)
         {
             Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserDeleted called with the parameters \"{id}\".");
 
@@ -476,12 +477,12 @@ namespace HunterIndustriesAPI.Services.User
             {
                 using (SqlConnection connection = new SqlConnection(DatabaseModel.ConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand(File.ReadAllText($@"{DatabaseModel.SQLFiles}\User\UserDeleted.sql"), connection))
                     {
                         command.Parameters.Add(new SqlParameter("@UserID", id));
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected != 1)
                         {
