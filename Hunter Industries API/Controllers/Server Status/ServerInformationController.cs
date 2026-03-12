@@ -20,7 +20,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
     /// <summary>
     /// </summary>
     [Authorize]
-    [RequiredPolicyAuthorisationAttributeFilter("ServerStatus")]
+    [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Information")]
     [VersionedRoute("serverstatus/serverinformation", "1.1")]
     public class ServerInformationController : ApiController
     {
@@ -55,6 +55,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="isActive">Whether the servers are active or not.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Information.Read")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ServerInformationRecord>), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -118,6 +119,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the server information.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Information.Create")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a server matching the details already exists for the application.")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(ServerInformationRecord), Description = "If the server is successfuly added.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]

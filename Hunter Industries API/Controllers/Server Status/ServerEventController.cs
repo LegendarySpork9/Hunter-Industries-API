@@ -21,7 +21,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
     /// <summary>
     /// </summary>
     [Authorize]
-    [RequiredPolicyAuthorisationAttributeFilter("ServerStatus")]
+    [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Event")]
     [VersionedRoute("serverstatus/serverevent", "1.1")]
     public class ServerEventController : ApiController
     {
@@ -56,6 +56,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="component">Which component you want the status for.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Event.Read")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ServerEventRecord>), Description = "Returns the item matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
@@ -138,6 +139,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the event.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Event.Create")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(ServerEventRecord), Description = "If the server is successfuly added.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]

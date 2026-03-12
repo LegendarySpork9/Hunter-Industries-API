@@ -713,6 +713,7 @@
         </member>
         <member name="T:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter">
             <summary>
+            Checks if the token has the required permission to access the endpoint.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.#ctor(System.String)">
@@ -723,11 +724,6 @@
         <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.OnAuthorization(System.Web.Http.Controllers.HttpActionContext)">
             <summary>
             Checks if the token has the required claim to access the endpoint.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.ValidScope(System.String,System.Security.Claims.ClaimsPrincipal)">
-            <summary>
-            Checks if the token has a valid claim.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Filters.VersionedDirectRouteProvider">
@@ -791,6 +787,21 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.VersionedRouteAttribute.System#Web#Http#Routing#IDirectRouteFactory#CreateRoute(System.Web.Http.Routing.DirectRouteFactoryContext)">
             <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
+            <summary>
+            Maps broad database scopes to granular internal permissions.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns all granular permissions granted by the given broad scopes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Checks if the given permissions contain any that match the required permission.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.HashFunction">
