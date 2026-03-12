@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "zg6IOhGBOgc=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\TobyH\\OneDrive - Nurtur Limited\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\TobyH\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.4\\microsoft.aspnetcore.app.internal.assets.10.0.4.nupkg.sha512",
+    "C:\\Users\\TobyH\\.nuget\\packages\\radzen.blazor\\7.4.3\\radzen.blazor.7.4.3.nupkg.sha512"
+  ],
+  "logs": []
+}

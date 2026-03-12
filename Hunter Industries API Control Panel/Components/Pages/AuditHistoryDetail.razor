@@ -1,0 +1,135 @@
+@page "/audit-history/{Id:int}"
+
+<PageTitle>Audit Record - HI Control Panel</PageTitle>
+
+<div class="mb-3">
+    <a href="/audit-history?page=@_fromPage" class="btn btn-outline-light btn-sm">&larr; Back to Audit History</a>
+</div>
+
+@if (_record == null)
+{
+    <div class="alert alert-warning">Audit record not found.</div>
+}
+else
+{
+    <!-- General Info -->
+    <div class="card mb-4" style="border-radius: 8px;">
+        <div class="card-header">
+            <h5 class="mb-0">Audit Record #@_record.Id</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">IP Address</label>
+                    <div>@_record.IPAddress</div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Endpoint</label>
+                    <div>@_record.Endpoint</div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Method</label>
+                    <div><span class="badge @GetMethodBadgeClass(_record.Method)">@_record.Method</span></div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Status</label>
+                    <div><span class="badge @GetStatusBadgeClass(_record.Status)">@_record.Status</span></div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Date</label>
+                    <div>@_record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parameters -->
+    <div class="card mb-4" style="border-radius: 8px;">
+        <div class="card-header">
+            <h6 class="mb-0">Parameters</h6>
+        </div>
+        <div class="card-body">
+            @if (_record.Paramaters != null && _record.Paramaters.Length > 0)
+            {
+                <ul class="mb-0">
+                    @foreach (var param in _record.Paramaters)
+                    {
+                        <li>@param</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span class="text-muted">None</span>
+            }
+        </div>
+    </div>
+
+    <!-- Login Attempt -->
+    @if (_record.LoginAttempt != null)
+    {
+        <div class="card mb-4" style="border-radius: 8px;">
+            <div class="card-header">
+                <h6 class="mb-0">Login Attempt</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted">Username</label>
+                        <div style="color: #D7D7D7;">@_record.LoginAttempt.Username</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted">Phrase</label>
+                        <div style="color: #D7D7D7;">@_record.LoginAttempt.Phrase</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted">Successful</label>
+                        <div>
+                            @if (_record.LoginAttempt.IsSuccessful)
+                            {
+                                <StatusBadge Text="Yes" Type="active" />
+                            }
+                            else
+                            {
+                                <StatusBadge Text="No" Type="deleted" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Changes -->
+    @if (_record.Change != null && _record.Change.Count > 0)
+    {
+        <div class="card mb-4" style="border-radius: 8px;">
+            <div class="card-header">
+                <h6 class="mb-0">Changes</h6>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Endpoint</th>
+                            <th>Field</th>
+                            <th>Old Value</th>
+                            <th>New Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var change in _record.Change)
+                        {
+                            <tr>
+                                <td style="color: #D7D7D7;">@change.Endpoint</td>
+                                <td style="color: #D7D7D7;">@change.Field</td>
+                                <td style="color: #dc3545;">@change.OldValue</td>
+                                <td style="color: #28a745;">@change.NewValue</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}

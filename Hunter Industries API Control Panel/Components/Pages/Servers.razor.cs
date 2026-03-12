@@ -1,0 +1,75 @@
+using Microsoft.AspNetCore.Components;
+using Hunter_Industries_API_Control_Panel.Models;
+using Hunter_Industries_API_Control_Panel.Services;
+
+namespace Hunter_Industries_API_Control_Panel.Components.Pages
+{
+    public partial class Servers
+    {
+        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+        private List<ServerInformationRecord> _servers = new();
+        private bool _showModal;
+        private bool _isEditing;
+        private int _editingServerId;
+        private string _modalHostName = string.Empty;
+        private string _modalGame = string.Empty;
+        private string _modalGameVersion = string.Empty;
+        private string _modalIPAddress = string.Empty;
+        private int _modalPort;
+        private string _modalDowntime = string.Empty;
+        private bool _modalIsActive = true;
+
+        protected override void OnInitialized()
+        {
+            _servers = APIService.GetServers();
+        }
+
+        private void ShowCreateModal()
+        {
+            _isEditing = false;
+            _modalHostName = string.Empty;
+            _modalGame = string.Empty;
+            _modalGameVersion = string.Empty;
+            _modalIPAddress = string.Empty;
+            _modalPort = 25565;
+            _modalDowntime = string.Empty;
+            _modalIsActive = true;
+            _showModal = true;
+        }
+
+        private void ShowEditModal(ServerInformationRecord server)
+        {
+            _isEditing = true;
+            _editingServerId = server.Id;
+            _modalHostName = server.HostName;
+            _modalGame = server.Game;
+            _modalGameVersion = server.GameVersion;
+            _modalIPAddress = server.Connection.IPAddress;
+            _modalPort = server.Connection.Port;
+            _modalDowntime = server.Downtime?.Time ?? string.Empty;
+            _modalIsActive = server.IsActive;
+            _showModal = true;
+        }
+
+        private void CloseModal() => _showModal = false;
+
+        private void SaveServer()
+        {
+            if (_isEditing)
+            {
+                APIService.UpdateServer(_editingServerId, _modalHostName, _modalGame, _modalGameVersion,
+                    _modalIPAddress, _modalPort, string.IsNullOrEmpty(_modalDowntime) ? null : _modalDowntime, _modalIsActive);
+            }
+            else
+            {
+                APIService.CreateServer(_modalHostName, _modalGame, _modalGameVersion,
+                    _modalIPAddress, _modalPort, string.IsNullOrEmpty(_modalDowntime) ? null : _modalDowntime, _modalIsActive);
+            }
+
+            _servers = APIService.GetServers();
+            _showModal = false;
+        }
+    }
+}
