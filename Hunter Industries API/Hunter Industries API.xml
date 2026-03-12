@@ -640,7 +640,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.Document.BaseUrlDocumentFilter.Apply(Swashbuckle.Swagger.SwaggerDocument,Swashbuckle.Swagger.SchemaRegistry,System.Web.Http.Description.IApiExplorer)">
             <summary>
-            Sets the base URL on the Swagger UI.
+            Sets the base URL on the Swagger UI and strips the version prefix from endpoint paths.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Filters.Operation.ParameterDetailOperationFilter">
