@@ -22,7 +22,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
     /// <summary>
     /// </summary>
     [Authorize]
-    [RequiredPolicyAuthorisationAttributeFilter("ServerStatus")]
+    [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Alert")]
     [VersionedRoute("serverstatus/serveralert", "1.1")]
     public class ServerAlertController : ApiController
     {
@@ -56,6 +56,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     GET /serverstatus/serveralert
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Alert.Read")]
         [SwaggerOperation("GetServerAlert")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerAlertResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
@@ -123,6 +124,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="id">The id number of the server alert.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Alert.Read")]
         [VersionedRoute("serverstatus/serveralert/{id:int}", "1.1")]
         [SwaggerOperation("GetServerAlertById")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerAlertRecord), Description = "Returns the item matching the given id.")]
@@ -191,6 +193,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the alert.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Alert.Create")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(ServerAlertRecord), Description = "If the server is successfuly added.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
@@ -291,6 +294,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         /// </remarks>
         /// <param name="id">The id number of the server alert.</param>
         /// <param name="request">An object containing the new status value.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Alert.Update")]
         [VersionedRoute("serverstatus/serveralert/{id:int}", "1.1")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerAlertRecord), Description = "Returns the updated item.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]

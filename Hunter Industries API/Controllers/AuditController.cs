@@ -20,7 +20,7 @@ namespace HunterIndustriesAPI.Controllers
     /// <summary>
     /// </summary>
     [Authorize]
-    [RequiredPolicyAuthorisationAttributeFilter("APIControlPanel")]
+    [RequiredPolicyAuthorisationAttributeFilter("AuditHistory")]
     public class AuditController : ApiController
     {
         private readonly ILoggerService _Logger;

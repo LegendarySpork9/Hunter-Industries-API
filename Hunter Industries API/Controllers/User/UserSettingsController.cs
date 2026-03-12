@@ -20,7 +20,7 @@ namespace HunterIndustriesAPI.Controllers.User
     /// <summary>
     /// </summary>
     [Authorize]
-    [RequiredPolicyAuthorisationAttributeFilter("ServerStatus")]
+    [RequiredPolicyAuthorisationAttributeFilter("UserSettings")]
     [VersionedRoute("usersettings/{id:int}", "1.1")]
     public class UserSettingsController : ApiController
     {
@@ -56,6 +56,7 @@ namespace HunterIndustriesAPI.Controllers.User
         /// </remarks>
         /// <param name="id">The id number of the user.</param>
         /// <param name="application">The application the settings relate to.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("UserSettings.Read")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<UserSettingRecord>), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -121,6 +122,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the user setting information.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("UserSettings.Create")]
         [VersionedRoute("usersettings", "1.1")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a setting matching the name already exists for the application.")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(UserSettingRecord), Description = "If the setting is successfuly added.")]
@@ -234,6 +236,7 @@ namespace HunterIndustriesAPI.Controllers.User
         /// </remarks>
         /// <param name="id">The id number of the user setting.</param>
         /// <param name="request">An object containing the new setting value.</param>
+        [RequiredPolicyAuthorisationAttributeFilter("UserSettings.Update")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(SettingRecord), Description = "Returns the updated item.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]

@@ -1,21 +1,26 @@
-﻿using System.Security.Claims;
+using HunterIndustriesAPI.Mappings;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
 namespace HunterIndustriesAPI.Filters
 {
     /// <summary>
+    /// Checks if the token has the required permission to access the endpoint.
     /// </summary>
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Method, AllowMultiple = false)]
     public class RequiredPolicyAuthorisationAttributeFilter : AuthorizationFilterAttribute
     {
-        private readonly string Policy;
+        private readonly string RequiredPermission;
 
         /// <summary>
         /// Sets the class's global variables.
         /// </summary>
-        public RequiredPolicyAuthorisationAttributeFilter(string policy)
+        public RequiredPolicyAuthorisationAttributeFilter(string requiredPermission)
         {
-            Policy = policy;
+            RequiredPermission = requiredPermission;
         }
 
         /// <summary>
@@ -25,29 +30,37 @@ namespace HunterIndustriesAPI.Filters
         {
             ClaimsPrincipal principal = actionContext.RequestContext.Principal as ClaimsPrincipal;
 
-            if (principal == null || !ValidScope(Policy, principal))
+            if (principal == null)
+            {
+                actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+                return;
+            }
+
+            string permissionToCheck = RequiredPermission;
+
+            RequiredPolicyAuthorisationAttributeFilter actionAttribute = actionContext.ActionDescriptor
+                .GetCustomAttributes<RequiredPolicyAuthorisationAttributeFilter>()
+                .FirstOrDefault();
+
+            RequiredPolicyAuthorisationAttributeFilter controllerAttribute = actionContext.ControllerContext.ControllerDescriptor
+                .GetCustomAttributes<RequiredPolicyAuthorisationAttributeFilter>()
+                .FirstOrDefault();
+
+            if (actionAttribute != null && controllerAttribute != null && actionAttribute != controllerAttribute)
+            {
+                permissionToCheck = actionAttribute.RequiredPermission;
+            }
+
+            IEnumerable<string> scopes = principal.Claims
+                .Where(c => c.Type == "scope")
+                .Select(c => c.Value);
+
+            List<string> grantedPermissions = ScopePermissionMapping.GetPermissions(scopes);
+
+            if (!ScopePermissionMapping.HasPermission(grantedPermissions, permissionToCheck))
             {
                 actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
             }
-        }
-
-        /// <summary>
-        /// Checks if the token has a valid claim.
-        /// </summary>
-        private bool ValidScope(string policy, ClaimsPrincipal principal)
-        {
-            bool valid = false;
-
-            switch (policy)
-            {
-                case "Assistant": valid = principal.HasClaim("scope", "Assistant API"); break;
-                case "BookReader": valid = principal.HasClaim("scope", "Book Reader API"); break;
-                case "APIControlPanel": valid = principal.HasClaim("scope", "Control Panel API"); break;
-                case "AIAccess": valid = principal.HasClaim("scope", "Assistant API") || principal.HasClaim("scope", "Control Panel API"); break;
-                case "ServerStatus": valid = principal.HasClaim("scope", "Server Status API"); break;
-            }
-
-            return valid;
         }
     }
 }

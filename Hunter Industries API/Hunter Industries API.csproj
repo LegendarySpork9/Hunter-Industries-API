@@ -352,6 +352,7 @@
     <Compile Include="Filters\Operation\Response Example Operation Filter.cs" />
     <Compile Include="Filters\Dependency Resolver.cs" />
     <Compile Include="Filters\Required Policy Authorisation Attribute Filter.cs" />
+    <Compile Include="Mappings\Scope Permission Mapping.cs" />
     <Compile Include="Filters\Versioned Direct Route Provider.cs" />
     <Compile Include="Filters\Versioned Route Attribute.cs" />
     <Compile Include="Functions\Hash Function.cs" />
