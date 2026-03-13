@@ -8,6 +8,7 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
     {
         [Parameter] public int Id { get; set; }
         [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private UserRecord? _user;
         private List<string> _availableScopes = new();
@@ -20,6 +21,7 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
         private string _editPassword = string.Empty;
         private bool _showPassword;
         private bool _saveSuccess;
+        private bool _showDeleteConfirm;
 
         protected override void OnInitialized()
         {
@@ -97,6 +99,25 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
             var key = $"{application}:{settingName}";
             _addingSettings.Remove(key);
             _newSettingValues.Remove(key);
+        }
+
+        private void ConfirmDelete()
+        {
+            _showDeleteConfirm = true;
+        }
+
+        private void DeleteUser()
+        {
+            if (_user != null)
+            {
+                APIService.DeleteUser(_user.Id);
+                Navigation.NavigateTo("/users");
+            }
+        }
+
+        private void CancelDelete()
+        {
+            _showDeleteConfirm = false;
         }
 
         private void ConfirmAddSetting(string application, string settingName)

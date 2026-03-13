@@ -15,7 +15,14 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
         private List<ChartDataItem> _alertsByComponent = new();
         private List<ChartDataItem> _alertsByStatus = new();
         private string[] _alertStatusColours = Array.Empty<string>();
+        private string[] _alertComponentColours = Array.Empty<string>();
         private List<ServerEventRecord> _lastEventPerComponent = new();
+
+        private static readonly string[] DefaultPalette = new[]
+        {
+            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
+            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
+        };
 
         private string _editHostName = string.Empty;
         private string _editGame = string.Empty;
@@ -52,6 +59,10 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
                     .GroupBy(a => a.Component)
                     .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
                     .ToList();
+
+                _alertComponentColours = _alertsByComponent
+                    .Select((_, i) => DefaultPalette[i % DefaultPalette.Length])
+                    .ToArray();
 
                 _alertsByStatus = _alerts
                     .GroupBy(a => a.AlertStatus)

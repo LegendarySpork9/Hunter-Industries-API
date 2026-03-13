@@ -51,9 +51,10 @@ else
                     <label class="form-label">Downtime</label>
                     <input type="text" class="form-control" @bind="_editDowntime" placeholder="HH:MM:SS" />
                 </div>
-                <div class="col-md-3 d-flex align-items-end">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" @bind="_editIsActive" />
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="form-check form-switch mb-0" style="padding-top: 0.4rem;">
+                        <input class="form-check-input" type="checkbox" role="switch" @bind="_editIsActive" />
                         <label class="form-check-label">Active</label>
                     </div>
                 </div>
@@ -76,11 +77,20 @@ else
                     <h6 class="card-title text-muted mb-3">Alerts by Component</h6>
                     @if (_alertsByComponent.Count > 0)
                     {
-                        <RadzenChart Style="height: 250px;">
+                        <RadzenChart Style="height: 200px;">
                             <RadzenDonutSeries Data="@_alertsByComponent" CategoryProperty="Label" ValueProperty="Value"
-                                                Title="Component" InnerRadius="50" />
-                            <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                                                InnerRadius="50"
+                                                Fills="@_alertComponentColours" Strokes="@_alertComponentColours" />
+                            <RadzenLegend Visible="false" />
                         </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                            @for (int i = 0; i < _alertsByComponent.Count; i++)
+                            {
+                                var item = _alertsByComponent[i];
+                                var colour = _alertComponentColours[i % _alertComponentColours.Length];
+                                <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                            }
+                        </div>
                     }
                     else
                     {
@@ -95,12 +105,20 @@ else
                     <h6 class="card-title text-muted mb-3">Alerts by Status</h6>
                     @if (_alertsByStatus.Count > 0)
                     {
-                        <RadzenChart Style="height: 250px;">
+                        <RadzenChart Style="height: 200px;">
                             <RadzenDonutSeries Data="@_alertsByStatus" CategoryProperty="Label" ValueProperty="Value"
-                                                Title="Status" InnerRadius="50"
+                                                InnerRadius="50"
                                                 Fills="@_alertStatusColours" Strokes="@_alertStatusColours" />
-                            <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                            <RadzenLegend Visible="false" />
                         </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                            @for (int i = 0; i < _alertsByStatus.Count; i++)
+                            {
+                                var item = _alertsByStatus[i];
+                                var colour = _alertStatusColours[i % _alertStatusColours.Length];
+                                <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                            }
+                        </div>
                     }
                     else
                     {

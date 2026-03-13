@@ -110,6 +110,17 @@ h1:focus {
     color: #999;
 }
 
+.form-control:disabled, .form-select:disabled {
+    background-color: #444;
+    border-color: #555;
+    color: #999;
+    opacity: 1;
+}
+
+.form-check-input:disabled {
+    opacity: 0.5;
+}
+
 .form-check-input {
     background-color: #4E4E4E;
     border-color: #666;
@@ -118,6 +129,18 @@ h1:focus {
 .form-check-input:checked {
     background-color: #1b6ec2;
     border-color: #1b6ec2;
+}
+
+.form-switch .form-check-input {
+    background-color: #666;
+    border-color: #666;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23999'/%3e%3c/svg%3e");
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #1b6ec2;
+    border-color: #1b6ec2;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 
 /* Dark Theme Tables */
@@ -289,6 +312,7 @@ h1:focus {
 
 .rz-chart text {
     fill: #A9A9A9 !important;
+    font-size: 12px !important;
 }
 
 .rz-chart .rz-chart-tooltip {

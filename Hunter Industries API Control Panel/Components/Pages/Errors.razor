@@ -29,14 +29,18 @@
         <div class="card h-100" style="border-radius: 8px;">
             <div class="card-body">
                 <h6 class="card-title text-muted mb-3">Errors by IP Address</h6>
-                <RadzenChart Style="height: 200px;">
+                <RadzenChart Style="height: 160px;">
                     <RadzenDonutSeries Data="@_errorsByIP" CategoryProperty="Label" ValueProperty="Value"
-                                        InnerRadius="40" Radius="70" />
+                                        InnerRadius="40" Radius="70"
+                                        Fills="@_errorsByIPColours" Strokes="@_errorsByIPColours" />
+                    <RadzenLegend Visible="false" />
                 </RadzenChart>
                 <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
-                    @foreach (var item in _errorsByIP)
+                    @for (int i = 0; i < _errorsByIP.Count; i++)
                     {
-                        <span class="text-muted">@item.Label (@item.Value)</span>
+                        var item = _errorsByIP[i];
+                        var colour = _errorsByIPColours[i % _errorsByIPColours.Length];
+                        <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
                     }
                 </div>
             </div>
@@ -48,11 +52,14 @@
                 <h6 class="card-title text-muted mb-3">Errors by Summary</h6>
                 <RadzenChart Style="height: 200px;">
                     <RadzenBarSeries Data="@_errorsBySummary" CategoryProperty="Label" ValueProperty="Value"
-                                      Title="Count" />
+                                      Title="Count">
+                        <RadzenSeriesDataLabels Visible="true" />
+                    </RadzenBarSeries>
                     <RadzenCategoryAxis />
                     <RadzenValueAxis>
                         <RadzenGridLines Visible="true" Stroke="#555" />
                     </RadzenValueAxis>
+                    <RadzenLegend Visible="false" />
                 </RadzenChart>
             </div>
         </div>
@@ -97,7 +104,7 @@
         <RadzenDataGridColumn TItem="ErrorLogRecord" Property="IPAddress" Title="IP Address" Width="150px" />
         <RadzenDataGridColumn TItem="ErrorLogRecord" Title="Summary">
             <Template Context="error">
-                @(error.Summary.Length > 80 ? error.Summary[..80] + "..." : error.Summary)
+                @ExtractClassMethod(error.Summary)
             </Template>
         </RadzenDataGridColumn>
     </Columns>

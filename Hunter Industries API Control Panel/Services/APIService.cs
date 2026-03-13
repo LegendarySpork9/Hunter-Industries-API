@@ -281,7 +281,7 @@ namespace Hunter_Industries_API_Control_Panel.Services
 
             summary.ErrorsByIPAndSummary = ErrorLogs
                 .GroupBy(e => new { e.IPAddress, e.Summary })
-                .Select(g => new ChartDataItem { Label = g.Key.IPAddress, Value = g.Count(), Category = g.Key.Summary.Length > 50 ? g.Key.Summary[..50] + "..." : g.Key.Summary })
+                .Select(g => new ChartDataItem { Label = g.Key.IPAddress, Value = g.Count(), Category = g.Key.Summary })
                 .ToList();
 
             summary.CallsByEndpoint = AuditHistory

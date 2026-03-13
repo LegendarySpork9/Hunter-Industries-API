@@ -15,7 +15,14 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
         private List<ChartDataItem> _errorsOverTime = new();
         private List<ChartDataItem> _errorsByIP = new();
         private List<ChartDataItem> _errorsBySummary = new();
+        private string[] _errorsByIPColours = Array.Empty<string>();
         private string _errorsYearRange = string.Empty;
+
+        private static readonly string[] DefaultPalette = new[]
+        {
+            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
+            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
+        };
 
         private int _pageSize = 25;
         private int _pageNumber = 1;
@@ -63,9 +70,14 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
                 .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
                 .ToList();
 
+            _errorsByIPColours = _errorsByIP
+                .Select((_, i) => DefaultPalette[i % DefaultPalette.Length])
+                .ToArray();
+
             _errorsBySummary = _allErrors
-                .GroupBy(e => e.Summary.Length > 40 ? e.Summary[..40] + "..." : e.Summary)
+                .GroupBy(e => ExtractClassMethod(e.Summary))
                 .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
+                .Where(c => c.Value > 0)
                 .OrderByDescending(c => c.Value)
                 .Take(6)
                 .ToList();
@@ -121,6 +133,29 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
         {
             _pageNumber = 1;
             UpdatePagedErrors();
+        }
+
+        private static string ExtractClassMethod(string summary)
+        {
+            var words = summary.TrimEnd('.').Split(' ');
+
+            for (int i = words.Length - 1; i >= 0; i--)
+            {
+                if (words[i].Contains('.'))
+                {
+                    var classMethod = words[i].TrimEnd('.');
+                    var dotIndex = classMethod.LastIndexOf('.');
+
+                    if (dotIndex >= 0)
+                    {
+                        return classMethod[(dotIndex + 1)..];
+                    }
+
+                    return classMethod;
+                }
+            }
+
+            return summary.Length > 40 ? summary[..40] + "..." : summary;
         }
     }
 }

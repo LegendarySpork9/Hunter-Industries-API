@@ -87,14 +87,18 @@ else
             <div class="card h-100" style="border-radius: 8px;">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
-                    <RadzenChart Style="height: 200px;">
+                    <RadzenChart Style="height: 160px;">
                         <RadzenDonutSeries Data="@_summary.CallsByEndpoint" CategoryProperty="Label" ValueProperty="Value"
-                                            InnerRadius="40" Radius="70" />
+                                            InnerRadius="40" Radius="70"
+                                            Fills="@_endpointColours" Strokes="@_endpointColours" />
+                        <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
-                        @foreach (var item in _summary.CallsByEndpoint)
+                        @for (int i = 0; i < _summary.CallsByEndpoint.Count; i++)
                         {
-                            <span class="text-muted">@item.Label (@item.Value)</span>
+                            var item = _summary.CallsByEndpoint[i];
+                            var colour = _endpointColours[i % _endpointColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>
@@ -104,15 +108,18 @@ else
             <div class="card h-100" style="border-radius: 8px;">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method</h6>
-                    <RadzenChart Style="height: 200px;">
+                    <RadzenChart Style="height: 160px;">
                         <RadzenDonutSeries Data="@_summary.CallsByMethod" CategoryProperty="Label" ValueProperty="Value"
                                             InnerRadius="40" Radius="70"
                                             Fills="@_methodColours" Strokes="@_methodColours" />
+                        <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
-                        @foreach (var item in _summary.CallsByMethod)
+                        @for (int i = 0; i < _summary.CallsByMethod.Count; i++)
                         {
-                            <span class="text-muted">@item.Label (@item.Value)</span>
+                            var item = _summary.CallsByMethod[i];
+                            var colour = _methodColours[i % _methodColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>
@@ -122,15 +129,18 @@ else
             <div class="card h-100" style="border-radius: 8px;">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
-                    <RadzenChart Style="height: 200px;">
+                    <RadzenChart Style="height: 160px;">
                         <RadzenDonutSeries Data="@_summary.CallsByStatusCode" CategoryProperty="Label" ValueProperty="Value"
                                             InnerRadius="40" Radius="70"
                                             Fills="@_statusColours" Strokes="@_statusColours" />
+                        <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
-                        @foreach (var item in _summary.CallsByStatusCode)
+                        @for (int i = 0; i < _summary.CallsByStatusCode.Count; i++)
                         {
-                            <span class="text-muted">@item.Label (@item.Value)</span>
+                            var item = _summary.CallsByStatusCode[i];
+                            var colour = _statusColours[i % _statusColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>
@@ -140,14 +150,18 @@ else
             <div class="card h-100" style="border-radius: 8px;">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field</h6>
-                    <RadzenChart Style="height: 200px;">
+                    <RadzenChart Style="height: 160px;">
                         <RadzenDonutSeries Data="@_summary.ChangesByField" CategoryProperty="Label" ValueProperty="Value"
-                                            InnerRadius="40" Radius="70" />
+                                            InnerRadius="40" Radius="70"
+                                            Fills="@_fieldColours" Strokes="@_fieldColours" />
+                        <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
-                        @foreach (var item in _summary.ChangesByField)
+                        @for (int i = 0; i < _summary.ChangesByField.Count; i++)
                         {
-                            <span class="text-muted">@item.Label (@item.Value)</span>
+                            var item = _summary.ChangesByField[i];
+                            var colour = _fieldColours[i % _fieldColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>

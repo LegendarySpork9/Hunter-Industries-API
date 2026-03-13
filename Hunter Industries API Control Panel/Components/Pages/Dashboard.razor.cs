@@ -15,21 +15,33 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
         private Dictionary<string, List<ChartDataItem>> _loginAttemptsByApp = new();
         private string[] _methodColours = Array.Empty<string>();
         private string[] _statusColours = Array.Empty<string>();
+        private string[] _endpointColours = Array.Empty<string>();
+        private string[] _fieldColours = Array.Empty<string>();
+
+        private static readonly string[] DefaultPalette = new[]
+        {
+            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
+            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
+        };
 
         protected override void OnInitialized()
         {
             _summary = APIService.GetDashboardSummary();
             _recentActivity = APIService.GetRecentAuditHistory(10);
 
-            // Build errors by IP - ensure every series has an entry for every IP (0 if missing)
-            var allIPs = _summary.ErrorsByIPAndSummary.Select(e => e.Label).Distinct().ToList();
+            // Build errors by IP - ensure every series has an entry for every IP, sorted by most errors
+            var allIPs = _summary.ErrorsByIPAndSummary
+                .GroupBy(e => e.Label)
+                .OrderByDescending(g => g.Sum(x => x.Value))
+                .Select(g => g.Key)
+                .ToList();
             _errorsByIPGrouped = _summary.ErrorsByIPAndSummary
-                .GroupBy(e => e.Category)
+                .GroupBy(e => ExtractClassMethod(e.Category))
                 .ToDictionary(
                     g => g.Key,
                     g =>
                     {
-                        var existing = g.GroupBy(x => x.Label).ToDictionary(x => x.Key, x => x.First().Value);
+                        var existing = g.GroupBy(x => x.Label).ToDictionary(x => x.Key, x => x.Sum(v => v.Value));
                         return allIPs.Select(ip => new ChartDataItem
                         {
                             Label = ip,
@@ -59,6 +71,16 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
                 var l when l.StartsWith("500") => "#dc3545",
                 _ => "#6c757d"
             }).ToArray();
+
+            // Build endpoint donut colours
+            _endpointColours = _summary.CallsByEndpoint
+                .Select((_, i) => DefaultPalette[i % DefaultPalette.Length])
+                .ToArray();
+
+            // Build field donut colours
+            _fieldColours = _summary.ChangesByField
+                .Select((_, i) => DefaultPalette[i % DefaultPalette.Length])
+                .ToArray();
 
             // Build login attempts - ensure every series has an entry for every user (0 if missing)
             var allUsers = _summary.LoginAttemptsByUser.Select(l => l.Label).Distinct().OrderBy(u => u).ToList();
@@ -111,6 +133,29 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
             if (span.TotalHours < 24) return $"{(int)span.TotalHours}h ago";
             if (span.TotalDays < 30) return $"{(int)span.TotalDays}d ago";
             return dateTime.ToString("dd MMM yyyy");
+        }
+
+        private static string ExtractClassMethod(string summary)
+        {
+            var words = summary.TrimEnd('.').Split(' ');
+
+            for (int i = words.Length - 1; i >= 0; i--)
+            {
+                if (words[i].Contains('.'))
+                {
+                    var classMethod = words[i].TrimEnd('.');
+                    var dotIndex = classMethod.LastIndexOf('.');
+
+                    if (dotIndex >= 0)
+                    {
+                        return classMethod[(dotIndex + 1)..];
+                    }
+
+                    return classMethod;
+                }
+            }
+
+            return summary.Length > 40 ? summary[..40] + "..." : summary;
         }
     }
 }
