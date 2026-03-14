@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [API Clean Up]    Script Date: 20/12/2024 19:10:41 ******/
+/****** Object:  Job [API Clean Up]    Script Date: 14/03/2026 13:34:31 ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 20/12/2024 19:10:41 ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 14/03/2026 13:34:31 ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -23,9 +23,9 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'API Clean Up',
 		@delete_level=0, 
 		@description=N'No description available.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'HI-GameAppServe\HIAdministrator', @job_id = @jobId OUTPUT
+		@owner_login_name=N'Central\CentralAdmin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Clean Up Tables]    Script Date: 20/12/2024 19:10:41 ******/
+/****** Object:  Step [1]    Script Date: 14/03/2026 13:34:31 ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'1', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -97,7 +97,7 @@ values (''Location'', @expected, @actual, @match)
 
 select * from @CleanUpResults', 
 		@database_name=N'HunterIndustriesAPI', 
-		@output_file_name=N'K:\Hunter Industries\API\Clean Up Output\Clean Up.txt', 
+		@output_file_name=N'L:\Hunter Industries\API\Clean Up Output\Clean Up.txt', 
 		@flags=2
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -110,11 +110,11 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'Clean Up'
 		@freq_subday_interval=0, 
 		@freq_relative_interval=0, 
 		@freq_recurrence_factor=0, 
-		@active_start_date=20241220, 
+		@active_start_date=20260314, 
 		@active_end_date=99991231, 
 		@active_start_time=0, 
 		@active_end_time=235959, 
-		@schedule_uid=N'e31749a7-f336-4f83-8c06-0a0abda5d105'
+		@schedule_uid=N'71afb118-abc4-45a2-ad1b-ba8797f57b11'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_add_jobserver @job_id = @jobId, @server_name = N'(local)'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
