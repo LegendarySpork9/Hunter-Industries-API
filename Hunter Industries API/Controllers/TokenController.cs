@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -10,11 +11,11 @@ using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.User;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.Swagger.Annotations;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -35,6 +36,7 @@ namespace HunterIndustriesAPI.Controllers
 
         /// <summary>
         /// </summary>
+        // Sets the class's global variables.
         public TokenController(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
@@ -140,10 +142,10 @@ namespace HunterIndustriesAPI.Controllers
 
             if (_tokenFunction.IsValidUser(usernames, passwords, phrases, request.Username, request.Password, request.Phrase))
             {
-                var claims = _tokenConverter.GetClaims(await _userService.GetUserScopes(0, request.Username));
+                Claim[] claims = _tokenConverter.GetClaims(await _userService.GetUserScopes(0, request.Username));
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));
+                SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 string token = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
                     ValidationModel.Issuer,

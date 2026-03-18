@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Primitives;
+﻿// Copyright © - Unpublished - Toby Hunter
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections;
 using System.Globalization;

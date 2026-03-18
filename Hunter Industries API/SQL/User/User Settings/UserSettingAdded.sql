@@ -1,18 +1,10 @@
-﻿insert into UserSetting (UserId, ApplicationId, [Name], [Value])
+insert into UserSetting (UserId, ApplicationId, [Name], [Value])
 output inserted.UserSettingId
-values (
-	(
-		select
-			UserId
-		from APIUser with (nolock)
-		where Username = @Username
-	),
-	(
-		select
-			ApplicationId
-		from [Application] with (nolock)
-		where [Name] = @Application
-	),
+select
+	AU.UserId,
+	A.ApplicationId,
 	@Name,
 	@Value
-)
+from APIUser AU with (nolock)
+join [Application] A with (nolock) on A.[Name] = @Application
+where AU.Username = @Username

@@ -1,9 +1,9 @@
 ﻿select
 	AH.AuditId,
 	IPAddress,
-	E.[Value],
-	M.[Value],
-	SC.[Value],
+	E.[Value] as Endpoint,
+	M.[Value] as [Method],
+	SC.[Value] as StatusCode,
 	AH.DateOccured,
 	[Parameters],
 	AttemptId,
@@ -11,7 +11,7 @@
 	Phrase,
 	IsSuccessful,
 	ChangeId,
-	CE.[Value],
+	CE.[Value] as ChangeEndpoint,
 	Field,
 	OldValue,
 	NewValue

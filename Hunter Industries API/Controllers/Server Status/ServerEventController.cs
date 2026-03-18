@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -8,7 +9,6 @@ using HunterIndustriesAPI.Objects.ServerStatus;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.ServerStatus;
 using Swashbuckle.Swagger.Annotations;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -33,6 +33,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
         /// <summary>
         /// </summary>
+        // Sets the class's global variables.
         public ServerEventController(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,

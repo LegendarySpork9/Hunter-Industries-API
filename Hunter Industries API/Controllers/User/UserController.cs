@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -33,6 +34,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
         /// <summary>
         /// </summary>
+        // Sets the class's global variables.
         public UserController(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,

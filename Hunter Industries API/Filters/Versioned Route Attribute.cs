@@ -1,17 +1,16 @@
+// Copyright © - Unpublished - Toby Hunter
 using System;
 using System.Web.Http.Routing;
 
 namespace HunterIndustriesAPI.Filters
 {
     /// <summary>
-    /// A route attribute that automatically registers routes for all API versions
-    /// from the minimum version up to the current version.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class VersionedRouteAttribute : Attribute, IDirectRouteFactory
     {
         /// <summary>
-        /// All known API versions in order. Add new versions to the end of this array.
+        /// All known API versions in order.
         /// </summary>
         public static readonly string[] ApiVersions = { "1.0", "1.1" };
 
@@ -32,9 +31,6 @@ namespace HunterIndustriesAPI.Filters
 
         /// <summary>
         /// </summary>
-        /// <param name="path">The route path without the api/vN.N/ prefix.</param>
-        /// <param name="minVersion">The minimum API version this route is available from.</param>
-        /// <param name="maxVersion">The maximum API version this route is available up to. Defaults to the latest version.</param>
         public VersionedRouteAttribute(string path, string minVersion, string maxVersion = null)
         {
             Path = path;
@@ -43,6 +39,7 @@ namespace HunterIndustriesAPI.Filters
         }
 
         /// <summary>
+        /// Creates the route for the given context.
         /// </summary>
         RouteEntry IDirectRouteFactory.CreateRoute(DirectRouteFactoryContext context)
         {

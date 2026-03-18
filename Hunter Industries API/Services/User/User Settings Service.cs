@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -21,8 +22,8 @@ namespace HunterIndustriesAPI.Services.User
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public UserSettingsService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,

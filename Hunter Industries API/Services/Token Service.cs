@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -23,8 +24,8 @@ namespace HunterIndustriesAPI.Services
         private string ProgramName;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public TokenService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -62,7 +63,7 @@ namespace HunterIndustriesAPI.Services
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetUsers.SQL");
-                (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(1), reader.GetString(2)));
+                (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetString(1)));
 
                 if (ex != null)
                 {
@@ -95,7 +96,7 @@ namespace HunterIndustriesAPI.Services
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetAuthorisationPhrases.SQL");
-                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(1));
+                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(0));
 
                 if (ex != null)
                 {

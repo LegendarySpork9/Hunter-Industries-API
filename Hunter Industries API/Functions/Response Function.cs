@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Functions
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Functions
 {
     /// <summary>
     /// </summary>

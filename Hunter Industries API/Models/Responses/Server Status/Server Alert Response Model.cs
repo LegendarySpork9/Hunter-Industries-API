@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Objects.ServerStatus;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Objects.ServerStatus;
 using System.Collections.Generic;
 
 namespace HunterIndustriesAPI.Models.Responses.ServerStatus

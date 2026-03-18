@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models.Responses.Assistant
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models.Responses.Assistant
 {
     /// <summary>
     /// </summary>

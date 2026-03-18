@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Abstractions
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Abstractions
 {
     /// <summary>
     /// Interface for the logger service.

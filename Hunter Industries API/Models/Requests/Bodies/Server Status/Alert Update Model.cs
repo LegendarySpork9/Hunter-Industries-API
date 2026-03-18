@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
 {
     public class AlertUpdateModel
     {

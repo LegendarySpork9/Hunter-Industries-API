@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿// Copyright © - Unpublished - Toby Hunter
+using System.Security.Cryptography;
 using System.Text;
 
 namespace HunterIndustriesAPI.Functions

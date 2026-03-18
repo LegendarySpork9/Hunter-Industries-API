@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿// Copyright © - Unpublished - Toby Hunter
+using log4net;
 
 namespace HunterIndustriesAPI.Services
 {

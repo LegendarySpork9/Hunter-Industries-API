@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -21,8 +22,8 @@ namespace HunterIndustriesAPI.Services
         private readonly IClock _Clock;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public AuditHistoryService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -271,7 +272,7 @@ fetch next @PageSize rows only";
                     auditHistories.Add(current);
                 }
 
-                totalRecords = await GetTotalAuditHistory(auditId, ipAddress, endpoint, fromDate);
+                totalRecords = await GetTotalAuditHistory(ipAddress, endpoint, fromDate);
             }
 
             catch (Exception ex)
@@ -288,7 +289,7 @@ fetch next @PageSize rows only";
         /// <summary>
         /// Returns the number of audit history records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalAuditHistory(int auditId, string ipAddress, string endpoint, DateTime fromDate)
+        private async Task<int> GetTotalAuditHistory(string ipAddress, string endpoint, DateTime fromDate)
         {
             int totalRecords = 0;
 

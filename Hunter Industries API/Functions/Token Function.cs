@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using System;
@@ -12,8 +13,8 @@ namespace HunterIndustriesAPI.Functions
         private readonly ILoggerService _Logger;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public TokenFunction(
             ILoggerService _logger)
         {

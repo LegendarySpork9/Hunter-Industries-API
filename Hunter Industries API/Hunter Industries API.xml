@@ -69,20 +69,13 @@
             <summary>
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.BundleConfig">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
-            <summary>
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.FilterConfig">
             <summary>
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.FilterConfig.RegisterGlobalFilters(System.Web.Mvc.GlobalFilterCollection)">
             <summary>
+            Sets up the global filters.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.RouteConfig">
@@ -91,6 +84,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.RouteConfig.RegisterRoutes(System.Web.Routing.RouteCollection)">
             <summary>
+            Setus up the routing.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.SwaggerConfig">
@@ -99,6 +93,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.SwaggerConfig.Register">
             <summary>
+            Sets up the Swagger page.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.WebApiConfig">
@@ -107,6 +102,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
             <summary>
+            Sets up the application configuration.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.ConfigController">
@@ -689,7 +685,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.#ctor(System.IServiceProvider)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.BeginScope">
@@ -718,7 +713,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.#ctor(System.String)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.OnAuthorization(System.Web.Http.Controllers.HttpActionContext)">
@@ -739,6 +733,11 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionedDirectRouteProvider.ExpandVersionedFactories(System.Collections.Generic.IReadOnlyList{System.Web.Http.Routing.IDirectRouteFactory})">
+            <summary>
+            Returns a list of routes based on the given descriptor.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Filters.VersionSpecificRouteFactory">
             <summary>
             Creates a route entry for a specific versioned route template.
@@ -750,17 +749,16 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.VersionSpecificRouteFactory.CreateRoute(System.Web.Http.Routing.DirectRouteFactoryContext)">
             <summary>
+            Creates the route for the given context.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Filters.VersionedRouteAttribute">
             <summary>
-            A route attribute that automatically registers routes for all API versions
-            from the minimum version up to the current version.
             </summary>
         </member>
         <member name="F:HunterIndustriesAPI.Filters.VersionedRouteAttribute.ApiVersions">
             <summary>
-            All known API versions in order. Add new versions to the end of this array.
+            All known API versions in order.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Filters.VersionedRouteAttribute.Path">
@@ -781,12 +779,10 @@
         <member name="M:HunterIndustriesAPI.Filters.VersionedRouteAttribute.#ctor(System.String,System.String,System.String)">
             <summary>
             </summary>
-            <param name="path">The route path without the api/vN.N/ prefix.</param>
-            <param name="minVersion">The minimum API version this route is available from.</param>
-            <param name="maxVersion">The maximum API version this route is available up to. Defaults to the latest version.</param>
         </member>
         <member name="M:HunterIndustriesAPI.Filters.VersionedRouteAttribute.System#Web#Http#Routing#IDirectRouteFactory#CreateRoute(System.Web.Http.Routing.DirectRouteFactoryContext)">
             <summary>
+            Creates the route for the given context.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
@@ -857,7 +853,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Functions.TokenFunction.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Functions.TokenFunction.ExtractCredentialsFromBasicAuth(System.String)">
@@ -888,6 +883,10 @@
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Implementations.DatabaseWrapper">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.#ctor(HunterIndustriesAPI.Abstractions.IDatabaseOptions)">
             <summary>
             </summary>
         </member>
@@ -1845,7 +1844,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.GetAssistantConfig(System.String,System.String)">
@@ -1879,7 +1877,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.GetAssistantDeletion(System.String,System.String)">
@@ -1898,7 +1895,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.LocationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.LocationService.GetAssistantLocation(System.String,System.String)">
@@ -1917,7 +1913,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.VersionService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.VersionService.GetAssistantVersion(System.String,System.String)">
@@ -1936,7 +1931,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IClock)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.String[])">
@@ -1954,7 +1948,7 @@
             Returns all audit history records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.Int32,System.String,System.String,System.DateTime)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.String,System.String,System.DateTime)">
             <summary>
             Returns the number of audit history records that match the parameters.
             </summary>
@@ -1965,7 +1959,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.ChangeService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.Int32,System.String,System.String,System.String)">
@@ -2022,7 +2015,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Services.ServerStatus.ServerInformationService)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetServerAlerts(System.Int32,System.Int32)">
@@ -2061,7 +2053,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Services.ServerStatus.ServerInformationService)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.GetServerEvents(System.String)">
@@ -2080,7 +2071,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServers(System.Boolean)">
@@ -2109,7 +2099,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.TokenService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,System.String)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.TokenService.ApplicationName">
@@ -2138,7 +2127,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.Int32,System.String)">
@@ -2192,7 +2180,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.GetUserSettings(System.Int32,System.String)">
@@ -2231,6 +2218,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Startup.Configuration(Owin.IAppBuilder)">
             <summary>
+            Sets up the app.
             </summary>
         </member>
     </members>

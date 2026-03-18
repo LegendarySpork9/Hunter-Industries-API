@@ -1,30 +1,14 @@
-﻿insert into ServerInformation (MachineId, GameId, ConnectionId, DowntimeId)
+insert into ServerInformation (MachineId, GameId, ConnectionId, DowntimeId)
 output inserted.ServerInformationId
-values (
-	(
-		select
-			MachineId
-		from Machine with (nolock)
-		where HostName = @HostName
-	),
-	(
-		select
-			GameId
-		from Game with (nolock)
-		where [Name] = @Game
-		and [Version] = @GameVersion
-	),
-	(
-		select
-			ConnectionId
-		from Connection with (nolock)
-		where IPAddress = @IPAddress
-		and [Port] = @Port
-	),
-	(
-		select
-			DowntimeId
-		from Downtime with (nolock)
-		where [Time] = @Time
-	)
-)
+select
+	M.MachineId,
+	G.GameId,
+	C.ConnectionId,
+	D.DowntimeId
+from Machine M with (nolock)
+join Game G with (nolock) on G.[Name] = @Game
+	and G.[Version] = @GameVersion
+join Connection C with (nolock) on C.IPAddress = @IPAddress
+	and C.[Port] = @Port
+left join Downtime D with (nolock) on D.[Time] = @Time
+where M.HostName = @HostName

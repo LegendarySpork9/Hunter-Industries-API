@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Mappings;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace HunterIndustriesAPI.Filters
         private readonly string RequiredPermission;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public RequiredPolicyAuthorisationAttributeFilter(string requiredPermission)
         {
             RequiredPermission = requiredPermission;

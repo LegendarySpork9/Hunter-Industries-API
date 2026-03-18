@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Objects;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Objects;
 
 namespace HunterIndustriesAPI.Models.Responses
 {

@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Converters
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Converters
 {
     /// <summary>
     /// </summary>

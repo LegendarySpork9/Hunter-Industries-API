@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -22,8 +23,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         private readonly ServerInformationService _ServerInformationService;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public ServerEventService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,

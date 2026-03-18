@@ -1,7 +1,7 @@
 ﻿select
-	[Application].[Name],
+	[Application].[Name] as ApplicationName,
 	UserSettingId,
-	UserSetting.[Name],
+	UserSetting.[Name] as SettingName,
 	[Value]
 from UserSetting with (nolock)
 join [Application] with (nolock) on UserSetting.ApplicationId = [Application].ApplicationId

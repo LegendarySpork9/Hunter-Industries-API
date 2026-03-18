@@ -1,1 +1,1 @@
-﻿select * from Authorisation with (nolock)
+﻿select Phrase from Authorisation with (nolock)
