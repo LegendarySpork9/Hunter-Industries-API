@@ -3,10 +3,9 @@ values (
 	@LocationId,
 	2,
 	(
-		select top 1
-			VersionId
+		select
+			max(VersionId)
 		from [Version] with (nolock)
-		order by VersionId desc
 	),
 	@UserId,
 	@AssistantName,

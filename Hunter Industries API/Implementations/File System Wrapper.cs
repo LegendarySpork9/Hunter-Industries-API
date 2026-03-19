@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Abstractions;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Abstractions;
 using System.IO;
 
 namespace HunterIndustriesAPI.Implementations

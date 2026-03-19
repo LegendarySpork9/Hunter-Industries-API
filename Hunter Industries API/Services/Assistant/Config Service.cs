@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -20,8 +21,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public ConfigService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -38,9 +39,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<(List<AssistantConfiguration>, int, string)> GetAssistantConfig(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             List<AssistantConfiguration> assistantConfigurations = new List<AssistantConfiguration>();
             int totalConfigs = 0;
@@ -92,7 +91,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {_parameterFunction.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {ParameterFunction.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
             return (assistantConfigurations, totalConfigs, mostRecentVersion);
         }
 
@@ -101,6 +100,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         private async Task<int> GetTotalConfigs(string assistantName, string assistantId)
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetTotalConfigs called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+
             int totalRecords = 0;
 
             try
@@ -137,6 +138,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetTotalConfigs returned {totalRecords}.");
             return totalRecords;
         }
 
@@ -145,6 +147,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<string> GetMostRecentVersion()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetMostRecentVersion called.");
+
             string version = string.Empty;
 
             try
@@ -172,6 +176,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetMostRecentVersion returned {version}.");
             return version;
         }
 
@@ -180,9 +185,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantExists(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             bool exists = false;
 
@@ -229,9 +232,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantConfigCreated(string assistantName, string assistantId, string assignedUser, string hostName)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
 
             bool created = true;
 

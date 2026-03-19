@@ -1,12 +1,12 @@
 ﻿select
 	ServerAlertId,
-	US.[Value],
-	Component.[Name],
-	CS.[Value],
-	SAS.[Value],
+	US.[Value] as Reporter,
+	Component.[Name] as Component,
+	CS.[Value] as ComponentStatus,
+	SAS.[Value] as AlertStatus,
 	DateOccured,
 	HostName,
-	Game.[Name],
+	Game.[Name] as Game,
 	[Version]
 from ServerAlert SA with (nolock)
 join UserSetting US with (nolock) on SA.UserSettingId = US.UserSettingId

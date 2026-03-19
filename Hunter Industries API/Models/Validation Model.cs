@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models
 {
     /// <summary>
     /// </summary>

@@ -1,19 +1,26 @@
-﻿namespace HunterIndustriesAPI.Converters
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Converters
 {
     /// <summary>
     /// </summary>
-    public class StandardValues
+    public static class StandardValues
     {
         /// <summary>
         /// </summary>
         public static class LoggerValues
         {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+            /// <summary>
+            /// </summary>
             public const string Debug = "Debug";
+            /// <summary>
+            /// </summary>
             public const string Error = "Error";
+            /// <summary>
+            /// </summary>
             public const string Info = "Info";
+            /// <summary>
+            /// </summary>
             public const string Warning = "Warn";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
     }
 }

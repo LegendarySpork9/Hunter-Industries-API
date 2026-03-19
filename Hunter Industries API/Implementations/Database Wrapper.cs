@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Abstractions;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,6 +13,8 @@ namespace HunterIndustriesAPI.Implementations
     {
         private readonly IDatabaseOptions _Options;
 
+        /// <summary>
+        /// </summary>
         // Sets the class's global variables.
         public DatabaseWrapper(
             IDatabaseOptions _options)

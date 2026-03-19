@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Controllers;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
 using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Controllers.User;

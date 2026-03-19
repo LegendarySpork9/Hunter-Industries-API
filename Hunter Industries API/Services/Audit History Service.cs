@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -21,8 +22,8 @@ namespace HunterIndustriesAPI.Services
         private readonly IClock _Clock;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public AuditHistoryService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -41,13 +42,11 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<(bool, int)> LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[] parameters = null)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {_parameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), _parameterFunction.FormatParameters(parameters) })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), ParameterFunction.FormatParameters(parameters) })}.");
 
             bool logged = false;
             int auditId = 0;
-            string formattedParameters = _parameterFunction.FormatParameters(parameters, true);
+            string formattedParameters = ParameterFunction.FormatParameters(parameters, true);
 
             try
             {
@@ -93,9 +92,7 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task LogLoginAttempt(int auditId, bool isSuccessful, string username = null, string password = null, string phrase = null)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {_parameterFunction.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
 
             try
             {
@@ -132,9 +129,7 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId, string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {_parameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<AuditHistoryRecord> auditHistories = new List<AuditHistoryRecord>();
             int totalRecords = 0;
@@ -192,7 +187,7 @@ fetch next @PageSize rows only";
 
                     if (!reader.IsDBNull(6))
                     {
-                        auditHistory.Paramaters = _parameterFunction.FormatParameters(reader.GetString(6));
+                        auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(6));
                     }
 
                     LoginAttemptRecord loginAttempt = null;
@@ -271,7 +266,7 @@ fetch next @PageSize rows only";
                     auditHistories.Add(current);
                 }
 
-                totalRecords = await GetTotalAuditHistory(auditId, ipAddress, endpoint, fromDate);
+                totalRecords = await GetTotalAuditHistory(ipAddress, endpoint, fromDate);
             }
 
             catch (Exception ex)
@@ -288,8 +283,10 @@ fetch next @PageSize rows only";
         /// <summary>
         /// Returns the number of audit history records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalAuditHistory(int auditId, string ipAddress, string endpoint, DateTime fromDate)
+        private async Task<int> GetTotalAuditHistory(string ipAddress, string endpoint, DateTime fromDate)
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString() })}.");
+
             int totalRecords = 0;
 
             try
@@ -334,6 +331,7 @@ fetch next @PageSize rows only";
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory returned {totalRecords}.");
             return totalRecords;
         }
     }

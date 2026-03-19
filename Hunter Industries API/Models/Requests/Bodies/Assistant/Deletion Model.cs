@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models.Requests.Bodies.Assistant
 {
     /// <summary>
     /// </summary>

@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -22,8 +23,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         private readonly ServerInformationService _ServerInformationService;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public ServerAlertService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -42,9 +43,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(List<ServerAlertRecord>, int)> GetServerAlerts(int pageSize, int pageNumber)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlerts called with the parameters {_parameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlerts called with the parameters {ParameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<ServerAlertRecord> serverAlerts = new List<ServerAlertRecord>();
             int totalRecords = 0;
@@ -101,7 +100,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<ServerAlertRecord> GetServerAlert(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             ServerAlertRecord serverAlert = new ServerAlertRecord();
 
@@ -158,6 +157,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         private async Task<int> GetTotalServerAlerts()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetTotalServerAlerts called.");
+
             int totalRecords = 0;
 
             try
@@ -182,6 +183,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetTotalServerAlerts returned {totalRecords}.");
             return totalRecords;
         }
 
@@ -190,9 +192,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(bool, int)> LogServerAlert(ServerAlertModel serverAlert)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert called with the parameters {_parameterFunction.FormatParameters(serverAlert)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert called with the parameters {ParameterFunction.FormatParameters(serverAlert)}.");
 
             bool logged = true;
             int serverAlertId = 0;
@@ -249,9 +249,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<bool> ServerAlertExists(int id)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             bool exists = false;
 
@@ -294,7 +292,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<bool> ServerAlertUpdated(int id, string value)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated called with the parameters \"{id}\", \"{value}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), value })}.");
 
             bool updated = true;
 

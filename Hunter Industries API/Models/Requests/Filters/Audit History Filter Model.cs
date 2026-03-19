@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models.Requests.Filters
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models.Requests.Filters
 {
     /// <summary>
     /// </summary>

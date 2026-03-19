@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -32,6 +33,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
         /// <summary>
         /// </summary>
+        // Sets the class's global variables.
         public ServerInformationController(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
@@ -62,15 +64,13 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         public async Task<IHttpActionResult> Get([FromUri] bool isActive = false)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (get) endpoint called with the following parameters \"{isActive}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Get) endpoint called with the following parameters \"{isActive}\".");
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
                     new string[] { isActive.ToString() });
 
             List<ServerInformationRecord> servers = await _serverInformationService.GetServers(isActive);
@@ -86,7 +86,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -96,7 +96,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 Data = servers
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -127,12 +127,9 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Post([FromBody, Required] ServerInformationModel request)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
             ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ResponseFunction _responseFunction = new ResponseFunction();
 
             ResponseModel response;
 
@@ -141,11 +138,11 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 request = new ServerInformationModel();
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request, true, null, new string[] { "Time" }))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
                     null);
 
                 response = new ResponseModel()
@@ -157,13 +154,13 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
             if (await _serverInformationService.ServerExists(request.HostName, request.Game, request.GameVersion))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("OK"), _parameterFunction.FormatParameters(null, request));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -174,7 +171,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -182,7 +179,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             if (!added)
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), _parameterFunction.FormatParameters(null, request));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -192,11 +189,11 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"), _parameterFunction.FormatParameters(null, request));
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"), ParameterFunction.FormatParameters(null, request));
 
             DowntimeRecord downtime = null;
 
@@ -227,7 +224,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.Created, response.Data);
         }
     }

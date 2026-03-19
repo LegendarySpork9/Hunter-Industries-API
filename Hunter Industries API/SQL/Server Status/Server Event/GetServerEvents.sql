@@ -25,6 +25,6 @@ select
 	Game,
 	[Version],
 	DateOccured
-from RankedComponentInformation with (nolock)
+from RankedComponentInformation
 where rn = 1
-order by 6 desc
+order by DateOccured desc

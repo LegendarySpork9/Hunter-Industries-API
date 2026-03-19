@@ -1,2 +1,2 @@
-﻿select * from APIUser with (nolock)
+﻿select UserId, Username, [Password] from APIUser with (nolock)
 where IsDeleted = 0

@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Copyright © - Unpublished - Toby Hunter
+using System;
 using System.Collections.Generic;
 
 namespace HunterIndustriesAPI.Objects

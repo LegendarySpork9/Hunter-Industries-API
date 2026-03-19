@@ -1,4 +1,5 @@
-﻿using Swashbuckle.Swagger;
+﻿// Copyright © - Unpublished - Toby Hunter
+using Swashbuckle.Swagger;
 using System;
 using System.Linq;
 

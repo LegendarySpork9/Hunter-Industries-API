@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Controllers;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Controllers;
 using Swashbuckle.Swagger;
 using System.Web.Http.Description;
 

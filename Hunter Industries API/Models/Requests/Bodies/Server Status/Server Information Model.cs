@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
 {
     /// <summary>

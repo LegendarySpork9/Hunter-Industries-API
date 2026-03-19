@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
@@ -20,8 +21,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public LocationService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -38,9 +39,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<LocationResponseModel> GetAssistantLocation(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             LocationResponseModel location = new LocationResponseModel();
 
@@ -81,7 +80,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {_parameterFunction.FormatParameters(location)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {ParameterFunction.FormatParameters(location)}.");
             return location;
         }
 
@@ -90,9 +89,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantLocationUpdated(string assistantName, string assistantId, string hostName, string ipAddress)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
 
             bool updated = true;
 

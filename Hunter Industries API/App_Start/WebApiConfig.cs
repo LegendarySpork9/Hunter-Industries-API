@@ -1,16 +1,12 @@
-﻿using HunterIndustriesAPI.Abstractions;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Implementations;
 using HunterIndustriesAPI.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 
@@ -21,6 +17,7 @@ namespace HunterIndustriesAPI
     public static class WebApiConfig
     {
         /// <summary>
+        /// Sets up the application configuration.
         /// </summary>
         public static void Register(HttpConfiguration config)
         {
