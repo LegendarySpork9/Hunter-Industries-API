@@ -63,6 +63,7 @@ namespace HunterIndustriesAPI
                         c.DocumentTitle("Hunter Industries API");
                         c.InjectStylesheet(thisAssembly, "HunterIndustriesAPI.CSS.Swagger.css");
                         c.InjectJavaScript(thisAssembly, "HunterIndustriesAPI.JS.VersionSelector.js");
+                        c.InjectJavaScript(thisAssembly, "HunterIndustriesAPI.JS.GroupHeaders.js");
                         c.EnableDiscoveryUrlSelector();
                     });
         }
