@@ -43,7 +43,7 @@ namespace HunterIndustriesAPI.Filters
         /// </summary>
         RouteEntry IDirectRouteFactory.CreateRoute(DirectRouteFactoryContext context)
         {
-            IDirectRouteBuilder builder = context.CreateBuilder($"api/v{MinVersion}/{Path}");
+            IDirectRouteBuilder builder = context.CreateBuilder($"v{MinVersion}/{Path}");
             return builder.Build();
         }
     }
