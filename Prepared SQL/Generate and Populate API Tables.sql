@@ -666,27 +666,27 @@ INSERT [dbo].[Deletion] ([Value]) VALUES ('True')
 GO
 INSERT [dbo].[Deletion] ([Value]) VALUES ('False')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/auth/token')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/auth/token')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/audithistory')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/audithistory')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/config')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/config')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/version')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/version')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/deletion')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/deletion')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/assistant/location')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/location')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/user')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/user')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/UserSetting')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/UserSetting')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverinformation')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/serverstatus/serverinformation')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serverevent')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/serverstatus/serverevent')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://hunter-industries.co.uk/api/serverstatus/serveralert')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/serverstatus/serveralert')
 GO
 INSERT [dbo].[Method] ([Value]) VALUES ('GET')
 GO

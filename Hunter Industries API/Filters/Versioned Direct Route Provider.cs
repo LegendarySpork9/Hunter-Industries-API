@@ -41,7 +41,7 @@ namespace HunterIndustriesAPI.Filters
 
                     for (int i = minIndex; i <= maxIndex; i++)
                     {
-                        expanded.Add(new VersionSpecificRouteFactory($"api/v{VersionedRouteAttribute.ApiVersions[i]}/{versioned.Path}"));
+                        expanded.Add(new VersionSpecificRouteFactory($"v{VersionedRouteAttribute.ApiVersions[i]}/{versioned.Path}"));
                     }
                 }
                 else
