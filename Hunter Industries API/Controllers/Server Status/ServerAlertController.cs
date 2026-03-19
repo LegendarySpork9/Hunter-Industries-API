@@ -330,12 +330,12 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
                 if (await _serverAlertService.ServerAlertUpdated(id, request.Status))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
                         new string[] { id.ToString(), request.Status });
 
                     if (!string.IsNullOrEmpty(request.Status) && request.Status != alertRecord.AlertStatus)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), auditID.Item2, "Alert Status", alertRecord.AlertStatus, request.Status);
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), audit.Item2, "Alert Status", alertRecord.AlertStatus, request.Status);
                         alertRecord.AlertStatus = request.Status;
                     }
 

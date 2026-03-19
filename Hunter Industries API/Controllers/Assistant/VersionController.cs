@@ -194,12 +194,12 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
                 if (await _versionService.AssistantVersionUpdated(filters.AssistantName, filters.AssistantId, request.Version))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
                         new string[] { filters.AssistantName, filters.AssistantId, request.Version });
 
                     if (request.Version != versionResponse.Version)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/version"), auditID.Item2, "Version", versionResponse.Version, request.Version);
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/version"), audit.Item2, "Version", versionResponse.Version, request.Version);
                     }
 
                     versionResponse.Version = request.Version;

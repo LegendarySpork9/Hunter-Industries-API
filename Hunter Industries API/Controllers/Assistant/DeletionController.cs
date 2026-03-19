@@ -194,12 +194,12 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
                 if (await _deletionService.AssistantDeletionUpdated(filters.AssistantName, filters.AssistantId, bool.Parse(request.Deletion.ToString())))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/deletion"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/deletion"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
                         new string[] { filters.AssistantName, filters.AssistantId, request.Deletion.ToString() });
 
                     if (request.Deletion != deletionResponse.Deletion)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/deletion"), auditID.Item2, "Deletion", deletionResponse.Deletion.ToString(), request.Deletion.ToString());
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/deletion"), audit.Item2, "Deletion", deletionResponse.Deletion.ToString(), request.Deletion.ToString());
                     }
 
                     deletionResponse.Deletion = request.Deletion;

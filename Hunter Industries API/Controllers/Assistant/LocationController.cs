@@ -194,18 +194,18 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
                 if (await _locationService.AssistantLocationUpdated(filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
                         new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                     if (!string.IsNullOrEmpty(request.HostName) && request.HostName != locationResponse.HostName)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/location"), auditID.Item2, "Host Name", locationResponse.HostName, request.HostName);
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/location"), audit.Item2, "Host Name", locationResponse.HostName, request.HostName);
                         locationResponse.HostName = request.HostName;
                     }
 
                     if (!string.IsNullOrEmpty(request.IPAddress) && request.IPAddress != locationResponse.IPAddress)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/location"), auditID.Item2, "IP Address", locationResponse.IPAddress, request.IPAddress);
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/location"), audit.Item2, "IP Address", locationResponse.IPAddress, request.IPAddress);
                         locationResponse.IPAddress = request.IPAddress;
                     }
 

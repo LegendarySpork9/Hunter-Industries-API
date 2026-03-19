@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Filters.Document
         public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
         {
             string version = swaggerDoc.info.version;
-            string versionPrefix = $"/v{version}";
+            string versionPrefix = $"/{version}";
 
             swaggerDoc.basePath = $"api.hunter-industries.co.uk{versionPrefix}";
 

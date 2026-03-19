@@ -372,24 +372,24 @@ namespace HunterIndustriesAPI.Controllers.User
 
                 if (await _userService.UserUpdated(id, request.Username, HashFunction.HashString(request.Password), UserFunction.GetScopesUpdateList(userRecord.Scopes, request.Scopes)))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
-                        new string[] { id.ToString(), request.Username, HashFunction.HashString(request.Password), ParameterFunction.FormatParameters(request.Scopes.ToList<object>(), true) });
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                        new string[] { id.ToString(), request.Username, HashFunction.HashString(request.Password), ParameterFunction.FormatParameters(request.Scopes?.ToList<object>(), true) });
 
                     if (!string.IsNullOrEmpty(request.Username) && request.Username != userRecord.Username)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), auditID.Item2, "Username", userRecord.Username, request.Username);
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), audit.Item2, "Username", userRecord.Username, request.Username);
                         userRecord.Username = request.Username;
                     }
 
                     if (!string.IsNullOrEmpty(request.Password) && HashFunction.HashString(request.Password) != userRecord.Password)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), auditID.Item2, "Password", userRecord.Password, HashFunction.HashString(request.Password));
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), audit.Item2, "Password", userRecord.Password, HashFunction.HashString(request.Password));
                         userRecord.Password = HashFunction.HashString(request.Password);
                     }
 
                     if (request.Scopes != null && !Enumerable.SequenceEqual(request.Scopes, userRecord.Scopes))
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), auditID.Item2, "Scopes", ParameterFunction.FormatParameters(userRecord.Scopes.ToList<object>()), ParameterFunction.FormatParameters(request.Scopes.ToList<object>()));
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), audit.Item2, "Scopes", ParameterFunction.FormatParameters(userRecord.Scopes.ToList<object>()), ParameterFunction.FormatParameters(request.Scopes.ToList<object>()));
                         userRecord.Scopes = request.Scopes;
                     }
 
@@ -404,7 +404,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 }
 
                 await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetMethodID("PATCH"),
-                        AuditHistoryConverter.GetStatusID("InternalServerError"), new string[] { id.ToString(), request.Username, HashFunction.HashString(request.Password), ParameterFunction.FormatParameters(request.Scopes.ToList(), true) });
+                        AuditHistoryConverter.GetStatusID("InternalServerError"), new string[] { id.ToString(), request.Username, HashFunction.HashString(request.Password), ParameterFunction.FormatParameters(request.Scopes?.ToList<object>(), true) });
 
                 response = new ResponseModel()
                 {
@@ -420,7 +420,7 @@ namespace HunterIndustriesAPI.Controllers.User
             }
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
-                new string[] { id.ToString(), request.Username, HashFunction.HashString(request.Password), ParameterFunction.FormatParameters(request.Scopes.ToList<object>(), true) });
+                new string[] { id.ToString(), request.Username, HashFunction.HashString(request.Password), ParameterFunction.FormatParameters(request.Scopes?.ToList<object>(), true) });
 
             response = new ResponseModel()
             {
@@ -465,10 +465,10 @@ namespace HunterIndustriesAPI.Controllers.User
             {
                 if (await _userService.UserDeleted(id))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetMethodID("DELETE"), AuditHistoryConverter.GetStatusID("OK"),
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetMethodID("DELETE"), AuditHistoryConverter.GetStatusID("OK"),
                         new string[] { id.ToString() });
 
-                    await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), auditID.Item2, "IsDeleted", "0", "1");
+                    await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("user"), audit.Item2, "IsDeleted", "0", "1");
 
                     response = new ResponseModel()
                     {
