@@ -426,6 +426,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\HI Tech Logo NBG.png" />
     <EmbeddedResource Include="CSS\Swagger.css" />
+    <EmbeddedResource Include="JS\GroupHeaders.js" />
     <EmbeddedResource Include="JS\VersionSelector.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />

@@ -40,3 +40,31 @@
 .swagger-section .swagger-ui-wrap .code {
     font-weight: normal;
 }
+
+.swagger-section ul#resources {
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
+}
+
+.swagger-section ul#resources.grouped {
+    opacity: 1;
+}
+
+.swagger-section li.group-header {
+    list-style: none;
+    padding: 15px 0 5px 0;
+    margin: 0;
+}
+
+.swagger-section li.group-header:first-child {
+    padding-top: 0;
+}
+
+.swagger-section li.group-header h2 {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #130f3c;
+    border-bottom: 2px solid #130f3c;
+    padding-bottom: 5px;
+    margin: 0;
+}
