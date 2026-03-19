@@ -31,7 +31,7 @@ namespace HunterIndustriesAPI
                             (apiDesc, targetApiVersion) =>
                             {
                                 var route = "/" + apiDesc.RelativePath.ToLower();
-                                return route.StartsWith($"/v{targetApiVersion}/");
+                                return route.StartsWith($"/{targetApiVersion}/");
                             },
                             vc =>
                             {

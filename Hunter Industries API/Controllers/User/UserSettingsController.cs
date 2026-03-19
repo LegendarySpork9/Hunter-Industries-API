@@ -273,12 +273,12 @@ namespace HunterIndustriesAPI.Controllers.User
 
                 if (await _userSettingsService.UserSettingUpdated(id, request.Value))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
                         new string[] { id.ToString(), request.Value });
 
                     if (!string.IsNullOrEmpty(request.Value) && request.Value != setting.Value)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("usersettings"), auditID.Item2, setting.Name, setting.Value, request.Value);
+                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("usersettings"), audit.Item2, setting.Name, setting.Value, request.Value);
                         setting.Value = request.Value;
                     }
 
