@@ -177,6 +177,7 @@
                  }
              </remarks>
              <param name="request">An object containing the deletion value.</param>
+             <param name="filters">An object containing the fitler to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.VersionController">
             <summary>
@@ -212,6 +213,7 @@
                  }
              </remarks>
              <param name="request">An object containing the version information.</param>
+             <param name="filters">An object containing the fitler to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.LocationController">
             <summary>
@@ -247,6 +249,7 @@
                  }
              </remarks>
              <param name="request">An object containing the location data.</param>
+             <param name="filters">An object containing the fitler to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.AuditController">
             <summary>
@@ -618,6 +621,22 @@
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.StandardValues.LoggerValues">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Debug">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Error">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Info">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Warning">
             <summary>
             </summary>
         </member>
@@ -1044,6 +1063,10 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Assistant.VersionModel.Version">
             <summary>
             The version of the assistant.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel">
+            <summary>
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel.Status">
