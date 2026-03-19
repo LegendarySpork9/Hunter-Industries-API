@@ -6,12 +6,12 @@ namespace HunterIndustriesAPI.Functions
 {
     /// <summary>
     /// </summary>
-    public class HashFunction
+    public static class HashFunction
     {
         /// <summary>
         /// Takes the given value and hashes it.
         /// </summary>
-        public string HashString(string value)
+        public static string HashString(string value)
         {
             string hashString = null;
 

@@ -5,12 +5,12 @@ namespace HunterIndustriesAPI.Functions
 {
     /// <summary>
     /// </summary>
-    public class UserFunction
+    public static class UserFunction
     {
         /// <summary>
         /// Compares the scopes and generates the update list.
         /// </summary>
-        public List<KeyValuePair<string, string>> GetScopesUpdateList(List<string> currentScopes, List<string> requiredScopes)
+        public static List<KeyValuePair<string, string>> GetScopesUpdateList(List<string> currentScopes, List<string> requiredScopes)
         {
             List<KeyValuePair<string, string>> updateScopes = new List<KeyValuePair<string, string>>();
 

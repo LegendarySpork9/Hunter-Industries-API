@@ -851,10 +851,6 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService)">
-            <summary>
-            </summary>
-        </member>
         <member name="M:HunterIndustriesAPI.Functions.TokenFunction.ExtractCredentialsFromBasicAuth(System.String)">
             <summary>
             Returns the username and password from the decoded header.

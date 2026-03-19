@@ -40,9 +40,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<List<ServerInformationRecord>> GetServers(bool isActive)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameters \"{isActive}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameters {ParameterFunction.FormatParameters(new string[] { isActive.ToString() })}.");
 
             List<ServerInformationRecord> servers = new List<ServerInformationRecord>();
 
@@ -111,9 +109,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<int> GetServer(string hostName, string game, string gameVersion)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer called with the parameters {_parameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer called with the parameters {ParameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
 
             int serverId = 0;
 
@@ -155,9 +151,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<bool> ServerExists(string hostName, string game, string gameVersion)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameters {_parameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameters {ParameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
 
             bool exists = false;
 
@@ -202,9 +196,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(bool, int)> ServerAdded(ServerInformationModel server)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded called with the parameters {_parameterFunction.FormatParameters(null, server)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded called with the parameters {ParameterFunction.FormatParameters(null, server)}.");
 
             bool added = true;
             int serverId = 0;

@@ -38,9 +38,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<VersionResponseModel> GetAssistantVersion(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             VersionResponseModel version = new VersionResponseModel();
 
@@ -80,7 +78,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion returned {_parameterFunction.FormatParameters(version)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.GetAssistantVersion returned {ParameterFunction.FormatParameters(version)}.");
             return version;
         }
 
@@ -89,9 +87,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantVersionUpdated(string assistantName, string assistantId, string version)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, version })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"VersionService.AssistantVersionUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, version })}.");
 
             bool updated = true;
 

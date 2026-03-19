@@ -3,12 +3,12 @@ namespace HunterIndustriesAPI.Converters
 {
     /// <summary>
     /// </summary>
-    public class AuditHistoryConverter
+    public static class AuditHistoryConverter
     {
         /// <summary>
         /// Returns the endpoint id number.
         /// </summary>
-        public int GetEndpointID(string endpoint)
+        public static int GetEndpointID(string endpoint)
         {
             switch (endpoint)
             {
@@ -30,7 +30,7 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Returns the method id number.
         /// </summary>
-        public int GetMethodID(string method)
+        public static int GetMethodID(string method)
         {
             switch (method)
             {
@@ -45,7 +45,7 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Returns the status id number.
         /// </summary>
-        public int GetStatusID(string status)
+        public static int GetStatusID(string status)
         {
             switch (status)
             {

@@ -43,9 +43,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<List<ServerEventRecord>> GetServerEvents(string component)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents called with the parameters \"{component}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents called with the parameters {ParameterFunction.FormatParameters(new string[] { component })}.");
 
             List<ServerEventRecord> serverEvents = new List<ServerEventRecord>();
 
@@ -96,9 +94,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(bool, int)> LogServerEvent(ServerEventModel serverEvent)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent called with the parameters {_parameterFunction.FormatParameters(serverEvent)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent called with the parameters {ParameterFunction.FormatParameters(serverEvent)}.");
 
             bool logged = true;
             int componentInformationId = 0;

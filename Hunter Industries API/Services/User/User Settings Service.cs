@@ -40,9 +40,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<List<UserSettingRecord>> GetUserSettings(int id, string application)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSettings called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSettings called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
 
             List<UserSettingRecord> userSettings = new List<UserSettingRecord>();
 
@@ -124,7 +122,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<SettingRecord> GetUserSetting(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             SettingRecord setting = new SettingRecord();
 
@@ -172,9 +170,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingExists(string username, string application, string settingName)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {_parameterFunction.FormatParameters(new string[] { username, application, settingName })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { username, application, settingName })}.");
 
             bool exists = false;
 
@@ -219,9 +215,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingExists(int id)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             bool exists = false;
 
@@ -264,9 +258,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingAdded(UserSettingsModel userSetting)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded called with the parameters {_parameterFunction.FormatParameters(null, userSetting)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded called with the parameters {ParameterFunction.FormatParameters(null, userSetting)}.");
 
             bool added = true;
 
@@ -316,7 +308,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingUpdated(int id, string value)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated called with the parameters \"{id}\", \"{value}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), value })}.");
 
             bool updated = true;
 
