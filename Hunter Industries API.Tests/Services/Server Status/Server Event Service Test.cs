@@ -40,6 +40,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                 {
                     new ServerEventRecord
                     {
+                        EventId = 1,
                         Component = "CPU",
                         Status = "Online",
                         DateOccured = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
@@ -92,8 +93,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
 
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -119,8 +118,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestLogServerEventFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 

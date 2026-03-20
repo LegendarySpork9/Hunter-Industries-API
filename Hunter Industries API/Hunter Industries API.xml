@@ -1574,6 +1574,11 @@
             <summary>
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.EventId">
+            <summary>
+            The id number of the event.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.Component">
             <summary>
             The name of the component.

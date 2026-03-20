@@ -8,6 +8,10 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
     public class ServerEventRecord
     {
         /// <summary>
+        /// The id number of the event.
+        /// </summary>
+        public int EventId { get; set; }
+        /// <summary>
         /// The name of the component.
         /// </summary>
         public string Component { get; set; }
