@@ -14,6 +14,10 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// </summary>
         public string Status { get; set; }
         /// <summary>
+        /// The id number of the server.
+        /// </summary>
+        public int ServerId { get; set; }
+        /// <summary>
         /// The name of the server.
         /// </summary>
         public string HostName { get; set; }

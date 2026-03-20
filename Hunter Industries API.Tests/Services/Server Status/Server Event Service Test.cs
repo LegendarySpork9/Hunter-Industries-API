@@ -45,6 +45,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                         DateOccured = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
                         Server = new RelatedServerRecord
                         {
+                            Id = 1,
                             HostName = "TestServer",
                             Game = "TestGame",
                             GameVersion = "1.0"
@@ -52,8 +53,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                     }
                 }, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             List<ServerEventRecord> actual = await service.GetServerEvents("CPU");
 
@@ -73,8 +73,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerEventRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerEventRecord>(), null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             List<ServerEventRecord> actual = await service.GetServerEvents("CPU");
 
@@ -97,13 +96,13 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (bool logged, int eventId) = await service.LogServerEvent(new ServerEventModel
             {
                 Component = "CPU",
                 Status = "Online",
+                ServerId = 1,
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -125,13 +124,13 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (bool logged, int eventId) = await service.LogServerEvent(new ServerEventModel
             {
                 Component = "CPU",
                 Status = "Online",
+                ServerId = 1,
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"

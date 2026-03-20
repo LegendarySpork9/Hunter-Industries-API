@@ -5,6 +5,7 @@
 	CS.[Value] as ComponentStatus,
 	SAS.[Value] as AlertStatus,
 	DateOccured,
+	SI.ServerInformationId,
 	HostName,
 	Game.[Name] as Game,
 	[Version]

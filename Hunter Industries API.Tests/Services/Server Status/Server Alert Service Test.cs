@@ -48,6 +48,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                         AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
                         server = new RelatedServerRecord
                         {
+                            Id = 1,
                             HostName = "TestServer",
                             Game = "TestGame",
                             GameVersion = "1.0"
@@ -57,8 +58,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((5, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (List<ServerAlertRecord> alerts, int total) = await service.GetServerAlerts(10, 1);
 
@@ -81,8 +81,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (List<ServerAlertRecord> alerts, int total) = await service.GetServerAlerts(10, 1);
 
@@ -118,8 +117,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                     }
                 }, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             ServerAlertRecord actual = await service.GetServerAlert(1);
 
@@ -140,8 +138,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             ServerAlertRecord actual = await service.GetServerAlert(1);
 
@@ -164,8 +161,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (bool logged, int alertId) = await service.LogServerAlert(new ServerAlertModel
             {
@@ -173,6 +169,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                 Component = "CPU",
                 ComponentStatus = "Critical",
                 AlertStatus = "Open",
+                ServerId = 1,
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -194,8 +191,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (bool logged, int alertId) = await service.LogServerAlert(new ServerAlertModel
             {
@@ -203,6 +199,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                 Component = "CPU",
                 ComponentStatus = "Critical",
                 AlertStatus = "Open",
+                ServerId = 1,
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -226,8 +223,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             bool actual = await service.ServerAlertExists(1);
 
@@ -244,8 +240,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             bool actual = await service.ServerAlertExists(1);
 
@@ -266,8 +261,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             bool actual = await service.ServerAlertUpdated(1, "Closed");
 
@@ -284,8 +278,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
-            ServerInformationService serverInfoService = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object, serverInfoService);
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             bool actual = await service.ServerAlertUpdated(1, "Closed");
 

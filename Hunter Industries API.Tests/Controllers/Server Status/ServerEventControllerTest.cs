@@ -59,6 +59,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                     DateOccured = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
                     Server = new RelatedServerRecord
                     {
+                        Id = 1,
                         HostName = "TestServer",
                         Game = "Minecraft",
                         GameVersion = "1.7.10"
@@ -120,6 +121,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
             {
                 Component = "PC Status",
                 Status = "Online",
+                ServerId = 1,
                 HostName = "TestServer",
                 Game = "Minecraft",
                 GameVersion = "1.7.10"

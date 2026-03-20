@@ -62,6 +62,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                     AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
                     server = new RelatedServerRecord
                     {
+                        Id = 1,
                         HostName = "TestServer",
                         Game = "TestGame",
                         GameVersion = "1.0"
@@ -125,6 +126,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                 AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
                 server = new RelatedServerRecord
                 {
+                    Id = 1,
                     HostName = "TestServer",
                     Game = "TestGame",
                     GameVersion = "1.0"
@@ -187,6 +189,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                 Component = "CPU",
                 ComponentStatus = "Critical",
                 AlertStatus = "Open",
+                ServerId = 1,
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -240,6 +243,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                 AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
                 server = new RelatedServerRecord
                 {
+                    Id = 1,
                     HostName = "TestServer",
                     Game = "TestGame",
                     GameVersion = "1.0"

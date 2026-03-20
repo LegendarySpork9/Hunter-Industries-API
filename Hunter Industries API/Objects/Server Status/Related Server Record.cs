@@ -6,6 +6,10 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
     public class RelatedServerRecord
     {
         /// <summary>
+        /// The id number of the server.
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
         /// The name of the server.
         /// </summary>
         public string HostName { get; set; }
