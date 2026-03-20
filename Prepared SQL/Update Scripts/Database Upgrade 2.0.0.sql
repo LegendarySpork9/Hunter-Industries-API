@@ -18,6 +18,10 @@ UPDATE [Endpoint] SET [Value] = REPLACE([Value], 'hunter-industries.co.uk/api', 
 
 PRINT('Changed URL Values')
 
+UPDATE Component SET [Name] = REPLACE([Name], ' Status', '')
+
+PRINT('Removed "Status" from Component Names')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 

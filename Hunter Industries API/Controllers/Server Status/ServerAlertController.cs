@@ -180,7 +180,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     Content-Type: application/json
         ///     {
         ///         "reporter": "tester",
-        ///         "component": "PC Status",
+        ///         "component": "PC",
         ///         "componentStatus": "Unknown",
         ///         "alertStatus": "Reported",
         ///         "hostName": "Test",

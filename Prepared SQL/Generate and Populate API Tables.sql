@@ -650,11 +650,11 @@ GO
 
 /* Inserts */
 
-INSERT [dbo].[Component] ([Name]) VALUES ('PC Status')
+INSERT [dbo].[Component] ([Name]) VALUES ('PC')
 GO
-INSERT [dbo].[Component] ([Name]) VALUES ('Server Status')
+INSERT [dbo].[Component] ([Name]) VALUES ('Server')
 GO
-INSERT [dbo].[Component] ([Name]) VALUES ('Connection Status')
+INSERT [dbo].[Component] ([Name]) VALUES ('Connection')
 GO
 INSERT [dbo].[ComponentStatus] ([Value]) VALUES ('Online')
 GO
