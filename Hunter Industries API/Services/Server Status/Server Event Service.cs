@@ -54,15 +54,16 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
                 (List<ServerEventRecord> results, Exception ex) = await _Database.Query(sql, reader => new ServerEventRecord()
                 {
-                    Component = reader.GetString(0),
-                    Status = reader.GetString(1),
-                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(6), DateTimeKind.Utc),
+                    EventId = reader.GetInt32(0),
+                    Component = reader.GetString(1),
+                    Status = reader.GetString(2),
+                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(7), DateTimeKind.Utc),
                     Server = new RelatedServerRecord()
                     {
-                        Id = reader.GetInt32(2),
-                        HostName = reader.GetString(3),
-                        Game = reader.GetString(4),
-                        GameVersion = reader.GetString(5)
+                        Id = reader.GetInt32(3),
+                        HostName = reader.GetString(4),
+                        Game = reader.GetString(5),
+                        GameVersion = reader.GetString(6)
                     }
                 }, parameters);
 
@@ -95,7 +96,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent called with the parameters {ParameterFunction.FormatParameters(serverEvent)}.");
 
             bool logged = true;
-            int componentInformationId = 0;
+            int eventId = 0;
 
             try
             {
@@ -125,7 +126,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
                 else
                 {
-                    componentInformationId = int.Parse(result.ToString());
+                    eventId = int.Parse(result.ToString());
                 }
             }
 
@@ -139,7 +140,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             }
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent returned {logged}.");
-            return (logged, componentInformationId);
+            return (logged, eventId);
         }
     }
 }

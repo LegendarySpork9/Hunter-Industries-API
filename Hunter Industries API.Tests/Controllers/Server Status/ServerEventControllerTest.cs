@@ -54,6 +54,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
             {
                 new ServerEventRecord
                 {
+                    EventId = 1,
                     Component = "PC Status",
                     Status = "Online",
                     DateOccured = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),

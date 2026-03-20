@@ -1,5 +1,6 @@
 ﻿with RankedComponentInformation as (
 	select
+		ComponentInformationId,
 		Component.[Name] as Component,
 		CS.[Value] as [Status],
 		SI.ServerInformationId,
@@ -20,6 +21,7 @@
 	where Component.[Name] = @Component
 )
 select
+	ComponentInformationId,
 	Component,
 	[Status],
 	ServerInformationId,
