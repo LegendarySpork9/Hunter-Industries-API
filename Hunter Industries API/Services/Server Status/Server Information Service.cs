@@ -105,48 +105,6 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         }
 
         /// <summary>
-        /// Returns the id of the server with the given values.
-        /// </summary>
-        public async Task<int> GetServer(string hostName, string game, string gameVersion)
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer called with the parameters {ParameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
-
-            int serverId = 0;
-
-            try
-            {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\GetServer.sql");
-                SqlParameter[] parameters =
-                {
-                    new SqlParameter("@HostName", SqlDbType.VarChar) { Value = hostName },
-                    new SqlParameter("@Game", SqlDbType.VarChar) { Value = game },
-                    new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = gameVersion }
-                };
-
-                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameters);
-
-                if (ex != null)
-                {
-                    string message = "An error occured when trying to run ServerInformationService.GetServer.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-                }
-
-                serverId = result;
-            }
-
-            catch (Exception ex)
-            {
-                string message = "An error occured when trying to run ServerInformationService.GetServer.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-            }
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer returned {serverId}.");
-            return serverId;
-        }
-
-        /// <summary>
         /// Returns whether a server already exists with the given values.
         /// </summary>
         public async Task<bool> ServerExists(string hostName, string game, string gameVersion)

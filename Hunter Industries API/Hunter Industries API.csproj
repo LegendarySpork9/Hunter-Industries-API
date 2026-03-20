@@ -460,7 +460,6 @@
     <Content Include="SQL\Server Status\Server Alerts\LogServerAlert.sql" />
     <Content Include="SQL\Server Status\Server Event\GetServerEvents.sql" />
     <Content Include="SQL\Server Status\Server Event\LogServerEvent.sql" />
-    <Content Include="SQL\Server Status\Server Information\GetServer.sql" />
     <Content Include="SQL\Server Status\Server Information\GetServers.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerAdded.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerExists.sql" />

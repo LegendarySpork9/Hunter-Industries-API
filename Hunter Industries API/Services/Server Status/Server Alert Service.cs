@@ -20,7 +20,6 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         private readonly IFileSystem _FileSystem;
         private readonly IDatabaseOptions _Options;
         private readonly IDatabase _Database;
-        private readonly ServerInformationService _ServerInformationService;
 
         /// <summary>
         /// </summary>
@@ -28,14 +27,12 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         public ServerAlertService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
-            IDatabase _database,
-            ServerInformationService _serverInformationService)
+            IDatabase _database)
         {
             _Logger = _logger;
             _FileSystem = _fileSystem;
             _Options = _options;
             _Database = _database;
-            _ServerInformationService = _serverInformationService;
         }
 
         /// <summary>
@@ -67,9 +64,10 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
                     server = new RelatedServerRecord()
                     {
-                        HostName = reader.GetString(6),
-                        Game = reader.GetString(7),
-                        GameVersion = reader.GetString(8)
+                        Id = reader.GetInt32(6),
+                        HostName = reader.GetString(7),
+                        Game = reader.GetString(8),
+                        GameVersion = reader.GetString(9)
                     }
                 }, parameters);
 
@@ -122,9 +120,10 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
                     server = new RelatedServerRecord()
                     {
-                        HostName = reader.GetString(6),
-                        Game = reader.GetString(7),
-                        GameVersion = reader.GetString(8)
+                        Id = reader.GetInt32(6),
+                        HostName = reader.GetString(7),
+                        Game = reader.GetString(8),
+                        GameVersion = reader.GetString(9)
                     }
                 }, parameters);
 
@@ -202,7 +201,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = await _ServerInformationService.GetServer(serverAlert.HostName, serverAlert.Game, serverAlert.GameVersion) },
+                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = serverAlert.ServerId },
                     new SqlParameter("@Reporter", SqlDbType.VarChar) { Value = serverAlert.Reporter },
                     new SqlParameter("@Component", SqlDbType.VarChar) { Value = serverAlert.Component },
                     new SqlParameter("@ComponentStatus", SqlDbType.VarChar) { Value = serverAlert.ComponentStatus },

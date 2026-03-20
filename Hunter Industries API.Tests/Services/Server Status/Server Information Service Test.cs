@@ -82,44 +82,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
 
         #endregion
 
-        #region GetServer
-
-        /// <summary>
-        /// Checks whether the GetServer method returns the server id.
-        /// </summary>
-        [TestMethod]
-        public async Task TestGetServer()
-        {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
-
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-
-            int actual = await service.GetServer("TestServer", "TestGame", "1.0");
-
-            Assert.AreEqual(1, actual);
-        }
-
-        /// <summary>
-        /// Checks whether the GetServer method returns zero when the server is not found.
-        /// </summary>
-        [TestMethod]
-        public async Task TestGetServerNotFound()
-        {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
-
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
-
-            int actual = await service.GetServer("TestServer", "TestGame", "1.0");
-
-            Assert.AreEqual(0, actual);
-        }
-
-        #endregion
-
         #region ServerExists
 
         /// <summary>

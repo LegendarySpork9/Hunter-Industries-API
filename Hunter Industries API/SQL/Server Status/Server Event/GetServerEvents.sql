@@ -2,6 +2,7 @@
 	select
 		Component.[Name] as Component,
 		CS.[Value] as [Status],
+		SI.ServerInformationId,
 		HostName,
 		Game.[Name] as Game,
 		[Version],
@@ -21,6 +22,7 @@
 select
 	Component,
 	[Status],
+	ServerInformationId,
 	HostName,
 	Game,
 	[Version],

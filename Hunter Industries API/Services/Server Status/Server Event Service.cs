@@ -20,7 +20,6 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         private readonly IFileSystem _FileSystem;
         private readonly IDatabaseOptions _Options;
         private readonly IDatabase _Database;
-        private readonly ServerInformationService _ServerInformationService;
 
         /// <summary>
         /// </summary>
@@ -28,14 +27,12 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         public ServerEventService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
-            IDatabase _database,
-            ServerInformationService _serverInformationService)
+            IDatabase _database)
         {
             _Logger = _logger;
             _FileSystem = _fileSystem;
             _Options = _options;
             _Database = _database;
-            _ServerInformationService = _serverInformationService;
         }
 
         /// <summary>
@@ -59,12 +56,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 {
                     Component = reader.GetString(0),
                     Status = reader.GetString(1),
-                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
+                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(6), DateTimeKind.Utc),
                     Server = new RelatedServerRecord()
                     {
-                        HostName = reader.GetString(2),
-                        Game = reader.GetString(3),
-                        GameVersion = reader.GetString(4)
+                        Id = reader.GetInt32(2),
+                        HostName = reader.GetString(3),
+                        Game = reader.GetString(4),
+                        GameVersion = reader.GetString(5)
                     }
                 }, parameters);
 
@@ -104,7 +102,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Event\LogServerEvent.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = await _ServerInformationService.GetServer(serverEvent.HostName, serverEvent.Game, serverEvent.GameVersion) },
+                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = serverEvent.ServerId },
                     new SqlParameter("@Component", SqlDbType.VarChar) { Value = serverEvent.Component },
                     new SqlParameter("@Status", SqlDbType.VarChar) { Value = serverEvent.Status }
                 };

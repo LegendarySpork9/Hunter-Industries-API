@@ -66,8 +66,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         public async Task<IHttpActionResult> Get([FromUri] int pageSize = 25, [FromUri] int pageNumber = 1)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
@@ -132,8 +131,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         public async Task<IHttpActionResult> Get(int id)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
@@ -183,6 +181,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///         "component": "PC",
         ///         "componentStatus": "Unknown",
         ///         "alertStatus": "Reported",
+        ///         "serverId": 1,
         ///         "hostName": "Test",
         ///         "game": "Minecraft",
         ///         "gameVersion": "1.7.10"
@@ -198,8 +197,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
@@ -261,6 +259,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     AlertDate = _Clock.UtcNow,
                     server = new RelatedServerRecord()
                     {
+                        Id = request.ServerId,
                         HostName = request.HostName,
                         Game = request.Game,
                         GameVersion = request.GameVersion
@@ -298,8 +297,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
             ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;

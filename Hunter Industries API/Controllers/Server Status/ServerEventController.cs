@@ -65,8 +65,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         public async Task<IHttpActionResult> Get([FromUri] string component)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerEventService _serverEventService = new ServerEventService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
+            ServerEventService _serverEventService = new ServerEventService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
@@ -131,6 +130,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     {
         ///         "component": "PC",
         ///         "status": "Online",
+        ///         "serverId": 1,
         ///         "hostName": "Test",
         ///         "game": "Minecraft",
         ///         "gameVersion": "1.7.10"
@@ -146,8 +146,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerEventService _serverEventService = new ServerEventService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
+            ServerEventService _serverEventService = new ServerEventService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
@@ -206,6 +205,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     DateOccured = _Clock.UtcNow,
                     Server = new RelatedServerRecord()
                     {
+                        Id = request.ServerId,
                         HostName = request.HostName,
                         Game = request.Game,
                         GameVersion = request.GameVersion
