@@ -8,7 +8,7 @@ using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services.Assistant
+namespace HunterIndustriesAPI.Tests.Services.Assistant
 {
     [TestClass]
     public class VersionServiceTest
@@ -33,8 +33,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         [TestMethod]
         public async Task TestGetAssistantVersion()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             VersionResponseModel expected = new VersionResponseModel
             {
                 AssistantName = "TestAssistant",
@@ -42,6 +40,7 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
                 Version = "2.5.0"
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, VersionResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((expected, null));
 
             VersionService service = new VersionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -59,7 +58,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestGetAssistantVersionEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, VersionResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             VersionService service = new VersionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -81,7 +79,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantVersionUpdated()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             VersionService service = new VersionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -97,7 +94,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantVersionUpdatedFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
             VersionService service = new VersionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);

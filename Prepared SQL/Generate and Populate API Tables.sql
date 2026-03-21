@@ -489,6 +489,7 @@ CREATE TABLE [dbo].[ServerInformation](
 	[GameId] [int] NOT NULL,
 	[ConnectionId] [int] NOT NULL,
 	[DowntimeId] [int] NULL,
+	[Name] [varchar](255) NULL,
 	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (

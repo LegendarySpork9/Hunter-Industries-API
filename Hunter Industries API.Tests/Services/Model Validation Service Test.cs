@@ -3,7 +3,7 @@ using HunterIndustriesAPI.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace Hunter_Industries_API.Tests.Services
+namespace HunterIndustriesAPI.Tests.Services
 {
     [TestClass]
     public class ModelValidationServiceTest

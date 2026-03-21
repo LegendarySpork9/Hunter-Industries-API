@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Hunter_Industries_API.Tests.Converters
+namespace HunterIndustriesAPI.Tests.Converters
 {
     [TestClass]
     public class TokenConverterTest
@@ -16,7 +16,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetClaims()
         {
             int expected = 0;
-
             Claim[] actual = TokenConverter.GetClaims(new List<string>());
 
             Assert.AreEqual(expected, actual.Length);
@@ -42,7 +41,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetClaimsMultipleScopes()
         {
             List<string> expected = new List<string> { "User", "Assistant API", "Server Status API" };
-
             Claim[] actual = TokenConverter.GetClaims(new List<string> { "User", "Assistant API", "Server Status API" });
 
             Assert.AreEqual(expected.Count, actual.Length);

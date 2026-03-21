@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services.ServerStatus
+namespace HunterIndustriesAPI.Tests.Services.ServerStatus
 {
     [TestClass]
     public class ServerAlertServiceTest
@@ -35,7 +35,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServerAlerts()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerAlertRecord>
                 {
                     new ServerAlertRecord
@@ -49,13 +48,13 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                         server = new RelatedServerRecord
                         {
                             Id = 1,
+                            Name = "Test",
                             HostName = "TestServer",
                             Game = "TestGame",
                             GameVersion = "1.0"
                         }
                     }
                 }, null));
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((5, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -76,9 +75,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServerAlertsEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerAlertRecord>(), null));
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -100,7 +97,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServerAlert()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new ServerAlertRecord
                 {
                     AlertId = 1,
@@ -111,6 +107,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                     AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
                     server = new RelatedServerRecord
                     {
+                        Name = "Test",
                         HostName = "TestServer",
                         Game = "TestGame",
                         GameVersion = "1.0"
@@ -135,7 +132,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServerAlertEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -156,7 +152,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestLogServerAlert()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -168,6 +163,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                 ComponentStatus = "Critical",
                 AlertStatus = "Open",
                 ServerId = 1,
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -184,7 +180,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestLogServerAlertFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -196,6 +191,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                 ComponentStatus = "Critical",
                 AlertStatus = "Open",
                 ServerId = 1,
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -216,7 +212,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerAlertExists()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -233,7 +228,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerAlertExistsNot()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -254,7 +248,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerAlertUpdated()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -271,7 +264,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerAlertUpdatedFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
             ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);

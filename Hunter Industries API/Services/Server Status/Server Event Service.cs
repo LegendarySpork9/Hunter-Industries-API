@@ -57,13 +57,14 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     EventId = reader.GetInt32(0),
                     Component = reader.GetString(1),
                     Status = reader.GetString(2),
-                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(7), DateTimeKind.Utc),
+                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(8), DateTimeKind.Utc),
                     Server = new RelatedServerRecord()
                     {
                         Id = reader.GetInt32(3),
-                        HostName = reader.GetString(4),
-                        Game = reader.GetString(5),
-                        GameVersion = reader.GetString(6)
+                        Name = reader.GetString(4),
+                        HostName = reader.GetString(5),
+                        Game = reader.GetString(6),
+                        GameVersion = reader.GetString(7)
                     }
                 }, parameters);
 

@@ -132,6 +132,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///         "component": "PC",
         ///         "status": "Online",
         ///         "serverId": 1,
+        ///         "name": "Test",
         ///         "hostName": "Test",
         ///         "game": "Minecraft",
         ///         "gameVersion": "1.7.10"
@@ -208,6 +209,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     Server = new RelatedServerRecord()
                     {
                         Id = request.ServerId,
+                        Name = request.Name,
                         HostName = request.HostName,
                         Game = request.Game,
                         GameVersion = request.GameVersion

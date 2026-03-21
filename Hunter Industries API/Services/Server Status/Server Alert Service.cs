@@ -65,9 +65,10 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     server = new RelatedServerRecord()
                     {
                         Id = reader.GetInt32(6),
-                        HostName = reader.GetString(7),
-                        Game = reader.GetString(8),
-                        GameVersion = reader.GetString(9)
+                        Name = reader.GetString(7),
+                        HostName = reader.GetString(8),
+                        Game = reader.GetString(9),
+                        GameVersion = reader.GetString(10)
                     }
                 }, parameters);
 
@@ -121,9 +122,10 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     server = new RelatedServerRecord()
                     {
                         Id = reader.GetInt32(6),
-                        HostName = reader.GetString(7),
-                        Game = reader.GetString(8),
-                        GameVersion = reader.GetString(9)
+                        Name = reader.GetString(7),
+                        HostName = reader.GetString(8),
+                        Game = reader.GetString(9),
+                        GameVersion = reader.GetString(10)
                     }
                 }, parameters);
 

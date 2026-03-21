@@ -6,6 +6,7 @@
 	SAS.[Value] as AlertStatus,
 	DateOccured,
 	SI.ServerInformationId,
+	SI.[Name],
 	HostName,
 	Game.[Name] as Game,
 	[Version]

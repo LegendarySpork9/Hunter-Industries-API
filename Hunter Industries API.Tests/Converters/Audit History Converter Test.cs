@@ -2,7 +2,7 @@
 using HunterIndustriesAPI.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hunter_Industries_API.Tests.Converters
+namespace HunterIndustriesAPI.Tests.Converters
 {
     [TestClass]
     public class AuditHistoryConverterTest
@@ -16,7 +16,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointID()
         {
             int expected = 0;
-
             int actual = AuditHistoryConverter.GetEndpointID("Trombone");
 
             Assert.AreEqual(expected, actual);
@@ -29,7 +28,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDToken()
         {
             int expected = 1;
-
             int actual = AuditHistoryConverter.GetEndpointID("token");
 
             Assert.AreEqual(expected, actual);
@@ -42,7 +40,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDAuditHistory()
         {
             int expected = 2;
-
             int actual = AuditHistoryConverter.GetEndpointID("audithistory");
 
             Assert.AreEqual(expected, actual);
@@ -55,7 +52,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDAssistantConfig()
         {
             int expected = 3;
-
             int actual = AuditHistoryConverter.GetEndpointID("assistant/config");
 
             Assert.AreEqual(expected, actual);
@@ -68,7 +64,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDAssistantVersion()
         {
             int expected = 4;
-
             int actual = AuditHistoryConverter.GetEndpointID("assistant/version");
 
             Assert.AreEqual(expected, actual);
@@ -81,7 +76,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDAssistantDeletion()
         {
             int expected = 5;
-
             int actual = AuditHistoryConverter.GetEndpointID("assistant/deletion");
 
             Assert.AreEqual(expected, actual);
@@ -94,7 +88,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDAssistantLocation()
         {
             int expected = 6;
-
             int actual = AuditHistoryConverter.GetEndpointID("assistant/location");
 
             Assert.AreEqual(expected, actual);
@@ -107,7 +100,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDUser()
         {
             int expected = 7;
-
             int actual = AuditHistoryConverter.GetEndpointID("user");
 
             Assert.AreEqual(expected, actual);
@@ -120,7 +112,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDUserSettings()
         {
             int expected = 8;
-
             int actual = AuditHistoryConverter.GetEndpointID("usersettings");
 
             Assert.AreEqual(expected, actual);
@@ -133,7 +124,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDServerInformation()
         {
             int expected = 9;
-
             int actual = AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation");
 
             Assert.AreEqual(expected, actual);
@@ -146,7 +136,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDServerEvent()
         {
             int expected = 10;
-
             int actual = AuditHistoryConverter.GetEndpointID("serverstatus/serverevent");
 
             Assert.AreEqual(expected, actual);
@@ -159,7 +148,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetEndpointIDServerAlert()
         {
             int expected = 11;
-
             int actual = AuditHistoryConverter.GetEndpointID("serverstatus/serveralert");
 
             Assert.AreEqual(expected, actual);
@@ -176,7 +164,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetMethodID()
         {
             int expected = 0;
-
             int actual = AuditHistoryConverter.GetMethodID("Trombone");
 
             Assert.AreEqual(expected, actual);
@@ -189,7 +176,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetMethodIDGet()
         {
             int expected = 1;
-
             int actual = AuditHistoryConverter.GetMethodID("GET");
 
             Assert.AreEqual(expected, actual);
@@ -202,7 +188,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetMethodIDPost()
         {
             int expected = 2;
-
             int actual = AuditHistoryConverter.GetMethodID("POST");
 
             Assert.AreEqual(expected, actual);
@@ -215,7 +200,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetMethodIDPatch()
         {
             int expected = 3;
-
             int actual = AuditHistoryConverter.GetMethodID("PATCH");
 
             Assert.AreEqual(expected, actual);
@@ -228,7 +212,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetMethodIDDelete()
         {
             int expected = 4;
-
             int actual = AuditHistoryConverter.GetMethodID("DELETE");
 
             Assert.AreEqual(expected, actual);
@@ -245,7 +228,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusID()
         {
             int expected = 0;
-
             int actual = AuditHistoryConverter.GetStatusID("Trombone");
 
             Assert.AreEqual(expected, actual);
@@ -258,7 +240,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusIDOK()
         {
             int expected = 1;
-
             int actual = AuditHistoryConverter.GetStatusID("OK");
 
             Assert.AreEqual(expected, actual);
@@ -271,7 +252,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusIDCreated()
         {
             int expected = 2;
-
             int actual = AuditHistoryConverter.GetStatusID("Created");
 
             Assert.AreEqual(expected, actual);
@@ -284,7 +264,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusIDBadRequest()
         {
             int expected = 3;
-
             int actual = AuditHistoryConverter.GetStatusID("BadRequest");
 
             Assert.AreEqual(expected, actual);
@@ -297,7 +276,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusIDUnauthorized()
         {
             int expected = 4;
-
             int actual = AuditHistoryConverter.GetStatusID("Unauthorized");
 
             Assert.AreEqual(expected, actual);
@@ -310,7 +288,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusIDForbidden()
         {
             int expected = 5;
-
             int actual = AuditHistoryConverter.GetStatusID("Forbidden");
 
             Assert.AreEqual(expected, actual);
@@ -323,7 +300,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusIDNotFound()
         {
             int expected = 6;
-
             int actual = AuditHistoryConverter.GetStatusID("NotFound");
 
             Assert.AreEqual(expected, actual);
@@ -336,7 +312,6 @@ namespace Hunter_Industries_API.Tests.Converters
         public void TestGetStatusIDInternalServerError()
         {
             int expected = 7;
-
             int actual = AuditHistoryConverter.GetStatusID("InternalServerError");
 
             Assert.AreEqual(expected, actual);

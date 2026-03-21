@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services.ServerStatus
+namespace HunterIndustriesAPI.Tests.Services.ServerStatus
 {
     [TestClass]
     public class ServerInformationServiceTest
@@ -35,12 +35,12 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServers()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerInformationRecord>
                 {
                     new ServerInformationRecord
                     {
                         Id = 1,
+                        Name = "Test",
                         HostName = "TestServer",
                         Game = "TestGame",
                         GameVersion = "1.0",
@@ -55,6 +55,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
             List<ServerInformationRecord> actual = await service.GetServers(true);
 
             Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("Test", actual[0].Name);
             Assert.AreEqual("TestServer", actual[0].HostName);
             Assert.AreEqual("TestGame", actual[0].Game);
             Assert.AreEqual("1.0", actual[0].GameVersion);
@@ -70,7 +71,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServersEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerInformationRecord>(), null));
 
             ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -91,12 +91,11 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerExists()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
 
             ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
-            bool actual = await service.ServerExists("TestServer", "TestGame", "1.0");
+            bool actual = await service.ServerExists("Test");
 
             Assert.IsTrue(actual);
         }
@@ -108,12 +107,11 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerExistsNot()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
 
             ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
-            bool actual = await service.ServerExists("TestServer", "TestGame", "1.0");
+            bool actual = await service.ServerExists("Test");
 
             Assert.IsFalse(actual);
         }
@@ -129,13 +127,13 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerAdded()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (bool added, int serverId) = await service.ServerAdded(new ServerInformationModel
             {
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0",
@@ -155,13 +153,13 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestServerAddedFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 
             (bool added, int serverId) = await service.ServerAdded(new ServerInformationModel
             {
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0",

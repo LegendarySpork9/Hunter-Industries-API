@@ -20,6 +20,10 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// <summary>
         /// The name of the server.
         /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// The name of the server Machine.
+        /// </summary>
         public string HostName { get; set; }
         /// <summary>
         /// The name of the game.

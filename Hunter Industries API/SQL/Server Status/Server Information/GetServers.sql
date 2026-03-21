@@ -1,7 +1,8 @@
 ﻿select
 	ServerInformationId,
+	ServerInformation.[Name] as ServerName,
 	HostName,
-	[Name],
+	Game.[Name] as Game,
 	[Version],
 	IPAddress,
 	[Port],

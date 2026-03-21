@@ -17,7 +17,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace Hunter_Industries_API.Tests.Controllers
+namespace HunterIndustriesAPI.Tests.Controllers
 {
     [TestClass]
     public class TokenControllerTest
@@ -52,13 +52,14 @@ namespace Hunter_Industries_API.Tests.Controllers
         public async Task TestPostNullBody()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(null);
 
@@ -73,15 +74,16 @@ namespace Hunter_Industries_API.Tests.Controllers
         public async Task TestPostInvalidCredentials()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, string)> { ("admin", "wronghash") }, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<string> { "testphrase" }, null));
 
-            TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
             controller.Request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes("testuser:testpass")));
 
             IHttpActionResult actionResult = await controller.Post(new AuthenticationModel
@@ -99,19 +101,20 @@ namespace Hunter_Industries_API.Tests.Controllers
         [TestMethod]
         public async Task TestPostValid()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             string hashedPassword = HashFunction.HashString("testpass");
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, string)> { ("testuser", hashedPassword) }, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<string> { "testphrase" }, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns(("TestApplication", null));
 
-            TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
             controller.Request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes("testuser:testpass")));
 
             IHttpActionResult actionResult = await controller.Post(new AuthenticationModel

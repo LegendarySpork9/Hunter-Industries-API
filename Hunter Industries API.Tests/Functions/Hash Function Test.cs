@@ -2,7 +2,7 @@
 using HunterIndustriesAPI.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hunter_Industries_API.Tests.Functions
+namespace HunterIndustriesAPI.Tests.Functions
 {
     [TestClass]
     public class HashFunctionTest
@@ -47,7 +47,6 @@ namespace Hunter_Industries_API.Tests.Functions
         public void TestHashStringLength()
         {
             int expected = 128;
-
             string actual = HashFunction.HashString("password");
 
             Assert.AreEqual(expected, actual.Length);

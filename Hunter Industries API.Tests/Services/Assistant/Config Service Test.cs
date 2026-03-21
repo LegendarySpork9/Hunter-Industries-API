@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services.Assistant
+namespace HunterIndustriesAPI.Tests.Services.Assistant
 {
     [TestClass]
     public class ConfigServiceTest
@@ -34,8 +34,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         [TestMethod]
         public async Task TestGetAssistantConfig()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AssistantConfiguration> configs = new List<AssistantConfiguration>
             {
                 new AssistantConfiguration
@@ -49,6 +47,7 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
                 }
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AssistantConfiguration>>(), It.IsAny<SqlParameter[]>()).Result).Returns((configs, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns(("2.0.0", null));
@@ -68,10 +67,9 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         [TestMethod]
         public async Task TestGetAssistantConfigEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AssistantConfiguration> configs = new List<AssistantConfiguration>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AssistantConfiguration>>(), It.IsAny<SqlParameter[]>()).Result).Returns((configs, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
@@ -95,7 +93,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestGetMostRecentVersion()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns(("3.1.0", null));
 
             ConfigService service = new ConfigService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -111,7 +108,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestGetMostRecentVersionEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             ConfigService service = new ConfigService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -130,13 +126,12 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         [TestMethod]
         public async Task TestAssistantExists()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<(string, string)> results = new List<(string, string)>
             {
                 ("TestAssistant", "A001")
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((results, null));
 
             ConfigService service = new ConfigService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -151,10 +146,9 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         [TestMethod]
         public async Task TestAssistantExistsNot()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<(string, string)> results = new List<(string, string)>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((results, null));
 
             ConfigService service = new ConfigService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -174,10 +168,7 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantConfigCreated()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
-            _mockDatabase.SetupSequence(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null))
-                .Returns((2, null));
-
+            _mockDatabase.SetupSequence(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null)).Returns((2, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             ConfigService service = new ConfigService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -193,7 +184,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantConfigCreatedFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             ConfigService service = new ConfigService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);

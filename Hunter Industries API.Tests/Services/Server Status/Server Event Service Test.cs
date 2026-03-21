@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services.ServerStatus
+namespace HunterIndustriesAPI.Tests.Services.ServerStatus
 {
     [TestClass]
     public class ServerEventServiceTest
@@ -35,7 +35,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServerEvents()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerEventRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerEventRecord>
                 {
                     new ServerEventRecord
@@ -47,6 +46,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                         Server = new RelatedServerRecord
                         {
                             Id = 1,
+                            Name = "Test",
                             HostName = "TestServer",
                             Game = "TestGame",
                             GameVersion = "1.0"
@@ -61,7 +61,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual("CPU", actual[0].Component);
             Assert.AreEqual("Online", actual[0].Status);
-            Assert.AreEqual("TestServer", actual[0].Server.HostName);
+            Assert.AreEqual("Test", actual[0].Server.Name);
         }
 
         /// <summary>
@@ -71,7 +71,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestGetServerEventsEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerEventRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerEventRecord>(), null));
 
             ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -92,7 +91,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestLogServerEvent()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -102,6 +100,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                 Component = "CPU",
                 Status = "Online",
                 ServerId = 1,
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -118,7 +117,6 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
         public async Task TestLogServerEventFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -128,6 +126,7 @@ namespace Hunter_Industries_API.Tests.Services.ServerStatus
                 Component = "CPU",
                 Status = "Online",
                 ServerId = 1,
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"

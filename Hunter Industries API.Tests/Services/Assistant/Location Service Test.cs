@@ -8,7 +8,7 @@ using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services.Assistant
+namespace HunterIndustriesAPI.Tests.Services.Assistant
 {
     [TestClass]
     public class LocationServiceTest
@@ -33,8 +33,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         [TestMethod]
         public async Task TestGetAssistantLocation()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             LocationResponseModel expected = new LocationResponseModel
             {
                 AssistantName = "TestAssistant",
@@ -43,6 +41,7 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
                 IPAddress = "192.168.1.1"
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, LocationResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((expected, null));
 
             LocationService service = new LocationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -61,7 +60,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestGetAssistantLocationEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, LocationResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             LocationService service = new LocationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -84,7 +82,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantLocationUpdated()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             LocationService service = new LocationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -100,7 +97,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantLocationUpdatedFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
             LocationService service = new LocationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
