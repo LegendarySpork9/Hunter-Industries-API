@@ -15,7 +15,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
+namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
 {
     [TestClass]
     public class ServerAlertControllerTest
@@ -48,7 +48,6 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestGet()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerAlertRecord>
             {
@@ -63,6 +62,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                     server = new RelatedServerRecord
                     {
                         Id = 1,
+                        Name = "Test",
                         HostName = "TestServer",
                         Game = "TestGame",
                         GameVersion = "1.0"
@@ -71,9 +71,11 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
             }, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((5, null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(25, 1);
 
@@ -88,14 +90,15 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestGetEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerAlertRecord>(), null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(25, 1);
 
@@ -114,7 +117,6 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestGetById()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new ServerAlertRecord
             {
@@ -127,15 +129,18 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                 server = new RelatedServerRecord
                 {
                     Id = 1,
+                    Name = "Test",
                     HostName = "TestServer",
                     Game = "TestGame",
                     GameVersion = "1.0"
                 }
             }, null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(1);
 
@@ -150,13 +155,14 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestGetByIdEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(999);
 
@@ -175,13 +181,14 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestPost()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(new ServerAlertModel
             {
@@ -190,6 +197,7 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                 ComponentStatus = "Critical",
                 AlertStatus = "Open",
                 ServerId = 1,
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
@@ -206,12 +214,13 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestPostInvalidModel()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(new ServerAlertModel());
 
@@ -230,7 +239,6 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestPatch()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new ServerAlertRecord
@@ -251,9 +259,11 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
             }, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Patch(1, new AlertUpdateModel
             {
@@ -271,13 +281,14 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestPatchNotFound()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
 
-            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Patch(999, new AlertUpdateModel
             {

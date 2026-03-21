@@ -59,27 +59,28 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 {
                     DowntimeRecord downtime = null;
 
-                    if (!reader.IsDBNull(6) && !string.IsNullOrWhiteSpace(reader.GetString(6)))
+                    if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                     {
                         downtime = new DowntimeRecord()
                         {
-                            Time = reader.GetString(6)
+                            Time = reader.GetString(7)
                         };
                     }
 
                     return new ServerInformationRecord()
                     {
                         Id = reader.GetInt32(0),
-                        HostName = reader.GetString(1),
-                        Game = reader.GetString(2),
-                        GameVersion = reader.GetString(3),
+                        Name = reader.GetString(1),
+                        HostName = reader.GetString(2),
+                        Game = reader.GetString(3),
+                        GameVersion = reader.GetString(4),
                         Connection = new ConnectionRecord()
                         {
-                            IPAddress = reader.GetString(4),
-                            Port = reader.GetInt32(5),
+                            IPAddress = reader.GetString(5),
+                            Port = reader.GetInt32(6),
                         },
                         Downtime = downtime,
-                        IsActive = reader.GetBoolean(7)
+                        IsActive = reader.GetBoolean(8)
                     };
                 }, parameterList.ToArray());
 
@@ -107,9 +108,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns whether a server already exists with the given values.
         /// </summary>
-        public async Task<bool> ServerExists(string hostName, string game, string gameVersion)
+        public async Task<bool> ServerExists(string name)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameters {ParameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameters {ParameterFunction.FormatParameters(new string[] { name })}.");
 
             bool exists = false;
 
@@ -118,9 +119,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerExists.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@HostName", SqlDbType.VarChar) { Value = hostName },
-                    new SqlParameter("@Game", SqlDbType.VarChar) { Value = game },
-                    new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = gameVersion }
+                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = name }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -164,6 +163,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerAdded.sql");
                 SqlParameter[] parameters =
                 {
+                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = server.Name },
                     new SqlParameter("@HostName", SqlDbType.VarChar) { Value = server.HostName },
                     new SqlParameter("@Game", SqlDbType.VarChar) { Value = server.Game },
                     new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = server.GameVersion },

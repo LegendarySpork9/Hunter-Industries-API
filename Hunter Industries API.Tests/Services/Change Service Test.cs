@@ -7,7 +7,7 @@ using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services
+namespace HunterIndustriesAPI.Tests.Services
 {
     [TestClass]
     public class ChangeServiceTest

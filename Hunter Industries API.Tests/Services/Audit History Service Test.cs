@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services
+namespace HunterIndustriesAPI.Tests.Services
 {
     [TestClass]
     public class AuditHistoryServiceTest
@@ -92,7 +92,6 @@ namespace Hunter_Industries_API.Tests.Services
         [TestMethod]
         public async Task TestGetAuditHistory()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             List<AuditHistoryRecord> records = new List<AuditHistoryRecord>
             {
                 new AuditHistoryRecord
@@ -109,6 +108,7 @@ namespace Hunter_Industries_API.Tests.Services
                 }
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((5, null));
 
@@ -128,9 +128,9 @@ namespace Hunter_Industries_API.Tests.Services
         [TestMethod]
         public async Task TestGetAuditHistoryEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             List<AuditHistoryRecord> records = new List<AuditHistoryRecord>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 

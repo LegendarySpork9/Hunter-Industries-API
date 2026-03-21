@@ -2,7 +2,7 @@
 using HunterIndustriesAPI.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Hunter_Industries_API.Tests.Functions
+namespace HunterIndustriesAPI.Tests.Functions
 {
     [TestClass]
     public class ResponseFunctionTest
@@ -14,7 +14,6 @@ namespace Hunter_Industries_API.Tests.Functions
         public void TestGetModelJSON()
         {
             string expected = "{\"Name\":\"Test\",\"Value\":1}";
-
             string actual = ResponseFunction.GetModelJSON(new { Name = "Test", Value = 1 });
 
             Assert.AreEqual(expected, actual);
@@ -27,7 +26,6 @@ namespace Hunter_Industries_API.Tests.Functions
         public void TestGetModelJSONNull()
         {
             string expected = "null";
-
             string actual = ResponseFunction.GetModelJSON(null);
 
             Assert.AreEqual(expected, actual);
@@ -40,7 +38,6 @@ namespace Hunter_Industries_API.Tests.Functions
         public void TestGetModelJSONEmpty()
         {
             string expected = "{}";
-
             string actual = ResponseFunction.GetModelJSON(new { });
 
             Assert.AreEqual(expected, actual);

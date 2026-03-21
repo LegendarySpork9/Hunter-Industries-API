@@ -15,7 +15,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace Hunter_Industries_API.Tests.Controllers.User
+namespace HunterIndustriesAPI.Tests.Controllers.User
 {
     [TestClass]
     public class UserSettingsControllerTest
@@ -48,13 +48,14 @@ namespace Hunter_Industries_API.Tests.Controllers.User
         public async Task TestGet()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, int, string, string)> { ("TestApp", 1, "Theme", "Dark") }, null));
 
-            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(1, "TestApp");
 
@@ -69,13 +70,14 @@ namespace Hunter_Industries_API.Tests.Controllers.User
         public async Task TestGetEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, int, string, string)>(), null));
 
-            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(1, null);
 
@@ -94,14 +96,15 @@ namespace Hunter_Industries_API.Tests.Controllers.User
         public async Task TestPost()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(new UserSettingsModel
             {
@@ -122,12 +125,13 @@ namespace Hunter_Industries_API.Tests.Controllers.User
         public async Task TestPostInvalidModel()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
 
-            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(null);
 
@@ -146,15 +150,16 @@ namespace Hunter_Industries_API.Tests.Controllers.User
         public async Task TestPatch()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, SettingRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new SettingRecord { Id = 1, Name = "Theme", Value = "Dark" }, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Patch(1, new SettingUpdateModel { Value = "Light" });
 
@@ -169,13 +174,14 @@ namespace Hunter_Industries_API.Tests.Controllers.User
         public async Task TestPatchNotFound()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
 
-            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Patch(999, new SettingUpdateModel { Value = "Light" });
 

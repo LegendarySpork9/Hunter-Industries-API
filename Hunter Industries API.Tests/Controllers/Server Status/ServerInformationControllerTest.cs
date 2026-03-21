@@ -15,7 +15,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
+namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
 {
     [TestClass]
     public class ServerInformationControllerTest
@@ -48,13 +48,13 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestGet()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerInformationRecord>
             {
                 new ServerInformationRecord
                 {
                     Id = 1,
+                    Name = "Test",
                     HostName = "TestServer",
                     Game = "Minecraft",
                     GameVersion = "1.7.10",
@@ -64,9 +64,11 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
                 }
             }, null));
 
-            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(true);
 
@@ -81,13 +83,14 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestGetEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerInformationRecord>(), null));
 
-            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(true);
 
@@ -106,16 +109,18 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestPost()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
 
-            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(new ServerInformationModel
             {
+                Name = "Test",
                 HostName = "TestServer",
                 Game = "Minecraft",
                 GameVersion = "1.7.10",
@@ -135,12 +140,13 @@ namespace Hunter_Industries_API.Tests.Controllers.ServerStatus
         public async Task TestPostInvalidModel()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
 
-            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(null);
 

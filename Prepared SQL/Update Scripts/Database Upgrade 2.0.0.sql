@@ -22,6 +22,15 @@ UPDATE Component SET [Name] = REPLACE([Name], ' Status', '')
 
 PRINT('Removed "Status" from Component Names')
 
+ALTER TABLE ServerInformation ADD [Name] [varchar](255) NULL
+GO
+
+UPDATE ServerInformation SET [Name] = 'Replace Me'
+
+ALTER TABLE ServerInformation ALTER COLUMN [Name] [varchar](255) NOT NULL
+
+PRINT('Added Name Field to ServerInformation Table')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 

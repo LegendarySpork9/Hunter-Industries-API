@@ -3,7 +3,7 @@ using HunterIndustriesAPI.Mappings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace Hunter_Industries_API.Tests.Mappings
+namespace HunterIndustriesAPI.Tests.Mappings
 {
     [TestClass]
     public class ScopePermissionMappingTest
@@ -97,7 +97,6 @@ namespace Hunter_Industries_API.Tests.Mappings
         public void TestHasPermission()
         {
             List<string> granted = new List<string> { "Assistant.Config" };
-
             bool actual = ScopePermissionMapping.HasPermission(granted, "User");
 
             Assert.IsFalse(actual);
@@ -110,7 +109,6 @@ namespace Hunter_Industries_API.Tests.Mappings
         public void TestHasPermissionExact()
         {
             List<string> granted = new List<string> { "Assistant.Config" };
-
             bool actual = ScopePermissionMapping.HasPermission(granted, "Assistant.Config");
 
             Assert.IsTrue(actual);
@@ -123,7 +121,6 @@ namespace Hunter_Industries_API.Tests.Mappings
         public void TestHasPermissionParent()
         {
             List<string> granted = new List<string> { "User" };
-
             bool actual = ScopePermissionMapping.HasPermission(granted, "User.Read");
 
             Assert.IsTrue(actual);
@@ -136,7 +133,6 @@ namespace Hunter_Industries_API.Tests.Mappings
         public void TestHasPermissionChild()
         {
             List<string> granted = new List<string> { "User.Read" };
-
             bool actual = ScopePermissionMapping.HasPermission(granted, "User");
 
             Assert.IsTrue(actual);

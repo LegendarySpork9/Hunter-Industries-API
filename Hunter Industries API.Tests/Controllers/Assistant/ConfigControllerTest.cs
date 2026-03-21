@@ -16,7 +16,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace Hunter_Industries_API.Tests.Controllers.Assistant
+namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 {
     [TestClass]
     public class ConfigControllerTest
@@ -48,8 +48,6 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         [TestMethod]
         public async Task TestGet()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AssistantConfiguration> configs = new List<AssistantConfiguration>
             {
                 new AssistantConfiguration
@@ -63,14 +61,17 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
                 }
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AssistantConfiguration>>(), It.IsAny<SqlParameter[]>()).Result).Returns((configs, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns(("2.0.0", null));
 
-            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AssistantFilterModel filters = new AssistantFilterModel()
             {
@@ -91,18 +92,19 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         [TestMethod]
         public async Task TestGetEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AssistantConfiguration> configs = new List<AssistantConfiguration>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AssistantConfiguration>>(), It.IsAny<SqlParameter[]>()).Result).Returns((configs, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
-            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AssistantFilterModel filters = new AssistantFilterModel();
 
@@ -123,18 +125,19 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         [TestMethod]
         public async Task TestPost()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<(string, string)> existsResults = new List<(string, string)>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((existsResults, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1.0.0", null));
 
-            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             ConfigModel request = new ConfigModel()
             {
@@ -158,12 +161,13 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         public async Task TestPostInvalidModel()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
 
-            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Post(null);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;

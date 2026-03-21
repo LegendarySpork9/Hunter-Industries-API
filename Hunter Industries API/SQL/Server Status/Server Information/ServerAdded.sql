@@ -1,6 +1,7 @@
-insert into ServerInformation (MachineId, GameId, ConnectionId, DowntimeId)
+insert into ServerInformation ([Name], MachineId, GameId, ConnectionId, DowntimeId)
 output inserted.ServerInformationId
 select
+	@Name,
 	M.MachineId,
 	G.GameId,
 	C.ConnectionId,

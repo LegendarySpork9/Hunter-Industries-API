@@ -3,7 +3,7 @@ using HunterIndustriesAPI.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace Hunter_Industries_API.Tests.Functions
+namespace HunterIndustriesAPI.Tests.Functions
 {
     [TestClass]
     public class UserFunctionTest
@@ -27,7 +27,6 @@ namespace Hunter_Industries_API.Tests.Functions
         {
             List<string> current = new List<string> { "User", "Assistant API" };
             List<string> required = new List<string> { "User", "Assistant API" };
-
             List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
 
             Assert.AreEqual(0, actual.Count);
@@ -41,7 +40,6 @@ namespace Hunter_Industries_API.Tests.Functions
         {
             List<string> current = new List<string> { "User" };
             List<string> required = new List<string> { "User", "Assistant API" };
-
             List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
 
             Assert.AreEqual(1, actual.Count);
@@ -57,7 +55,6 @@ namespace Hunter_Industries_API.Tests.Functions
         {
             List<string> current = new List<string> { "User", "Assistant API" };
             List<string> required = new List<string> { "User" };
-
             List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
 
             Assert.AreEqual(1, actual.Count);
@@ -73,7 +70,6 @@ namespace Hunter_Industries_API.Tests.Functions
         {
             List<string> current = new List<string> { "User", "Assistant API" };
             List<string> required = new List<string> { "User", "Server Status API" };
-
             List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
 
             Assert.AreEqual(2, actual.Count);

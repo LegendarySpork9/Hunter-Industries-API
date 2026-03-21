@@ -15,7 +15,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace Hunter_Industries_API.Tests.Controllers
+namespace HunterIndustriesAPI.Tests.Controllers
 {
     [TestClass]
     public class AuditControllerTest
@@ -47,8 +47,6 @@ namespace Hunter_Industries_API.Tests.Controllers
         [TestMethod]
         public async Task TestGet()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AuditHistoryRecord> records = new List<AuditHistoryRecord>
             {
                 new AuditHistoryRecord
@@ -65,13 +63,16 @@ namespace Hunter_Industries_API.Tests.Controllers
                 }
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AuditHistoryFilterModel filters = new AuditHistoryFilterModel();
 
@@ -88,17 +89,18 @@ namespace Hunter_Industries_API.Tests.Controllers
         [TestMethod]
         public async Task TestGetEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AuditHistoryRecord> records = new List<AuditHistoryRecord>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AuditHistoryFilterModel filters = new AuditHistoryFilterModel();
 
@@ -119,8 +121,6 @@ namespace Hunter_Industries_API.Tests.Controllers
         [TestMethod]
         public async Task TestGetById()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AuditHistoryRecord> records = new List<AuditHistoryRecord>
             {
                 new AuditHistoryRecord
@@ -137,13 +137,16 @@ namespace Hunter_Industries_API.Tests.Controllers
                 }
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(1);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
@@ -158,17 +161,18 @@ namespace Hunter_Industries_API.Tests.Controllers
         [TestMethod]
         public async Task TestGetByIdEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<AuditHistoryRecord> records = new List<AuditHistoryRecord>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             IHttpActionResult actionResult = await controller.Get(999);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;

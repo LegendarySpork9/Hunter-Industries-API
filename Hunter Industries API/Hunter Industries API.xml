@@ -329,6 +329,7 @@
                      "componentStatus": "Unknown",
                      "alertStatus": "Reported",
                      "serverId": 1,
+                     "name": "Test",
                      "hostName": "Test",
                      "game": "Minecraft",
                      "gameVersion": "1.7.10"
@@ -384,9 +385,11 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
+                     "eventId": 1,
                      "component": "PC",
                      "status": "Online",
                      "serverId": 1,
+                     "name": "Test",
                      "hostName": "Test",
                      "game": "Minecraft",
                      "gameVersion": "1.7.10"
@@ -425,6 +428,7 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
+                     "name": "Test",
                      "hostName": "Test",
                      "game": "Minecraft",
                      "gameVersion": "1.7.10",
@@ -1105,9 +1109,14 @@
             The id number of the server.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.HostName">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Game">
@@ -1139,9 +1148,14 @@
             The id number of the server.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.HostName">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.HostName">
+            <summary>
+            The name of the server Machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Game">
@@ -1158,9 +1172,14 @@
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.HostName">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Game">
@@ -1608,9 +1627,14 @@
             The id number of the server.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.HostName">
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.Game">
@@ -1632,9 +1656,14 @@
             The id number of the server.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.HostName">
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Game">
@@ -2119,7 +2148,7 @@
             Returns all the servers that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerExists(System.String,System.String,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerExists(System.String)">
             <summary>
             Returns whether a server already exists with the given values.
             </summary>

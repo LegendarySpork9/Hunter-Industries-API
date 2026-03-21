@@ -16,7 +16,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace Hunter_Industries_API.Tests.Controllers.Assistant
+namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 {
     [TestClass]
     public class LocationControllerTest
@@ -48,8 +48,6 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         [TestMethod]
         public async Task TestGet()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             LocationResponseModel locationResponse = new LocationResponseModel()
             {
                 AssistantName = "TestAssistant",
@@ -58,12 +56,15 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
                 IPAddress = "192.168.1.1"
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, LocationResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((locationResponse, null));
 
-            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AssistantFilterModel filters = new AssistantFilterModel()
             {
@@ -85,13 +86,14 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         public async Task TestGetNotFound()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, LocationResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
-            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AssistantFilterModel filters = new AssistantFilterModel()
             {
@@ -116,8 +118,6 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         [TestMethod]
         public async Task TestPatch()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<(string, string)> existsResults = new List<(string, string)>
             {
                 ("TestAssistant", "A001")
@@ -131,14 +131,17 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
                 IPAddress = "192.168.1.1"
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((existsResults, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, LocationResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((locationResponse, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AssistantFilterModel filters = new AssistantFilterModel()
             {
@@ -165,16 +168,17 @@ namespace Hunter_Industries_API.Tests.Controllers.Assistant
         [TestMethod]
         public async Task TestPatchNotFound()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             List<(string, string)> existsResults = new List<(string, string)>();
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((existsResults, null));
 
-            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             AssistantFilterModel filters = new AssistantFilterModel()
             {

@@ -8,7 +8,7 @@ using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Hunter_Industries_API.Tests.Services.Assistant
+namespace HunterIndustriesAPI.Tests.Services.Assistant
 {
     [TestClass]
     public class DeletionServiceTest
@@ -33,8 +33,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         [TestMethod]
         public async Task TestGetAssistantDeletion()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             DeletionResponseModel expected = new DeletionResponseModel
             {
                 AssistantName = "TestAssistant",
@@ -42,6 +40,7 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
                 Deletion = true
             };
 
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, DeletionResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((expected, null));
 
             DeletionService service = new DeletionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -59,7 +58,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestGetAssistantDeletionEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, DeletionResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
 
             DeletionService service = new DeletionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -81,7 +79,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantDeletionUpdated()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             DeletionService service = new DeletionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
@@ -97,7 +94,6 @@ namespace Hunter_Industries_API.Tests.Services.Assistant
         public async Task TestAssistantDeletionUpdatedFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
             DeletionService service = new DeletionService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
