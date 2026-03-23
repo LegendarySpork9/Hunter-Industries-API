@@ -47,6 +47,7 @@ GO
 CREATE TABLE [dbo].[AuditHistory](
 	[AuditId] [int] IDENTITY(1,1) NOT NULL,
 	[EndpointId] [int] NOT NULL,
+	[EndpointVersionId] [int] NOT NULL,
 	[MethodId] [int] NOT NULL,
 	[StatusId] [int] NOT NULL,
 	[IPAddress] [varchar](15) NOT NULL,
@@ -100,10 +101,27 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Endpoint](
 	[EndpointId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](255) NOT NULL,
+	[Value] [varchar](50) NOT NULL,
  CONSTRAINT [PK_Endpoint] PRIMARY KEY CLUSTERED 
 (
 	[EndpointId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[EndpointVersion]    Script Date: 23/03/2026 14:01:26 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[EndpointVersion](
+	[EndpointVersionId] [int] IDENTITY(1,1) NOT NULL,
+	[Value] [varchar](10) NOT NULL,
+ CONSTRAINT [PK_EndpointVersion] PRIMARY KEY CLUSTERED 
+(
+	[EndpointVersionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -533,6 +551,11 @@ REFERENCES [dbo].[Endpoint] ([EndpointId])
 GO
 ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_Endpoint]
 GO
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_EndpointVersion] FOREIGN KEY([EndpointVersionId])
+REFERENCES [dbo].[EndpointVersion] ([EndpointVersionId])
+GO
+ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_EndpointVersion]
+GO
 ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Methods] FOREIGN KEY([MethodId])
 REFERENCES [dbo].[Method] ([MethodId])
 GO
@@ -667,27 +690,31 @@ INSERT [dbo].[Deletion] ([Value]) VALUES ('True')
 GO
 INSERT [dbo].[Deletion] ([Value]) VALUES ('False')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/auth/token')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/auth/token')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/audithistory')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/audithistory')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/config')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/assistant/config')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/version')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/assistant/version')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/deletion')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/assistant/deletion')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/assistant/location')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/assistant/location')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/user')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/user')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/UserSetting')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/UserSetting')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/serverstatus/serverinformation')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/serverstatus/serverinformation')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/serverstatus/serverevent')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/serverstatus/serverevent')
 GO
-INSERT [dbo].[Endpoint] ([Value]) VALUES ('https://api.hunter-industries.co.uk/serverstatus/serveralert')
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/serverstatus/serveralert')
+GO
+INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v1.0')
+GO
+INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v1.1')
 GO
 INSERT [dbo].[Method] ([Value]) VALUES ('GET')
 GO

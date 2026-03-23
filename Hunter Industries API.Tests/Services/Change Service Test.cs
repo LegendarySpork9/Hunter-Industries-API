@@ -34,7 +34,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ChangeService service = new ChangeService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            bool actual = await service.LogChange(1, 1, "Field", "OldValue", "NewValue");
+            bool actual = await service.LogChange(1, "Field", "OldValue", "NewValue");
 
             Assert.IsTrue(actual);
         }
@@ -50,7 +50,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ChangeService service = new ChangeService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            bool actual = await service.LogChange(1, 1, "Field", "OldValue", "NewValue");
+            bool actual = await service.LogChange(1, "Field", "OldValue", "NewValue");
 
             Assert.IsFalse(actual);
         }

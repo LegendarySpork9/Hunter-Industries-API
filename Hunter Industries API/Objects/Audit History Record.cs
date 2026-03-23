@@ -21,6 +21,10 @@ namespace HunterIndustriesAPI.Objects
         /// </summary>
         public string Endpoint { get; set; }
         /// <summary>
+        /// The version of the endpoint that was called.
+        /// </summary>
+        public string EndpointVersion { get; set; }
+        /// <summary>
         /// The method of the call.
         /// </summary>
         public string Method { get; set; }

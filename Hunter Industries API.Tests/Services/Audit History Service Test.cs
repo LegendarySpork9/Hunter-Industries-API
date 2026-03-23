@@ -41,7 +41,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
 
-            (bool logged, int auditId) = await service.LogRequest("127.0.0.1", 1, 1, 1);
+            (bool logged, int auditId) = await service.LogRequest("127.0.0.1", 1, 1, 1, 1);
 
             Assert.IsTrue(logged);
             Assert.AreEqual(1, auditId);
@@ -58,7 +58,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
 
-            (bool logged, int auditId) = await service.LogRequest("127.0.0.1", 1, 1, 1);
+            (bool logged, int auditId) = await service.LogRequest("127.0.0.1", 1, 1, 1, 1);
 
             Assert.IsFalse(logged);
             Assert.AreEqual(0, auditId);
@@ -99,6 +99,7 @@ namespace HunterIndustriesAPI.Tests.Services
                     Id = 1,
                     IPAddress = "127.0.0.1",
                     Endpoint = "token",
+                    EndpointVersion = "v1.0",
                     Method = "POST",
                     Status = "OK",
                     OccuredAt = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc),

@@ -40,9 +40,9 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Logs the call made to the database.
         /// </summary>
-        public async Task<(bool, int)> LogRequest(string ipAddress, int endpointId, int methodId, int statusId, string[] parameters = null)
+        public async Task<(bool, int)> LogRequest(string ipAddress, int endpointId, int endpointVersionId, int methodId, int statusId, string[] parameters = null)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), methodId.ToString(), statusId.ToString(), ParameterFunction.FormatParameters(parameters) })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), endpointVersionId.ToString(), methodId.ToString(), statusId.ToString(), ParameterFunction.FormatParameters(parameters) })}.");
 
             bool logged = false;
             int auditId = 0;
@@ -55,6 +55,7 @@ namespace HunterIndustriesAPI.Services
                 {
                     new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress },
                     new SqlParameter("@EndpointID", SqlDbType.Int) { Value = endpointId },
+                    new SqlParameter("@EndpointVersionId", SqlDbType.Int) { Value = endpointVersionId },
                     new SqlParameter("@MethodID", SqlDbType.Int) { Value = methodId },
                     new SqlParameter("@StatusID", SqlDbType.Int) { Value = statusId },
                     new SqlParameter("@Parameters", SqlDbType.VarChar) { Value = (object)formattedParameters ?? DBNull.Value }
@@ -179,47 +180,47 @@ fetch next @PageSize rows only";
                         Id = reader.GetInt32(0),
                         IPAddress = reader.GetString(1),
                         Endpoint = reader.GetString(2),
-                        Method = reader.GetString(3),
-                        Status = reader.GetString(4),
-                        OccuredAt = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
+                        EndpointVersion = reader.GetString(3),
+                        Method = reader.GetString(4),
+                        Status = reader.GetString(5),
+                        OccuredAt = DateTime.SpecifyKind(reader.GetDateTime(6), DateTimeKind.Utc),
                         Paramaters = Array.Empty<string>()
                     };
 
-                    if (!reader.IsDBNull(6))
+                    if (!reader.IsDBNull(7))
                     {
-                        auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(6));
+                        auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(7));
                     }
 
                     LoginAttemptRecord loginAttempt = null;
 
-                    if (!reader.IsDBNull(7))
+                    if (!reader.IsDBNull(8))
                     {
                         loginAttempt = new LoginAttemptRecord()
                         {
-                            Id = reader.GetInt32(7),
-                            IsSuccessful = reader.GetBoolean(10)
+                            Id = reader.GetInt32(8),
+                            IsSuccessful = reader.GetBoolean(11)
                         };
-
-                        if (!reader.IsDBNull(8))
-                        {
-                            loginAttempt.Username = reader.GetString(8);
-                        }
 
                         if (!reader.IsDBNull(9))
                         {
-                            loginAttempt.Phrase = reader.GetString(9);
+                            loginAttempt.Username = reader.GetString(9);
+                        }
+
+                        if (!reader.IsDBNull(10))
+                        {
+                            loginAttempt.Phrase = reader.GetString(10);
                         }
                     }
 
                     auditHistory.LoginAttempt = loginAttempt;
                     auditHistory.Change = new List<ChangeRecord>();
 
-                    if (!reader.IsDBNull(11))
+                    if (!reader.IsDBNull(12))
                     {
                         auditHistory.Change.Add(new ChangeRecord()
                         {
-                            Id = reader.GetInt32(11),
-                            Endpoint = reader.GetString(12),
+                            Id = reader.GetInt32(12),
                             Field = reader.GetString(13),
                             OldValue = reader.GetString(14),
                             NewValue = reader.GetString(15),

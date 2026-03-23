@@ -70,7 +70,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
 
             AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/audithistory")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -98,7 +98,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
 
             AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/audithistory")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -144,7 +144,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
 
             AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/audithistory")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -170,7 +170,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
 
             AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/audithistory")),
                 Configuration = new HttpConfiguration()
             };
 

@@ -61,7 +61,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             DeletionController controller = new DeletionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/deletion")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -90,7 +90,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             DeletionController controller = new DeletionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/deletion")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -137,7 +137,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             DeletionController controller = new DeletionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/deletion")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -173,7 +173,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             DeletionController controller = new DeletionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/deletion")),
                 Configuration = new HttpConfiguration()
             };
 
