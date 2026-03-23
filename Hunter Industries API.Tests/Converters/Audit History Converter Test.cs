@@ -155,6 +155,46 @@ namespace HunterIndustriesAPI.Tests.Converters
 
         #endregion
 
+        #region GetEndpointVersionID
+
+        /// <summary>
+        /// Tests whether the GetEndpointVersionID method returns 1 when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointVersionID()
+        {
+            int expected = 1;
+            int actual = AuditHistoryConverter.GetEndpointVersionID("Trombone");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetEndpointVersionID method returns 1 when given "1.0".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointVersionIDV10()
+        {
+            int expected = 1;
+            int actual = AuditHistoryConverter.GetEndpointVersionID("1.0");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetEndpointVersionID method returns 2 when given "1.1".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointVersionIDV11()
+        {
+            int expected = 2;
+            int actual = AuditHistoryConverter.GetEndpointVersionID("1.1");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
         #region GetMethodID
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
 
             TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Post, new System.Uri("https://localhost/api/v1.0/auth/token")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -81,7 +81,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
 
             TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Post, new System.Uri("https://localhost/api/v1.0/auth/token")),
                 Configuration = new HttpConfiguration()
             };
             controller.Request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes("testuser:testpass")));
@@ -112,7 +112,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
 
             TokenController controller = new TokenController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Post, new System.Uri("https://localhost/api/v1.0/auth/token")),
                 Configuration = new HttpConfiguration()
             };
             controller.Request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes("testuser:testpass")));

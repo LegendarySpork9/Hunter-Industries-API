@@ -17,7 +17,7 @@ namespace HunterIndustriesAPI.Filters.Document
             string version = swaggerDoc.info.version;
             string versionPrefix = $"/{version}";
 
-            swaggerDoc.basePath = $"api.hunter-industries.co.uk{versionPrefix}";
+            swaggerDoc.basePath = "api.hunter-industries.co.uk";
 
             var updatedPaths = new Dictionary<string, PathItem>();
 

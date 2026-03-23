@@ -78,7 +78,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
             if (!_modelValidator.IsValid(filters, true))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, filters));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, filters));
 
                 response = new ResponseModel()
                 {
@@ -93,7 +93,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), ParameterFunction.FormatParameters(null, filters));
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), ParameterFunction.FormatParameters(null, filters));
 
             VersionResponseModel versionResponse = await _versionService.GetAssistantVersion(filters.AssistantName, filters.AssistantId);
 
@@ -165,13 +165,13 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             {
                 if (request == null)
                 {
-                    await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                    await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
                         new string[] { filters.AssistantName, filters.AssistantId, null });
                 }
 
                 else
                 {
-                    await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                    await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
                         new string[] { filters.AssistantName, filters.AssistantId, request.Version });
                 }
 
@@ -194,12 +194,12 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
                 if (await _versionService.AssistantVersionUpdated(filters.AssistantName, filters.AssistantId, request.Version))
                 {
-                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                    (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
                         new string[] { filters.AssistantName, filters.AssistantId, request.Version });
 
                     if (request.Version != versionResponse.Version)
                     {
-                        await _changeService.LogChange(AuditHistoryConverter.GetEndpointID("assistant/version"), audit.Item2, "Version", versionResponse.Version, request.Version);
+                        await _changeService.LogChange(audit.Item2, "Version", versionResponse.Version, request.Version);
                     }
 
                     versionResponse.Version = request.Version;
@@ -214,7 +214,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     return Content(HttpStatusCode.OK, response.Data);
                 }
 
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"),
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"),
                         AuditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantId, request.Version });
 
                 response = new ResponseModel()
@@ -230,7 +230,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/version"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
                     new string[] { filters.AssistantName, filters.AssistantId, request.Version });
 
             response = new ResponseModel()

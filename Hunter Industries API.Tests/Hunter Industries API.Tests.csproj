@@ -128,6 +128,7 @@
     <Compile Include="Converters\Audit History Converter Test.cs" />
     <Compile Include="Converters\Token Converter Test.cs" />
     <Compile Include="Filters\Dependency Resolver Test.cs" />
+    <Compile Include="Functions\Audit History Functions Test.cs" />
     <Compile Include="Functions\Hash Function Test.cs" />
     <Compile Include="Functions\Parameter Function Test.cs" />
     <Compile Include="Functions\Response Function Test.cs" />

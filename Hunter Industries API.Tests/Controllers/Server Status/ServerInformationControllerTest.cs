@@ -66,7 +66,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
 
             ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/serverstatus/serverinformation")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -88,7 +88,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
 
             ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/serverstatus/serverinformation")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -114,7 +114,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
 
             ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/serverstatus/serverinformation")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -144,7 +144,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
 
             ServerInformationController controller = new ServerInformationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/serverstatus/serverinformation")),
                 Configuration = new HttpConfiguration()
             };
 

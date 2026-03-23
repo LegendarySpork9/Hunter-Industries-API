@@ -28,6 +28,19 @@ namespace HunterIndustriesAPI.Converters
         }
 
         /// <summary>
+        /// Returns the endpoint version id number.
+        /// </summary>
+        public static int GetEndpointVersionID(string version)
+        {
+            switch (version)
+            {
+                case "1.0": return 1;
+                case "1.1": return 2;
+                default: return 1;
+            }
+        }
+
+        /// <summary>
         /// Returns the method id number.
         /// </summary>
         public static int GetMethodID(string method)

@@ -1,6 +1,5 @@
-﻿insert into [Change] (EndpointId, AuditId, Field, OldValue, NewValue)
+﻿insert into [Change] (AuditId, Field, OldValue, NewValue)
 values (
-	@EndpointId,
 	@AuditId,
 	@Field,
 	@OldValue,

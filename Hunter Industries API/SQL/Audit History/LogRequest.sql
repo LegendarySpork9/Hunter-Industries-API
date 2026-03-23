@@ -1,8 +1,9 @@
-﻿insert into AuditHistory (IPAddress, EndpointId, MethodId, StatusId, DateOccured, [Parameters])
+﻿insert into AuditHistory (IPAddress, EndpointId, EndpointVersionId, MethodId, StatusId, DateOccured, [Parameters])
 output inserted.AuditId
 values (
 	@IPAddress,
 	@EndpointId,
+	@EndpointVersionId,
 	@MethodId,
 	@StatusId,
 	GETUTCDATE(),

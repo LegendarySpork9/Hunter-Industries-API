@@ -55,7 +55,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -77,7 +77,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -104,7 +104,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -126,7 +126,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -152,7 +152,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -178,7 +178,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -207,7 +207,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -232,7 +232,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -262,7 +262,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -284,7 +284,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserController controller = new UserController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(),
+                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/user")),
                 Configuration = new HttpConfiguration()
             };
 

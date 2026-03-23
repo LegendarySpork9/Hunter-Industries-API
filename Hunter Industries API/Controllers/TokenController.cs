@@ -92,7 +92,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(request, true, validationIgnore))
             {
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, request))).Item2;
+                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, request))).Item2;
 
                 response = new ResponseModel()
                 {
@@ -115,7 +115,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(request, true))
             {
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
                 response = new ResponseModel()
@@ -150,7 +150,7 @@ namespace HunterIndustriesAPI.Controllers
                     signingCredentials: creds
                 ));
 
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"),
+                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"),
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
                 response = new ResponseModel()
@@ -176,7 +176,7 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
-            auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Unauthorized"),
+            auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Unauthorized"),
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
             response = new ResponseModel()

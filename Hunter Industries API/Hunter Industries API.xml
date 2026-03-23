@@ -612,6 +612,11 @@
             Returns the endpoint id number.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Converters.AuditHistoryConverter.GetEndpointVersionID(System.String)">
+            <summary>
+            Returns the endpoint version id number.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Converters.AuditHistoryConverter.GetMethodID(System.String)">
             <summary>
             Returns the method id number.
@@ -823,6 +828,15 @@
         <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
             <summary>
             Checks if the given permissions contain any that match the required permission.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunctions">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.AuditHistoryFunctions.ExtractVersionFromRequest(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Extracts the API version from the request URL.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.HashFunction">
@@ -1744,6 +1758,11 @@
             The endpoint that was called.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.EndpointVersion">
+            <summary>
+            The version of the endpoint that was called.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Method">
             <summary>
             The method of the call.
@@ -1781,11 +1800,6 @@
         <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Id">
             <summary>
             Id of the record.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Endpoint">
-            <summary>
-            The endpoint that was called.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Field">
@@ -2003,7 +2017,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.String[])">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String[])">
             <summary>
             Logs the call made to the database.
             </summary>
@@ -2031,7 +2045,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.Int32,System.String,System.String,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.String,System.String,System.String)">
             <summary>
             Creates a record in the Change table.
             </summary>
