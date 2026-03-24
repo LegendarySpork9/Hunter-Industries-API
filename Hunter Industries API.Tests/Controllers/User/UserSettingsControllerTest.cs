@@ -53,7 +53,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/usersettings/1")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.1/usersettings/1")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -75,7 +75,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/usersettings/1")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.1/usersettings/1")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -102,7 +102,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/usersettings/1")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.1/usersettings/1")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -129,7 +129,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/usersettings/1")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.1/usersettings/1")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -157,7 +157,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/usersettings/1")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.1/usersettings/1")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -179,7 +179,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.User
 
             UserSettingsController controller = new UserSettingsController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.1/usersettings/1")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.1/usersettings/1")),
                 Configuration = new HttpConfiguration()
             };
 

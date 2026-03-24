@@ -280,7 +280,38 @@
                  GET /audithistory/1
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
-             <param name="id">The id number of the user.</param>
+             <param name="id">The id number of the audit history record.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ErrorController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.Get(HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel)">
+             <summary>
+             Returns a collection of errors logged by the api.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /errorlog?FromDate=24/03/2026
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.Get(System.Int32)">
+             <summary>
+             Returns the record matching the given id.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /errorlog/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="id">The id number of the error log record.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController">
             <summary>
@@ -1316,6 +1347,35 @@
             The number of the page to pull.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.FromDate">
+            <summary>
+            The date from which to pull records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.IPAddress">
+            <summary>
+            The IP address the records were made from.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.Summary">
+            <summary>
+            The summary of the records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.PageSize">
+            <summary>
+            The number of records to pull per page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.PageNumber">
+            <summary>
+            The number of the page to pull.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel">
             <summary>
             </summary>
@@ -1450,6 +1510,40 @@
             The total number of records returned.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.Entries">
+            <summary>
+            The error log records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.ResponseModel">
             <summary>
             </summary>
@@ -1539,6 +1633,35 @@
         <member name="P:HunterIndustriesAPI.Models.ValidationModel.SecretKey">
             <summary>
             The valid secret key of the token.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ErrorLogRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.DateOccured">
+            <summary>
+            When the error happened.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.IPAddress">
+            <summary>
+            IP Address the call was made from.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.Summary">
+            <summary>
+            A short message about the error.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.Message">
+            <summary>
+            The full error including the trace.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ConnectionRecord">
@@ -2048,6 +2171,24 @@
         <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.String,System.String,System.String)">
             <summary>
             Creates a record in the Change table.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.ErrorLogService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetErrorLog(System.Int32,System.String,System.String,System.DateTime,System.Int32,System.Int32)">
+            <summary>
+            Returns all error log records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetTotalErrorLog(System.String,System.String,System.DateTime)">
+            <summary>
+            Returns the number of error log records that match the parameters.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.LoggerService">

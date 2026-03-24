@@ -86,6 +86,16 @@ GO
 
 PRINT('Added Foreign Key to EndpointVersionId Field')
 
+INSERT INTO EndpointVersion([Value])
+VALUES ('v2.0')
+
+PRINT('Added Endpoint Version to EndpointVersion Table')
+
+INSERT INTO [Endpoint]([Value])
+VALUES ('/errorlog')
+
+PRINT('Added Error Log Endpoint')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 

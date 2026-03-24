@@ -153,6 +153,18 @@ namespace HunterIndustriesAPI.Tests.Converters
             Assert.AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Tests whether the GetEndpointID method returns 12 when given "errorlog".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointIDErrorLog()
+        {
+            int expected = 12;
+            int actual = AuditHistoryConverter.GetEndpointID("errorlog");
+
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region GetEndpointVersionID
@@ -189,6 +201,18 @@ namespace HunterIndustriesAPI.Tests.Converters
         {
             int expected = 2;
             int actual = AuditHistoryConverter.GetEndpointVersionID("1.1");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetEndpointVersionID method returns 3 when given "2.0".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointVersionIDV20()
+        {
+            int expected = 3;
+            int actual = AuditHistoryConverter.GetEndpointVersionID("2.0");
 
             Assert.AreEqual(expected, actual);
         }

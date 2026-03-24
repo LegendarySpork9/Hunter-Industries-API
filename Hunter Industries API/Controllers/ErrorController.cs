@@ -1,4 +1,4 @@
-// Copyright © - Unpublished - Toby Hunter
+﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -21,8 +21,8 @@ namespace HunterIndustriesAPI.Controllers
     /// <summary>
     /// </summary>
     [Authorize]
-    [RequiredPolicyAuthorisationAttributeFilter("AuditHistory")]
-    public class AuditController : ApiController
+    [RequiredPolicyAuthorisationAttributeFilter("ErrorLog")]
+    public class ErrorController : ApiController
     {
         private readonly ILoggerService _Logger;
         private readonly IFileSystem _FileSystem;
@@ -33,7 +33,7 @@ namespace HunterIndustriesAPI.Controllers
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public AuditController(ILoggerService _logger,
+        public ErrorController(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
             IDatabaseOptions _options,
@@ -47,30 +47,31 @@ namespace HunterIndustriesAPI.Controllers
         }
 
         /// <summary>
-        /// Returns a collection of calls made to the api.
+        /// Returns a collection of errors logged by the api.
         /// </summary>
         /// <remarks>
         /// Sample Request:
         ///
-        ///     GET /audithistory?FromDate=02/11/2024&amp;Endpoint=https://api.hunter-industries.co.uk/v2.0/auth/token
+        ///     GET /errorlog?FromDate=24/03/2026
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        [VersionedRoute("audithistory", "1.0")]
-        [SwaggerOperation("GetAuditList")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryResponseModel), Description = "Returns the item(s) matching the given parameters.")]
+        [VersionedRoute("errorlog", "2.0")]
+        [SwaggerOperation("GetErrorList")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ErrorLogResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Get([FromUri] AuditHistoryFilterModel filters)
+        public async Task<IHttpActionResult> Get([FromUri] ErrorLogFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
+            ErrorLogService _errorLogService = new ErrorLogService(_Logger, _FileSystem, _Options, _Database, _Clock);
 
             ResponseModel response;
 
             if (filters == null)
             {
-                filters = new AuditHistoryFilterModel();
+                filters = new ErrorLogFilterModel();
             }
 
             if (filters.PageSize > 200)
@@ -78,11 +79,11 @@ namespace HunterIndustriesAPI.Controllers
                 filters.PageSize = 200;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Error Log endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(filters))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, filters));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("errorlog"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, filters));
 
                 response = new ResponseModel()
                 {
@@ -93,17 +94,17 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Error Log endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("errorlog"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
+                    new string[] { filters.IPAddress, filters.Summary, filters.FromDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
-            var result = await _auditHistoryService.GetAuditHistory(0, filters.IPAddress, filters.Endpoint, DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), filters.PageSize, filters.PageNumber);
-            List<AuditHistoryRecord> auditHistories = result.Item1;
+            var result = await _errorLogService.GetErrorLog(0, filters.IPAddress, filters.Summary, DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), filters.PageSize, filters.PageNumber);
+            List<ErrorLogRecord> errorLogs = result.Item1;
 
-            if (auditHistories.Count == 0)
+            if (errorLogs.Count == 0)
             {
                 response = new ResponseModel()
                 {
@@ -114,7 +115,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Error Log endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -124,10 +125,10 @@ namespace HunterIndustriesAPI.Controllers
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = new AuditHistoryResponseModel()
+                Data = new ErrorLogResponseModel()
                 {
-                    Entries = auditHistories,
-                    EntryCount = auditHistories.Count,
+                    Entries = errorLogs,
+                    EntryCount = errorLogs.Count,
                     PageNumber = filters.PageNumber,
                     PageSize = filters.PageSize,
                     TotalPageCount = totalPages,
@@ -135,7 +136,7 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Error Log endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -145,30 +146,31 @@ namespace HunterIndustriesAPI.Controllers
         /// <remarks>
         /// Sample Request:
         ///
-        ///     GET /audithistory/1
+        ///     GET /errorlog/1
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        /// <param name="id">The id number of the audit history record.</param>
-        [VersionedRoute("audithistory/{id:int}", "1.0")]
-        [SwaggerOperation("GetAuditById")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryRecord), Description = "Returns the item matching the given id.")]
+        /// <param name="id">The id number of the error log record.</param>
+        [VersionedRoute("errorlog/{id:int}", "2.0")]
+        [SwaggerOperation("GetErrorById")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ErrorLogRecord), Description = "Returns the item matching the given id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(int id)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
+            ErrorLogService _errorLogService = new ErrorLogService(_Logger, _FileSystem, _Options, _Database, _Clock);
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Error Log endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("errorlog"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
                     new string[] { id.ToString() });
 
-            var result = await _auditHistoryService.GetAuditHistory(id, null, null, _Clock.DefaultDate, 25, 1);
-            List<AuditHistoryRecord> auditHistories = result.Item1;
+            var result = await _errorLogService.GetErrorLog(id, null, null, _Clock.DefaultDate, 25, 1);
+            List<ErrorLogRecord> errorLogs = result.Item1;
 
-            if (auditHistories.Count == 0)
+            if (errorLogs.Count == 0)
             {
                 response = new ResponseModel()
                 {
@@ -179,17 +181,17 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Error Log endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = auditHistories[0]
+                Data = errorLogs[0]
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Error Log endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.OK, response.Data);
         }
     }
