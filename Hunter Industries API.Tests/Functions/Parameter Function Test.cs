@@ -215,7 +215,6 @@ namespace HunterIndustriesAPI.Tests.Functions
             object model = new { Password = "Password" };
             string actual = ParameterFunction.FormatParameters(model, true);
 
-            Assert.AreEqual(1, actual.Length);
             Assert.AreEqual(expected, actual);
         }
 
