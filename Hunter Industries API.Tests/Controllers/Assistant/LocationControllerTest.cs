@@ -62,7 +62,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/location")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/location")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -91,7 +91,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/location")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/location")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -139,7 +139,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/location")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/location")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -176,7 +176,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             LocationController controller = new LocationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/location")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/location")),
                 Configuration = new HttpConfiguration()
             };
 

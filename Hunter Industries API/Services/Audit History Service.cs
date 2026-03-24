@@ -162,7 +162,7 @@ namespace HunterIndustriesAPI.Services
                     parameterList.Add(new SqlParameter("@Endpoint", SqlDbType.VarChar) { Value = endpoint });
                 }
 
-                if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate.ToString() != "01/01/1900 00:00:00")
+                if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate != _Clock.DefaultDate)
                 {
                     sql += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
                     parameterList.Add(new SqlParameter("@FromDate", SqlDbType.DateTime) { Value = fromDate });

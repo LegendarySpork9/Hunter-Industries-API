@@ -23,6 +23,7 @@ namespace HunterIndustriesAPI.Converters
                 case "serverstatus/serverinformation": return 9;
                 case "serverstatus/serverevent": return 10;
                 case "serverstatus/serveralert": return 11;
+                case "errorlog": return 12;
                 default: return 0;
             }
         }
@@ -36,6 +37,7 @@ namespace HunterIndustriesAPI.Converters
             {
                 case "1.0": return 1;
                 case "1.1": return 2;
+                case "2.0": return 3;
                 default: return 1;
             }
         }

@@ -18,7 +18,7 @@ using System.Web.Http.Results;
 namespace HunterIndustriesAPI.Tests.Controllers
 {
     [TestClass]
-    public class AuditControllerTest
+    public class ErrorControllerTest
     {
         private readonly Mock<ILoggerService> _mockLogger = new Mock<ILoggerService>();
         private readonly Mock<IFileSystem> _mockFileSystem = new Mock<IFileSystem>();
@@ -42,39 +42,35 @@ namespace HunterIndustriesAPI.Tests.Controllers
         #region Get
 
         /// <summary>
-        /// Checks whether the Get method returns a 200 status code with audit history data.
+        /// Checks whether the Get method returns a 200 status code with error log data.
         /// </summary>
         [TestMethod]
         public async Task TestGet()
         {
-            List<AuditHistoryRecord> records = new List<AuditHistoryRecord>
+            List<ErrorLogRecord> records = new List<ErrorLogRecord>
             {
-                new AuditHistoryRecord
+                new ErrorLogRecord
                 {
                     Id = 1,
+                    DateOccured = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     IPAddress = "127.0.0.1",
-                    Endpoint = "token",
-                    Method = "POST",
-                    Status = "OK",
-                    OccuredAt = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-                    Paramaters = new string[0],
-                    LoginAttempt = null,
-                    Change = new List<ChangeRecord>()
+                    Summary = "This is an error.",
+                    Message = "This is a detailed error trace."
                 }
             };
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/audithistory")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 
-            AuditHistoryFilterModel filters = new AuditHistoryFilterModel();
+            ErrorLogFilterModel filters = new ErrorLogFilterModel();
 
             IHttpActionResult actionResult = await controller.Get(filters);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
@@ -89,20 +85,20 @@ namespace HunterIndustriesAPI.Tests.Controllers
         [TestMethod]
         public async Task TestGetEmpty()
         {
-            List<AuditHistoryRecord> records = new List<AuditHistoryRecord>();
+            List<ErrorLogRecord> records = new List<ErrorLogRecord>();
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/audithistory")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 
-            AuditHistoryFilterModel filters = new AuditHistoryFilterModel();
+            ErrorLogFilterModel filters = new ErrorLogFilterModel();
 
             IHttpActionResult actionResult = await controller.Get(filters);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
@@ -116,35 +112,31 @@ namespace HunterIndustriesAPI.Tests.Controllers
         #region GetById
 
         /// <summary>
-        /// Checks whether the Get by id method returns a 200 status code with a single audit record.
+        /// Checks whether the Get by id method returns a 200 status code with a single error record.
         /// </summary>
         [TestMethod]
         public async Task TestGetById()
         {
-            List<AuditHistoryRecord> records = new List<AuditHistoryRecord>
+            List<ErrorLogRecord> records = new List<ErrorLogRecord>
             {
-                new AuditHistoryRecord
+                new ErrorLogRecord
                 {
                     Id = 1,
+                    DateOccured = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     IPAddress = "127.0.0.1",
-                    Endpoint = "token",
-                    Method = "POST",
-                    Status = "OK",
-                    OccuredAt = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-                    Paramaters = new string[0],
-                    LoginAttempt = null,
-                    Change = new List<ChangeRecord>()
+                    Summary = "This is an error.",
+                    Message = "This is a detailed error trace."
                 }
             };
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/audithistory")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -161,16 +153,16 @@ namespace HunterIndustriesAPI.Tests.Controllers
         [TestMethod]
         public async Task TestGetByIdEmpty()
         {
-            List<AuditHistoryRecord> records = new List<AuditHistoryRecord>();
+            List<ErrorLogRecord> records = new List<ErrorLogRecord>();
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
 
-            AuditController controller = new AuditController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/audithistory")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 

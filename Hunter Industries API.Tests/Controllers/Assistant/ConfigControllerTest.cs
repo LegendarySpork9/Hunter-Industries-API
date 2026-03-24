@@ -69,7 +69,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/config")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/config")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -102,7 +102,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/config")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/config")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -135,7 +135,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/config")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/config")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -165,7 +165,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.Assistant
 
             ConfigController controller = new ConfigController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new System.Uri("https://localhost/api/v1.0/assistant/config")),
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/config")),
                 Configuration = new HttpConfiguration()
             };
 
