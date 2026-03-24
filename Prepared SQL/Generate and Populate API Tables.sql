@@ -46,6 +46,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AuditHistory](
 	[AuditId] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NULL,
+	[ApplicationId] [int] NULL,
 	[EndpointId] [int] NOT NULL,
 	[EndpointVersionId] [int] NOT NULL,
 	[MethodId] [int] NOT NULL,
@@ -545,6 +547,16 @@ ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_Assista
 REFERENCES [dbo].[Version] ([VersionId])
 GO
 ALTER TABLE [dbo].[AssistantInformation] CHECK CONSTRAINT [FK_AssistantInformation_Version]
+GO
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_APIUser] FOREIGN KEY([UserId])
+REFERENCES [dbo].[APIUser] ([UserId])
+GO
+ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_APIUser]
+GO
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
+GO
+ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_Application]
 GO
 ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Endpoint] FOREIGN KEY([EndpointId])
 REFERENCES [dbo].[Endpoint] ([EndpointId])

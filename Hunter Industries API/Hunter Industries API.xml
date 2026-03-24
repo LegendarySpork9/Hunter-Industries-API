@@ -686,7 +686,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetClaims(System.Collections.Generic.List{System.String})">
+        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetClaims(System.String,System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Converts the scope into a claim.
             </summary>
@@ -868,6 +868,20 @@
         <member name="M:HunterIndustriesAPI.Functions.AuditHistoryFunctions.ExtractVersionFromRequest(System.Net.Http.HttpRequestMessage)">
             <summary>
             Extracts the API version from the request URL.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.ClaimFunctions">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunctions.GetUsername(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Extracts the username from the claims principal.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunctions.GetApplicationName(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Extracts the application name from the claims principal.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.HashFunction">
@@ -1335,6 +1349,16 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.Endpoint">
             <summary>
             The endpoint which the calls were made to.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.Username">
+            <summary>
+            The username of the user who made the call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.Application">
+            <summary>
+            The application that made the call.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.PageSize">
@@ -1876,6 +1900,16 @@
             IP Address the call was made from.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Username">
+            <summary>
+            The username of the user who made the call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Application">
+            <summary>
+            The name of the application that made the call.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Endpoint">
             <summary>
             The endpoint that was called.
@@ -2140,7 +2174,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String[])">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String,System.String[])">
             <summary>
             Logs the call made to the database.
             </summary>
@@ -2150,12 +2184,12 @@
             Logs any authorisation calls made to the database.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.Int32,System.String,System.String,System.DateTime,System.Int32,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.Int32,System.String,System.String,System.String,System.String,System.DateTime,System.Int32,System.Int32)">
             <summary>
             Returns all audit history records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.String,System.String,System.DateTime)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.String,System.String,System.String,System.String,System.DateTime)">
             <summary>
             Returns the number of audit history records that match the parameters.
             </summary>

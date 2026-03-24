@@ -61,6 +61,16 @@ namespace HunterIndustriesAPI.Filters.Operation
                         param.name = "endpoint";
                     }
 
+                    if (param.name == "filters.username")
+                    {
+                        param.name = "username";
+                    }
+
+                    if (param.name == "filters.application")
+                    {
+                        param.name = "application";
+                    }
+
                     if (param.name == "filters.pageSize")
                     {
                         param.name = "pageSize";
