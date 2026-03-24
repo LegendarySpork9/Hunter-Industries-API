@@ -897,7 +897,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String,System.Object)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String,System.Object,System.Boolean)">
             <summary>
             Converts the parameters from the stored SQL format to the output format or converts the model into a string array.
             </summary>
@@ -907,12 +907,12 @@
             Converts the parameters into a log/SQL friendly format.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.Boolean)">
             <summary>
             Converts the model into a log friendly format.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatListParameters(System.Object,System.Boolean)">
             <summary>
             Converts the list into a log friendly format.
             </summary>
