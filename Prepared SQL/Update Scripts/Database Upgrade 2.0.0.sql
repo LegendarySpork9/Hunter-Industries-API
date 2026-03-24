@@ -96,6 +96,34 @@ VALUES ('/errorlog')
 
 PRINT('Added Error Log Endpoint')
 
+ALTER TABLE AuditHistory ADD UserId [int] NULL
+GO
+
+PRINT('Added UserId Field to AuditHistory Table')
+
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_APIUser] FOREIGN KEY([UserId])
+REFERENCES [dbo].[APIUser] ([UserId])
+GO
+
+ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_APIUser]
+GO
+
+PRINT('Added Foreign Key to UserId Field')
+
+ALTER TABLE AuditHistory ADD ApplicationId [int] NULL
+GO
+
+PRINT('Added ApplicationId Field to AuditHistory Table')
+
+ALTER TABLE [dbo].[AuditHistory]  WITH CHECK ADD  CONSTRAINT [FK_AuditHistory_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
+GO
+
+ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_Application]
+GO
+
+PRINT('Added Foreign Key to ApplicationId Field')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 

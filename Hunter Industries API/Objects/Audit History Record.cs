@@ -17,6 +17,14 @@ namespace HunterIndustriesAPI.Objects
         /// </summary>
         public string IPAddress { get; set; }
         /// <summary>
+        /// The username of the user who made the call.
+        /// </summary>
+        public string Username { get; set; }
+        /// <summary>
+        /// The name of the application that made the call.
+        /// </summary>
+        public string Application { get; set; }
+        /// <summary>
         /// The endpoint that was called.
         /// </summary>
         public string Endpoint { get; set; }

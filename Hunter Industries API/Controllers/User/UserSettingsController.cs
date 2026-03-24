@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers.User
@@ -67,12 +68,16 @@ namespace HunterIndustriesAPI.Controllers.User
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             UserSettingsService _userSettingsService = new UserSettingsService(_Logger, _FileSystem, _Options, _Database);
 
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunctions.GetUsername(principal);
+            string applicationName = ClaimFunctions.GetApplicationName(principal);
+
             ResponseModel response;
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    new string[] { id.ToString(), application });
+                    username, applicationName, new string[] { id.ToString(), application });
 
             List<UserSettingRecord> userSettings = await _userSettingsService.GetUserSettings(id, application);
 
@@ -134,6 +139,10 @@ namespace HunterIndustriesAPI.Controllers.User
             ModelValidationService _modelValidator = new ModelValidationService();
             UserSettingsService _userSettingsService = new UserSettingsService(_Logger, _FileSystem, _Options, _Database);
 
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunctions.GetUsername(principal);
+            string applicationName = ClaimFunctions.GetApplicationName(principal);
+
             ResponseModel response;
 
             if (request == null)
@@ -146,7 +155,7 @@ namespace HunterIndustriesAPI.Controllers.User
             if (!_modelValidator.IsValid(request, true))
             {
                 await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
-                    null);
+                    username, applicationName, null);
 
                 response = new ResponseModel()
                 {
@@ -163,7 +172,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
             if (await _userSettingsService.UserSettingExists(request.Username, request.Application, request.SettingName))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), ParameterFunction.FormatParameters(null, request));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -180,7 +189,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
             if (!await _userSettingsService.UserSettingAdded(request))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), ParameterFunction.FormatParameters(null, request));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -194,7 +203,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"), ParameterFunction.FormatParameters(null, request));
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
             response = new ResponseModel()
             {
@@ -245,6 +254,10 @@ namespace HunterIndustriesAPI.Controllers.User
             UserSettingsService _userSettingsService = new UserSettingsService(_Logger, _FileSystem, _Options, _Database);
             ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
 
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunctions.GetUsername(principal);
+            string applicationName = ClaimFunctions.GetApplicationName(principal);
+
             ResponseModel response;
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User Settings (Patch) endpoint called with the following parameters \"{id}\", {ParameterFunction.FormatParameters(null, request)}.");
@@ -252,7 +265,7 @@ namespace HunterIndustriesAPI.Controllers.User
             if (!_modelValidator.IsValid(request))
             {
                 await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
-                    null);
+                    username, applicationName, null);
 
                 response = new ResponseModel()
                 {
@@ -274,7 +287,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 if (await _userSettingsService.UserSettingUpdated(id, request.Value))
                 {
                     (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
-                        new string[] { id.ToString(), request.Value });
+                        username, applicationName, new string[] { id.ToString(), request.Value });
 
                     if (!string.IsNullOrEmpty(request.Value) && request.Value != setting.Value)
                     {
@@ -293,7 +306,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 }
 
                 await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"),
-                        AuditHistoryConverter.GetStatusID("InternalServerError"), new string[] { id.ToString(), request.Value });
+                        AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, new string[] { id.ToString(), request.Value });
 
                 response = new ResponseModel()
                 {
@@ -309,7 +322,7 @@ namespace HunterIndustriesAPI.Controllers.User
             }
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
-                new string[] { id.ToString(), request.Value });
+                username, applicationName, new string[] { id.ToString(), request.Value });
 
             response = new ResponseModel()
             {

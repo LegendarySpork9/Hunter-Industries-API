@@ -40,9 +40,9 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Logs the call made to the database.
         /// </summary>
-        public async Task<(bool, int)> LogRequest(string ipAddress, int endpointId, int endpointVersionId, int methodId, int statusId, string[] parameters = null)
+        public async Task<(bool, int)> LogRequest(string ipAddress, int endpointId, int endpointVersionId, int methodId, int statusId, string username = null, string applicationName = null, string[] parameters = null)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), endpointVersionId.ToString(), methodId.ToString(), statusId.ToString(), ParameterFunction.FormatParameters(parameters) })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), endpointVersionId.ToString(), methodId.ToString(), statusId.ToString(), username, applicationName, ParameterFunction.FormatParameters(parameters) })}.");
 
             bool logged = false;
             int auditId = 0;
@@ -58,7 +58,9 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@EndpointVersionId", SqlDbType.Int) { Value = endpointVersionId },
                     new SqlParameter("@MethodID", SqlDbType.Int) { Value = methodId },
                     new SqlParameter("@StatusID", SqlDbType.Int) { Value = statusId },
-                    new SqlParameter("@Parameters", SqlDbType.VarChar) { Value = (object)formattedParameters ?? DBNull.Value }
+                    new SqlParameter("@Parameters", SqlDbType.VarChar) { Value = (object)formattedParameters ?? DBNull.Value },
+                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = (object)username ?? DBNull.Value },
+                    new SqlParameter("@ApplicationName", SqlDbType.VarChar) { Value = (object)applicationName ?? DBNull.Value }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, sqlParameters);
@@ -128,7 +130,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all audit history records that match the parameters.
         /// </summary>
-        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId, string ipAddress, string endpoint, DateTime fromDate, int pageSize, int pageNumber)
+        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId, string ipAddress, string endpoint, string username, string application, DateTime fromDate, int pageSize, int pageNumber)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
@@ -162,6 +164,18 @@ namespace HunterIndustriesAPI.Services
                     parameterList.Add(new SqlParameter("@Endpoint", SqlDbType.VarChar) { Value = endpoint });
                 }
 
+                if (!string.IsNullOrEmpty(username))
+                {
+                    sql += "\nand AU2.Username = @Username";
+                    parameterList.Add(new SqlParameter("@Username", SqlDbType.VarChar) { Value = username });
+                }
+
+                if (!string.IsNullOrEmpty(application))
+                {
+                    sql += "\nand App.[Name] = @Application";
+                    parameterList.Add(new SqlParameter("@Application", SqlDbType.VarChar) { Value = application });
+                }
+
                 if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate != _Clock.DefaultDate)
                 {
                     sql += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
@@ -179,51 +193,61 @@ fetch next @PageSize rows only";
                     {
                         Id = reader.GetInt32(0),
                         IPAddress = reader.GetString(1),
-                        Endpoint = reader.GetString(2),
-                        EndpointVersion = reader.GetString(3),
-                        Method = reader.GetString(4),
-                        Status = reader.GetString(5),
-                        OccuredAt = DateTime.SpecifyKind(reader.GetDateTime(6), DateTimeKind.Utc),
+                        Endpoint = reader.GetString(4),
+                        EndpointVersion = reader.GetString(5),
+                        Method = reader.GetString(6),
+                        Status = reader.GetString(7),
+                        OccuredAt = DateTime.SpecifyKind(reader.GetDateTime(8), DateTimeKind.Utc),
                         Paramaters = Array.Empty<string>()
                     };
 
-                    if (!reader.IsDBNull(7))
+                    if (!reader.IsDBNull(9))
                     {
-                        auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(7));
+                        auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(9));
+                    }
+
+                    if (!reader.IsDBNull(2))
+                    {
+                        auditHistory.Username = reader.GetString(2);
+                    }
+
+                    if (!reader.IsDBNull(3))
+                    {
+                        auditHistory.Application = reader.GetString(3);
                     }
 
                     LoginAttemptRecord loginAttempt = null;
 
-                    if (!reader.IsDBNull(8))
+                    if (!reader.IsDBNull(10))
                     {
                         loginAttempt = new LoginAttemptRecord()
                         {
-                            Id = reader.GetInt32(8),
-                            IsSuccessful = reader.GetBoolean(11)
+                            Id = reader.GetInt32(10),
+                            IsSuccessful = reader.GetBoolean(13)
                         };
 
-                        if (!reader.IsDBNull(9))
+                        if (!reader.IsDBNull(11))
                         {
-                            loginAttempt.Username = reader.GetString(9);
+                            loginAttempt.Username = reader.GetString(11);
                         }
 
-                        if (!reader.IsDBNull(10))
+                        if (!reader.IsDBNull(12))
                         {
-                            loginAttempt.Phrase = reader.GetString(10);
+                            loginAttempt.Phrase = reader.GetString(12);
                         }
                     }
 
                     auditHistory.LoginAttempt = loginAttempt;
                     auditHistory.Change = new List<ChangeRecord>();
 
-                    if (!reader.IsDBNull(12))
+                    if (!reader.IsDBNull(14))
                     {
                         auditHistory.Change.Add(new ChangeRecord()
                         {
-                            Id = reader.GetInt32(12),
-                            Field = reader.GetString(13),
-                            OldValue = reader.GetString(14),
-                            NewValue = reader.GetString(15),
+                            Id = reader.GetInt32(14),
+                            Field = reader.GetString(15),
+                            OldValue = reader.GetString(16),
+                            NewValue = reader.GetString(17),
                         });
                     }
 
@@ -267,7 +291,7 @@ fetch next @PageSize rows only";
                     auditHistories.Add(current);
                 }
 
-                totalRecords = await GetTotalAuditHistory(ipAddress, endpoint, fromDate);
+                totalRecords = await GetTotalAuditHistory(ipAddress, endpoint, username, application, fromDate);
             }
 
             catch (Exception ex)
@@ -284,9 +308,9 @@ fetch next @PageSize rows only";
         /// <summary>
         /// Returns the number of audit history records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalAuditHistory(string ipAddress, string endpoint, DateTime fromDate)
+        private async Task<int> GetTotalAuditHistory(string ipAddress, string endpoint, string username, string application, DateTime fromDate)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, username, application, fromDate.ToString() })}.");
 
             int totalRecords = 0;
 
@@ -305,6 +329,18 @@ fetch next @PageSize rows only";
                 {
                     sql += "\nand E.Value = @Endpoint";
                     parameterList.Add(new SqlParameter("@Endpoint", SqlDbType.VarChar) { Value = endpoint });
+                }
+
+                if (!string.IsNullOrEmpty(username))
+                {
+                    sql += "\nand AU2.Username = @Username";
+                    parameterList.Add(new SqlParameter("@Username", SqlDbType.VarChar) { Value = username });
+                }
+
+                if (!string.IsNullOrEmpty(application))
+                {
+                    sql += "\nand App.[Name] = @Application";
+                    parameterList.Add(new SqlParameter("@Application", SqlDbType.VarChar) { Value = application });
                 }
 
                 if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate != _Clock.DefaultDate)

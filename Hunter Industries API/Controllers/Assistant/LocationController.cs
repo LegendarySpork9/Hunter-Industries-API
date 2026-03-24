@@ -14,6 +14,7 @@ using Swashbuckle.Swagger.Annotations;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
@@ -67,6 +68,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ModelValidationService _modelValidator = new ModelValidationService();
             LocationService _locationService = new LocationService(_Logger, _FileSystem, _Options, _Database);
 
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunctions.GetUsername(principal);
+            string applicationName = ClaimFunctions.GetApplicationName(principal);
+
             ResponseModel response;
 
             if (filters == null)
@@ -78,7 +83,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
             if (!_modelValidator.IsValid(filters, true))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, filters));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"), username, applicationName, ParameterFunction.FormatParameters(null, filters));
 
                 response = new ResponseModel()
                 {
@@ -93,7 +98,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), ParameterFunction.FormatParameters(null, filters));
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, filters));
 
             LocationResponseModel locationResponse = await _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantId);
 
@@ -152,6 +157,10 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             LocationService _locationService = new LocationService(_Logger, _FileSystem, _Options, _Database);
             ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
 
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunctions.GetUsername(principal);
+            string applicationName = ClaimFunctions.GetApplicationName(principal);
+
             ResponseModel response;
 
             if (filters == null)
@@ -166,13 +175,13 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 if (request == null)
                 {
                     await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
-                        new string[] { filters.AssistantName, filters.AssistantId, null });
+                        username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, null });
                 }
 
                 else
                 {
                     await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
-                        new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+                        username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
                 }
 
                 response = new ResponseModel()
@@ -195,7 +204,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 if (await _locationService.AssistantLocationUpdated(filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress))
                 {
                     (bool, int) audit = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
-                        new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+                        username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                     if (!string.IsNullOrEmpty(request.HostName) && request.HostName != locationResponse.HostName)
                     {
@@ -220,7 +229,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
 
                 await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"),
-                        AuditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+                        AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                 response = new ResponseModel()
                 {
@@ -236,7 +245,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
-                    new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+                    username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
             response = new ResponseModel()
             {

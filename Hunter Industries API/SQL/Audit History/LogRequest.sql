@@ -1,11 +1,15 @@
-﻿insert into AuditHistory (IPAddress, EndpointId, EndpointVersionId, MethodId, StatusId, DateOccured, [Parameters])
+﻿insert into AuditHistory (IPAddress, EndpointId, EndpointVersionId, MethodId, StatusId, DateOccured, [Parameters], UserId, ApplicationId)
 output inserted.AuditId
-values (
+select
 	@IPAddress,
 	@EndpointId,
 	@EndpointVersionId,
 	@MethodId,
 	@StatusId,
 	GETUTCDATE(),
-	@Parameters
-)
+	@Parameters,
+	AU.UserId,
+	A.ApplicationId
+from (select 1 as dummy) D
+left join APIUser AU with (nolock) on AU.Username = @Username
+left join [Application] A with (nolock) on A.[Name] = @ApplicationName

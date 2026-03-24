@@ -1,14 +1,16 @@
 ﻿select
 	AH.AuditId,
 	IPAddress,
-	E.[Value] as Endpoint,
+	AU2.Username as AuditUsername,
+	App.[Name] as ApplicationName,
+	E.[Value] as [Endpoint],
 	EV.[Value] as EndpointVersion,
 	M.[Value] as [Method],
 	SC.[Value] as StatusCode,
 	AH.DateOccured,
 	[Parameters],
 	AttemptId,
-	Username,
+	AU.Username as AttemptUsername,
 	Phrase,
 	IsSuccessful,
 	ChangeId,
@@ -24,4 +26,6 @@ left join LoginAttempt L with (nolock) on AH.AuditId = L.AuditId
 left join APIUser AU with (nolock) on L.UserId = AU.UserId
 left join Authorisation A with (nolock) on L.PhraseId = A.PhraseId
 left join [Change] C with (nolock) on AH.AuditId = C.AuditId
+left join APIUser AU2 with (nolock) on AH.UserId = AU2.UserId
+left join [Application] App with (nolock) on AH.ApplicationId = App.ApplicationId
 where AH.AuditId is not null

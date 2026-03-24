@@ -18,6 +18,14 @@ namespace HunterIndustriesAPI.Models.Requests.Filters
         /// </summary>
         public string Endpoint { get; set; }
         /// <summary>
+        /// The username of the user who made the call.
+        /// </summary>
+        public string Username { get; set; }
+        /// <summary>
+        /// The application that made the call.
+        /// </summary>
+        public string Application { get; set; }
+        /// <summary>
         /// The number of records to pull per page.
         /// </summary>
         public int PageSize { get; set; } = 25;

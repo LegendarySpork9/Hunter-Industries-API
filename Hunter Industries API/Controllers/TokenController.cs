@@ -92,7 +92,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(request, true, validationIgnore))
             {
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), ParameterFunction.FormatParameters(null, request))).Item2;
+                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), null, null, ParameterFunction.FormatParameters(null, request))).Item2;
 
                 response = new ResponseModel()
                 {
@@ -115,7 +115,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(request, true))
             {
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), null, null,
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
                 response = new ResponseModel()
@@ -137,7 +137,8 @@ namespace HunterIndustriesAPI.Controllers
 
             if (TokenFunction.IsValidUser(usernames, passwords, phrases, request.Username, request.Password, request.Phrase))
             {
-                Claim[] claims = TokenConverter.GetClaims(await _userService.GetUserScopes(0, request.Username));
+                string applicationName = await _tokenService.ApplicationName();
+                Claim[] claims = TokenConverter.GetClaims(request.Username, applicationName, await _userService.GetUserScopes(0, request.Username));
 
                 SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));
                 SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -150,7 +151,7 @@ namespace HunterIndustriesAPI.Controllers
                     signingCredentials: creds
                 ));
 
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"),
+                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), null, null,
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
                 response = new ResponseModel()
@@ -163,7 +164,7 @@ namespace HunterIndustriesAPI.Controllers
                         ExpiresIn = 900,
                         Info = new TokenInfo()
                         {
-                            ApplicationName = await _tokenService.ApplicationName(),
+                            ApplicationName = applicationName,
                             Scope = claims.Where(c => c.Type == "scope").Select(c => c.Value),
                             Issued = _Clock.UtcNow,
                             Expires = _Clock.UtcNow.AddMinutes(15)
@@ -176,7 +177,7 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
-            auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Unauthorized"),
+            auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Unauthorized"), null, null,
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
             response = new ResponseModel()
