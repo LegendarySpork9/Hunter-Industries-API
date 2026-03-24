@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Tests.Functions
     [TestClass]
     public class ParameterFunctionTest
     {
-        #region FormatParameters (string, object)
+        #region FormatParameters (string, object, bool)
 
         /// <summary>
         /// Tests whether the FormatParameters method returns an empty array when given no arguments.
@@ -73,6 +73,19 @@ namespace HunterIndustriesAPI.Tests.Functions
             Assert.AreEqual(2, actual.Length);
             Assert.AreEqual("a", actual[0]);
             Assert.AreEqual("b", actual[1]);
+        }
+
+        /// <summary>
+        /// Tests whether the FormatParameters method returns the correct array when given a model with a password.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatParametersModelPassword()
+        {
+            object model = new { Password = "Password" };
+            string[] actual = ParameterFunction.FormatParameters(null, model, true);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb", actual[0]);
         }
 
         #endregion
@@ -140,7 +153,7 @@ namespace HunterIndustriesAPI.Tests.Functions
 
         #endregion
 
-        #region FormatParameters (object)
+        #region FormatParameters (object, bool)
 
         /// <summary>
         /// Tests whether the FormatParameters method returns an empty string when given a null model.
@@ -192,26 +205,40 @@ namespace HunterIndustriesAPI.Tests.Functions
             Assert.AreEqual(expected, actual);
         }
 
-        #endregion
-
-        #region FormatParameters (object, bool)
-
         /// <summary>
-        /// Tests whether the FormatParameters method returns an empty string when given a null list object.
+        /// Tests whether the FormatParameters method returns the correct array when given a model with a password.
         /// </summary>
         [TestMethod]
-        public void TestFormatParametersListNull()
+        public void TestFormatParametersObjectPassword()
         {
-            string actual = ParameterFunction.FormatParameters((object)null, true);
+            string expected = "\"e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb\"";
+            object model = new { Password = "Password" };
+            string actual = ParameterFunction.FormatParameters(model, true);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region FormatListParameters (object, bool)
+
+        /// <summary>
+        /// Tests whether the FormatListParameters method returns an empty string when given a null list object.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatListParametersListNull()
+        {
+            string actual = ParameterFunction.FormatListParameters((object)null, true);
 
             Assert.AreEqual(string.Empty, actual);
         }
 
         /// <summary>
-        /// Tests whether the FormatParameters method returns the correct format when given a key value pair list.
+        /// Tests whether the FormatListParameters method returns the correct format when given a key value pair list.
         /// </summary>
         [TestMethod]
-        public void TestFormatParametersListKeyPair()
+        public void TestFormatListParametersListKeyPair()
         {
             string expected = "\"User\", \"Assistant API\"";
             List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>
@@ -219,20 +246,20 @@ namespace HunterIndustriesAPI.Tests.Functions
                 new KeyValuePair<string, string>("Add", "User"),
                 new KeyValuePair<string, string>("Remove", "Assistant API")
             };
-            string actual = ParameterFunction.FormatParameters(list, true);
+            string actual = ParameterFunction.FormatListParameters(list, true);
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the FormatParameters method returns the correct format when given a regular list.
+        /// Tests whether the FormatListParameters method returns the correct format when given a regular list.
         /// </summary>
         [TestMethod]
-        public void TestFormatParametersListRegular()
+        public void TestFormatListParametersListRegular()
         {
             string expected = "\"User\", \"Assistant API\"";
             List<string> list = new List<string> { "User", "Assistant API" };
-            string actual = ParameterFunction.FormatParameters(list, false);
+            string actual = ParameterFunction.FormatListParameters(list, false);
 
             Assert.AreEqual(expected, actual);
         }

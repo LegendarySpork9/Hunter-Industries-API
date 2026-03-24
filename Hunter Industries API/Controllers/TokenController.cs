@@ -103,7 +103,7 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                await _auditHistoryService.LogLoginAttempt(auditId, false, request.Username, request.Password, request.Phrase);
+                await _auditHistoryService.LogLoginAttempt(auditId, false, null, null, request.Phrase);
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
