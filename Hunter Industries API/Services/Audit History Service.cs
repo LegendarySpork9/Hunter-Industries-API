@@ -130,9 +130,9 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all audit history records that match the parameters.
         /// </summary>
-        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId, string ipAddress, string endpoint, string username, string application, DateTime fromDate, int pageSize, int pageNumber)
+        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId, string ipAddress, string endpoint, string username, string application, DateTime fromDate, DateTime toDate, int pageSize, int pageNumber)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<AuditHistoryRecord> auditHistories = new List<AuditHistoryRecord>();
             int totalRecords = 0;
@@ -180,6 +180,12 @@ namespace HunterIndustriesAPI.Services
                 {
                     sql += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
                     parameterList.Add(new SqlParameter("@FromDate", SqlDbType.DateTime) { Value = fromDate });
+                }
+
+                if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
+                {
+                    sql += "\nand AH.DateOccured < cast(@ToDate as datetime)";
+                    parameterList.Add(new SqlParameter("@ToDate", SqlDbType.DateTime) { Value = toDate });
                 }
 
                 sql += @"
@@ -291,7 +297,7 @@ fetch next @PageSize rows only";
                     auditHistories.Add(current);
                 }
 
-                totalRecords = await GetTotalAuditHistory(ipAddress, endpoint, username, application, fromDate);
+                totalRecords = await GetTotalAuditHistory(ipAddress, endpoint, username, application, fromDate, toDate);
             }
 
             catch (Exception ex)
@@ -308,9 +314,9 @@ fetch next @PageSize rows only";
         /// <summary>
         /// Returns the number of audit history records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalAuditHistory(string ipAddress, string endpoint, string username, string application, DateTime fromDate)
+        private async Task<int> GetTotalAuditHistory(string ipAddress, string endpoint, string username, string application, DateTime fromDate, DateTime toDate)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, username, application, fromDate.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, username, application, fromDate.ToString(), toDate.ToString() })}.");
 
             int totalRecords = 0;
 
@@ -347,6 +353,12 @@ fetch next @PageSize rows only";
                 {
                     sql += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
                     parameterList.Add(new SqlParameter("@FromDate", SqlDbType.DateTime) { Value = fromDate });
+                }
+
+                if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
+                {
+                    sql += "\nand AH.DateOccured < cast(@ToDate as datetime)";
+                    parameterList.Add(new SqlParameter("@ToDate", SqlDbType.DateTime) { Value = toDate });
                 }
 
                 (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());

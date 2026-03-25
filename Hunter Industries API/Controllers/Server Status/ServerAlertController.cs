@@ -238,7 +238,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            (bool logged, int serverAlertId) = await _serverAlertService.LogServerAlert(request);
+            (bool logged, int serverAlertId) = await _serverAlertService.LogServerAlert(request, applicationName);
 
             if (!logged)
             {

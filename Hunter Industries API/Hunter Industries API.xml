@@ -1341,6 +1341,11 @@
             The date from which to pull records.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.ToDate">
+            <summary>
+            The date to which to pull records.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.IPAddress">
             <summary>
             The IP address the records were made from.
@@ -2184,12 +2189,12 @@
             Logs any authorisation calls made to the database.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.Int32,System.String,System.String,System.String,System.String,System.DateTime,System.Int32,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.Int32,System.String,System.String,System.String,System.String,System.DateTime,System.DateTime,System.Int32,System.Int32)">
             <summary>
             Returns all audit history records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.String,System.String,System.String,System.String,System.DateTime)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.String,System.String,System.String,System.String,System.DateTime,System.DateTime)">
             <summary>
             Returns the number of audit history records that match the parameters.
             </summary>
@@ -2291,7 +2296,7 @@
             Returns the number of server alert records in the table.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.LogServerAlert(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.LogServerAlert(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel,System.String)">
             <summary>
             Logs the server alert.
             </summary>
