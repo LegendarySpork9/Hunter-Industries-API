@@ -19,7 +19,6 @@ CREATE TABLE [dbo].[APIUser](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
 ALTER TABLE [dbo].[APIUser] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
@@ -37,6 +36,25 @@ CREATE TABLE [dbo].[Application](
 	[ApplicationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[ApplicationSetting]    Script Date: 25/03/2026 15:30:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ApplicationSetting](
+	[ApplicationSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[ApplicationId] [int] NOT NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Required] [bit] NOT NULL,
+ CONSTRAINT [PK_ApplicationSetting] PRIMARY KEY CLUSTERED 
+(
+	[ApplicationSettingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[ApplicationSetting] ADD  CONSTRAINT [DF_ApplicationSetting_Required]  DEFAULT ((0)) FOR [Required]
 GO
 
 /****** Object:  Table [dbo].[AuditHistory]    Script Date: 18/12/2024 21:19:28 ******/
@@ -114,10 +132,8 @@ GO
 /****** Object:  Table [dbo].[EndpointVersion]    Script Date: 23/03/2026 14:01:26 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[EndpointVersion](
 	[EndpointVersionId] [int] IDENTITY(1,1) NOT NULL,
 	[Value] [varchar](10) NOT NULL,
@@ -396,10 +412,8 @@ GO
 /****** Object:  Table [dbo].[Connection]    Script Date: 14/08/2025 20:59:26 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[Connection](
 	[ConnectionId] [int] IDENTITY(1,1) NOT NULL,
 	[IPAddress] [varchar](50) NOT NULL,
@@ -414,10 +428,8 @@ GO
 /****** Object:  Table [dbo].[Downtime]    Script Date: 14/08/2025 20:59:47 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[Downtime](
 	[DowntimeId] [int] IDENTITY(1,1) NOT NULL,
 	[Time] [varchar](8) NOT NULL,
@@ -431,10 +443,8 @@ GO
 /****** Object:  Table [dbo].[Game]    Script Date: 14/08/2025 21:00:01 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[Game](
 	[GameId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](255) NOT NULL,
@@ -499,10 +509,8 @@ GO
 /****** Object:  Table [dbo].[ServerInformation]    Script Date: 14/08/2025 21:00:33 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[ServerInformation](
 	[ServerInformationId] [int] IDENTITY(1,1) NOT NULL,
 	[MachineId] [int] NOT NULL,
@@ -517,7 +525,6 @@ CREATE TABLE [dbo].[ServerInformation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
 ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((0)) FOR [IsActive]
 GO
 
@@ -527,6 +534,11 @@ ALTER TABLE [dbo].[Application]  WITH CHECK ADD  CONSTRAINT [FK_Applications_Aut
 REFERENCES [dbo].[Authorisation] ([PhraseId])
 GO
 ALTER TABLE [dbo].[Application] CHECK CONSTRAINT [FK_Applications_Authorisation]
+GO
+ALTER TABLE [dbo].[ApplicationSetting]  WITH CHECK ADD  CONSTRAINT [FK_ApplicationSetting_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
+GO
+ALTER TABLE [dbo].[ApplicationSetting] CHECK CONSTRAINT [FK_ApplicationSetting_Application]
 GO
 ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Deletion] FOREIGN KEY([DeletionStatusId])
 REFERENCES [dbo].[Deletion] ([StatusId])

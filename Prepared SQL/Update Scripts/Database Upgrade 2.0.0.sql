@@ -124,6 +124,35 @@ GO
 
 PRINT('Added Foreign Key to ApplicationId Field')
 
+INSERT INTO [Endpoint]([Value])
+VALUES ('/configuration')
+
+PRINT('Added Configuration Endpoint')
+
+CREATE TABLE [dbo].[ApplicationSetting](
+	[ApplicationSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[ApplicationId] [int] NOT NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Required] [bit] NOT NULL,
+ CONSTRAINT [PK_ApplicationSetting] PRIMARY KEY CLUSTERED 
+(
+	[ApplicationSettingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ApplicationSetting] ADD  CONSTRAINT [DF_ApplicationSetting_Required]  DEFAULT ((0)) FOR [Required]
+GO
+
+ALTER TABLE [dbo].[ApplicationSetting]  WITH CHECK ADD  CONSTRAINT [FK_ApplicationSetting_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
+GO
+
+ALTER TABLE [dbo].[ApplicationSetting] CHECK CONSTRAINT [FK_ApplicationSetting_Application]
+GO
+
+PRINT('ApplicationSetting Table Added')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 
