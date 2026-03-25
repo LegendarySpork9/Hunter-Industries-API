@@ -343,6 +343,7 @@
     <Compile Include="Controllers\User\UserController.cs" />
     <Compile Include="Controllers\User\UserSettingsController.cs" />
     <Compile Include="Converters\Audit History Converter.cs" />
+    <Compile Include="Converters\Configuration Converter.cs" />
     <Compile Include="Converters\Standard Values.cs" />
     <Compile Include="Converters\Token Converter.cs" />
     <Compile Include="Filters\Document\Base Url Document Filter.cs" />
@@ -376,6 +377,14 @@
     <Compile Include="Models\Requests\Bodies\Assistant\Deletion Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Location Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Version Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Application Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Application Setting Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Authorisation Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Component Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Connection Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Downtime Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Game Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Configuration\Machine Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Alert Update Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Server Alert Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Server Event Model.cs" />
@@ -469,6 +478,8 @@
     <Content Include="SQL\Audit History\GetTotalAuditHistory.sql" />
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
     <Content Include="SQL\Audit History\LogRequest.sql" />
+    <Content Include="SQL\Configuration\Application Setting\GetTotalApplicationSetting.sql" />
+    <Content Include="SQL\Configuration\Application\GetTotalApplication.sql" />
     <Content Include="SQL\Configuration\Component\ComponentExists.sql" />
     <Content Include="SQL\Configuration\Component\ComponentUpdated.sql" />
     <Content Include="SQL\Configuration\Component\CreateComponent.sql" />
