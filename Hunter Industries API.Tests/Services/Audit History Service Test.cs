@@ -115,7 +115,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
 
-            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(0, null, null, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
+            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(0, null, null, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(5, totalRecords);
@@ -137,7 +137,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
 
-            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(0, null, null, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
+            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(0, null, null, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
 
             Assert.AreEqual(0, actual.Count);
             Assert.AreEqual(0, totalRecords);

@@ -51,6 +51,11 @@ namespace HunterIndustriesAPI.Filters.Operation
                         param.name = "fromDate";
                     }
 
+                    if (param.name == "filters.toDate")
+                    {
+                        param.name = "toDate";
+                    }
+
                     if (param.name == "filters.ipAddress")
                     {
                         param.name = "ipAddress";

@@ -9,7 +9,7 @@ select
 	GETUTCDATE()
 from UserSetting US with (nolock)
 join [Application] A with (nolock) on A.ApplicationId = US.ApplicationId
-	and A.[Name] = 'Server Status Site'
+	and A.[Name] = @Application
 join Component C with (nolock) on C.[Name] = @Component
 join ComponentStatus CS with (nolock) on CS.[Value] = @ComponentStatus
 join ServerAlertStatus SAS with (nolock) on SAS.[Value] = @AlertStatus

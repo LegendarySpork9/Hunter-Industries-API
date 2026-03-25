@@ -191,9 +191,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Logs the server alert.
         /// </summary>
-        public async Task<(bool, int)> LogServerAlert(ServerAlertModel serverAlert)
+        public async Task<(bool, int)> LogServerAlert(ServerAlertModel serverAlert, string applicationName)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert called with the parameters {ParameterFunction.FormatParameters(serverAlert)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert called with the parameters {ParameterFunction.FormatParameters(serverAlert)}, \"{applicationName}\".");
 
             bool logged = true;
             int serverAlertId = 0;
@@ -207,7 +207,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@Reporter", SqlDbType.VarChar) { Value = serverAlert.Reporter },
                     new SqlParameter("@Component", SqlDbType.VarChar) { Value = serverAlert.Component },
                     new SqlParameter("@ComponentStatus", SqlDbType.VarChar) { Value = serverAlert.ComponentStatus },
-                    new SqlParameter("@AlertStatus", SqlDbType.VarChar) { Value = serverAlert.AlertStatus }
+                    new SqlParameter("@AlertStatus", SqlDbType.VarChar) { Value = serverAlert.AlertStatus },
+                    new SqlParameter("@Application", SqlDbType.VarChar) { Value = applicationName }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);

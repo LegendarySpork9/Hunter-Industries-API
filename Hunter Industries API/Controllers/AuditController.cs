@@ -103,9 +103,9 @@ namespace HunterIndustriesAPI.Controllers
             }
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
-                    new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
+                    new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.ToDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
-            var result = await _auditHistoryService.GetAuditHistory(0, filters.IPAddress, filters.Endpoint, filters.Username, filters.Application, DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), filters.PageSize, filters.PageNumber);
+            var result = await _auditHistoryService.GetAuditHistory(0, filters.IPAddress, filters.Endpoint, filters.Username, filters.Application, DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), DateTime.SpecifyKind(DateTime.ParseExact(filters.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), filters.PageSize, filters.PageNumber);
             List<AuditHistoryRecord> auditHistories = result.Item1;
 
             if (auditHistories.Count == 0)
@@ -174,7 +174,7 @@ namespace HunterIndustriesAPI.Controllers
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
                     new string[] { id.ToString() });
 
-            var result = await _auditHistoryService.GetAuditHistory(id, null, null, null, null, _Clock.DefaultDate, 25, 1);
+            var result = await _auditHistoryService.GetAuditHistory(id, null, null, null, null, _Clock.DefaultDate, _Clock.DefaultDate, 25, 1);
             List<AuditHistoryRecord> auditHistories = result.Item1;
 
             if (auditHistories.Count == 0)

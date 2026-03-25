@@ -167,7 +167,7 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
-            });
+            }, "UnitTests");
 
             Assert.IsTrue(logged);
             Assert.AreEqual(1, alertId);
@@ -195,7 +195,7 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
                 HostName = "TestServer",
                 Game = "TestGame",
                 GameVersion = "1.0"
-            });
+            }, "UnitTests");
 
             Assert.IsFalse(logged);
             Assert.AreEqual(0, alertId);
