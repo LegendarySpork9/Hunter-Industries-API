@@ -1,7 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
 using System.Collections.Generic;
 
-namespace HunterIndustriesAPI.Objects
+namespace HunterIndustriesAPI.Objects.Configuration
 {
     /// <summary>
     /// </summary>

@@ -1,5 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-namespace HunterIndustriesAPI.Objects
+namespace HunterIndustriesAPI.Objects.Configuration
 {
     /// <summary>
     /// </summary>
