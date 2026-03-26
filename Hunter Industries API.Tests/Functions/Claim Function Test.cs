@@ -6,7 +6,7 @@ using System.Security.Claims;
 namespace HunterIndustriesAPI.Tests.Functions
 {
     [TestClass]
-    public class ClaimFunctionsTest
+    public class ClaimFunctionTest
     {
         #region GetUsername
 
@@ -20,7 +20,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
             string expected = "TestUser";
-            string actual = ClaimFunctions.GetUsername(principal);
+            string actual = ClaimFunction.GetUsername(principal);
 
             Assert.AreEqual(expected, actual);
         }
@@ -31,7 +31,7 @@ namespace HunterIndustriesAPI.Tests.Functions
         [TestMethod]
         public void TestGetUsernameNullPrincipal()
         {
-            string actual = ClaimFunctions.GetUsername(null);
+            string actual = ClaimFunction.GetUsername(null);
 
             Assert.IsNull(actual);
         }
@@ -45,7 +45,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             ClaimsIdentity identity = new ClaimsIdentity(new[] { new Claim("scope", "User") }, "TestAuth");
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
-            string actual = ClaimFunctions.GetUsername(principal);
+            string actual = ClaimFunction.GetUsername(principal);
 
             Assert.IsNull(actual);
         }
@@ -64,7 +64,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
             string expected = "TestApp";
-            string actual = ClaimFunctions.GetApplicationName(principal);
+            string actual = ClaimFunction.GetApplicationName(principal);
 
             Assert.AreEqual(expected, actual);
         }
@@ -75,7 +75,7 @@ namespace HunterIndustriesAPI.Tests.Functions
         [TestMethod]
         public void TestGetApplicationNameNullPrincipal()
         {
-            string actual = ClaimFunctions.GetApplicationName(null);
+            string actual = ClaimFunction.GetApplicationName(null);
 
             Assert.IsNull(actual);
         }
@@ -89,7 +89,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             ClaimsIdentity identity = new ClaimsIdentity(new[] { new Claim("scope", "User") }, "TestAuth");
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
-            string actual = ClaimFunctions.GetApplicationName(principal);
+            string actual = ClaimFunction.GetApplicationName(principal);
 
             Assert.IsNull(actual);
         }

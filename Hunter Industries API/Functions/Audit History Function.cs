@@ -6,7 +6,7 @@ namespace HunterIndustriesAPI.Functions
 {
     /// <summary>
     /// </summary>
-    public static class AuditHistoryFunctions
+    public static class AuditHistoryFunction
     {
         /// <summary>
         /// Extracts the API version from the request URL.

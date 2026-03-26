@@ -7,7 +7,7 @@ using System.Net.Http;
 namespace HunterIndustriesAPI.Tests.Functions
 {
     [TestClass]
-    public class AuditHistoryFunctionsTest
+    public class AuditHistoryFunctionTest
     {
         #region ExtractVersionFromRequest
 
@@ -20,7 +20,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://api.hunter-industries.co.uk/api/v1.0/user"));
 
             string expected = "1.0";
-            string actual = AuditHistoryFunctions.ExtractVersionFromRequest(request);
+            string actual = AuditHistoryFunction.ExtractVersionFromRequest(request);
 
             Assert.AreEqual(expected, actual);
         }
@@ -34,7 +34,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://api.hunter-industries.co.uk/api/v1.1/user"));
 
             string expected = "1.1";
-            string actual = AuditHistoryFunctions.ExtractVersionFromRequest(request);
+            string actual = AuditHistoryFunction.ExtractVersionFromRequest(request);
 
             Assert.AreEqual(expected, actual);
         }
@@ -47,7 +47,7 @@ namespace HunterIndustriesAPI.Tests.Functions
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://api.hunter-industries.co.uk/api/user"));
 
-            string actual = AuditHistoryFunctions.ExtractVersionFromRequest(request);
+            string actual = AuditHistoryFunction.ExtractVersionFromRequest(request);
 
             Assert.IsNull(actual);
         }

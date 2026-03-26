@@ -920,25 +920,25 @@
             Checks if the given permissions contain any that match the required permission.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunctions">
+        <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunction">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.AuditHistoryFunctions.ExtractVersionFromRequest(System.Net.Http.HttpRequestMessage)">
+        <member name="M:HunterIndustriesAPI.Functions.AuditHistoryFunction.ExtractVersionFromRequest(System.Net.Http.HttpRequestMessage)">
             <summary>
             Extracts the API version from the request URL.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Functions.ClaimFunctions">
+        <member name="T:HunterIndustriesAPI.Functions.ClaimFunction">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ClaimFunctions.GetUsername(System.Security.Claims.ClaimsPrincipal)">
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunction.GetUsername(System.Security.Claims.ClaimsPrincipal)">
             <summary>
             Extracts the username from the claims principal.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ClaimFunctions.GetApplicationName(System.Security.Claims.ClaimsPrincipal)">
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunction.GetApplicationName(System.Security.Claims.ClaimsPrincipal)">
             <summary>
             Extracts the application name from the claims principal.
             </summary>

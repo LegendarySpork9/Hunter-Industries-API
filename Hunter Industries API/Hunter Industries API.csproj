@@ -356,8 +356,8 @@
     <Compile Include="Mappings\Scope Permission Mapping.cs" />
     <Compile Include="Filters\Versioned Direct Route Provider.cs" />
     <Compile Include="Filters\Versioned Route Attribute.cs" />
-    <Compile Include="Functions\Audit History Functions.cs" />
-    <Compile Include="Functions\Claim Functions.cs" />
+    <Compile Include="Functions\Audit History Function.cs" />
+    <Compile Include="Functions\Claim Function.cs" />
     <Compile Include="Functions\Hash Function.cs" />
     <Compile Include="Functions\Parameter Function.cs" />
     <Compile Include="Functions\Response Function.cs" />
