@@ -24,96 +24,96 @@ namespace HunterIndustriesAPI.Tests.Converters
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetApplication.sql" when given "application".
+        /// Tests whether the GetSQLGet method returns "Application\GetApplication.sql" when given "application".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetApplication()
         {
-            string expected = "GetApplication.sql";
+            string expected = @"Application\GetApplication.sql";
             string actual = ConfigurationConverter.GetSQLGet("application");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetApplicationSetting.sql" when given "applicationSetting".
+        /// Tests whether the GetSQLGet method returns "Application Setting\GetApplicationSetting.sql" when given "applicationSetting".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetApplicationSetting()
         {
-            string expected = "GetApplicationSetting.sql";
+            string expected = @"Application Setting\GetApplicationSetting.sql";
             string actual = ConfigurationConverter.GetSQLGet("applicationSetting");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetAuthorisation.sql" when given "authorisation".
+        /// Tests whether the GetSQLGet method returns "Authorisation\GetAuthorisation.sql" when given "authorisation".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetAuthorisation()
         {
-            string expected = "GetAuthorisation.sql";
+            string expected = @"Authorisation\GetAuthorisation.sql";
             string actual = ConfigurationConverter.GetSQLGet("authorisation");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetComponent.sql" when given "component".
+        /// Tests whether the GetSQLGet method returns "Component\GetComponent.sql" when given "component".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetComponent()
         {
-            string expected = "GetComponent.sql";
+            string expected = @"Component\GetComponent.sql";
             string actual = ConfigurationConverter.GetSQLGet("component");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetConnection.sql" when given "connection".
+        /// Tests whether the GetSQLGet method returns "Connection\GetConnection.sql" when given "connection".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetConnection()
         {
-            string expected = "GetConnection.sql";
+            string expected = @"Connection\GetConnection.sql";
             string actual = ConfigurationConverter.GetSQLGet("connection");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetDowntime.sql" when given "downtime".
+        /// Tests whether the GetSQLGet method returns "Downtime\GetDowntime.sql" when given "downtime".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetDowntime()
         {
-            string expected = "GetDowntime.sql";
+            string expected = @"Downtime\GetDowntime.sql";
             string actual = ConfigurationConverter.GetSQLGet("downtime");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetGame.sql" when given "game".
+        /// Tests whether the GetSQLGet method returns "Game\GetGame.sql" when given "game".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetGame()
         {
-            string expected = "GetGame.sql";
+            string expected = @"Game\GetGame.sql";
             string actual = ConfigurationConverter.GetSQLGet("game");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGet method returns "GetMachine.sql" when given "machine".
+        /// Tests whether the GetSQLGet method returns "Machine\GetMachine.sql" when given "machine".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetMachine()
         {
-            string expected = "GetMachine.sql";
+            string expected = @"Machine\GetMachine.sql";
             string actual = ConfigurationConverter.GetSQLGet("machine");
 
             Assert.AreEqual(expected, actual);
@@ -257,96 +257,96 @@ fetch next @PageSize rows only";
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalApplication.sql" when given "application".
+        /// Tests whether the GetSQLGetTotal method returns "Application\GetTotalApplication.sql" when given "application".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalApplication()
         {
-            string expected = "GetTotalApplication.sql";
+            string expected = @"Application\GetTotalApplication.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("application");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalApplicationSetting.sql" when given "applicationSetting".
+        /// Tests whether the GetSQLGetTotal method returns "Application Setting\GetTotalApplicationSetting.sql" when given "applicationSetting".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalApplicationSetting()
         {
-            string expected = "GetTotalApplicationSetting.sql";
+            string expected = @"Application Setting\GetTotalApplicationSetting.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("applicationSetting");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalAuthorisation.sql" when given "authorisation".
+        /// Tests whether the GetSQLGetTotal method returns "Authorisation\GetTotalAuthorisation.sql" when given "authorisation".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalAuthorisation()
         {
-            string expected = "GetTotalAuthorisation.sql";
+            string expected = @"Authorisation\GetTotalAuthorisation.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("authorisation");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalComponent.sql" when given "component".
+        /// Tests whether the GetSQLGetTotal method returns "Component\GetTotalComponent.sql" when given "component".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalComponent()
         {
-            string expected = "GetTotalComponent.sql";
+            string expected = @"Component\GetTotalComponent.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("component");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalConnection.sql" when given "connection".
+        /// Tests whether the GetSQLGetTotal method returns "Connection\GetTotalConnection.sql" when given "connection".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalConnection()
         {
-            string expected = "GetTotalConnection.sql";
+            string expected = @"Connection\GetTotalConnection.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("connection");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalDowntime.sql" when given "downtime".
+        /// Tests whether the GetSQLGetTotal method returns "Downtime\GetTotalDowntime.sql" when given "downtime".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalDowntime()
         {
-            string expected = "GetTotalDowntime.sql";
+            string expected = @"Downtime\GetTotalDowntime.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("downtime");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalGame.sql" when given "game".
+        /// Tests whether the GetSQLGetTotal method returns "Game\GetTotalGame.sql" when given "game".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalGame()
         {
-            string expected = "GetTotalGame.sql";
+            string expected = @"Game\GetTotalGame.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("game");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLGetTotal method returns "GetTotalMachine.sql" when given "machine".
+        /// Tests whether the GetSQLGetTotal method returns "Machine\GetTotalMachine.sql" when given "machine".
         /// </summary>
         [TestMethod]
         public void TestGetSQLGetTotalMachine()
         {
-            string expected = "GetTotalMachine.sql";
+            string expected = @"Machine\GetTotalMachine.sql";
             string actual = ConfigurationConverter.GetSQLGetTotal("machine");
 
             Assert.AreEqual(expected, actual);
@@ -369,96 +369,96 @@ fetch next @PageSize rows only";
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "ApplicationExists.sql" when given "application".
+        /// Tests whether the GetSQLExists method returns "Application\ApplicationExists.sql" when given "application".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsApplication()
         {
-            string expected = "ApplicationExists.sql";
+            string expected = @"Application\ApplicationExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("application");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "ApplicationSettingExists.sql" when given "applicationSetting".
+        /// Tests whether the GetSQLExists method returns "Application Setting\ApplicationSettingExists.sql" when given "applicationSetting".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsApplicationSetting()
         {
-            string expected = "ApplicationSettingExists.sql";
+            string expected = @"Application Setting\ApplicationSettingExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("applicationSetting");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "AuthorisationExists.sql" when given "authorisation".
+        /// Tests whether the GetSQLExists method returns "Authorisation\AuthorisationExists.sql" when given "authorisation".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsAuthorisation()
         {
-            string expected = "AuthorisationExists.sql";
+            string expected = @"Authorisation\AuthorisationExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("authorisation");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "ComponentExists.sql" when given "component".
+        /// Tests whether the GetSQLExists method returns "Component\ComponentExists.sql" when given "component".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsComponent()
         {
-            string expected = "ComponentExists.sql";
+            string expected = @"Component\ComponentExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("component");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "ConnectionExists.sql" when given "connection".
+        /// Tests whether the GetSQLExists method returns "Connection\ConnectionExists.sql" when given "connection".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsConnection()
         {
-            string expected = "ConnectionExists.sql";
+            string expected = @"Connection\ConnectionExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("connection");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "DowntimeExists.sql" when given "downtime".
+        /// Tests whether the GetSQLExists method returns "Downtime\DowntimeExists.sql" when given "downtime".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsDowntime()
         {
-            string expected = "DowntimeExists.sql";
+            string expected = @"Downtime\DowntimeExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("downtime");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "GameExists.sql" when given "game".
+        /// Tests whether the GetSQLExists method returns "Game\GameExists.sql" when given "game".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsGame()
         {
-            string expected = "GameExists.sql";
+            string expected = @"Game\GameExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("game");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLExists method returns "MachineExists.sql" when given "machine".
+        /// Tests whether the GetSQLExists method returns "Machine\MachineExists.sql" when given "machine".
         /// </summary>
         [TestMethod]
         public void TestGetSQLExistsMachine()
         {
-            string expected = "MachineExists.sql";
+            string expected = @"Machine\MachineExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("machine");
 
             Assert.AreEqual(expected, actual);
@@ -724,96 +724,96 @@ where MachineId = @MachineId";
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateApplication.sql" when given "application".
+        /// Tests whether the GetSQLCreate method returns "Application\CreateApplication.sql" when given "application".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateApplication()
         {
-            string expected = "CreateApplication.sql";
+            string expected = @"Application\CreateApplication.sql";
             string actual = ConfigurationConverter.GetSQLCreate("application");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateApplicationSetting.sql" when given "applicationSetting".
+        /// Tests whether the GetSQLCreate method returns "Application Setting\CreateApplicationSetting.sql" when given "applicationSetting".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateApplicationSetting()
         {
-            string expected = "CreateApplicationSetting.sql";
+            string expected = @"Application Setting\CreateApplicationSetting.sql";
             string actual = ConfigurationConverter.GetSQLCreate("applicationSetting");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateAuthorisation.sql" when given "authorisation".
+        /// Tests whether the GetSQLCreate method returns "Authorisation\CreateAuthorisation.sql" when given "authorisation".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateAuthorisation()
         {
-            string expected = "CreateAuthorisation.sql";
+            string expected = @"Authorisation\CreateAuthorisation.sql";
             string actual = ConfigurationConverter.GetSQLCreate("authorisation");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateComponent.sql" when given "component".
+        /// Tests whether the GetSQLCreate method returns "Component\CreateComponent.sql" when given "component".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateComponent()
         {
-            string expected = "CreateComponent.sql";
+            string expected = @"Component\CreateComponent.sql";
             string actual = ConfigurationConverter.GetSQLCreate("component");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateConnection.sql" when given "connection".
+        /// Tests whether the GetSQLCreate method returns "Connection\CreateConnection.sql" when given "connection".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateConnection()
         {
-            string expected = "CreateConnection.sql";
+            string expected = @"Connection\CreateConnection.sql";
             string actual = ConfigurationConverter.GetSQLCreate("connection");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateDowntime.sql" when given "downtime".
+        /// Tests whether the GetSQLCreate method returns "Downtime\CreateDowntime.sql" when given "downtime".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateDowntime()
         {
-            string expected = "CreateDowntime.sql";
+            string expected = @"Downtime\CreateDowntime.sql";
             string actual = ConfigurationConverter.GetSQLCreate("downtime");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateGame.sql" when given "game".
+        /// Tests whether the GetSQLCreate method returns "Game\CreateGame.sql" when given "game".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateGame()
         {
-            string expected = "CreateGame.sql";
+            string expected = @"Game\CreateGame.sql";
             string actual = ConfigurationConverter.GetSQLCreate("game");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLCreate method returns "CreateMachine.sql" when given "machine".
+        /// Tests whether the GetSQLCreate method returns "Machine\CreateMachine.sql" when given "machine".
         /// </summary>
         [TestMethod]
         public void TestGetSQLCreateMachine()
         {
-            string expected = "CreateMachine.sql";
+            string expected = @"Machine\CreateMachine.sql";
             string actual = ConfigurationConverter.GetSQLCreate("machine");
 
             Assert.AreEqual(expected, actual);
@@ -836,96 +836,96 @@ where MachineId = @MachineId";
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "ApplicationUpdated.sql" when given "application".
+        /// Tests whether the GetSQLUpdated method returns "Application\ApplicationUpdated.sql" when given "application".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedApplication()
         {
-            string expected = "ApplicationUpdated.sql";
+            string expected = @"Application\ApplicationUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("application");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "ApplicationSettingUpdated.sql" when given "applicationSetting".
+        /// Tests whether the GetSQLUpdated method returns "Application Setting\ApplicationSettingUpdated.sql" when given "applicationSetting".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedApplicationSetting()
         {
-            string expected = "ApplicationSettingUpdated.sql";
+            string expected = @"Application Setting\ApplicationSettingUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("applicationSetting");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "AuthorisationUpdated.sql" when given "authorisation".
+        /// Tests whether the GetSQLUpdated method returns "Authorisation\AuthorisationUpdated.sql" when given "authorisation".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedAuthorisation()
         {
-            string expected = "AuthorisationUpdated.sql";
+            string expected = @"Authorisation\AuthorisationUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("authorisation");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "ComponentUpdated.sql" when given "component".
+        /// Tests whether the GetSQLUpdated method returns "Component\ComponentUpdated.sql" when given "component".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedComponent()
         {
-            string expected = "ComponentUpdated.sql";
+            string expected = @"Component\ComponentUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("component");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "ConnectionUpdated.sql" when given "connection".
+        /// Tests whether the GetSQLUpdated method returns "Connection\ConnectionUpdated.sql" when given "connection".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedConnection()
         {
-            string expected = "ConnectionUpdated.sql";
+            string expected = @"Connection\ConnectionUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("connection");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "DowntimeUpdated.sql" when given "downtime".
+        /// Tests whether the GetSQLUpdated method returns "Downtime\DowntimeUpdated.sql" when given "downtime".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedDowntime()
         {
-            string expected = "DowntimeUpdated.sql";
+            string expected = @"Downtime\DowntimeUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("downtime");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "GameUpdated.sql" when given "game".
+        /// Tests whether the GetSQLUpdated method returns "Game\GameUpdated.sql" when given "game".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedGame()
         {
-            string expected = "GameUpdated.sql";
+            string expected = @"Game\GameUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("game");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetSQLUpdated method returns "MachineUpdated.sql" when given "machine".
+        /// Tests whether the GetSQLUpdated method returns "Machine\MachineUpdated.sql" when given "machine".
         /// </summary>
         [TestMethod]
         public void TestGetSQLUpdatedMachine()
         {
-            string expected = "MachineUpdated.sql";
+            string expected = @"Machine\MachineUpdated.sql";
             string actual = ConfigurationConverter.GetSQLUpdated("machine");
 
             Assert.AreEqual(expected, actual);

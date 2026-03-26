@@ -1027,6 +1027,50 @@
             Compares the scopes and generates the update list.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ApplicationMapper">
+            <summary>
+            The SQL row to model mappings for the application record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ApplicationSettingMapper">
+            <summary>
+            The SQL row to model mappings for the application setting record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.AuthorisationMapper">
+            <summary>
+            The SQL row to model mappings for the authorisation record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ComponentMapper">
+            <summary>
+            The SQL row to model mappings for the component record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ConnectionMapper">
+            <summary>
+            The SQL row to model mappings for the connection record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.DowntimeMapper">
+            <summary>
+            The SQL row to model mappings for the downtime record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.GameMapper">
+            <summary>
+            The SQL row to model mappings for the game record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.MachineMapper">
+            <summary>
+            The SQL row to model mappings for the machine record.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
             <summary>
             Maps broad database scopes to granular internal permissions.
@@ -1878,139 +1922,139 @@
             The valid secret key of the token.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.MachineRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.MachineRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.MachineRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.MachineRecord.HostName">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.HostName">
             <summary>
             The name of the machine.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.GameRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.GameRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.GameRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.GameRecord.Name">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Name">
             <summary>
             The name of the game.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.GameRecord.Version">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Version">
             <summary>
             The version of the game.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.ConfigurationDowntimeRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ConfigurationDowntimeRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ConfigurationDowntimeRecord.Time">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Time">
             <summary>
             The time that the server goes offline.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord.IPAddress">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.IPAddress">
             <summary>
             The ip address of the game.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord.Port">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.Port">
             <summary>
             The port the server runs on.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.ComponentRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ComponentRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ComponentRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ComponentRecord.Name">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.Name">
             <summary>
             The name of the component.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.ApplicationSettingRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ApplicationSettingRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ApplicationSettingRecord.Name">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Name">
             <summary>
             The name of the setting.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ApplicationSettingRecord.Required">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Required">
             <summary>
             Whether the setting is required.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.AuthorisationRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.AuthorisationRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.AuthorisationRecord.Phrase">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.Phrase">
             <summary>
             The authorisation phrase.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Objects.ApplicationRecord">
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Id">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Id">
             <summary>
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Name">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Name">
             <summary>
             The name of the application.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Authorisation">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Authorisation">
             <summary>
             The authorisation record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Settings">
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Settings">
             <summary>
             The setting records.
             </summary>

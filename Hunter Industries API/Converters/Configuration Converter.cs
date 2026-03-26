@@ -19,14 +19,14 @@ namespace HunterIndustriesAPI.Converters
         {
             switch (entity)
             {
-                case "application": return "GetApplication.sql";
-                case "applicationSetting": return "GetApplicationSetting.sql";
-                case "authorisation": return "GetAuthorisation.sql";
-                case "component": return "GetComponent.sql";
-                case "connection": return "GetConnection.sql";
-                case "downtime": return "GetDowntime.sql";
-                case "game": return "GetGame.sql";
-                case "machine": return "GetMachine.sql";
+                case "application": return @"Application\GetApplication.sql";
+                case "applicationSetting": return @"Application Setting\GetApplicationSetting.sql";
+                case "authorisation": return @"Authorisation\GetAuthorisation.sql";
+                case "component": return @"Component\GetComponent.sql";
+                case "connection": return @"Connection\GetConnection.sql";
+                case "downtime": return @"Downtime\GetDowntime.sql";
+                case "game": return @"Game\GetGame.sql";
+                case "machine": return @"Machine\GetMachine.sql";
                 default: return "Unknown.sql";
             }
         }
@@ -77,14 +77,14 @@ fetch next @PageSize rows only";
         {
             switch (entity)
             {
-                case "application": return "GetTotalApplication.sql";
-                case "applicationSetting": return "GetTotalApplicationSetting.sql";
-                case "authorisation": return "GetTotalAuthorisation.sql";
-                case "component": return "GetTotalComponent.sql";
-                case "connection": return "GetTotalConnection.sql";
-                case "downtime": return "GetTotalDowntime.sql";
-                case "game": return "GetTotalGame.sql";
-                case "machine": return "GetTotalMachine.sql";
+                case "application": return @"Application\GetTotalApplication.sql";
+                case "applicationSetting": return @"Application Setting\GetTotalApplicationSetting.sql";
+                case "authorisation": return @"Authorisation\GetTotalAuthorisation.sql";
+                case "component": return @"Component\GetTotalComponent.sql";
+                case "connection": return @"Connection\GetTotalConnection.sql";
+                case "downtime": return @"Downtime\GetTotalDowntime.sql";
+                case "game": return @"Game\GetTotalGame.sql";
+                case "machine": return @"Machine\GetTotalMachine.sql";
                 default: return "Unknown.sql";
             }
         }
@@ -96,14 +96,14 @@ fetch next @PageSize rows only";
         {
             switch (entity)
             {
-                case "application": return "ApplicationExists.sql";
-                case "applicationSetting": return "ApplicationSettingExists.sql";
-                case "authorisation": return "AuthorisationExists.sql";
-                case "component": return "ComponentExists.sql";
-                case "connection": return "ConnectionExists.sql";
-                case "downtime": return "DowntimeExists.sql";
-                case "game": return "GameExists.sql";
-                case "machine": return "MachineExists.sql";
+                case "application": return @"Application\ApplicationExists.sql";
+                case "applicationSetting": return @"Application Setting\ApplicationSettingExists.sql";
+                case "authorisation": return @"Authorisation\AuthorisationExists.sql";
+                case "component": return @"Component\ComponentExists.sql";
+                case "connection": return @"Connection\ConnectionExists.sql";
+                case "downtime": return @"Downtime\DowntimeExists.sql";
+                case "game": return @"Game\GameExists.sql";
+                case "machine": return @"Machine\MachineExists.sql";
                 default: return "Unknown.sql";
             }
         }
@@ -172,14 +172,14 @@ where MachineId = @MachineId";
         {
             switch (entity)
             {
-                case "application": return "CreateApplication.sql";
-                case "applicationSetting": return "CreateApplicationSetting.sql";
-                case "authorisation": return "CreateAuthorisation.sql";
-                case "component": return "CreateComponent.sql";
-                case "connection": return "CreateConnection.sql";
-                case "downtime": return "CreateDowntime.sql";
-                case "game": return "CreateGame.sql";
-                case "machine": return "CreateMachine.sql";
+                case "application": return @"Application\CreateApplication.sql";
+                case "applicationSetting": return @"Application Setting\CreateApplicationSetting.sql";
+                case "authorisation": return @"Authorisation\CreateAuthorisation.sql";
+                case "component": return @"Component\CreateComponent.sql";
+                case "connection": return @"Connection\CreateConnection.sql";
+                case "downtime": return @"Downtime\CreateDowntime.sql";
+                case "game": return @"Game\CreateGame.sql";
+                case "machine": return @"Machine\CreateMachine.sql";
                 default: return "Unknown.sql";
             }
         }
@@ -191,14 +191,14 @@ where MachineId = @MachineId";
         {
             switch (entity)
             {
-                case "application": return "ApplicationUpdated.sql";
-                case "applicationSetting": return "ApplicationSettingUpdated.sql";
-                case "authorisation": return "AuthorisationUpdated.sql";
-                case "component": return "ComponentUpdated.sql";
-                case "connection": return "ConnectionUpdated.sql";
-                case "downtime": return "DowntimeUpdated.sql";
-                case "game": return "GameUpdated.sql";
-                case "machine": return "MachineUpdated.sql";
+                case "application": return @"Application\ApplicationUpdated.sql";
+                case "applicationSetting": return @"Application Setting\ApplicationSettingUpdated.sql";
+                case "authorisation": return @"Authorisation\AuthorisationUpdated.sql";
+                case "component": return @"Component\ComponentUpdated.sql";
+                case "connection": return @"Connection\ConnectionUpdated.sql";
+                case "downtime": return @"Downtime\DowntimeUpdated.sql";
+                case "game": return @"Game\GameUpdated.sql";
+                case "machine": return @"Machine\MachineUpdated.sql";
                 default: return "Unknown.sql";
             }
         }
