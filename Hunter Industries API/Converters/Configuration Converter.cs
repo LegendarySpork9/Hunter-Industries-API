@@ -1,4 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Mappings;
 using HunterIndustriesAPI.Models.Requests.Bodies.Configuration;
 using System;
 using System.Data;
@@ -455,7 +456,6 @@ where MachineId = @MachineId";
                         new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = parentEntityId },
                         new SqlParameter("@Name", SqlDbType.VarChar) { Value = applicationSetting.Name },
                         new SqlParameter("@Required", SqlDbType.Bit) { Value = applicationSetting.Required }
-                        
                     };
                 case "authorisation":
                     AuthorisationModel authorisation = record as AuthorisationModel;
@@ -585,5 +585,24 @@ where MachineId = @MachineId";
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the data reader mappings for the given entity.
+        /// </summary>
+        public static Func<IDataReader, object> GetDataReaderMappings(string entity)
+        {
+            switch (entity)
+            {
+                case "application": return ConfigurationDataReaderMapping.ApplicationMapper;
+                case "applicationSetting": return ConfigurationDataReaderMapping.ApplicationSettingMapper;
+                case "authorisation": return ConfigurationDataReaderMapping.AuthorisationMapper;
+                case "component": return ConfigurationDataReaderMapping.ComponentMapper;
+                case "connection": return ConfigurationDataReaderMapping.ConnectionMapper;
+                case "downtime": return ConfigurationDataReaderMapping.DowntimeMapper;
+                case "game": return ConfigurationDataReaderMapping.GameMapper;
+                case "machine": return ConfigurationDataReaderMapping.MachineMapper;
+                default: return null;
+            }
+        }
     }
 }

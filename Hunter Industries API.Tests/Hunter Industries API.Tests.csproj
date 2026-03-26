@@ -144,6 +144,7 @@
     <Compile Include="Services\Token Service Test.cs" />
     <Compile Include="Services\Change Service Test.cs" />
     <Compile Include="Services\Audit History Service Test.cs" />
+    <Compile Include="Services\Configuration Service Test.cs" />
     <Compile Include="Services\Assistant\Config Service Test.cs" />
     <Compile Include="Services\Assistant\Deletion Service Test.cs" />
     <Compile Include="Services\Assistant\Location Service Test.cs" />

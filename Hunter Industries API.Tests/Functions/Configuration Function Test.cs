@@ -1,7 +1,7 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+using System;
 using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Tests.Functions
@@ -9,6 +9,8 @@ namespace HunterIndustriesAPI.Tests.Functions
     [TestClass]
     public class ConfigurationFunctionTest
     {
+        #region CleanParameterArray Tests
+
         /// <summary>
         /// Tests whether the CleanParameterArray method removes parameters for null properties.
         /// </summary>
@@ -20,7 +22,7 @@ namespace HunterIndustriesAPI.Tests.Functions
                 Name = "Test",
                 Value = (string)null
             };
-            List<SqlParameter> parameters = new List<SqlParameter>
+            SqlParameter[] parameters =
             {
                 new SqlParameter("@Name", "Test"),
                 new SqlParameter("@Value", "SomeValue")
@@ -43,7 +45,7 @@ namespace HunterIndustriesAPI.Tests.Functions
                 Name = "Test",
                 Value = "Present"
             };
-            List<SqlParameter> parameters = new List<SqlParameter>
+            SqlParameter[] parameters =
             {
                 new SqlParameter("@Name", "Test"),
                 new SqlParameter("@Value", "Present")
@@ -65,7 +67,7 @@ namespace HunterIndustriesAPI.Tests.Functions
                 Name = (string)null,
                 Value = (string)null
             };
-            List<SqlParameter> parameters = new List<SqlParameter>
+            SqlParameter[] parameters =
             {
                 new SqlParameter("@Name", "Test"),
                 new SqlParameter("@Value", "SomeValue")
@@ -83,7 +85,7 @@ namespace HunterIndustriesAPI.Tests.Functions
         public void TestCleanParameterArrayEmptyModelAndParameters()
         {
             object model = new { };
-            List<SqlParameter> parameters = new List<SqlParameter>();
+            SqlParameter[] parameters = Array.Empty<SqlParameter>();
 
             SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
 
@@ -102,7 +104,7 @@ namespace HunterIndustriesAPI.Tests.Functions
                 Second = (string)null,
                 Third = "C"
             };
-            List<SqlParameter> parameters = new List<SqlParameter>
+            SqlParameter[] parameters =
             {
                 new SqlParameter("@First", "A"),
                 new SqlParameter("@Second", "B"),
@@ -115,5 +117,150 @@ namespace HunterIndustriesAPI.Tests.Functions
             Assert.AreEqual("@First", actual[0].ParameterName);
             Assert.AreEqual("@Third", actual[1].ParameterName);
         }
+
+        #endregion
+
+        #region CleanSQL Tests
+
+        /// <summary>
+        /// Tests whether the CleanSQL method removes SQL lines for null properties.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLRemovesLinesForNullProperties()
+        {
+            object model = new
+            {
+                Name = "Test",
+                Value = (string)null
+            };
+            string sql = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where Name = @Name",
+                "and Value = @Value"
+            });
+
+            string actual = ConfigurationFunction.CleanSQL(model, sql);
+
+            string expected = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where Name = @Name"
+            });
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the CleanSQL method retains all lines when no properties are null.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLRetainsAllLinesWhenNoNulls()
+        {
+            object model = new
+            {
+                Name = "Test",
+                Value = "Present"
+            };
+            string sql = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where Name = @Name",
+                "and Value = @Value"
+            });
+
+            string actual = ConfigurationFunction.CleanSQL(model, sql);
+
+            Assert.AreEqual(sql, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the CleanSQL method replaces the first and with where when the where line is removed.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLReplacesAndWithWhereWhenWhereLineRemoved()
+        {
+            object model = new
+            {
+                Name = (string)null,
+                Value = "Present"
+            };
+            string sql = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where Name = @Name",
+                "and Value = @Value"
+            });
+
+            string actual = ConfigurationFunction.CleanSQL(model, sql);
+
+            string expected = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where Value = @Value"
+            });
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the CleanSQL method leaves SQL unchanged when given an empty model.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLEmptyModelLeavesUnchanged()
+        {
+            object model = new { };
+            string sql = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where Id = 1"
+            });
+
+            string actual = ConfigurationFunction.CleanSQL(model, sql);
+
+            Assert.AreEqual(sql, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the CleanSQL method correctly handles a model with a mix of null and non-null properties.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLMixedNullAndNonNull()
+        {
+            object model = new
+            {
+                First = "A",
+                Second = (string)null,
+                Third = "C"
+            };
+            string sql = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where First = @First",
+                "and Second = @Second",
+                "and Third = @Third"
+            });
+
+            string actual = ConfigurationFunction.CleanSQL(model, sql);
+
+            string expected = string.Join(Environment.NewLine, new[]
+            {
+                "select *",
+                "from Table with (nolock)",
+                "where First = @First",
+                "and Third = @Third"
+            });
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
     }
 }

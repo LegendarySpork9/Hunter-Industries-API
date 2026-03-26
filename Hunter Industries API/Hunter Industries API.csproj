@@ -439,6 +439,7 @@
     <Compile Include="Services\Assistant\Version Service.cs" />
     <Compile Include="Services\Audit History Service.cs" />
     <Compile Include="Services\Change Service.cs" />
+    <Compile Include="Services\Configuration Service.cs" />
     <Compile Include="Services\Error Log Service.cs" />
     <Compile Include="Services\Logger Service.cs" />
     <Compile Include="Services\Model Validation Service.cs" />

@@ -732,6 +732,11 @@
             Returns the parameters for the xUpdated sql.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetDataReaderMappings(System.String)">
+            <summary>
+            Returns the data reader mappings for the given entity.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Converters.StandardValues">
             <summary>
             </summary>
@@ -924,9 +929,14 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanParameterArray(System.Object,System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanParameterArray(System.Object,System.Data.SqlClient.SqlParameter[])">
             <summary>
             Removes any null properties from the SQL parameter list.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanSQL(System.Object,System.String)">
+            <summary>
+            Removes any null properties from the SQL.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.GetProperties(System.Object)">
@@ -2605,6 +2615,44 @@
         <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.String,System.String,System.String)">
             <summary>
             Creates a record in the Change table.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.ConfigurationService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetRecords(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns all records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetTotalRecord(System.String)">
+            <summary>
+            Returns the number of records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns whether a record already exists with the given parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.UserExists(System.String,System.Int32)">
+            <summary>
+            Returns whether a record already exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordCreated(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Creates the record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordUpdated(System.String,System.Int32,System.Object)">
+            <summary>
+            Updates the details of the given record.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ErrorLogService">

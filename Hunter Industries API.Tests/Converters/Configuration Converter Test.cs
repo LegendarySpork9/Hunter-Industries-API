@@ -1,7 +1,11 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Mappings;
 using HunterIndustriesAPI.Models.Requests.Bodies.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace HunterIndustriesAPI.Tests.Converters
@@ -1761,6 +1765,109 @@ where MachineId = @MachineId";
             Assert.AreEqual(1, actual[0].Value);
             Assert.AreEqual("@HostName", actual[1].ParameterName);
             Assert.AreEqual("TestMachine", actual[1].Value);
+        }
+
+        #endregion
+
+        #region GetDataReaderMappings
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns null when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappings()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("Trombone");
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the application mapper when given "application".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsApplication()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("application");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.ApplicationMapper, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the application setting mapper when given "applicationSetting".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsApplicationSetting()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("applicationSetting");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.ApplicationSettingMapper, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the authorisation mapper when given "authorisation".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsAuthorisation()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("authorisation");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.AuthorisationMapper, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the component mapper when given "component".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsComponent()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("component");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.ComponentMapper, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the connection mapper when given "connection".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsConnection()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("connection");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.ConnectionMapper, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the downtime mapper when given "downtime".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsDowntime()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("downtime");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.DowntimeMapper, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the game mapper when given "game".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsGame()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("game");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.GameMapper, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the machine mapper when given "machine".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsMachine()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("machine");
+
+            Assert.AreEqual(ConfigurationDataReaderMapping.MachineMapper, actual);
         }
 
         #endregion

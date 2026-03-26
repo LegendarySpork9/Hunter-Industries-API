@@ -1,4 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Removes any null properties from the SQL parameter list.
         /// </summary>
-        public static SqlParameter[] CleanParameterArray(object model, List<SqlParameter> parameters)
+        public static SqlParameter[] CleanParameterArray(object model, SqlParameter[] parameters)
         {
+            List<SqlParameter> parameterList = parameters.ToList();
             PropertyInfo[] properties = GetProperties(model);
 
             foreach (PropertyInfo property in properties)
@@ -23,11 +25,44 @@ namespace HunterIndustriesAPI.Functions
 
                 if (value == null)
                 {
-                    parameters.Remove(parameters.First(p => p.ParameterName == $"@{property.Name}"));
+                    parameterList.Remove(parameterList.First(p => p.ParameterName == $"@{property.Name}"));
                 }
             }
 
-            return parameters.ToArray();
+            return parameterList.ToArray();
+        }
+
+        /// <summary>
+        /// Removes any null properties from the SQL.
+        /// </summary>
+        public static string CleanSQL(object model, string sql)
+        {
+            List<string> sqlLines = sql.Split(new[] { Environment.NewLine, "\n", "\r\n" }, StringSplitOptions.None).ToList();
+            PropertyInfo[] properties = GetProperties(model);
+
+            foreach (PropertyInfo property in properties)
+            {
+                object value = property.GetValue(model);
+
+                if (value == null)
+                {
+                    sqlLines.Remove(sqlLines.First(s => s.Contains($"@{property.Name}")));
+                }
+            }
+
+            string whereCondition = sqlLines.Find(s => s.Contains("where"));
+
+            if (string.IsNullOrWhiteSpace(whereCondition))
+            {
+                string firstAnd = sqlLines.First(s => s.Contains("and"));
+                int index = sqlLines.IndexOf(firstAnd);
+
+                whereCondition = firstAnd.Replace("and", "where");
+
+                sqlLines[index] = whereCondition;
+            }
+
+            return string.Join(Environment.NewLine, sqlLines);
         }
 
         /// <summary>
