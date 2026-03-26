@@ -132,6 +132,7 @@
     <Compile Include="Filters\Dependency Resolver Test.cs" />
     <Compile Include="Functions\Audit History Function Test.cs" />
     <Compile Include="Functions\Claim Function Test.cs" />
+    <Compile Include="Functions\Configuration Function Test.cs" />
     <Compile Include="Functions\Hash Function Test.cs" />
     <Compile Include="Functions\Parameter Function Test.cs" />
     <Compile Include="Functions\Response Function Test.cs" />

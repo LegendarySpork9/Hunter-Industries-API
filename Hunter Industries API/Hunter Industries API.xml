@@ -905,19 +905,18 @@
             Creates the route for the given context.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
+        <member name="T:HunterIndustriesAPI.Functions.ConfigurationFunction">
             <summary>
-            Maps broad database scopes to granular internal permissions.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanParameterArray(System.Object,System.Collections.Generic.List{System.Data.SqlClient.SqlParameter})">
             <summary>
-            Returns all granular permissions granted by the given broad scopes.
+            Removes any null properties from the SQL parameter list.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.GetProperties(System.Object)">
             <summary>
-            Checks if the given permissions contain any that match the required permission.
+            Returns all the properties in the model.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunction">
@@ -1011,6 +1010,21 @@
         <member name="M:HunterIndustriesAPI.Functions.UserFunction.GetScopesUpdateList(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
             <summary>
             Compares the scopes and generates the update list.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
+            <summary>
+            Maps broad database scopes to granular internal permissions.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns all granular permissions granted by the given broad scopes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Checks if the given permissions contain any that match the required permission.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.WebApiApplication">
