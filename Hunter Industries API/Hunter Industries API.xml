@@ -682,6 +682,16 @@
             Returns the xExists sql file to load.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLFilter(System.String)">
+            <summary>
+            Returns the xExists sql filter.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLFilterId(System.String)">
+            <summary>
+            Returns the xExists sql filter.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLCreate(System.String)">
             <summary>
             Returns the Createx sql file to load.
@@ -703,6 +713,11 @@
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns the parameters for the xExists sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Int32)">
             <summary>
             Returns the parameters for the xExists sql.
             </summary>

@@ -466,6 +466,249 @@ fetch next @PageSize rows only";
 
         #endregion
 
+        #region GetSQLFilter
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns "Unknown.sql" when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilter()
+        {
+            string expected = "Unknown.sql";
+            string actual = ConfigurationConverter.GetSQLFilter("Trombone");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the application filter sql when given "application".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterApplication()
+        {
+            string expected = @"
+where [Name] = @Name";
+            string actual = ConfigurationConverter.GetSQLFilter("application");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the applicationSetting filter sql when given "applicationSetting".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterApplicationSetting()
+        {
+            string expected = @"
+where ApplicationId = @ApplicationId
+and [Name] = @Name";
+            string actual = ConfigurationConverter.GetSQLFilter("applicationSetting");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the authorisation filter sql when given "authorisation".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterAuthorisation()
+        {
+            string expected = @"
+where Phrase = @Phrase";
+            string actual = ConfigurationConverter.GetSQLFilter("authorisation");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the component filter sql when given "component".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterComponent()
+        {
+            string expected = @"
+where [Name] = @Name";
+            string actual = ConfigurationConverter.GetSQLFilter("component");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the connection filter sql when given "connection".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterConnection()
+        {
+            string expected = @"
+where IPAddress = @IPAddress
+and [Port] = @Port";
+            string actual = ConfigurationConverter.GetSQLFilter("connection");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the downtime filter sql when given "downtime".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterDowntime()
+        {
+            string expected = @"
+where Time = @Time";
+            string actual = ConfigurationConverter.GetSQLFilter("downtime");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the game filter sql when given "game".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterGame()
+        {
+            string expected = @"
+where [Name] = @Name
+and [Version] = @Version";
+            string actual = ConfigurationConverter.GetSQLFilter("game");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the machine filter sql when given "machine".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterMachine()
+        {
+            string expected = @"
+where HostName = @HostName";
+            string actual = ConfigurationConverter.GetSQLFilter("machine");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region GetSQLFilterId
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns "Unknown.sql" when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterId()
+        {
+            string expected = "Unknown.sql";
+            string actual = ConfigurationConverter.GetSQLFilterId("Trombone");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the application filter sql when given "application".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdApplication()
+        {
+            string expected = @"
+where ApplicationId = @ApplicationId";
+            string actual = ConfigurationConverter.GetSQLFilterId("application");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the applicationSetting filter sql when given "applicationSetting".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdApplicationSetting()
+        {
+            string expected = @"
+where ApplicationSettingId = @ApplicationSettingId";
+            string actual = ConfigurationConverter.GetSQLFilterId("applicationSetting");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the authorisation filter sql when given "authorisation".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdAuthorisation()
+        {
+            string expected = @"
+where PhraseId = @PhraseId";
+            string actual = ConfigurationConverter.GetSQLFilterId("authorisation");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the component filter sql when given "component".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdComponent()
+        {
+            string expected = @"
+where ComponentId = @ComponentId";
+            string actual = ConfigurationConverter.GetSQLFilterId("component");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the connection filter sql when given "connection".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdConnection()
+        {
+            string expected = @"
+where ConnectionId = @ConnectionId";
+            string actual = ConfigurationConverter.GetSQLFilterId("connection");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the downtime filter sql when given "downtime".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdDowntime()
+        {
+            string expected = @"
+where DowntimeId = @DowntimeId";
+            string actual = ConfigurationConverter.GetSQLFilterId("downtime");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the game filter sql when given "game".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdGame()
+        {
+            string expected = @"
+where GameId = @GameId";
+            string actual = ConfigurationConverter.GetSQLFilterId("game");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the machine filter sql when given "machine".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdMachine()
+        {
+            string expected = @"
+where MachineId = @MachineId";
+            string actual = ConfigurationConverter.GetSQLFilterId("machine");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
         #region GetSQLCreate
 
         /// <summary>
@@ -1058,6 +1301,125 @@ fetch next @PageSize rows only";
             Assert.AreEqual(1, actual.Length);
             Assert.AreEqual("@HostName", actual[0].ParameterName);
             Assert.AreEqual("TestHost", actual[0].Value);
+        }
+
+        #endregion
+
+        #region GetParameterExistsById
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns an empty array when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsById()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("Trombone", 1);
+
+            Assert.AreEqual(0, actual.Length);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "application".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdApplication()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("application", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "applicationSetting".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdApplicationSetting()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("applicationSetting", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@ApplicationSettingId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "authorisation".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdAuthorisation()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("authorisation", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@PhraseId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "component".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdComponent()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("component", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@ComponentId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "connection".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdConnection()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("connection", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@ConnectionId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "downtime".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdDowntime()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("downtime", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@DowntimeId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "game".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdGame()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("game", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@GameId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "machine".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdMachine()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("machine", 1);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("@MachineId", actual[0].ParameterName);
+            Assert.AreEqual(1, actual[0].Value);
         }
 
         #endregion

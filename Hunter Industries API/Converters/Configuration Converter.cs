@@ -109,6 +109,63 @@ fetch next @PageSize rows only";
         }
 
         /// <summary>
+        /// Returns the xExists sql filter.
+        /// </summary>
+        public static string GetSQLFilter(string entity)
+        {
+            switch (entity)
+            {
+                case "application": return @"
+where [Name] = @Name";
+                case "applicationSetting": return @"
+where ApplicationId = @ApplicationId
+and [Name] = @Name";
+                case "authorisation": return @"
+where Phrase = @Phrase";
+                case "component": return @"
+where [Name] = @Name";
+                case "connection": return @"
+where IPAddress = @IPAddress
+and [Port] = @Port";
+                case "downtime": return @"
+where Time = @Time";
+                case "game": return @"
+where [Name] = @Name
+and [Version] = @Version";
+                case "machine": return @"
+where HostName = @HostName";
+                default: return "Unknown.sql";
+            }
+        }
+
+        /// <summary>
+        /// Returns the xExists sql filter.
+        /// </summary>
+        public static string GetSQLFilterId(string entity)
+        {
+            switch (entity)
+            {
+                case "application": return @"
+where ApplicationId = @ApplicationId";
+                case "applicationSetting": return @"
+where ApplicationSettingId = @ApplicationSettingId";
+                case "authorisation": return @"
+where PhraseId = @PhraseId";
+                case "component": return @"
+where ComponentId = @ComponentId";
+                case "connection": return @"
+where ConnectionId = @ConnectionId";
+                case "downtime": return @"
+where DowntimeId = @DowntimeId";
+                case "game": return @"
+where GameId = @GameId";
+                case "machine": return @"
+where MachineId = @MachineId";
+                default: return "Unknown.sql";
+            }
+        }
+
+        /// <summary>
         /// Returns the Createx sql file to load.
         /// </summary>
         public static string GetSQLCreate(string entity)
@@ -319,6 +376,57 @@ fetch next @PageSize rows only";
                     return new SqlParameter[]
                     {
                         new SqlParameter("@HostName", SqlDbType.VarChar) { Value = machine.HostName }
+                    };
+                default: return Array.Empty<SqlParameter>();
+            }
+        }
+
+        /// <summary>
+        /// Returns the parameters for the xExists sql.
+        /// </summary>
+        public static SqlParameter[] GetParameterExists(string entity, int entityId)
+        {
+            switch (entity)
+            {
+                case "application":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "applicationSetting":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@ApplicationSettingId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "authorisation":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@PhraseId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "component":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@ComponentId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "connection":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@ConnectionId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "downtime":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@DowntimeId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "game":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@GameId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "machine":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@MachineId", SqlDbType.Int) { Value = entityId }
                     };
                 default: return Array.Empty<SqlParameter>();
             }
