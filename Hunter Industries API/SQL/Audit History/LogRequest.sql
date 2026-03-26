@@ -10,6 +10,6 @@ select
 	@Parameters,
 	AU.UserId,
 	A.ApplicationId
-from (select 1 as dummy) D
+from (select 1 as Dummy) D
 left join APIUser AU with (nolock) on AU.Username = @Username
 left join [Application] A with (nolock) on A.[Name] = @ApplicationName

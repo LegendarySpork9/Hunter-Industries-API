@@ -658,6 +658,65 @@
             Returns the status id number.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Converters.ConfigurationConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGet(System.String)">
+            <summary>
+            Returns the Getx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGetPagination(System.String)">
+            <summary>
+            Returns the Getx pagination sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGetTotal(System.String)">
+            <summary>
+            Returns the GetTotalx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLExists(System.String)">
+            <summary>
+            Returns the xExists sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLCreate(System.String)">
+            <summary>
+            Returns the Createx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLUpdated(System.String)">
+            <summary>
+            Returns the xUpdated sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersGet(System.String,System.Int32,System.Int32)">
+            <summary>
+            Returns the parameters for the paginated Getx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersGetSingle(System.String,System.Int32)">
+            <summary>
+            Returns the parameters for the Getx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Int32)">
+            <summary>
+            Returns the parameters for the xExists sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersCreate(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns the parameters for the Createx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersUpdated(System.String,System.Object,System.Int32)">
+            <summary>
+            Returns the parameters for the xUpdated sql.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Converters.StandardValues">
             <summary>
             </summary>
@@ -1130,6 +1189,98 @@
             The version of the assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel.Name">
+            <summary>
+            The name of the application.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Name">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Required">
+            <summary>
+            Whether the setting is required.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.AuthorisationModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.AuthorisationModel.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ComponentModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ComponentModel.Name">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel.IPAddress">
+            <summary>
+            The ip address of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel.Port">
+            <summary>
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel.Time">
+            <summary>
+            The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel.Name">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel.Version">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.MachineModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.MachineModel.HostName">
+            <summary>
+            The name of the machine.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel">
             <summary>
             </summary>
@@ -1505,6 +1656,40 @@
             The version of the assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.Entries">
+            <summary>
+            The configuration records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel">
             <summary>
             </summary>
@@ -1662,6 +1847,143 @@
         <member name="P:HunterIndustriesAPI.Models.ValidationModel.SecretKey">
             <summary>
             The valid secret key of the token.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.MachineRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.MachineRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.MachineRecord.HostName">
+            <summary>
+            The name of the machine.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.GameRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.GameRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.GameRecord.Name">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.GameRecord.Version">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ConfigurationDowntimeRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ConfigurationDowntimeRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ConfigurationDowntimeRecord.Time">
+            <summary>
+            The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord.IPAddress">
+            <summary>
+            The ip address of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ConfigurationConnectionRecord.Port">
+            <summary>
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ComponentRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ComponentRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ComponentRecord.Name">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ApplicationSettingRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ApplicationSettingRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ApplicationSettingRecord.Name">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ApplicationSettingRecord.Required">
+            <summary>
+            Whether the setting is required.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.AuthorisationRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuthorisationRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuthorisationRecord.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ApplicationRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Name">
+            <summary>
+            The name of the application.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Authorisation">
+            <summary>
+            The authorisation record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ApplicationRecord.Settings">
+            <summary>
+            The setting records.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ErrorLogRecord">

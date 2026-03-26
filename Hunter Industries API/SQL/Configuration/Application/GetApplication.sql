@@ -8,7 +8,4 @@ select
 	[Required]
 from [Application] with (nolock)
 join Authorisation with (nolock) on [Application].PhraseId = Authorisation.PhraseId
-left join ApplicationSetting [AS] with (nolock) on [Application].ApplicationId = [AS].ApplicationId 
-order by ApplicationId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only
+left join ApplicationSetting [AS] with (nolock) on [Application].ApplicationId = [AS].ApplicationId

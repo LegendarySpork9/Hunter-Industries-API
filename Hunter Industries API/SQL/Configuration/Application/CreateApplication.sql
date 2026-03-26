@@ -1,5 +1,7 @@
 insert into [Application] (PhraseId, [Name])
-values (
-	@PhraseId,
+output inserted.ApplicationId
+select
+	Authorisation.PhraseId,
 	@Name
-)
+from Authorisation with (nolock)
+where Phrase = @Phrase
