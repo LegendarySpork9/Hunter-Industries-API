@@ -702,7 +702,7 @@
             Returns the parameters for the Getx sql.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Object,System.Nullable{System.Int32})">
             <summary>
             Returns the parameters for the xExists sql.
             </summary>

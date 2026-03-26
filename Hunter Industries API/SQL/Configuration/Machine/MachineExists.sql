@@ -1,4 +1,4 @@
 select
 	MachineId
 from Machine with (nolock)
-where MachineId = @MachineId
+where HostName = @HostName

@@ -257,49 +257,68 @@ fetch next @PageSize rows only";
         /// <summary>
         /// Returns the parameters for the xExists sql.
         /// </summary>
-        public static SqlParameter[] GetParameterExists(string entity, int entityId)
+        public static SqlParameter[] GetParameterExists(string entity, object record, int? parentEntityId = null)
         {
             switch (entity)
             {
                 case "application":
+                    ApplicationModel application = record as ApplicationModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = application.Name }
                     };
                 case "applicationSetting":
+                    ApplicationSettingModel applicationSetting = record as ApplicationSettingModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationSettingId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = parentEntityId },
+                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = applicationSetting.Name }
                     };
                 case "authorisation":
+                    AuthorisationModel authorisation = record as AuthorisationModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PhraseId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = authorisation.Phrase }
                     };
                 case "component":
+                    ComponentModel component = record as ComponentModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ComponentId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = component.Name }
                     };
                 case "connection":
+                    ConnectionModel connection = record as ConnectionModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ConnectionId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
+                        new SqlParameter("@Port", SqlDbType.Int) { Value = connection.Port }
                     };
                 case "downtime":
+                    DowntimeModel downtime = record as DowntimeModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@DowntimeId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time }
                     };
                 case "game":
+                    GameModel game = record as GameModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@GameId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = game.Name },
+                        new SqlParameter("@Version", SqlDbType.VarChar) { Value = game.Version }
                     };
                 case "machine":
+                    MachineModel machine = record as MachineModel;
+
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@MachineId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@HostName", SqlDbType.VarChar) { Value = machine.HostName }
                     };
                 default: return Array.Empty<SqlParameter>();
             }

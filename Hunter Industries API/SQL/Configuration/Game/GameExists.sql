@@ -1,4 +1,5 @@
 select
 	GameId
 from Game with (nolock)
-where GameId = @GameId
+where [Name] = @Name
+and [Version] = @Version

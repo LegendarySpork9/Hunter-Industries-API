@@ -1,4 +1,5 @@
 select
 	ConnectionId
 from [Connection] with (nolock)
-where ConnectionId = @ConnectionId
+where IPAddress = @IPAddress
+and [Port] = @Port

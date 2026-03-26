@@ -1,4 +1,5 @@
 select
 	ApplicationSettingId
 from ApplicationSetting with (nolock)
-where ApplicationSettingId = @ApplicationSettingId
+where ApplicationId = @ApplicationId
+and [Name] = @Name

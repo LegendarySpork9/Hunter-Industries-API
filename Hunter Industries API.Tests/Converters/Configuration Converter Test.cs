@@ -937,7 +937,7 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExists()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("Trombone", 1);
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("Trombone", new object());
 
             Assert.AreEqual(0, actual.Length);
         }
@@ -948,11 +948,12 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsApplication()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("application", 1);
+            ApplicationModel model = new ApplicationModel() { Name = "TestApp", Phrase = "TestPhrase" };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("application", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
-            Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("TestApp", actual[0].Value);
         }
 
         /// <summary>
@@ -961,11 +962,14 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsApplicationSetting()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("applicationSetting", 1);
+            ApplicationSettingModel model = new ApplicationSettingModel() { Name = "TestSetting", Required = true };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("applicationSetting", model, 1);
 
-            Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ApplicationSettingId", actual[0].ParameterName);
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual("@Name", actual[1].ParameterName);
+            Assert.AreEqual("TestSetting", actual[1].Value);
         }
 
         /// <summary>
@@ -974,11 +978,12 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsAuthorisation()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("authorisation", 1);
+            AuthorisationModel model = new AuthorisationModel() { Phrase = "TestPhrase" };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("authorisation", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@PhraseId", actual[0].ParameterName);
-            Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual("@Phrase", actual[0].ParameterName);
+            Assert.AreEqual("TestPhrase", actual[0].Value);
         }
 
         /// <summary>
@@ -987,11 +992,12 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsComponent()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("component", 1);
+            ComponentModel model = new ComponentModel() { Name = "TestComponent" };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("component", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ComponentId", actual[0].ParameterName);
-            Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("TestComponent", actual[0].Value);
         }
 
         /// <summary>
@@ -1000,11 +1006,14 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsConnection()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("connection", 1);
+            ConnectionModel model = new ConnectionModel() { IPAddress = "192.168.1.1", Port = 8080 };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("connection", model);
 
-            Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ConnectionId", actual[0].ParameterName);
-            Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("@IPAddress", actual[0].ParameterName);
+            Assert.AreEqual("192.168.1.1", actual[0].Value);
+            Assert.AreEqual("@Port", actual[1].ParameterName);
+            Assert.AreEqual(8080, actual[1].Value);
         }
 
         /// <summary>
@@ -1013,11 +1022,12 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsDowntime()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("downtime", 1);
+            DowntimeModel model = new DowntimeModel() { Time = "03:00" };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("downtime", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@DowntimeId", actual[0].ParameterName);
-            Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual("@Time", actual[0].ParameterName);
+            Assert.AreEqual("03:00", actual[0].Value);
         }
 
         /// <summary>
@@ -1026,11 +1036,14 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsGame()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("game", 1);
+            GameModel model = new GameModel() { Name = "TestGame", Version = "1.0" };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("game", model);
 
-            Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@GameId", actual[0].ParameterName);
-            Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("TestGame", actual[0].Value);
+            Assert.AreEqual("@Version", actual[1].ParameterName);
+            Assert.AreEqual("1.0", actual[1].Value);
         }
 
         /// <summary>
@@ -1039,11 +1052,12 @@ fetch next @PageSize rows only";
         [TestMethod]
         public void TestGetParameterExistsMachine()
         {
-            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("machine", 1);
+            MachineModel model = new MachineModel() { HostName = "TestHost" };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("machine", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@MachineId", actual[0].ParameterName);
-            Assert.AreEqual(1, actual[0].Value);
+            Assert.AreEqual("@HostName", actual[0].ParameterName);
+            Assert.AreEqual("TestHost", actual[0].Value);
         }
 
         #endregion
