@@ -336,5 +336,57 @@ namespace HunterIndustriesAPI.Tests.Services
         }
 
         #endregion
+
+        #region RecordDeleted
+
+        /// <summary>
+        /// Checks whether the RecordDeleted method returns true when one row is affected.
+        /// </summary>
+        [TestMethod]
+        public async Task TestRecordDeleted()
+        {
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+
+            ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
+
+            bool actual = await service.RecordDeleted("component", 1);
+
+            Assert.IsTrue(actual);
+        }
+
+        /// <summary>
+        /// Checks whether the RecordDeleted method returns false when zero rows are affected.
+        /// </summary>
+        [TestMethod]
+        public async Task TestRecordDeletedNoRowsAffected()
+        {
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+
+            ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
+
+            bool actual = await service.RecordDeleted("component", 1);
+
+            Assert.IsFalse(actual);
+        }
+
+        /// <summary>
+        /// Checks whether the RecordDeleted method returns false when the database returns an error.
+        /// </summary>
+        [TestMethod]
+        public async Task TestRecordDeletedWithError()
+        {
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, new Exception("Database error")));
+
+            ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
+
+            bool actual = await service.RecordDeleted("component", 1);
+
+            Assert.IsFalse(actual);
+        }
+
+        #endregion
     }
 }

@@ -134,6 +134,7 @@ CREATE TABLE [dbo].[ApplicationSetting](
 	[ApplicationId] [int] NOT NULL,
 	[Name] [varchar](255) NOT NULL,
 	[Required] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_ApplicationSetting] PRIMARY KEY CLUSTERED 
 (
 	[ApplicationSettingId] ASC
@@ -144,6 +145,9 @@ GO
 ALTER TABLE [dbo].[ApplicationSetting] ADD  CONSTRAINT [DF_ApplicationSetting_Required]  DEFAULT ((0)) FOR [Required]
 GO
 
+ALTER TABLE [dbo].[ApplicationSetting] ADD  CONSTRAINT [DF_ApplicationSetting_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
+
 ALTER TABLE [dbo].[ApplicationSetting]  WITH CHECK ADD  CONSTRAINT [FK_ApplicationSetting_Application] FOREIGN KEY([ApplicationId])
 REFERENCES [dbo].[Application] ([ApplicationId])
 GO
@@ -152,6 +156,34 @@ ALTER TABLE [dbo].[ApplicationSetting] CHECK CONSTRAINT [FK_ApplicationSetting_A
 GO
 
 PRINT('ApplicationSetting Table Added')
+
+ALTER TABLE [Application] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Application Table')
+
+ALTER TABLE [Authorisation] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Authorisation Table')
+
+ALTER TABLE [Component] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Component Table')
+
+ALTER TABLE [Connection] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Connection Table')
+
+ALTER TABLE [Downtime] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Downtime Table')
+
+ALTER TABLE [Game] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Game Table')
+
+ALTER TABLE [Machine] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Machine Table')
 
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())

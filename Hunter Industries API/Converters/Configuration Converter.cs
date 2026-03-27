@@ -204,6 +204,25 @@ where MachineId = @MachineId";
             }
         }
 
+        /// <summary>
+        /// Returns the Deletex sql file to load.
+        /// </summary>
+        public static string GetSQLDelete(string entity)
+        {
+            switch (entity)
+            {
+                case "application": return @"Application\DeleteApplication.sql";
+                case "applicationSetting": return @"Application Setting\DeleteApplicationSetting.sql";
+                case "authorisation": return @"Authorisation\DeleteAuthorisation.sql";
+                case "component": return @"Component\DeleteComponent.sql";
+                case "connection": return @"Connection\DeleteConnection.sql";
+                case "downtime": return @"Downtime\DeleteDowntime.sql";
+                case "game": return @"Game\DeleteGame.sql";
+                case "machine": return @"Machine\DeleteMachine.sql";
+                default: return "Unknown.sql";
+            }
+        }
+
         #endregion
 
         #region SQLParameters

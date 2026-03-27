@@ -2,9 +2,7 @@
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Objects;
 using HunterIndustriesAPI.Objects.Configuration;
-using HunterIndustriesAPI.Objects.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -348,6 +346,48 @@ namespace HunterIndustriesAPI.Services
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigurationService.RecordUpdated returned {updated}.");
             return updated;
+        }
+
+        /// <summary>
+        /// Sets the record to deleted.
+        /// </summary>
+        public async Task<bool> RecordDeleted(string entity, int id)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigurationService.RecordDeleted called with the parameters {ParameterFunction.FormatParameters(new string[] { entity, id.ToString() })}.");
+
+            bool deleted = true;
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLDelete(entity)}");
+                SqlParameter[] parameters = ConfigurationConverter.GetParametersGetSingle(entity, id);
+
+                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ConfigurationService.RecordDeleted.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (rowsAffected != 1)
+                {
+                    deleted = false;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ConfigurationService.RecordDeleted.";
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                deleted = false;
+            }
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigurationService.RecordDeleted returned {deleted}.");
+            return deleted;
         }
     }
 }

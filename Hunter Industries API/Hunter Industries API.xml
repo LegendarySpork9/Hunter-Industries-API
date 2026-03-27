@@ -702,6 +702,11 @@
             Returns the xUpdated sql file to load.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLDelete(System.String)">
+            <summary>
+            Returns the Deletex sql file to load.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersGet(System.String,System.Int32,System.Int32)">
             <summary>
             Returns the parameters for the paginated Getx sql.
@@ -2653,6 +2658,11 @@
         <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordUpdated(System.String,System.Int32,System.Object)">
             <summary>
             Updates the details of the given record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordDeleted(System.String,System.Int32)">
+            <summary>
+            Sets the record to deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ErrorLogService">

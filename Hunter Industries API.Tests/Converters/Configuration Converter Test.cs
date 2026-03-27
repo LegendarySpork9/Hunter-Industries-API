@@ -937,6 +937,118 @@ where MachineId = @MachineId";
 
         #endregion
 
+        #region GetSQLDelete
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Unknown.sql" when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDelete()
+        {
+            string expected = "Unknown.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("Trombone");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Application\DeleteApplication.sql" when given "application".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteApplication()
+        {
+            string expected = @"Application\DeleteApplication.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("application");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Application Setting\DeleteApplicationSetting.sql" when given "applicationSetting".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteApplicationSetting()
+        {
+            string expected = @"Application Setting\DeleteApplicationSetting.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("applicationSetting");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Authorisation\DeleteAuthorisation.sql" when given "authorisation".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteAuthorisation()
+        {
+            string expected = @"Authorisation\DeleteAuthorisation.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("authorisation");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Component\DeleteComponent.sql" when given "component".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteComponent()
+        {
+            string expected = @"Component\DeleteComponent.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("component");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Connection\DeleteConnection.sql" when given "connection".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteConnection()
+        {
+            string expected = @"Connection\DeleteConnection.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("connection");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Downtime\DeleteDowntime.sql" when given "downtime".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteDowntime()
+        {
+            string expected = @"Downtime\DeleteDowntime.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("downtime");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Game\DeleteGame.sql" when given "game".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteGame()
+        {
+            string expected = @"Game\DeleteGame.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("game");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Machine\DeleteMachine.sql" when given "machine".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteMachine()
+        {
+            string expected = @"Machine\DeleteMachine.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("machine");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
         #region GetParametersGet
 
         /// <summary>
