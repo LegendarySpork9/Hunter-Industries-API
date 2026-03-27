@@ -494,6 +494,100 @@
              </remarks>
              <param name="request">The application identifier.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ConfigurationController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get">
+             <summary>
+             Returns a list of configuration entities.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get(System.String,System.Int32,System.Int32)">
+             <summary>
+             Returns a collection of records.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration/application
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get(System.String,System.Int32)">
+             <summary>
+             Returns the record matching the given id.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration/application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the record.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Post(System.String,System.Object,System.Int32)">
+             <summary>
+             Creates a new record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 POST /configuration/application
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "Name": "Test",
+                     "Phrase": "This is a test phrase."
+                 }
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="entityId">The id number of the parent entity record.</param>
+             <param name="request">An object containing the record information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Patch(System.String,System.Int32,System.Object)">
+             <summary>
+             Updates the details of the record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 PATCH /configuration/application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "Name": "TestApplication"
+                 }
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the record.</param>
+             <param name="request">An object containing the record data.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Delete(System.String,System.Int32)">
+             <summary>
+             Deletes the record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 Delete /configuration/Application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the user.</param>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.User.UserController">
             <summary>
             </summary>
@@ -509,7 +603,7 @@
              <remarks>
              Sample Request:
             
-                 GET /User?Username=TestUser
+                 GET /user?Username=TestUser
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
         </member>
@@ -520,7 +614,7 @@
              <remarks>
              Sample Request:
             
-                 GET /User/1
+                 GET /user/1
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the user.</param>
@@ -589,7 +683,7 @@
              <remarks>
              Sample Request:
             
-                 GET /UserSettings/1?application=test
+                 GET /usersettings/1?application=test
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the user.</param>
@@ -740,6 +834,11 @@
         <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetDataReaderMappings(System.String)">
             <summary>
             Returns the data reader mappings for the given entity.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetRequestObject(System.String,System.Object)">
+            <summary>
+            Returns the request model in the correct format.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.StandardValues">
@@ -985,7 +1084,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String,System.Object,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String,System.Object)">
             <summary>
             Converts the parameters from the stored SQL format to the output format or converts the model into a string array.
             </summary>
@@ -995,7 +1094,7 @@
             Converts the parameters into a log/SQL friendly format.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object)">
             <summary>
             Converts the model into a log friendly format.
             </summary>
@@ -1008,6 +1107,11 @@
         <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Collections.Generic.List{System.Object},System.Boolean)">
             <summary>
             Converts the list into a SQL friendly format.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.String[])">
+            <summary>
+            Converts the model into a string array.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.ResponseFunction">
@@ -2645,7 +2749,7 @@
             Returns whether a record already exists with the given parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.UserExists(System.String,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Int32)">
             <summary>
             Returns whether a record already exists with the given id.
             </summary>

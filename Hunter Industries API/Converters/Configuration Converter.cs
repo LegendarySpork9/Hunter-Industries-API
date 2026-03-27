@@ -623,5 +623,24 @@ where MachineId = @MachineId";
                 default: return null;
             }
         }
+
+        /// <summary>
+        /// Returns the request model in the correct format.
+        /// </summary>
+        public static object GetRequestObject(string entity, object request)
+        {
+            switch (entity)
+            {
+                case "application": return request as ApplicationModel;
+                case "applicationSetting": return request as ApplicationSettingModel;
+                case "authorisation": return request as AuthorisationModel;
+                case "component": return request as ComponentModel;
+                case "connection": return request as ConnectionModel;
+                case "downtime": return request as DowntimeModel;
+                case "game": return request as GameModel;
+                case "machine": return request as MachineModel;
+                default: return null;
+            }
+        }
     }
 }

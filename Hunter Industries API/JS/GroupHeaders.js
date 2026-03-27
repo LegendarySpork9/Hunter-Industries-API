@@ -2,7 +2,7 @@ $(function () {
     var groupHeaders = [
         {
             title: 'API Management',
-            controllers: ['Audit', 'Error', 'Token', 'User', 'UserSettings']
+            controllers: ['Audit', 'Configuration', 'Error', 'Token', 'User', 'UserSettings']
         },
         {
             title: 'Assistant API',

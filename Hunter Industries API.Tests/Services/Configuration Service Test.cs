@@ -144,13 +144,13 @@ namespace HunterIndustriesAPI.Tests.Services
 
         #endregion
 
-        #region RecordExists
+        #region RecordExists (string, object, int)
 
         /// <summary>
         /// Checks whether the RecordExists method returns true when a matching record is found.
         /// </summary>
         [TestMethod]
-        public async Task TestRecordExists()
+        public async Task TestRecordExistsObject()
         {
             List<int> results = new List<int> { 1 };
 
@@ -168,7 +168,7 @@ namespace HunterIndustriesAPI.Tests.Services
         /// Checks whether the RecordExists method returns false when no matching record is found.
         /// </summary>
         [TestMethod]
-        public async Task TestRecordExistsNotFound()
+        public async Task TestRecordExistsObjectNotFound()
         {
             List<int> results = new List<int>();
 
@@ -184,13 +184,13 @@ namespace HunterIndustriesAPI.Tests.Services
 
         #endregion
 
-        #region UserExists
+        #region RecordExists (string, int)
 
         /// <summary>
-        /// Checks whether the UserExists method returns true when a matching record is found.
+        /// Checks whether the RecordExists method returns true when a matching record is found.
         /// </summary>
         [TestMethod]
-        public async Task TestUserExists()
+        public async Task TestRecordExistsString()
         {
             List<int> results = new List<int> { 1 };
 
@@ -199,16 +199,16 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            bool actual = await service.UserExists("component", 1);
+            bool actual = await service.RecordExists("component", 1);
 
             Assert.IsTrue(actual);
         }
 
         /// <summary>
-        /// Checks whether the UserExists method returns false when no matching record is found.
+        /// Checks whether the RecordExists method returns false when no matching record is found.
         /// </summary>
         [TestMethod]
-        public async Task TestUserExistsNotFound()
+        public async Task TestRecordExistsStringNotFound()
         {
             List<int> results = new List<int>();
 
@@ -217,7 +217,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            bool actual = await service.UserExists("component", 1);
+            bool actual = await service.RecordExists("component", 1);
 
             Assert.IsFalse(actual);
         }

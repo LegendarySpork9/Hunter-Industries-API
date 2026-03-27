@@ -212,7 +212,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns whether a record already exists with the given id.
         /// </summary>
-        public async Task<bool> UserExists(string entity, int id)
+        public async Task<bool> RecordExists(string entity, int id)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigurationService.RecordExists called with the parameters {ParameterFunction.FormatParameters(new string[] { entity, id.ToString() })}.");
 

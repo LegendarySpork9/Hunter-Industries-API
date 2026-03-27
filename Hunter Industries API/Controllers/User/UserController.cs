@@ -55,7 +55,7 @@ namespace HunterIndustriesAPI.Controllers.User
         /// <remarks>
         /// Sample Request:
         ///
-        ///     GET /User?Username=TestUser
+        ///     GET /user?Username=TestUser
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         [RequiredPolicyAuthorisationAttributeFilter("User.Read")]
@@ -137,7 +137,7 @@ namespace HunterIndustriesAPI.Controllers.User
         /// <remarks>
         /// Sample Request:
         ///
-        ///     GET /User/1
+        ///     GET /user/1
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="id">The id number of the user.</param>
@@ -232,7 +232,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 request = new UserModel();
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Post) endpoint called with the following parameters {ParameterFunction.FormatParameters(request, true)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Post) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request, true))
             {
@@ -254,7 +254,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
             if (await _userService.UserExists(request.Username))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, request, true));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -273,7 +273,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
             if (!created)
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request, true));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -291,7 +291,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
             if (!created)
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request, true));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -305,7 +305,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"), username, applicationName, ParameterFunction.FormatParameters(null, request, true));
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
             response = new ResponseModel()
             {
@@ -363,7 +363,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 request = new UserModel();
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint called with the following parameters \"{id}\", {ParameterFunction.FormatParameters(null, request, true)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint called with the following parameters \"{id}\", {ParameterFunction.FormatParameters(null, request)}.");
 
             if (!_modelValidator.IsValid(request))
             {

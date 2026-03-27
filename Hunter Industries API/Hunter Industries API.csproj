@@ -340,6 +340,7 @@
     <Compile Include="Controllers\Server Status\ServerEventController.cs" />
     <Compile Include="Controllers\Server Status\ServerInformationController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
+    <Compile Include="Controllers\ConfigurationController.cs" />
     <Compile Include="Controllers\User\UserController.cs" />
     <Compile Include="Controllers\User\UserSettingsController.cs" />
     <Compile Include="Converters\Audit History Converter.cs" />

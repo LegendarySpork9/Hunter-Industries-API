@@ -82,7 +82,7 @@ namespace HunterIndustriesAPI.Tests.Functions
         public void TestFormatParametersModelPassword()
         {
             object model = new { Password = "Password" };
-            string[] actual = ParameterFunction.FormatParameters(null, model, true);
+            string[] actual = ParameterFunction.FormatParameters(null, model);
 
             Assert.AreEqual(1, actual.Length);
             Assert.AreEqual("e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb", actual[0]);
@@ -213,7 +213,7 @@ namespace HunterIndustriesAPI.Tests.Functions
         {
             string expected = "\"e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb\"";
             object model = new { Password = "Password" };
-            string actual = ParameterFunction.FormatParameters(model, true);
+            string actual = ParameterFunction.FormatParameters(model);
 
             Assert.AreEqual(expected, actual);
         }
@@ -300,6 +300,101 @@ namespace HunterIndustriesAPI.Tests.Functions
             string actual = ParameterFunction.FormatParameters(new List<object> { "value1", "value2" }, true);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region FormatParameters (object, string[])
+
+        /// <summary>
+        /// Tests whether the FormatParameters method returns only the other parameters when given a null model.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatParametersModelOtherParametersNullModel()
+        {
+            string[] otherParameters = new string[] { "entity", "1" };
+            string[] actual = ParameterFunction.FormatParameters((object)null, otherParameters);
+
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("entity", actual[0]);
+            Assert.AreEqual("1", actual[1]);
+        }
+
+        /// <summary>
+        /// Tests whether the FormatParameters method appends model properties to other parameters.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatParametersModelOtherParameters()
+        {
+            string[] otherParameters = new string[] { "entity", "1" };
+            object model = new { Name = "Test", Value = 2 };
+            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+
+            Assert.AreEqual(4, actual.Length);
+            Assert.AreEqual("entity", actual[0]);
+            Assert.AreEqual("1", actual[1]);
+            Assert.AreEqual("Test", actual[2]);
+            Assert.AreEqual("2", actual[3]);
+        }
+
+        /// <summary>
+        /// Tests whether the FormatParameters method appends empty strings for null model properties.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatParametersModelOtherParametersNullProperty()
+        {
+            string[] otherParameters = new string[] { "entity" };
+            object model = new { Name = (string)null };
+            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("entity", actual[0]);
+            Assert.AreEqual("", actual[1]);
+        }
+
+        /// <summary>
+        /// Tests whether the FormatParameters method appends list items individually.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatParametersModelOtherParametersList()
+        {
+            string[] otherParameters = new string[] { "entity" };
+            object model = new { Items = new List<string> { "a", "b" } };
+            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+
+            Assert.AreEqual(3, actual.Length);
+            Assert.AreEqual("entity", actual[0]);
+            Assert.AreEqual("a", actual[1]);
+            Assert.AreEqual("b", actual[2]);
+        }
+
+        /// <summary>
+        /// Tests whether the FormatParameters method hashes password properties.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatParametersModelOtherParametersPassword()
+        {
+            string[] otherParameters = new string[] { "entity" };
+            object model = new { Password = "Password" };
+            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("entity", actual[0]);
+            Assert.AreEqual("e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb", actual[1]);
+        }
+
+        /// <summary>
+        /// Tests whether the FormatParameters method works with an empty other parameters array.
+        /// </summary>
+        [TestMethod]
+        public void TestFormatParametersModelOtherParametersEmpty()
+        {
+            string[] otherParameters = new string[] { };
+            object model = new { Name = "Test" };
+            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+
+            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual("Test", actual[0]);
         }
 
         #endregion

@@ -1983,5 +1983,124 @@ where MachineId = @MachineId";
         }
 
         #endregion
+
+        #region GetRequestObject
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns null when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObject()
+        {
+            object actual = ConfigurationConverter.GetRequestObject("Trombone", new object());
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns an ApplicationModel when given "application".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectApplication()
+        {
+            ApplicationModel model = new ApplicationModel { Name = "TestApplication", Phrase = "TestPhrase" };
+            object actual = ConfigurationConverter.GetRequestObject("application", model);
+
+            Assert.IsInstanceOfType(actual, typeof(ApplicationModel));
+            Assert.AreEqual("TestApplication", ((ApplicationModel)actual).Name);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns an ApplicationSettingModel when given "applicationSetting".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectApplicationSetting()
+        {
+            ApplicationSettingModel model = new ApplicationSettingModel { Name = "TestSetting", Required = true };
+            object actual = ConfigurationConverter.GetRequestObject("applicationSetting", model);
+
+            Assert.IsInstanceOfType(actual, typeof(ApplicationSettingModel));
+            Assert.AreEqual("TestSetting", ((ApplicationSettingModel)actual).Name);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns an AuthorisationModel when given "authorisation".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectAuthorisation()
+        {
+            AuthorisationModel model = new AuthorisationModel { Phrase = "TestPhrase" };
+            object actual = ConfigurationConverter.GetRequestObject("authorisation", model);
+
+            Assert.IsInstanceOfType(actual, typeof(AuthorisationModel));
+            Assert.AreEqual("TestPhrase", ((AuthorisationModel)actual).Phrase);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns a ComponentModel when given "component".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectComponent()
+        {
+            ComponentModel model = new ComponentModel { Name = "TestComponent" };
+            object actual = ConfigurationConverter.GetRequestObject("component", model);
+
+            Assert.IsInstanceOfType(actual, typeof(ComponentModel));
+            Assert.AreEqual("TestComponent", ((ComponentModel)actual).Name);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns a ConnectionModel when given "connection".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectConnection()
+        {
+            ConnectionModel model = new ConnectionModel { IPAddress = "127.0.0.1", Port = 8080 };
+            object actual = ConfigurationConverter.GetRequestObject("connection", model);
+
+            Assert.IsInstanceOfType(actual, typeof(ConnectionModel));
+            Assert.AreEqual("127.0.0.1", ((ConnectionModel)actual).IPAddress);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns a DowntimeModel when given "downtime".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectDowntime()
+        {
+            DowntimeModel model = new DowntimeModel { Time = "12:00" };
+            object actual = ConfigurationConverter.GetRequestObject("downtime", model);
+
+            Assert.IsInstanceOfType(actual, typeof(DowntimeModel));
+            Assert.AreEqual("12:00", ((DowntimeModel)actual).Time);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns a GameModel when given "game".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectGame()
+        {
+            GameModel model = new GameModel { Name = "TestGame", Version = "1.0" };
+            object actual = ConfigurationConverter.GetRequestObject("game", model);
+
+            Assert.IsInstanceOfType(actual, typeof(GameModel));
+            Assert.AreEqual("TestGame", ((GameModel)actual).Name);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns a MachineModel when given "machine".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectMachine()
+        {
+            MachineModel model = new MachineModel { HostName = "TestMachine" };
+            object actual = ConfigurationConverter.GetRequestObject("machine", model);
+
+            Assert.IsInstanceOfType(actual, typeof(MachineModel));
+            Assert.AreEqual("TestMachine", ((MachineModel)actual).HostName);
+        }
+
+        #endregion
     }
 }
