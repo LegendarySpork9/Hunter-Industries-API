@@ -2065,6 +2065,11 @@
             The name of the machine.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.GameRecord">
             <summary>
             </summary>
@@ -2082,6 +2087,11 @@
         <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Version">
             <summary>
             The version of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord">
@@ -2103,6 +2113,11 @@
             The amount of time, in seconds, that the server is offline.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord">
             <summary>
             </summary>
@@ -2122,6 +2137,11 @@
             The port the server runs on.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.ComponentRecord">
             <summary>
             </summary>
@@ -2134,6 +2154,11 @@
         <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.Name">
             <summary>
             The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord">
@@ -2155,6 +2180,11 @@
             Whether the setting is required.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord">
             <summary>
             </summary>
@@ -2167,6 +2197,11 @@
         <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.Phrase">
             <summary>
             The authorisation phrase.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord">
@@ -2191,6 +2226,11 @@
         <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Settings">
             <summary>
             The setting records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ErrorLogRecord">

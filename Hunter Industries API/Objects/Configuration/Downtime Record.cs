@@ -17,5 +17,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// The amount of time, in seconds, that the server is offline.
         /// </summary>
         public int Duration { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

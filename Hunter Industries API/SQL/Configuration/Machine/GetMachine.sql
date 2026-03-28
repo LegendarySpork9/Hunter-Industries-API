@@ -1,4 +1,5 @@
 select
 	MachineId,
-	HostName
+	HostName,
+	IsDeleted
 from Machine with (nolock)

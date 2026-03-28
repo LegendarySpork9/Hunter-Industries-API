@@ -24,7 +24,8 @@ namespace HunterIndustriesAPI.Mappings
                     Id = reader.GetInt32(2),
                     Phrase = reader.GetString(3),
                 },
-                Settings = new List<ApplicationSettingRecord>()
+                Settings = new List<ApplicationSettingRecord>(),
+                IsDeleted = reader.GetBoolean(7)
             };
 
             if (!reader.IsDBNull(4))
@@ -49,7 +50,8 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Id = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                Required = reader.GetBoolean(2)
+                Required = reader.GetBoolean(2),
+                IsDeleted = reader.GetBoolean(3)
             };
 
             return applicationSetting;
@@ -63,7 +65,8 @@ namespace HunterIndustriesAPI.Mappings
             AuthorisationRecord authorisation = new AuthorisationRecord()
             {
                 Id = reader.GetInt32(0),
-                Phrase = reader.GetString(1)
+                Phrase = reader.GetString(1),
+                IsDeleted = reader.GetBoolean(2)
             };
 
             return authorisation;
@@ -77,7 +80,8 @@ namespace HunterIndustriesAPI.Mappings
             ComponentRecord component = new ComponentRecord()
             {
                 Id = reader.GetInt32(0),
-                Name = reader.GetString(1)
+                Name = reader.GetString(1),
+                IsDeleted = reader.GetBoolean(2)
             };
 
             return component;
@@ -92,7 +96,8 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Id = reader.GetInt32(0),
                 IPAddress = reader.GetString(1),
-                Port = reader.GetInt32(2)
+                Port = reader.GetInt32(2),
+                IsDeleted = reader.GetBoolean(3)
             };
 
             return connection;
@@ -107,7 +112,8 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Id = reader.GetInt32(0),
                 Time = reader.GetString(1),
-                Duration = reader.GetInt32(2)
+                Duration = reader.GetInt32(2),
+                IsDeleted = reader.GetBoolean(3)
             };
 
             return downtime;
@@ -122,7 +128,8 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Id = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                Version = reader.GetString(2)
+                Version = reader.GetString(2),
+                IsDeleted = reader.GetBoolean(3)
             };
 
             return game;
@@ -136,7 +143,8 @@ namespace HunterIndustriesAPI.Mappings
             MachineRecord machine = new MachineRecord()
             {
                 Id = reader.GetInt32(0),
-                HostName = reader.GetString(1)
+                HostName = reader.GetString(1),
+                IsDeleted = reader.GetBoolean(2)
             };
 
             return machine;

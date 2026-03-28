@@ -1,5 +1,6 @@
 select
 	DowntimeId,
 	[Time],
-	Duration
+	Duration,
+	IsDeleted
 from Downtime with (nolock)

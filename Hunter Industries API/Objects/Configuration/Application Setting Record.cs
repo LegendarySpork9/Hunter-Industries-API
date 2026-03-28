@@ -17,5 +17,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// Whether the setting is required.
         /// </summary>
         public bool Required { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

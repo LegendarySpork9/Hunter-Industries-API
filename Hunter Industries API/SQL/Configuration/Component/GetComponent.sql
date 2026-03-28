@@ -1,4 +1,5 @@
 select
 	ComponentId,
-	[Name]
+	[Name],
+	IsDeleted
 from Component with (nolock)

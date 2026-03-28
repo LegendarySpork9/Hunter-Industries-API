@@ -5,7 +5,8 @@ select
 	Phrase,
 	ApplicationSettingId,
 	[AS].[Name] as Setting,
-	[Required]
+	[Required],
+	[Application].IsDeleted
 from [Application] with (nolock)
 join Authorisation with (nolock) on [Application].PhraseId = Authorisation.PhraseId
 left join ApplicationSetting [AS] with (nolock) on [Application].ApplicationId = [AS].ApplicationId

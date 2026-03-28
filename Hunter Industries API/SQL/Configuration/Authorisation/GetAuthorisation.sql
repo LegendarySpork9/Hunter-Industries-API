@@ -1,4 +1,5 @@
 select
 	PhraseId,
-	Phrase
+	Phrase,
+	IsDeleted
 from Authorisation with (nolock)

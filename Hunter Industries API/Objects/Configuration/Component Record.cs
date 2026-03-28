@@ -13,5 +13,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// The name of the component.
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 select
 	GameId,
 	[Name],
-	[Version]
+	[Version],
+	IsDeleted
 from Game with (nolock)

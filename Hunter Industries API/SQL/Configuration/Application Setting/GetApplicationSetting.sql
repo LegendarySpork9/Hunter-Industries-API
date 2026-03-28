@@ -1,6 +1,7 @@
 select
 	ApplicationSettingId,
 	[Name],
-	[Required]
+	[Required],
+	IsDeleted
 from ApplicationSetting with (nolock)
 where ApplicationId = @ApplicationId

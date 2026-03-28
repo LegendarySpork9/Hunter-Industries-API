@@ -17,5 +17,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// The version of the game.
         /// </summary>
         public string Version { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

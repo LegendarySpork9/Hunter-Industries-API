@@ -13,5 +13,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// The authorisation phrase.
         /// </summary>
         public string Phrase { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

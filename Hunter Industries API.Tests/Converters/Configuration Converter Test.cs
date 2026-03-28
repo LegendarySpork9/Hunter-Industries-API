@@ -3,6 +3,7 @@ using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Mappings;
 using HunterIndustriesAPI.Models.Requests.Bodies.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -2013,7 +2014,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectApplication()
         {
             ApplicationModel model = new ApplicationModel { Name = "TestApplication", Phrase = "TestPhrase" };
-            object actual = ConfigurationConverter.GetRequestObject("application", model);
+            object actual = ConfigurationConverter.GetRequestObject("application", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(ApplicationModel));
             Assert.AreEqual("TestApplication", ((ApplicationModel)actual).Name);
@@ -2026,7 +2027,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectApplicationSetting()
         {
             ApplicationSettingModel model = new ApplicationSettingModel { Name = "TestSetting", Required = true };
-            object actual = ConfigurationConverter.GetRequestObject("applicationSetting", model);
+            object actual = ConfigurationConverter.GetRequestObject("applicationSetting", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(ApplicationSettingModel));
             Assert.AreEqual("TestSetting", ((ApplicationSettingModel)actual).Name);
@@ -2039,7 +2040,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectAuthorisation()
         {
             AuthorisationModel model = new AuthorisationModel { Phrase = "TestPhrase" };
-            object actual = ConfigurationConverter.GetRequestObject("authorisation", model);
+            object actual = ConfigurationConverter.GetRequestObject("authorisation", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(AuthorisationModel));
             Assert.AreEqual("TestPhrase", ((AuthorisationModel)actual).Phrase);
@@ -2052,7 +2053,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectComponent()
         {
             ComponentModel model = new ComponentModel { Name = "TestComponent" };
-            object actual = ConfigurationConverter.GetRequestObject("component", model);
+            object actual = ConfigurationConverter.GetRequestObject("component", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(ComponentModel));
             Assert.AreEqual("TestComponent", ((ComponentModel)actual).Name);
@@ -2065,7 +2066,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectConnection()
         {
             ConnectionModel model = new ConnectionModel { IPAddress = "127.0.0.1", Port = 8080 };
-            object actual = ConfigurationConverter.GetRequestObject("connection", model);
+            object actual = ConfigurationConverter.GetRequestObject("connection", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(ConnectionModel));
             Assert.AreEqual("127.0.0.1", ((ConnectionModel)actual).IPAddress);
@@ -2078,7 +2079,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectDowntime()
         {
             DowntimeModel model = new DowntimeModel { Time = "12:00" };
-            object actual = ConfigurationConverter.GetRequestObject("downtime", model);
+            object actual = ConfigurationConverter.GetRequestObject("downtime", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(DowntimeModel));
             Assert.AreEqual("12:00", ((DowntimeModel)actual).Time);
@@ -2091,7 +2092,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectGame()
         {
             GameModel model = new GameModel { Name = "TestGame", Version = "1.0" };
-            object actual = ConfigurationConverter.GetRequestObject("game", model);
+            object actual = ConfigurationConverter.GetRequestObject("game", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(GameModel));
             Assert.AreEqual("TestGame", ((GameModel)actual).Name);
@@ -2104,7 +2105,7 @@ where MachineId = @MachineId";
         public void TestGetRequestObjectMachine()
         {
             MachineModel model = new MachineModel { HostName = "TestMachine" };
-            object actual = ConfigurationConverter.GetRequestObject("machine", model);
+            object actual = ConfigurationConverter.GetRequestObject("machine", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(MachineModel));
             Assert.AreEqual("TestMachine", ((MachineModel)actual).HostName);

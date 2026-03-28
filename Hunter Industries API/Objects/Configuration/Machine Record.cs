@@ -13,5 +13,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// The name of the machine.
         /// </summary>
         public string HostName { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

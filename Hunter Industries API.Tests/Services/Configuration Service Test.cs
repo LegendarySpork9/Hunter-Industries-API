@@ -39,7 +39,8 @@ namespace HunterIndustriesAPI.Tests.Services
                 new ComponentRecord
                 {
                     Id = 1,
-                    Name = "TestComponent"
+                    Name = "TestComponent",
+                    IsDeleted = false
                 }
             };
 
@@ -87,7 +88,8 @@ namespace HunterIndustriesAPI.Tests.Services
                 new ComponentRecord
                 {
                     Id = 1,
-                    Name = "TestComponent"
+                    Name = "TestComponent",
+                    IsDeleted = false
                 }
             };
 
@@ -114,18 +116,20 @@ namespace HunterIndustriesAPI.Tests.Services
                 {
                     Id = 1,
                     Name = "App1",
+                    IsDeleted = false,
                     Settings = new List<ApplicationSettingRecord>
                     {
-                        new ApplicationSettingRecord { Id = 1, Name = "Setting1", Required = true }
+                        new ApplicationSettingRecord { Id = 1, Name = "Setting1", Required = true, IsDeleted = false }
                     }
                 },
                 new ApplicationRecord
                 {
                     Id = 1,
                     Name = "App1",
+                    IsDeleted = false,
                     Settings = new List<ApplicationSettingRecord>
                     {
-                        new ApplicationSettingRecord { Id = 2, Name = "Setting2", Required = false }
+                        new ApplicationSettingRecord { Id = 2, Name = "Setting2", Required = false, IsDeleted = false }
                     }
                 }
             };

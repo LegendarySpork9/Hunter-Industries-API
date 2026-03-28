@@ -1,5 +1,6 @@
 select
 	ConnectionId,
 	IPAddress,
-	[Port]
+	[Port],
+	IsDeleted
 from [Connection] with (nolock)

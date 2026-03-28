@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 using System.Web.Http.Results;
 
 namespace HunterIndustriesAPI.Tests.Controllers
@@ -74,7 +75,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent" } }, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false } }, null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((5, null));
 
             ConfigurationController controller = new ConfigurationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
@@ -123,7 +124,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent" } }, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false } }, null));
 
             ConfigurationController controller = new ConfigurationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
@@ -172,7 +173,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent" } }, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false } }, null));
 
             ConfigurationController controller = new ConfigurationController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
             {
@@ -180,10 +181,10 @@ namespace HunterIndustriesAPI.Tests.Controllers
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Post("component", new ComponentModel
+            IHttpActionResult actionResult = await controller.Post("component", JObject.FromObject(new ComponentModel
             {
                 Name = "TestComponent"
-            });
+            }));
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(HttpStatusCode.Created, contentResult.StatusCode);
@@ -226,10 +227,10 @@ namespace HunterIndustriesAPI.Tests.Controllers
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Post("component", new ComponentModel
+            IHttpActionResult actionResult = await controller.Post("component", JObject.FromObject(new ComponentModel
             {
                 Name = "TestComponent"
-            });
+            }));
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
@@ -251,7 +252,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent" } }, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object> { new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false } }, null));
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, (Exception)null));
 
             ConfigurationController controller = new ConfigurationController(_mockLogger.Object, mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
@@ -260,10 +261,10 @@ namespace HunterIndustriesAPI.Tests.Controllers
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Patch("component", 1, new ComponentModel
+            IHttpActionResult actionResult = await controller.Patch("component", 1, JObject.FromObject(new ComponentModel
             {
                 Name = "UpdatedComponent"
-            });
+            }));
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
@@ -285,10 +286,10 @@ namespace HunterIndustriesAPI.Tests.Controllers
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Patch("component", 999, new ComponentModel
+            IHttpActionResult actionResult = await controller.Patch("component", 999, JObject.FromObject(new ComponentModel
             {
                 Name = "UpdatedComponent"
-            });
+            }));
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(HttpStatusCode.NotFound, contentResult.StatusCode);

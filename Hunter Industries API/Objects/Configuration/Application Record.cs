@@ -23,5 +23,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// The setting records.
         /// </summary>
         public List<ApplicationSettingRecord> Settings { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

@@ -17,5 +17,9 @@ namespace HunterIndustriesAPI.Objects.Configuration
         /// The port the server runs on.
         /// </summary>
         public int Port { get; set; }
+        /// <summary>
+        /// Whether the record is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }
