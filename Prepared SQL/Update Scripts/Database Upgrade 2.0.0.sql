@@ -185,6 +185,15 @@ ALTER TABLE [Machine] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
 
 PRINT('Added IsDeleted Field to Machine Table')
 
+ALTER TABLE Downtime ADD [Duration] [int] NULL
+GO
+
+UPDATE Downtime SET Duration = 0
+
+ALTER TABLE Downtime ALTER COLUMN [Duration] [int] NOT NULL
+
+PRINT('Added Duration Field to Downtime Table')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 

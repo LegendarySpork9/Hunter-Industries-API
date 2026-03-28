@@ -1450,6 +1450,11 @@
             The time that the server goes offline.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel">
             <summary>
             </summary>
@@ -1607,6 +1612,11 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Time">
             <summary>
             The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel">
@@ -2088,6 +2098,11 @@
             The time that the server goes offline.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord">
             <summary>
             </summary>
@@ -2228,6 +2243,11 @@
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord.Time">
             <summary>
             The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord">

@@ -448,6 +448,7 @@ GO
 CREATE TABLE [dbo].[Downtime](
 	[DowntimeId] [int] IDENTITY(1,1) NOT NULL,
 	[Time] [varchar](8) NOT NULL,
+	[Duration] [int] NOT NULL,
 	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Downtime] PRIMARY KEY CLUSTERED 
 (

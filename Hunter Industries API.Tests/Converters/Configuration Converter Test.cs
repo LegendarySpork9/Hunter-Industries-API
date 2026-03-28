@@ -558,7 +558,8 @@ and [Port] = @Port";
         public void TestGetSQLFilterDowntime()
         {
             string expected = @"
-where Time = @Time";
+where Time = @Time
+and Duration = @Duration";
             string actual = ConfigurationConverter.GetSQLFilter("downtime");
 
             Assert.AreEqual(expected, actual);
@@ -614,7 +615,7 @@ where HostName = @HostName";
         public void TestGetSQLFilterIdApplication()
         {
             string expected = @"
-where ApplicationId = @ApplicationId";
+where [Application].ApplicationId = @ApplicationId";
             string actual = ConfigurationConverter.GetSQLFilterId("application");
 
             Assert.AreEqual(expected, actual);
@@ -1381,12 +1382,14 @@ where MachineId = @MachineId";
         [TestMethod]
         public void TestGetParameterExistsDowntime()
         {
-            DowntimeModel model = new DowntimeModel() { Time = "03:00" };
+            DowntimeModel model = new DowntimeModel() { Time = "03:00", Duration = 60 };
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("downtime", model);
 
-            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual(2, actual.Length);
             Assert.AreEqual("@Time", actual[0].ParameterName);
             Assert.AreEqual("03:00", actual[0].Value);
+            Assert.AreEqual("@Duration", actual[1].ParameterName);
+            Assert.AreEqual(60, actual[1].Value);
         }
 
         /// <summary>
@@ -1657,13 +1660,16 @@ where MachineId = @MachineId";
         {
             DowntimeModel model = new DowntimeModel()
             {
-                Time = "03:00:00"
+                Time = "03:00:00",
+                Duration = 60
             };
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("downtime", model);
 
-            Assert.AreEqual(1, actual.Length);
+            Assert.AreEqual(2, actual.Length);
             Assert.AreEqual("@Time", actual[0].ParameterName);
             Assert.AreEqual("03:00:00", actual[0].Value);
+            Assert.AreEqual("@Duration", actual[1].ParameterName);
+            Assert.AreEqual(60, actual[1].Value);
         }
 
         /// <summary>
@@ -1827,15 +1833,18 @@ where MachineId = @MachineId";
         {
             DowntimeModel model = new DowntimeModel()
             {
-                Time = "03:00:00"
+                Time = "03:00:00",
+                Duration = 60
             };
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("downtime", model, 1);
 
-            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual(3, actual.Length);
             Assert.AreEqual("@DowntimeId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
             Assert.AreEqual("@Time", actual[1].ParameterName);
             Assert.AreEqual("03:00:00", actual[1].Value);
+            Assert.AreEqual("@Duration", actual[2].ParameterName);
+            Assert.AreEqual(60, actual[2].Value);
         }
 
         /// <summary>

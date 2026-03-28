@@ -12,4 +12,5 @@ join Game G with (nolock) on G.[Name] = @Game
 join Connection C with (nolock) on C.IPAddress = @IPAddress
 	and C.[Port] = @Port
 left join Downtime D with (nolock) on D.[Time] = @Time
+	and D.Duration = @Duration
 where M.HostName = @HostName

@@ -1,9 +1,11 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Mappings;
 using HunterIndustriesAPI.Models.Requests.Bodies.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web.Helpers;
 
 namespace HunterIndustriesAPI.Converters
 {
@@ -129,7 +131,8 @@ where [Name] = @Name";
 where IPAddress = @IPAddress
 and [Port] = @Port";
                 case "downtime": return @"
-where Time = @Time";
+where Time = @Time
+and Duration = @Duration";
                 case "game": return @"
 where [Name] = @Name
 and [Version] = @Version";
@@ -147,7 +150,7 @@ where HostName = @HostName";
             switch (entity)
             {
                 case "application": return @"
-where ApplicationId = @ApplicationId";
+where [Application].ApplicationId = @ApplicationId";
                 case "applicationSetting": return @"
 where ApplicationSettingId = @ApplicationSettingId";
                 case "authorisation": return @"
@@ -380,7 +383,8 @@ where MachineId = @MachineId";
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time }
+                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time },
+                        new SqlParameter("@Duration", SqlDbType.Int) { Value= downtime.Duration }
                     };
                 case "game":
                     GameModel game = record as GameModel;
@@ -503,7 +507,8 @@ where MachineId = @MachineId";
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time }
+                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time },
+                        new SqlParameter("@Duration", SqlDbType.Int) { Value= downtime.Duration }
                     };
                 case "game":
                     GameModel game = record as GameModel;
@@ -580,7 +585,8 @@ where MachineId = @MachineId";
                     return new SqlParameter[]
                     {
                         new SqlParameter("@DowntimeId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time }
+                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time },
+                        new SqlParameter("@Duration", SqlDbType.Int) { Value= downtime.Duration }
                     };
                 case "game":
                     GameModel game = record as GameModel;
@@ -631,14 +637,14 @@ where MachineId = @MachineId";
         {
             switch (entity)
             {
-                case "application": return request as ApplicationModel;
-                case "applicationSetting": return request as ApplicationSettingModel;
-                case "authorisation": return request as AuthorisationModel;
-                case "component": return request as ComponentModel;
-                case "connection": return request as ConnectionModel;
-                case "downtime": return request as DowntimeModel;
-                case "game": return request as GameModel;
-                case "machine": return request as MachineModel;
+                case "application": return JsonConvert.DeserializeObject<ApplicationModel>(request.ToString());
+                case "applicationSetting": return JsonConvert.DeserializeObject<ApplicationSettingModel>(request.ToString());
+                case "authorisation": return JsonConvert.DeserializeObject<AuthorisationModel>(request.ToString());
+                case "component": return JsonConvert.DeserializeObject<ComponentModel>(request.ToString());
+                case "connection": return JsonConvert.DeserializeObject<ConnectionModel>(request.ToString());
+                case "downtime": return JsonConvert.DeserializeObject<DowntimeModel>(request.ToString());
+                case "game": return JsonConvert.DeserializeObject<GameModel>(request.ToString());
+                case "machine": return JsonConvert.DeserializeObject<MachineModel>(request.ToString());
                 default: return null;
             }
         }

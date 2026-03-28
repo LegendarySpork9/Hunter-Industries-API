@@ -1,5 +1,6 @@
-insert into Downtime ([Time])
+insert into Downtime ([Time], [Duration])
 output inserted.DowntimeId
 values (
-	@Time
+	@Time,
+	@Duration
 )

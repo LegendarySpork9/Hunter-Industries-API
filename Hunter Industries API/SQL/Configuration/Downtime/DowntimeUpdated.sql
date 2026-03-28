@@ -1,2 +1,2 @@
-update Downtime set [Time] = @Time
+update Downtime set [Time] = @Time, Duration = @Duration
 where DowntimeId = @DowntimeId

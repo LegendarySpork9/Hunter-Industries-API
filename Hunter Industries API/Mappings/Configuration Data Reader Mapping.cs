@@ -106,7 +106,8 @@ namespace HunterIndustriesAPI.Mappings
             ConfigurationDowntimeRecord downtime = new ConfigurationDowntimeRecord()
             {
                 Id = reader.GetInt32(0),
-                Time = reader.GetString(1)
+                Time = reader.GetString(1),
+                Duration = reader.GetInt32(2)
             };
 
             return downtime;

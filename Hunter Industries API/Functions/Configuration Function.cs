@@ -25,7 +25,10 @@ namespace HunterIndustriesAPI.Functions
 
                 if (value == null)
                 {
-                    parameterList.Remove(parameterList.First(p => p.ParameterName == $"@{property.Name}"));
+                    if (parameterList.Exists(p => p.ParameterName == $"@{property.Name}"))
+                    {
+                        parameterList.Remove(parameterList.First(p => p.ParameterName == $"@{property.Name}"));
+                    }
                 }
             }
 
@@ -46,7 +49,10 @@ namespace HunterIndustriesAPI.Functions
 
                 if (value == null)
                 {
-                    sqlLines.Remove(sqlLines.First(s => s.Contains($"@{property.Name}")));
+                    if (sqlLines.Exists(s => s.Contains($"@{property.Name}")))
+                    {
+                        sqlLines.Remove(sqlLines.First(s => s.Contains($"@{property.Name}")));
+                    }
                 }
             }
 

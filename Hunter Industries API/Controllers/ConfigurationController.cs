@@ -249,13 +249,13 @@ namespace HunterIndustriesAPI.Controllers
         /// <param name="entityId">The id number of the parent entity record.</param>
         /// <param name="request">An object containing the record information.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Configuration.Create")]
-        [VersionedRoute("configuration/{entity}/{entityId:int}", "2.0")]
+        [VersionedRoute("configuration/{entity}", "2.0")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a record matching the details already exists.")]
         [SwaggerResponse(HttpStatusCode.Created, Type = typeof(object), Description = "If the record is successfuly created.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Post(string entity, [FromBody, Required] object request, int entityId = 0)
+        public async Task<IHttpActionResult> Post(string entity, [FromBody, Required] object request, [FromUri] int entityId = 0)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
@@ -272,9 +272,14 @@ namespace HunterIndustriesAPI.Controllers
                 request = new object();
             }
 
+            else
+            {
+                request = ConfigurationConverter.GetRequestObject(entity, request);
+            }
+
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Post) endpoint called with the following parameters \"{entity}\", \"{entityId}\", {ParameterFunction.FormatParameters(request)}.");
 
-            if (!_modelValidator.IsValid(ConfigurationConverter.GetRequestObject(entity, request), true))
+            if (!_modelValidator.IsValid(request, true))
             {
                 await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
                     username, applicationName, null);
@@ -410,9 +415,14 @@ namespace HunterIndustriesAPI.Controllers
                 request = new object();
             }
 
+            else
+            {
+                request = ConfigurationConverter.GetRequestObject(entity, request);
+            }
+
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Patch) endpoint called with the following parameters \"{entity}\", \"{id}\", {ParameterFunction.FormatParameters(request)}.");
 
-            if (!_modelValidator.IsValid(ConfigurationConverter.GetRequestObject(entity, request)))
+            if (!_modelValidator.IsValid(request))
             {
                 await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
                     username, applicationName, null);

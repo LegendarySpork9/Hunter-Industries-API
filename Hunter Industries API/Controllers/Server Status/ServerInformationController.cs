@@ -210,7 +210,8 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
             {
                 downtime = new DowntimeRecord()
                 {
-                    Time = request.Time
+                    Time = request.Time,
+                    Duration = request.Duration
                 };
             }
 

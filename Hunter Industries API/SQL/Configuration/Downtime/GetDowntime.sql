@@ -1,4 +1,5 @@
 select
 	DowntimeId,
-	[Time]
+	[Time],
+	Duration
 from Downtime with (nolock)
