@@ -1049,6 +1049,15 @@
             Returns all the properties in the model.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Functions.IPAddressFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.IPAddressFunction.FetchIpAddress(System.Web.HttpRequestBase)">
+            <summary>
+            Returns the IP address for logging.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunction">
             <summary>
             </summary>
