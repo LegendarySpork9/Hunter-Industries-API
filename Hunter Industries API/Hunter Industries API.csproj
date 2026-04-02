@@ -355,6 +355,7 @@
     <Compile Include="Filters\Dependency Resolver.cs" />
     <Compile Include="Filters\Required Policy Authorisation Attribute Filter.cs" />
     <Compile Include="Functions\Configuration Function.cs" />
+    <Compile Include="Functions\IP Address Function.cs" />
     <Compile Include="Mappings\Configuration Data Reader Mapping.cs" />
     <Compile Include="Mappings\Scope Permission Mapping.cs" />
     <Compile Include="Filters\Versioned Direct Route Provider.cs" />

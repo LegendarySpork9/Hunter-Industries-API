@@ -92,7 +92,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(request, true, validationIgnore))
             {
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), null, null, ParameterFunction.FormatParameters(null, request))).Item2;
+                auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), null, null, ParameterFunction.FormatParameters(null, request))).Item2;
 
                 response = new ResponseModel()
                 {
@@ -115,7 +115,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(request, true))
             {
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), null, null,
+                auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"), null, null,
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
                 response = new ResponseModel()
@@ -151,7 +151,7 @@ namespace HunterIndustriesAPI.Controllers
                     signingCredentials: creds
                 ));
 
-                auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), null, null,
+                auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), null, null,
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
                 response = new ResponseModel()
@@ -177,7 +177,7 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
-            auditId = (await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Unauthorized"), null, null,
+            auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("token"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Unauthorized"), null, null,
                     new string[] { request.Username, request.Password, request.Phrase })).Item2;
 
             response = new ResponseModel()
