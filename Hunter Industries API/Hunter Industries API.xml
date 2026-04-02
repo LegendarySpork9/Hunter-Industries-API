@@ -2938,6 +2938,11 @@
             Logs the server alert.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertExists(System.Int32,System.String)">
+            <summary>
+            Returns whether a server alert exists with the given details.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertExists(System.Int32)">
             <summary>
             Returns whether a server alert exists with the given id.
