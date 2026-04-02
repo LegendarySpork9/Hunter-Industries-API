@@ -203,7 +203,43 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
 
         #endregion
 
-        #region ServerAlertExists
+        #region ServerAlertExists (ServerId, Component)
+
+        /// <summary>
+        /// Checks whether the ServerAlertExists method returns true when an alert with the server id and component exists.
+        /// </summary>
+        [TestMethod]
+        public async Task TestServerAlertExistsByServerIdAndComponent()
+        {
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
+
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+
+            bool actual = await service.ServerAlertExists(1, "CPU");
+
+            Assert.IsTrue(actual);
+        }
+
+        /// <summary>
+        /// Checks whether the ServerAlertExists method returns false when no alert with the server id and component exists.
+        /// </summary>
+        [TestMethod]
+        public async Task TestServerAlertExistsByServerIdAndComponentNot()
+        {
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
+
+            ServerAlertService service = new ServerAlertService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+
+            bool actual = await service.ServerAlertExists(1, "CPU");
+
+            Assert.IsFalse(actual);
+        }
+
+        #endregion
+
+        #region ServerAlertExists (Id)
 
         /// <summary>
         /// Checks whether the ServerAlertExists method returns true when an alert exists.

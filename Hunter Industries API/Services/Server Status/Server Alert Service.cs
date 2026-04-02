@@ -247,6 +247,55 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         }
 
         /// <summary>
+        /// Returns whether a server alert exists with the given details.
+        /// </summary>
+        public async Task<bool> ServerAlertExists(int serverId, string component)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters {ParameterFunction.FormatParameters(new string[] { serverId.ToString(), component })}.");
+
+            bool exists = false;
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql");
+                sql += @"
+where [Value] != 'Resolved'
+and ServerInformationId = @serverId
+and [Name] = @component";
+
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@serverId", SqlDbType.Int) { Value = serverId },
+                    new SqlParameter("@component", SqlDbType.VarChar) { Value = component }
+                };
+
+                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (results.Count > 0)
+                {
+                    exists = true;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+            }
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists returned {exists}.");
+            return exists;
+        }
+
+        /// <summary>
         /// Returns whether a server alert exists with the given id.
         /// </summary>
         public async Task<bool> ServerAlertExists(int id)
@@ -258,6 +307,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql");
+                sql += "\nwhere ServerAlertId = @alertId";
+
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@alertID", SqlDbType.Int) { Value = id }

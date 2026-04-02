@@ -9,6 +9,7 @@ using HunterIndustriesAPI.Models.Responses.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.ServerStatus;
+using HunterIndustriesAPI.Services.User;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
@@ -236,6 +237,23 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
+            }
+
+            if (await _serverAlertService.ServerAlertExists(request.ServerId, request.Component))
+            {
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, request));
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 200,
+                    Data = new
+                    {
+                        information = "An unresolved server alert with the server id and component already exists."
+                    }
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(HttpStatusCode.OK, response.Data);
             }
 
             (bool logged, int serverAlertId) = await _serverAlertService.LogServerAlert(request, applicationName);

@@ -182,6 +182,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
             _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
 
             ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
@@ -205,6 +206,39 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(HttpStatusCode.Created, contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 200 when the server alert already exists.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostAlertExists()
+        {
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
+
+            ServerAlertController controller = new ServerAlertController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            {
+                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.1/serverstatus/serveralert")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Post(new ServerAlertModel
+            {
+                Reporter = "System",
+                Component = "CPU",
+                ComponentStatus = "Critical",
+                AlertStatus = "Open",
+                ServerId = 1,
+                Name = "Test",
+                HostName = "TestServer",
+                Game = "TestGame",
+                GameVersion = "1.0"
+            });
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
         }
 
         /// <summary>
