@@ -3,8 +3,8 @@ output inserted.UserSettingId
 select
 	AU.UserId,
 	A.ApplicationId,
-	@Name,
-	@Value
+	@name,
+	@value
 from APIUser AU with (nolock)
-join [Application] A with (nolock) on A.[Name] = @Application
-where AU.Username = @Username
+join [Application] A with (nolock) on A.[Name] = @application
+where AU.Username = @username

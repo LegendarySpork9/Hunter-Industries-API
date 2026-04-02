@@ -1,4 +1,4 @@
 update Downtime set
-	[Time] = @Time,
-	Duration = @Duration
-where DowntimeId = @DowntimeId
+	[Time] = @time,
+	Duration = @duration
+where DowntimeId = @downtimeId

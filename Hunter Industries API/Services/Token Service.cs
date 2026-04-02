@@ -138,7 +138,7 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetApplicationName.SQL");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = phrase }
+                    new SqlParameter("@phrase", SqlDbType.VarChar) { Value = phrase }
                 };
 
                 (string result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetString(0), parameters);

@@ -49,7 +49,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Event\GetServerEvents.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Component", SqlDbType.VarChar) { Value = component }
+                    new SqlParameter("@component", SqlDbType.VarChar) { Value = component }
                 };
 
                 (List<ServerEventRecord> results, Exception ex) = await _Database.Query(sql, reader => new ServerEventRecord()
@@ -104,9 +104,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Event\LogServerEvent.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = serverEvent.ServerId },
-                    new SqlParameter("@Component", SqlDbType.VarChar) { Value = serverEvent.Component },
-                    new SqlParameter("@Status", SqlDbType.VarChar) { Value = serverEvent.Status }
+                    new SqlParameter("@serverID", SqlDbType.Int) { Value = serverEvent.ServerId },
+                    new SqlParameter("@component", SqlDbType.VarChar) { Value = serverEvent.Component },
+                    new SqlParameter("@status", SqlDbType.VarChar) { Value = serverEvent.Status }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);

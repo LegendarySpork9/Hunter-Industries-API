@@ -1,2 +1,2 @@
-﻿update UserSetting set [Value] = @Value
-where UserSettingId = @Id
+﻿update UserSetting set [Value] = @value
+where UserSettingId = @id

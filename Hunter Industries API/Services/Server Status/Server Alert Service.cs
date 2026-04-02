@@ -50,8 +50,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetServerAlerts.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                    new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                    new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                    new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
 
                 (List<ServerAlertRecord> results, Exception ex) = await _Database.Query(sql, reader => new ServerAlertRecord()
@@ -108,7 +108,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetServerAlert.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AlertID", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
                 (ServerAlertRecord result, Exception ex) = await _Database.QuerySingle(sql, reader => new ServerAlertRecord()
@@ -203,12 +203,12 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = serverAlert.ServerId },
-                    new SqlParameter("@Reporter", SqlDbType.VarChar) { Value = serverAlert.Reporter },
-                    new SqlParameter("@Component", SqlDbType.VarChar) { Value = serverAlert.Component },
-                    new SqlParameter("@ComponentStatus", SqlDbType.VarChar) { Value = serverAlert.ComponentStatus },
-                    new SqlParameter("@AlertStatus", SqlDbType.VarChar) { Value = serverAlert.AlertStatus },
-                    new SqlParameter("@Application", SqlDbType.VarChar) { Value = applicationName }
+                    new SqlParameter("@serverID", SqlDbType.Int) { Value = serverAlert.ServerId },
+                    new SqlParameter("@reporter", SqlDbType.VarChar) { Value = serverAlert.Reporter },
+                    new SqlParameter("@component", SqlDbType.VarChar) { Value = serverAlert.Component },
+                    new SqlParameter("@componentStatus", SqlDbType.VarChar) { Value = serverAlert.ComponentStatus },
+                    new SqlParameter("@alertStatus", SqlDbType.VarChar) { Value = serverAlert.AlertStatus },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = applicationName }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
@@ -260,7 +260,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AlertID", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -303,8 +303,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertUpdated.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AlertStatus", SqlDbType.VarChar) { Value = value },
-                    new SqlParameter("@AlertID", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@alertStatus", SqlDbType.VarChar) { Value = value },
+                    new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

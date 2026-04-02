@@ -51,8 +51,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
                 if (isActive)
                 {
-                    sql += "\nwhere IsActive = @IsActive";
-                    parameterList.Add(new SqlParameter("@IsActive", SqlDbType.Bit) { Value = isActive });
+                    sql += "\nwhere IsActive = @isActive";
+                    parameterList.Add(new SqlParameter("@isActive", SqlDbType.Bit) { Value = isActive });
                 }
 
                 (List<ServerInformationRecord> results, Exception ex) = await _Database.Query(sql, reader =>
@@ -120,7 +120,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerExists.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = name }
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = name }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -164,14 +164,14 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerAdded.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = server.Name },
-                    new SqlParameter("@HostName", SqlDbType.VarChar) { Value = server.HostName },
-                    new SqlParameter("@Game", SqlDbType.VarChar) { Value = server.Game },
-                    new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = server.GameVersion },
-                    new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = server.IPAddress },
-                    new SqlParameter("@Port", SqlDbType.Int) { Value = server.Port },
-                    new SqlParameter("@Time", SqlDbType.VarChar) { Value = (object)server.Time ?? DBNull.Value },
-                    new SqlParameter("@Duration", SqlDbType.Int) { Value = (object)server.Duration ?? DBNull.Value }
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = server.Name },
+                    new SqlParameter("@hostName", SqlDbType.VarChar) { Value = server.HostName },
+                    new SqlParameter("@game", SqlDbType.VarChar) { Value = server.Game },
+                    new SqlParameter("@gameVersion", SqlDbType.VarChar) { Value = server.GameVersion },
+                    new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = server.IPAddress },
+                    new SqlParameter("@port", SqlDbType.Int) { Value = server.Port },
+                    new SqlParameter("@time", SqlDbType.VarChar) { Value = (object)server.Time ?? DBNull.Value },
+                    new SqlParameter("@duration", SqlDbType.Int) { Value = (object)server.Duration ?? DBNull.Value }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);

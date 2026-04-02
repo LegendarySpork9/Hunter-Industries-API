@@ -2,7 +2,7 @@
 	select
 		StatusId
 	from [Deletion] with (nolock)
-	where Value = @Deletion
+	where Value = @deletion
 )
-where [Name] = @AssistantName
-and IDNumber = @IDNumber
+where [Name] = @assistantName
+and IDNumber = @idNumber

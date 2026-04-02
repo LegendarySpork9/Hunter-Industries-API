@@ -52,14 +52,14 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 if (!string.IsNullOrEmpty(assistantName))
                 {
-                    sql += "\nand AI.Name = @AssistantName";
-                    parameterList.Add(new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName });
+                    sql += "\nand AI.Name = @assistantName";
+                    parameterList.Add(new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName });
                 }
 
                 if (!string.IsNullOrEmpty(assistantId))
                 {
-                    sql += "\nand AI.IDNumber = @AssistantID";
-                    parameterList.Add(new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId });
+                    sql += "\nand AI.IDNumber = @assistantID";
+                    parameterList.Add(new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId });
                 }
 
                 (List<AssistantConfiguration> results, Exception ex) = await _Database.Query(sql, reader => new AssistantConfiguration()
@@ -111,12 +111,12 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 if (!string.IsNullOrEmpty(assistantName))
                 {
-                    parameterList.Add(new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName });
+                    parameterList.Add(new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName });
                 }
 
                 if (!string.IsNullOrEmpty(assistantId))
                 {
-                    parameterList.Add(new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId });
+                    parameterList.Add(new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId });
                 }
 
                 (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());
@@ -194,8 +194,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\AssistantExists.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetString(1)), parameters);
@@ -241,8 +241,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateLocation.sql");
                 SqlParameter[] locationParameters =
                 {
-                    new SqlParameter("@Hostname", SqlDbType.VarChar) { Value = hostName },
-                    new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = "PlaceHolder" }
+                    new SqlParameter("@hostname", SqlDbType.VarChar) { Value = hostName },
+                    new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = "PlaceHolder" }
                 };
 
                 (object locationId, Exception ex) = await _Database.ExecuteScalar(sql, locationParameters);
@@ -266,7 +266,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                     sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateUser.sql");
                     SqlParameter[] userParameters =
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = assignedUser }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = assignedUser }
                     };
 
                     (object userId, Exception ex2) = await _Database.ExecuteScalar(sql, userParameters);
@@ -290,10 +290,10 @@ namespace HunterIndustriesAPI.Services.Assistant
                         sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateAssistantConfiguration.sql");
                         SqlParameter[] configParameters =
                         {
-                            new SqlParameter("@LocationID", SqlDbType.Int) { Value = locationId },
-                            new SqlParameter("@UserID", SqlDbType.Int) { Value = userId },
-                            new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                            new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                            new SqlParameter("@locationID", SqlDbType.Int) { Value = locationId },
+                            new SqlParameter("@userID", SqlDbType.Int) { Value = userId },
+                            new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                            new SqlParameter("@idNumber", SqlDbType.VarChar) { Value = assistantId }
                         };
 
                         (int rowsAffected, Exception ex3) = await _Database.Execute(sql, configParameters);

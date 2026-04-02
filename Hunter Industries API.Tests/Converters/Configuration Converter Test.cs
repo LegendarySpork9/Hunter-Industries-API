@@ -148,8 +148,8 @@ namespace HunterIndustriesAPI.Tests.Converters
         {
             string expected = @"
 order by ApplicationId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("application");
 
             Assert.AreEqual(expected, actual);
@@ -163,8 +163,8 @@ fetch next @PageSize rows only";
         {
             string expected = @"
 order by PhraseId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("authorisation");
 
             Assert.AreEqual(expected, actual);
@@ -178,8 +178,8 @@ fetch next @PageSize rows only";
         {
             string expected = @"
 order by ComponentId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("component");
 
             Assert.AreEqual(expected, actual);
@@ -193,8 +193,8 @@ fetch next @PageSize rows only";
         {
             string expected = @"
 order by ConnectionId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("connection");
 
             Assert.AreEqual(expected, actual);
@@ -208,8 +208,8 @@ fetch next @PageSize rows only";
         {
             string expected = @"
 order by DowntimeId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("downtime");
 
             Assert.AreEqual(expected, actual);
@@ -223,8 +223,8 @@ fetch next @PageSize rows only";
         {
             string expected = @"
 order by GameId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("game");
 
             Assert.AreEqual(expected, actual);
@@ -238,8 +238,8 @@ fetch next @PageSize rows only";
         {
             string expected = @"
 order by MachineId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("machine");
 
             Assert.AreEqual(expected, actual);
@@ -492,7 +492,7 @@ fetch next @PageSize rows only";
         public void TestGetSQLFilterApplication()
         {
             string expected = @"
-where [Name] = @Name";
+where [Name] = @name";
             string actual = ConfigurationConverter.GetSQLFilter("application");
 
             Assert.AreEqual(expected, actual);
@@ -505,8 +505,8 @@ where [Name] = @Name";
         public void TestGetSQLFilterApplicationSetting()
         {
             string expected = @"
-where ApplicationId = @ApplicationId
-and [Name] = @Name";
+where ApplicationId = @applicationId
+and [Name] = @name";
             string actual = ConfigurationConverter.GetSQLFilter("applicationSetting");
 
             Assert.AreEqual(expected, actual);
@@ -519,7 +519,7 @@ and [Name] = @Name";
         public void TestGetSQLFilterAuthorisation()
         {
             string expected = @"
-where Phrase = @Phrase";
+where Phrase = @phrase";
             string actual = ConfigurationConverter.GetSQLFilter("authorisation");
 
             Assert.AreEqual(expected, actual);
@@ -532,7 +532,7 @@ where Phrase = @Phrase";
         public void TestGetSQLFilterComponent()
         {
             string expected = @"
-where [Name] = @Name";
+where [Name] = @name";
             string actual = ConfigurationConverter.GetSQLFilter("component");
 
             Assert.AreEqual(expected, actual);
@@ -545,8 +545,8 @@ where [Name] = @Name";
         public void TestGetSQLFilterConnection()
         {
             string expected = @"
-where IPAddress = @IPAddress
-and [Port] = @Port";
+where IPAddress = @ipAddress
+and [Port] = @port";
             string actual = ConfigurationConverter.GetSQLFilter("connection");
 
             Assert.AreEqual(expected, actual);
@@ -559,8 +559,8 @@ and [Port] = @Port";
         public void TestGetSQLFilterDowntime()
         {
             string expected = @"
-where Time = @Time
-and Duration = @Duration";
+where Time = @time
+and Duration = @duration";
             string actual = ConfigurationConverter.GetSQLFilter("downtime");
 
             Assert.AreEqual(expected, actual);
@@ -573,8 +573,8 @@ and Duration = @Duration";
         public void TestGetSQLFilterGame()
         {
             string expected = @"
-where [Name] = @Name
-and [Version] = @Version";
+where [Name] = @name
+and [Version] = @version";
             string actual = ConfigurationConverter.GetSQLFilter("game");
 
             Assert.AreEqual(expected, actual);
@@ -587,7 +587,7 @@ and [Version] = @Version";
         public void TestGetSQLFilterMachine()
         {
             string expected = @"
-where HostName = @HostName";
+where HostName = @hostName";
             string actual = ConfigurationConverter.GetSQLFilter("machine");
 
             Assert.AreEqual(expected, actual);
@@ -616,7 +616,7 @@ where HostName = @HostName";
         public void TestGetSQLFilterIdApplication()
         {
             string expected = @"
-where [Application].ApplicationId = @ApplicationId";
+where [Application].ApplicationId = @applicationId";
             string actual = ConfigurationConverter.GetSQLFilterId("application");
 
             Assert.AreEqual(expected, actual);
@@ -629,7 +629,7 @@ where [Application].ApplicationId = @ApplicationId";
         public void TestGetSQLFilterIdApplicationSetting()
         {
             string expected = @"
-where ApplicationSettingId = @ApplicationSettingId";
+where ApplicationSettingId = @applicationSettingId";
             string actual = ConfigurationConverter.GetSQLFilterId("applicationSetting");
 
             Assert.AreEqual(expected, actual);
@@ -642,7 +642,7 @@ where ApplicationSettingId = @ApplicationSettingId";
         public void TestGetSQLFilterIdAuthorisation()
         {
             string expected = @"
-where PhraseId = @PhraseId";
+where PhraseId = @phraseId";
             string actual = ConfigurationConverter.GetSQLFilterId("authorisation");
 
             Assert.AreEqual(expected, actual);
@@ -655,7 +655,7 @@ where PhraseId = @PhraseId";
         public void TestGetSQLFilterIdComponent()
         {
             string expected = @"
-where ComponentId = @ComponentId";
+where ComponentId = @componentId";
             string actual = ConfigurationConverter.GetSQLFilterId("component");
 
             Assert.AreEqual(expected, actual);
@@ -668,7 +668,7 @@ where ComponentId = @ComponentId";
         public void TestGetSQLFilterIdConnection()
         {
             string expected = @"
-where ConnectionId = @ConnectionId";
+where ConnectionId = @connectionId";
             string actual = ConfigurationConverter.GetSQLFilterId("connection");
 
             Assert.AreEqual(expected, actual);
@@ -681,7 +681,7 @@ where ConnectionId = @ConnectionId";
         public void TestGetSQLFilterIdDowntime()
         {
             string expected = @"
-where DowntimeId = @DowntimeId";
+where DowntimeId = @downtimeId";
             string actual = ConfigurationConverter.GetSQLFilterId("downtime");
 
             Assert.AreEqual(expected, actual);
@@ -694,7 +694,7 @@ where DowntimeId = @DowntimeId";
         public void TestGetSQLFilterIdGame()
         {
             string expected = @"
-where GameId = @GameId";
+where GameId = @gameId";
             string actual = ConfigurationConverter.GetSQLFilterId("game");
 
             Assert.AreEqual(expected, actual);
@@ -707,7 +707,7 @@ where GameId = @GameId";
         public void TestGetSQLFilterIdMachine()
         {
             string expected = @"
-where MachineId = @MachineId";
+where MachineId = @machineId";
             string actual = ConfigurationConverter.GetSQLFilterId("machine");
 
             Assert.AreEqual(expected, actual);
@@ -1073,9 +1073,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("application", 10, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PageSize", actual[0].ParameterName);
+            Assert.AreEqual("@pageSize", actual[0].ParameterName);
             Assert.AreEqual(10, actual[0].Value);
-            Assert.AreEqual("@PageNumber", actual[1].ParameterName);
+            Assert.AreEqual("@pageNumber", actual[1].ParameterName);
             Assert.AreEqual(1, actual[1].Value);
         }
 
@@ -1088,9 +1088,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("authorisation", 10, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PageSize", actual[0].ParameterName);
+            Assert.AreEqual("@pageSize", actual[0].ParameterName);
             Assert.AreEqual(10, actual[0].Value);
-            Assert.AreEqual("@PageNumber", actual[1].ParameterName);
+            Assert.AreEqual("@pageNumber", actual[1].ParameterName);
             Assert.AreEqual(1, actual[1].Value);
         }
 
@@ -1103,9 +1103,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("component", 10, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PageSize", actual[0].ParameterName);
+            Assert.AreEqual("@pageSize", actual[0].ParameterName);
             Assert.AreEqual(10, actual[0].Value);
-            Assert.AreEqual("@PageNumber", actual[1].ParameterName);
+            Assert.AreEqual("@pageNumber", actual[1].ParameterName);
             Assert.AreEqual(1, actual[1].Value);
         }
 
@@ -1118,9 +1118,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("connection", 10, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PageSize", actual[0].ParameterName);
+            Assert.AreEqual("@pageSize", actual[0].ParameterName);
             Assert.AreEqual(10, actual[0].Value);
-            Assert.AreEqual("@PageNumber", actual[1].ParameterName);
+            Assert.AreEqual("@pageNumber", actual[1].ParameterName);
             Assert.AreEqual(1, actual[1].Value);
         }
 
@@ -1133,9 +1133,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("downtime", 10, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PageSize", actual[0].ParameterName);
+            Assert.AreEqual("@pageSize", actual[0].ParameterName);
             Assert.AreEqual(10, actual[0].Value);
-            Assert.AreEqual("@PageNumber", actual[1].ParameterName);
+            Assert.AreEqual("@pageNumber", actual[1].ParameterName);
             Assert.AreEqual(1, actual[1].Value);
         }
 
@@ -1148,9 +1148,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("game", 10, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PageSize", actual[0].ParameterName);
+            Assert.AreEqual("@pageSize", actual[0].ParameterName);
             Assert.AreEqual(10, actual[0].Value);
-            Assert.AreEqual("@PageNumber", actual[1].ParameterName);
+            Assert.AreEqual("@pageNumber", actual[1].ParameterName);
             Assert.AreEqual(1, actual[1].Value);
         }
 
@@ -1163,9 +1163,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("machine", 10, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PageSize", actual[0].ParameterName);
+            Assert.AreEqual("@pageSize", actual[0].ParameterName);
             Assert.AreEqual(10, actual[0].Value);
-            Assert.AreEqual("@PageNumber", actual[1].ParameterName);
+            Assert.AreEqual("@pageNumber", actual[1].ParameterName);
             Assert.AreEqual(1, actual[1].Value);
         }
 
@@ -1193,7 +1193,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("application", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1206,7 +1206,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("applicationSetting", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ApplicationSettingId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationSettingId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1219,7 +1219,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("authorisation", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@PhraseId", actual[0].ParameterName);
+            Assert.AreEqual("@phraseId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1232,7 +1232,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("component", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ComponentId", actual[0].ParameterName);
+            Assert.AreEqual("@componentId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1245,7 +1245,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("connection", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ConnectionId", actual[0].ParameterName);
+            Assert.AreEqual("@connectionId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1258,7 +1258,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("downtime", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@DowntimeId", actual[0].ParameterName);
+            Assert.AreEqual("@downtimeId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1271,7 +1271,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("game", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@GameId", actual[0].ParameterName);
+            Assert.AreEqual("@gameId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1284,7 +1284,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("machine", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@MachineId", actual[0].ParameterName);
+            Assert.AreEqual("@machineId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1313,7 +1313,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("application", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("@name", actual[0].ParameterName);
             Assert.AreEqual("TestApp", actual[0].Value);
         }
 
@@ -1327,9 +1327,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("applicationSetting", model, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Name", actual[1].ParameterName);
+            Assert.AreEqual("@name", actual[1].ParameterName);
             Assert.AreEqual("TestSetting", actual[1].Value);
         }
 
@@ -1343,7 +1343,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("authorisation", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@Phrase", actual[0].ParameterName);
+            Assert.AreEqual("@phrase", actual[0].ParameterName);
             Assert.AreEqual("TestPhrase", actual[0].Value);
         }
 
@@ -1357,7 +1357,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("component", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("@name", actual[0].ParameterName);
             Assert.AreEqual("TestComponent", actual[0].Value);
         }
 
@@ -1371,9 +1371,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("connection", model);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@IPAddress", actual[0].ParameterName);
+            Assert.AreEqual("@ipAddress", actual[0].ParameterName);
             Assert.AreEqual("192.168.1.1", actual[0].Value);
-            Assert.AreEqual("@Port", actual[1].ParameterName);
+            Assert.AreEqual("@port", actual[1].ParameterName);
             Assert.AreEqual(8080, actual[1].Value);
         }
 
@@ -1387,9 +1387,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("downtime", model);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@Time", actual[0].ParameterName);
+            Assert.AreEqual("@time", actual[0].ParameterName);
             Assert.AreEqual("03:00", actual[0].Value);
-            Assert.AreEqual("@Duration", actual[1].ParameterName);
+            Assert.AreEqual("@duration", actual[1].ParameterName);
             Assert.AreEqual(60, actual[1].Value);
         }
 
@@ -1403,9 +1403,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("game", model);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("@name", actual[0].ParameterName);
             Assert.AreEqual("TestGame", actual[0].Value);
-            Assert.AreEqual("@Version", actual[1].ParameterName);
+            Assert.AreEqual("@version", actual[1].ParameterName);
             Assert.AreEqual("1.0", actual[1].Value);
         }
 
@@ -1419,7 +1419,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("machine", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@HostName", actual[0].ParameterName);
+            Assert.AreEqual("@hostName", actual[0].ParameterName);
             Assert.AreEqual("TestHost", actual[0].Value);
         }
 
@@ -1447,7 +1447,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("application", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1460,7 +1460,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("applicationSetting", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ApplicationSettingId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationSettingId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1473,7 +1473,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("authorisation", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@PhraseId", actual[0].ParameterName);
+            Assert.AreEqual("@phraseId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1486,7 +1486,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("component", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ComponentId", actual[0].ParameterName);
+            Assert.AreEqual("@componentId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1499,7 +1499,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("connection", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ConnectionId", actual[0].ParameterName);
+            Assert.AreEqual("@connectionId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1512,7 +1512,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("downtime", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@DowntimeId", actual[0].ParameterName);
+            Assert.AreEqual("@downtimeId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1525,7 +1525,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("game", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@GameId", actual[0].ParameterName);
+            Assert.AreEqual("@gameId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1538,7 +1538,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParameterExists("machine", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@MachineId", actual[0].ParameterName);
+            Assert.AreEqual("@machineId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1571,9 +1571,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("application", model);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("@name", actual[0].ParameterName);
             Assert.AreEqual("TestApp", actual[0].Value);
-            Assert.AreEqual("@Phrase", actual[1].ParameterName);
+            Assert.AreEqual("@phrase", actual[1].ParameterName);
             Assert.AreEqual("TestPhrase", actual[1].Value);
         }
 
@@ -1592,13 +1592,13 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("applicationSetting", model, 1);
 
             Assert.AreEqual(4, actual.Length);
-            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Name", actual[1].ParameterName);
+            Assert.AreEqual("@name", actual[1].ParameterName);
             Assert.AreEqual("TestSetting", actual[1].Value);
-            Assert.AreEqual("@Type", actual[2].ParameterName);
+            Assert.AreEqual("@type", actual[2].ParameterName);
             Assert.AreEqual("String", actual[2].Value);
-            Assert.AreEqual("@Required", actual[3].ParameterName);
+            Assert.AreEqual("@required", actual[3].ParameterName);
             Assert.AreEqual(true, actual[3].Value);
         }
 
@@ -1615,7 +1615,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("authorisation", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@Phrase", actual[0].ParameterName);
+            Assert.AreEqual("@phrase", actual[0].ParameterName);
             Assert.AreEqual("TestPhrase", actual[0].Value);
         }
 
@@ -1632,7 +1632,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("component", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("@name", actual[0].ParameterName);
             Assert.AreEqual("TestComponent", actual[0].Value);
         }
 
@@ -1650,9 +1650,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("connection", model);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@IPAddress", actual[0].ParameterName);
+            Assert.AreEqual("@ipAddress", actual[0].ParameterName);
             Assert.AreEqual("192.168.1.1", actual[0].Value);
-            Assert.AreEqual("@Port", actual[1].ParameterName);
+            Assert.AreEqual("@port", actual[1].ParameterName);
             Assert.AreEqual(8080, actual[1].Value);
         }
 
@@ -1670,9 +1670,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("downtime", model);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@Time", actual[0].ParameterName);
+            Assert.AreEqual("@time", actual[0].ParameterName);
             Assert.AreEqual("03:00:00", actual[0].Value);
-            Assert.AreEqual("@Duration", actual[1].ParameterName);
+            Assert.AreEqual("@duration", actual[1].ParameterName);
             Assert.AreEqual(60, actual[1].Value);
         }
 
@@ -1690,9 +1690,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("game", model);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("@name", actual[0].ParameterName);
             Assert.AreEqual("TestGame", actual[0].Value);
-            Assert.AreEqual("@Version", actual[1].ParameterName);
+            Assert.AreEqual("@version", actual[1].ParameterName);
             Assert.AreEqual("1.0", actual[1].Value);
         }
 
@@ -1709,7 +1709,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("machine", model);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@HostName", actual[0].ParameterName);
+            Assert.AreEqual("@hostName", actual[0].ParameterName);
             Assert.AreEqual("TestMachine", actual[0].Value);
         }
 
@@ -1741,9 +1741,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("application", model, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Name", actual[1].ParameterName);
+            Assert.AreEqual("@name", actual[1].ParameterName);
             Assert.AreEqual("TestApp", actual[1].Value);
         }
 
@@ -1762,13 +1762,13 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("applicationSetting", model, 1);
 
             Assert.AreEqual(4, actual.Length);
-            Assert.AreEqual("@ApplicationSettingId", actual[0].ParameterName);
+            Assert.AreEqual("@applicationSettingId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Name", actual[1].ParameterName);
+            Assert.AreEqual("@name", actual[1].ParameterName);
             Assert.AreEqual("TestSetting", actual[1].Value);
-            Assert.AreEqual("@Type", actual[2].ParameterName);
+            Assert.AreEqual("@type", actual[2].ParameterName);
             Assert.AreEqual("String", actual[2].Value);
-            Assert.AreEqual("@Required", actual[3].ParameterName);
+            Assert.AreEqual("@required", actual[3].ParameterName);
             Assert.AreEqual(true, actual[3].Value);
         }
 
@@ -1785,9 +1785,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("authorisation", model, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@PhraseId", actual[0].ParameterName);
+            Assert.AreEqual("@phraseId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Phrase", actual[1].ParameterName);
+            Assert.AreEqual("@phrase", actual[1].ParameterName);
             Assert.AreEqual("TestPhrase", actual[1].Value);
         }
 
@@ -1804,9 +1804,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("component", model, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@ComponentId", actual[0].ParameterName);
+            Assert.AreEqual("@componentId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Name", actual[1].ParameterName);
+            Assert.AreEqual("@name", actual[1].ParameterName);
             Assert.AreEqual("TestComponent", actual[1].Value);
         }
 
@@ -1824,11 +1824,11 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("connection", model, 1);
 
             Assert.AreEqual(3, actual.Length);
-            Assert.AreEqual("@ConnectionId", actual[0].ParameterName);
+            Assert.AreEqual("@connectionId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@IPAddress", actual[1].ParameterName);
+            Assert.AreEqual("@ipAddress", actual[1].ParameterName);
             Assert.AreEqual("192.168.1.1", actual[1].Value);
-            Assert.AreEqual("@Port", actual[2].ParameterName);
+            Assert.AreEqual("@port", actual[2].ParameterName);
             Assert.AreEqual(8080, actual[2].Value);
         }
 
@@ -1846,11 +1846,11 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("downtime", model, 1);
 
             Assert.AreEqual(3, actual.Length);
-            Assert.AreEqual("@DowntimeId", actual[0].ParameterName);
+            Assert.AreEqual("@downtimeId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Time", actual[1].ParameterName);
+            Assert.AreEqual("@time", actual[1].ParameterName);
             Assert.AreEqual("03:00:00", actual[1].Value);
-            Assert.AreEqual("@Duration", actual[2].ParameterName);
+            Assert.AreEqual("@duration", actual[2].ParameterName);
             Assert.AreEqual(60, actual[2].Value);
         }
 
@@ -1868,11 +1868,11 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("game", model, 1);
 
             Assert.AreEqual(3, actual.Length);
-            Assert.AreEqual("@GameId", actual[0].ParameterName);
+            Assert.AreEqual("@gameId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@Name", actual[1].ParameterName);
+            Assert.AreEqual("@name", actual[1].ParameterName);
             Assert.AreEqual("TestGame", actual[1].Value);
-            Assert.AreEqual("@Version", actual[2].ParameterName);
+            Assert.AreEqual("@version", actual[2].ParameterName);
             Assert.AreEqual("1.0", actual[2].Value);
         }
 
@@ -1889,9 +1889,9 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("machine", model, 1);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@MachineId", actual[0].ParameterName);
+            Assert.AreEqual("@machineId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
-            Assert.AreEqual("@HostName", actual[1].ParameterName);
+            Assert.AreEqual("@hostName", actual[1].ParameterName);
             Assert.AreEqual("TestMachine", actual[1].Value);
         }
 

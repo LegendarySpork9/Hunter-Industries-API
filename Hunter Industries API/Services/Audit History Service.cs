@@ -53,14 +53,14 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\LogRequest.sql");
                 SqlParameter[] sqlParameters =
                 {
-                    new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress },
-                    new SqlParameter("@EndpointID", SqlDbType.Int) { Value = endpointId },
-                    new SqlParameter("@EndpointVersionId", SqlDbType.Int) { Value = endpointVersionId },
-                    new SqlParameter("@MethodID", SqlDbType.Int) { Value = methodId },
-                    new SqlParameter("@StatusID", SqlDbType.Int) { Value = statusId },
-                    new SqlParameter("@Parameters", SqlDbType.VarChar) { Value = (object)formattedParameters ?? DBNull.Value },
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = (object)username ?? DBNull.Value },
-                    new SqlParameter("@ApplicationName", SqlDbType.VarChar) { Value = (object)applicationName ?? DBNull.Value }
+                    new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress },
+                    new SqlParameter("@endpointID", SqlDbType.Int) { Value = endpointId },
+                    new SqlParameter("@endpointVersionId", SqlDbType.Int) { Value = endpointVersionId },
+                    new SqlParameter("@methodID", SqlDbType.Int) { Value = methodId },
+                    new SqlParameter("@statusID", SqlDbType.Int) { Value = statusId },
+                    new SqlParameter("@parameters", SqlDbType.VarChar) { Value = (object)formattedParameters ?? DBNull.Value },
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = (object)username ?? DBNull.Value },
+                    new SqlParameter("@applicationName", SqlDbType.VarChar) { Value = (object)applicationName ?? DBNull.Value }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, sqlParameters);
@@ -102,11 +102,11 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\LogLoginAttempt.sql");
                 SqlParameter[] sqlParameters =
                 {
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = (object)username ?? DBNull.Value },
-                    new SqlParameter("@Password", SqlDbType.VarChar) { Value = (object)password ?? DBNull.Value },
-                    new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = (object)phrase ?? DBNull.Value },
-                    new SqlParameter("@AuditID", SqlDbType.Int) { Value = auditId },
-                    new SqlParameter("@IsSuccessful", SqlDbType.Bit) { Value = isSuccessful }
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = (object)username ?? DBNull.Value },
+                    new SqlParameter("@password", SqlDbType.VarChar) { Value = (object)password ?? DBNull.Value },
+                    new SqlParameter("@phrase", SqlDbType.VarChar) { Value = (object)phrase ?? DBNull.Value },
+                    new SqlParameter("@auditID", SqlDbType.Int) { Value = auditId },
+                    new SqlParameter("@isSuccessful", SqlDbType.Bit) { Value = isSuccessful }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, sqlParameters);
@@ -142,56 +142,56 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistory.sql");
                 List<SqlParameter> parameterList = new List<SqlParameter>
                 {
-                    new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                    new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                    new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                    new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
 
                 if (auditId != 0)
                 {
-                    sql += "\nand AH.AuditID = @AuditId";
-                    parameterList.Add(new SqlParameter("@AuditId", SqlDbType.Int) { Value = auditId });
+                    sql += "\nand AH.AuditID = @auditId";
+                    parameterList.Add(new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId });
                 }
 
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
-                    sql += "\nand AH.IPAddress = @IPAddress";
-                    parameterList.Add(new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress });
+                    sql += "\nand AH.IPAddress = @ipAddress";
+                    parameterList.Add(new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress });
                 }
 
                 if (!string.IsNullOrEmpty(endpoint))
                 {
-                    sql += "\nand E.Value = @Endpoint";
-                    parameterList.Add(new SqlParameter("@Endpoint", SqlDbType.VarChar) { Value = endpoint });
+                    sql += "\nand E.Value = @endpoint";
+                    parameterList.Add(new SqlParameter("@endpoint", SqlDbType.VarChar) { Value = endpoint });
                 }
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    sql += "\nand AU2.Username = @Username";
-                    parameterList.Add(new SqlParameter("@Username", SqlDbType.VarChar) { Value = username });
+                    sql += "\nand AU2.Username = @username";
+                    parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
                 if (!string.IsNullOrEmpty(application))
                 {
-                    sql += "\nand App.[Name] = @Application";
-                    parameterList.Add(new SqlParameter("@Application", SqlDbType.VarChar) { Value = application });
+                    sql += "\nand App.[Name] = @application";
+                    parameterList.Add(new SqlParameter("@application", SqlDbType.VarChar) { Value = application });
                 }
 
                 if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate != _Clock.DefaultDate)
                 {
-                    sql += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
-                    parameterList.Add(new SqlParameter("@FromDate", SqlDbType.DateTime) { Value = fromDate });
+                    sql += "\nand AH.DateOccured >= cast(@fromDate as datetime)";
+                    parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
                 if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
                 {
-                    sql += "\nand AH.DateOccured < cast(@ToDate as datetime)";
-                    parameterList.Add(new SqlParameter("@ToDate", SqlDbType.DateTime) { Value = toDate });
+                    sql += "\nand AH.DateOccured < cast(@toDate as datetime)";
+                    parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
                 }
 
                 sql += @"
 order by AH.AuditID asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
 
                 (List<AuditHistoryRecord> results, Exception ex) = await _Database.Query(sql, reader =>
                 {
@@ -327,38 +327,38 @@ fetch next @PageSize rows only";
 
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
-                    sql += "\nand AH.IPAddress = @IPAddress";
-                    parameterList.Add(new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress });
+                    sql += "\nand AH.IPAddress = @ipAddress";
+                    parameterList.Add(new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress });
                 }
 
                 if (!string.IsNullOrEmpty(endpoint))
                 {
-                    sql += "\nand E.Value = @Endpoint";
-                    parameterList.Add(new SqlParameter("@Endpoint", SqlDbType.VarChar) { Value = endpoint });
+                    sql += "\nand E.Value = @endpoint";
+                    parameterList.Add(new SqlParameter("@endpoint", SqlDbType.VarChar) { Value = endpoint });
                 }
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    sql += "\nand AU2.Username = @Username";
-                    parameterList.Add(new SqlParameter("@Username", SqlDbType.VarChar) { Value = username });
+                    sql += "\nand AU2.Username = @username";
+                    parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
                 if (!string.IsNullOrEmpty(application))
                 {
-                    sql += "\nand App.[Name] = @Application";
-                    parameterList.Add(new SqlParameter("@Application", SqlDbType.VarChar) { Value = application });
+                    sql += "\nand App.[Name] = @application";
+                    parameterList.Add(new SqlParameter("@application", SqlDbType.VarChar) { Value = application });
                 }
 
                 if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate != _Clock.DefaultDate)
                 {
-                    sql += "\nand AH.DateOccured >= cast(@FromDate as datetime)";
-                    parameterList.Add(new SqlParameter("@FromDate", SqlDbType.DateTime) { Value = fromDate });
+                    sql += "\nand AH.DateOccured >= cast(@fromDate as datetime)";
+                    parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
                 if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
                 {
-                    sql += "\nand AH.DateOccured < cast(@ToDate as datetime)";
-                    parameterList.Add(new SqlParameter("@ToDate", SqlDbType.DateTime) { Value = toDate });
+                    sql += "\nand AH.DateOccured < cast(@toDate as datetime)";
+                    parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
                 }
 
                 (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());

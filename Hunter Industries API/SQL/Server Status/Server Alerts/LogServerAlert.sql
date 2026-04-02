@@ -1,7 +1,7 @@
 insert into ServerAlert (ServerInformationId, UserSettingId, ComponentId, ComponentStatusId, AlertStatusId, DateOccured)
 output inserted.ServerAlertId
 select
-	@ServerId,
+	@serverId,
 	US.UserSettingId,
 	C.ComponentId,
 	CS.ComponentStatusId,
@@ -9,9 +9,9 @@ select
 	GETUTCDATE()
 from UserSetting US with (nolock)
 join [Application] A with (nolock) on A.ApplicationId = US.ApplicationId
-	and A.[Name] = @Application
-join Component C with (nolock) on C.[Name] = @Component
-join ComponentStatus CS with (nolock) on CS.[Value] = @ComponentStatus
-join ServerAlertStatus SAS with (nolock) on SAS.[Value] = @AlertStatus
+	and A.[Name] = @application
+join Component C with (nolock) on C.[Name] = @component
+join ComponentStatus CS with (nolock) on CS.[Value] = @componentStatus
+join ServerAlertStatus SAS with (nolock) on SAS.[Value] = @alertStatus
 where US.[Name] = 'DiscordName'
-and US.[Value] = @Reporter
+and US.[Value] = @reporter

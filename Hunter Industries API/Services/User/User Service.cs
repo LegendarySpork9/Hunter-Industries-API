@@ -51,14 +51,14 @@ namespace HunterIndustriesAPI.Services.User
 
                 if (id != 0)
                 {
-                    sql += "\nand UserID = @Id";
-                    parameterList.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
+                    sql += "\nand UserID = @id";
+                    parameterList.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
                 }
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    sql += "\nand Username = @Username";
-                    parameterList.Add(new SqlParameter("@Username", SqlDbType.VarChar) { Value = username });
+                    sql += "\nand Username = @username";
+                    parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
                 (List<(int, string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetInt32(0), reader.GetString(1), reader.GetString(2)), parameterList.ToArray());
@@ -107,11 +107,11 @@ namespace HunterIndustriesAPI.Services.User
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserExists.sql");
-                sql += "\nand Username = @Username";
+                sql += "\nand Username = @username";
 
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = username }
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = username }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -152,11 +152,11 @@ namespace HunterIndustriesAPI.Services.User
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserExists.sql");
-                sql += "\nand UserID = @Id";
+                sql += "\nand UserID = @id";
 
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -200,8 +200,8 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\CreateUser.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = username },
-                    new SqlParameter("@Password", SqlDbType.VarChar) { Value = HashFunction.HashString(password) }
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
+                    new SqlParameter("@password", SqlDbType.VarChar) { Value = HashFunction.HashString(password) }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
@@ -256,8 +256,8 @@ namespace HunterIndustriesAPI.Services.User
                 {
                     SqlParameter[] parameters =
                     {
-                        new SqlParameter("@UserID", SqlDbType.Int) { Value = id },
-                        new SqlParameter("@Scope", SqlDbType.VarChar) { Value = scope }
+                        new SqlParameter("@userID", SqlDbType.Int) { Value = id },
+                        new SqlParameter("@scope", SqlDbType.VarChar) { Value = scope }
                     };
 
                     (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
@@ -305,14 +305,14 @@ namespace HunterIndustriesAPI.Services.User
 
                 if (id != 0)
                 {
-                    sql += "\nand APIUser.UserID = @Id";
-                    parameterList.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
+                    sql += "\nand APIUser.UserID = @id";
+                    parameterList.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
                 }
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    sql += "\nand APIUser.Username = @Username";
-                    parameterList.Add(new SqlParameter("@Username", SqlDbType.VarChar) { Value = username });
+                    sql += "\nand APIUser.Username = @username";
+                    parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
                 (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(0), parameterList.ToArray());
@@ -426,8 +426,8 @@ namespace HunterIndustriesAPI.Services.User
                 {
                     SqlParameter[] parameters =
                     {
-                        new SqlParameter("@UserID", SqlDbType.Int) { Value = id },
-                        new SqlParameter("@Scope", SqlDbType.VarChar) { Value = scope }
+                        new SqlParameter("@userID", SqlDbType.Int) { Value = id },
+                        new SqlParameter("@scope", SqlDbType.VarChar) { Value = scope }
                     };
 
                     (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
@@ -473,7 +473,7 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserDeleted.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@userID", SqlDbType.Int) { Value = id }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

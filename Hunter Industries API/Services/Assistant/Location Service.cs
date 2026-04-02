@@ -48,8 +48,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Location\GetAssistantLocation.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (LocationResponseModel result, Exception ex) = await _Database.QuerySingle(sql, reader => new LocationResponseModel()
@@ -99,28 +99,28 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 if (string.IsNullOrEmpty(hostName))
                 {
-                    sql = sql.Replace("HostName = @HostName, ", "");
+                    sql = sql.Replace("HostName = @hostName, ", "");
                 }
 
                 if (string.IsNullOrEmpty(ipAddress))
                 {
-                    sql = sql.Replace(", IPAddress = @IPAddress", "");
+                    sql = sql.Replace(", IPAddress = @ipAddress", "");
                 }
 
                 List<SqlParameter> parameterList = new List<SqlParameter>
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@idNumber", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 if (!string.IsNullOrEmpty(hostName))
                 {
-                    parameterList.Add(new SqlParameter("@HostName", SqlDbType.VarChar) { Value = hostName });
+                    parameterList.Add(new SqlParameter("@hostName", SqlDbType.VarChar) { Value = hostName });
                 }
 
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
-                    parameterList.Add(new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress });
+                    parameterList.Add(new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress });
                 }
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameterList.ToArray());
