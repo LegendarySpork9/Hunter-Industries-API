@@ -6,7 +6,7 @@ namespace HunterIndustriesAPI.Functions
 {
     /// <summary>
     /// </summary>
-    public static class ClaimFunctions
+    public static class ClaimFunction
     {
         /// <summary>
         /// Extracts the username from the claims principal.

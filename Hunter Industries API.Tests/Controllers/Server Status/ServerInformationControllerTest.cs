@@ -59,7 +59,7 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
                     Game = "Minecraft",
                     GameVersion = "1.7.10",
                     Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
-                    Downtime = new DowntimeRecord { Time = "02:00:00" },
+                    Downtime = new DowntimeRecord { Time = "02:00:00", Duration = 60 },
                     IsActive = true
                 }
             }, null));
@@ -126,7 +126,8 @@ namespace HunterIndustriesAPI.Tests.Controllers.ServerStatus
                 GameVersion = "1.7.10",
                 IPAddress = "127.0.0.1",
                 Port = 25565,
-                Time = "02:00:00"
+                Time = "02:00:00",
+                Duration = 60
             });
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;

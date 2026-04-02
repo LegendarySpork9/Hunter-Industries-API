@@ -494,6 +494,101 @@
              </remarks>
              <param name="request">The application identifier.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ConfigurationController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get">
+             <summary>
+             Returns a list of configuration entities.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get(System.String,System.Int32,System.Int32,System.Int32)">
+             <summary>
+             Returns a collection of records.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration/application
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="entityId">The id number of the parent entity record.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get(System.String,System.Int32)">
+             <summary>
+             Returns the record matching the given id.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration/application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the record.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Post(System.String,System.Object,System.Int32)">
+             <summary>
+             Creates a new record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 POST /configuration/application
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "Name": "Test",
+                     "Phrase": "This is a test phrase."
+                 }
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="entityId">The id number of the parent entity record.</param>
+             <param name="request">An object containing the record information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Patch(System.String,System.Int32,System.Object)">
+             <summary>
+             Updates the details of the record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 PATCH /configuration/application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "Name": "TestApplication"
+                 }
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the record.</param>
+             <param name="request">An object containing the record data.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Delete(System.String,System.Int32)">
+             <summary>
+             Deletes the record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 Delete /configuration/Application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the user.</param>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.User.UserController">
             <summary>
             </summary>
@@ -509,7 +604,7 @@
              <remarks>
              Sample Request:
             
-                 GET /User?Username=TestUser
+                 GET /user?Username=TestUser
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
         </member>
@@ -520,7 +615,7 @@
              <remarks>
              Sample Request:
             
-                 GET /User/1
+                 GET /user/1
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the user.</param>
@@ -589,7 +684,7 @@
              <remarks>
              Sample Request:
             
-                 GET /UserSettings/1?application=test
+                 GET /usersettings/1?application=test
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the user.</param>
@@ -656,6 +751,95 @@
         <member name="M:HunterIndustriesAPI.Converters.AuditHistoryConverter.GetStatusID(System.String)">
             <summary>
             Returns the status id number.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Converters.ConfigurationConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGet(System.String)">
+            <summary>
+            Returns the Getx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGetPagination(System.String)">
+            <summary>
+            Returns the Getx pagination sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGetTotal(System.String)">
+            <summary>
+            Returns the GetTotalx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLExists(System.String)">
+            <summary>
+            Returns the xExists sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLFilter(System.String)">
+            <summary>
+            Returns the xExists sql filter.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLFilterId(System.String)">
+            <summary>
+            Returns the xExists sql filter.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLCreate(System.String)">
+            <summary>
+            Returns the Createx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLUpdated(System.String)">
+            <summary>
+            Returns the xUpdated sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLDelete(System.String)">
+            <summary>
+            Returns the Deletex sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersGet(System.String,System.Int32,System.Int32)">
+            <summary>
+            Returns the parameters for the paginated Getx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersGetSingle(System.String,System.Int32)">
+            <summary>
+            Returns the parameters for the Getx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns the parameters for the xExists sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Int32)">
+            <summary>
+            Returns the parameters for the xExists sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersCreate(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns the parameters for the Createx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersUpdated(System.String,System.Object,System.Int32)">
+            <summary>
+            Returns the parameters for the xUpdated sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetDataReaderMappings(System.String)">
+            <summary>
+            Returns the data reader mappings for the given entity.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetRequestObject(System.String,System.Object)">
+            <summary>
+            Returns the request model in the correct format.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.StandardValues">
@@ -846,40 +1030,44 @@
             Creates the route for the given context.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
-            <summary>
-            Maps broad database scopes to granular internal permissions.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Returns all granular permissions granted by the given broad scopes.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
-            <summary>
-            Checks if the given permissions contain any that match the required permission.
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunctions">
+        <member name="T:HunterIndustriesAPI.Functions.ConfigurationFunction">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.AuditHistoryFunctions.ExtractVersionFromRequest(System.Net.Http.HttpRequestMessage)">
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanParameterArray(System.Object,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Removes any null properties from the SQL parameter list.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanSQL(System.Object,System.String)">
+            <summary>
+            Removes any null properties from the SQL.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.GetProperties(System.Object)">
+            <summary>
+            Returns all the properties in the model.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.AuditHistoryFunction.ExtractVersionFromRequest(System.Net.Http.HttpRequestMessage)">
             <summary>
             Extracts the API version from the request URL.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Functions.ClaimFunctions">
+        <member name="T:HunterIndustriesAPI.Functions.ClaimFunction">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ClaimFunctions.GetUsername(System.Security.Claims.ClaimsPrincipal)">
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunction.GetUsername(System.Security.Claims.ClaimsPrincipal)">
             <summary>
             Extracts the username from the claims principal.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ClaimFunctions.GetApplicationName(System.Security.Claims.ClaimsPrincipal)">
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunction.GetApplicationName(System.Security.Claims.ClaimsPrincipal)">
             <summary>
             Extracts the application name from the claims principal.
             </summary>
@@ -897,7 +1085,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String,System.Object,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.String,System.Object)">
             <summary>
             Converts the parameters from the stored SQL format to the output format or converts the model into a string array.
             </summary>
@@ -907,7 +1095,7 @@
             Converts the parameters into a log/SQL friendly format.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object)">
             <summary>
             Converts the model into a log friendly format.
             </summary>
@@ -920,6 +1108,11 @@
         <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Collections.Generic.List{System.Object},System.Boolean)">
             <summary>
             Converts the list into a SQL friendly format.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.String[])">
+            <summary>
+            Converts the model into a string array.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.ResponseFunction">
@@ -952,6 +1145,65 @@
         <member name="M:HunterIndustriesAPI.Functions.UserFunction.GetScopesUpdateList(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
             <summary>
             Compares the scopes and generates the update list.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ApplicationMapper">
+            <summary>
+            The SQL row to model mappings for the application record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ApplicationSettingMapper">
+            <summary>
+            The SQL row to model mappings for the application setting record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.AuthorisationMapper">
+            <summary>
+            The SQL row to model mappings for the authorisation record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ComponentMapper">
+            <summary>
+            The SQL row to model mappings for the component record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ConnectionMapper">
+            <summary>
+            The SQL row to model mappings for the connection record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.DowntimeMapper">
+            <summary>
+            The SQL row to model mappings for the downtime record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.GameMapper">
+            <summary>
+            The SQL row to model mappings for the game record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.MachineMapper">
+            <summary>
+            The SQL row to model mappings for the machine record.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
+            <summary>
+            Maps broad database scopes to granular internal permissions.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns all granular permissions granted by the given broad scopes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Checks if the given permissions contain any that match the required permission.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.WebApiApplication">
@@ -1130,6 +1382,108 @@
             The version of the assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel.Name">
+            <summary>
+            The name of the application.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Name">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Type">
+            <summary>
+            The data type of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Required">
+            <summary>
+            Whether the setting is required.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.AuthorisationModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.AuthorisationModel.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ComponentModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ComponentModel.Name">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel.IPAddress">
+            <summary>
+            The ip address of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel.Port">
+            <summary>
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel.Time">
+            <summary>
+            The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel.Name">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel.Version">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.MachineModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.MachineModel.HostName">
+            <summary>
+            The name of the machine.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel">
             <summary>
             </summary>
@@ -1264,6 +1618,11 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Time">
             <summary>
             The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel">
@@ -1505,6 +1864,40 @@
             The version of the assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.Entries">
+            <summary>
+            The configuration records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel">
             <summary>
             </summary>
@@ -1664,6 +2057,193 @@
             The valid secret key of the token.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.MachineRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.HostName">
+            <summary>
+            The name of the machine.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.GameRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Name">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Version">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Time">
+            <summary>
+            The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.IPAddress">
+            <summary>
+            The ip address of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.Port">
+            <summary>
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ComponentRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.Name">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Name">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Type">
+            <summary>
+            The data type of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Required">
+            <summary>
+            Whether the setting is required.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Name">
+            <summary>
+            The name of the application.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Authorisation">
+            <summary>
+            The authorisation record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Settings">
+            <summary>
+            The setting records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.ErrorLogRecord">
             <summary>
             </summary>
@@ -1714,6 +2294,11 @@
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord.Time">
             <summary>
             The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord">
@@ -2210,6 +2795,49 @@
         <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.String,System.String,System.String)">
             <summary>
             Creates a record in the Change table.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.ConfigurationService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetRecords(System.String,System.Int32,System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            Returns all records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetTotalRecord(System.String)">
+            <summary>
+            Returns the number of records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns whether a record already exists with the given parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Int32)">
+            <summary>
+            Returns whether a record already exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordCreated(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Creates the record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordUpdated(System.String,System.Int32,System.Object)">
+            <summary>
+            Updates the details of the given record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordDeleted(System.String,System.Int32)">
+            <summary>
+            Sets the record to deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ErrorLogService">

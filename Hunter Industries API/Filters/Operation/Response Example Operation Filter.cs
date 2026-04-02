@@ -1,4 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
 using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Controllers.User;
@@ -114,6 +115,77 @@ namespace HunterIndustriesAPI.Filters.Operation
                                 {
                                     type = "string",
                                     example = "A server with the details provided already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ConfigurationController))
+            {
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "GetConfiguration")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "ConfigurationObjects", new Schema
+                                {
+                                    type = "array",
+                                    example = new string[]
+                                    {
+                                        "application",
+                                        "applicationSetting",
+                                        "authorisation",
+                                        "component",
+                                        "connection",
+                                        "downtime",
+                                        "game",
+                                        "machine"
+                                    },
+                                    items = new Schema
+                                    {
+                                        type = "string"
+                                    }
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Configuration_Post")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "A record with the details already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Configuration_Delete")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "The given record has been deleted."
                                 }
                             }
                         }

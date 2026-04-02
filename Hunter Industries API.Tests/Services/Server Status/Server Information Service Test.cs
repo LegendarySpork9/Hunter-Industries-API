@@ -45,7 +45,7 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
                         Game = "TestGame",
                         GameVersion = "1.0",
                         Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
-                        Downtime = new DowntimeRecord { Time = "03:00" },
+                        Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
                         IsActive = true
                     }
                 }, null));
@@ -61,6 +61,8 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
             Assert.AreEqual("1.0", actual[0].GameVersion);
             Assert.AreEqual("127.0.0.1", actual[0].Connection.IPAddress);
             Assert.AreEqual(25565, actual[0].Connection.Port);
+            Assert.AreEqual("03:00", actual[0].Downtime.Time);
+            Assert.AreEqual(60, actual[0].Downtime.Duration);
             Assert.IsTrue(actual[0].IsActive);
         }
 
@@ -139,7 +141,8 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
                 GameVersion = "1.0",
                 IPAddress = "127.0.0.1",
                 Port = 25565,
-                Time = "03:00"
+                Time = "03:00",
+                Duration = 60
             });
 
             Assert.IsTrue(added);
@@ -165,7 +168,8 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
                 GameVersion = "1.0",
                 IPAddress = "127.0.0.1",
                 Port = 25565,
-                Time = "03:00"
+                Time = "03:00",
+                Duration = 60
             });
 
             Assert.IsFalse(added);

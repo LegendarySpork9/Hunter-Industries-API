@@ -139,7 +139,7 @@ namespace HunterIndustriesAPI.Services
 
             if (allRequired)
             {
-                valid = validProperties.All(isValid => isValid);
+                valid = validProperties.Length > 0 && validProperties.All(isValid => isValid);
             }
 
             else

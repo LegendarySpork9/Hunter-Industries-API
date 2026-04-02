@@ -86,6 +86,13 @@ GO
 
 PRINT('Added Foreign Key to EndpointVersionId Field')
 
+ALTER TABLE [dbo].[Change] DROP CONSTRAINT [FK_Change_Endpoint]
+GO
+
+ALTER TABLE [Change] DROP COLUMN [EndpointId]
+
+PRINT('Removed EndpointId from Change Table')
+
 INSERT INTO EndpointVersion([Value])
 VALUES ('v2.0')
 
@@ -123,6 +130,77 @@ ALTER TABLE [dbo].[AuditHistory] CHECK CONSTRAINT [FK_AuditHistory_Application]
 GO
 
 PRINT('Added Foreign Key to ApplicationId Field')
+
+INSERT INTO [Endpoint]([Value])
+VALUES ('/configuration')
+
+PRINT('Added Configuration Endpoint')
+
+CREATE TABLE [dbo].[ApplicationSetting](
+	[ApplicationSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[ApplicationId] [int] NOT NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Type] [varchar](20) NOT NULL,
+	[Required] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
+ CONSTRAINT [PK_ApplicationSetting] PRIMARY KEY CLUSTERED 
+(
+	[ApplicationSettingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ApplicationSetting] ADD  CONSTRAINT [DF_ApplicationSetting_Required]  DEFAULT ((0)) FOR [Required]
+GO
+
+ALTER TABLE [dbo].[ApplicationSetting] ADD  CONSTRAINT [DF_ApplicationSetting_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
+
+ALTER TABLE [dbo].[ApplicationSetting]  WITH CHECK ADD  CONSTRAINT [FK_ApplicationSetting_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
+GO
+
+ALTER TABLE [dbo].[ApplicationSetting] CHECK CONSTRAINT [FK_ApplicationSetting_Application]
+GO
+
+PRINT('ApplicationSetting Table Added')
+
+ALTER TABLE [Application] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Application Table')
+
+ALTER TABLE [Authorisation] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Authorisation Table')
+
+ALTER TABLE [Component] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Component Table')
+
+ALTER TABLE [Connection] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Connection Table')
+
+ALTER TABLE [Downtime] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Downtime Table')
+
+ALTER TABLE [Game] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Game Table')
+
+ALTER TABLE [Machine] ADD [IsDeleted] [bit] NOT NULL DEFAULT(0)
+
+PRINT('Added IsDeleted Field to Machine Table')
+
+ALTER TABLE Downtime ADD [Duration] [int] NULL
+GO
+
+UPDATE Downtime SET Duration = 0
+
+ALTER TABLE Downtime ALTER COLUMN [Duration] [int] NOT NULL
+
+PRINT('Added Duration Field to Downtime Table')
 
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())

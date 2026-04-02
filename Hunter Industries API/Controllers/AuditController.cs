@@ -68,8 +68,8 @@ namespace HunterIndustriesAPI.Controllers
             ModelValidationService _modelValidator = new ModelValidationService();
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
-            string username = ClaimFunctions.GetUsername(principal);
-            string applicationName = ClaimFunctions.GetApplicationName(principal);
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
 
             ResponseModel response;
 
@@ -87,7 +87,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(filters))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("BadRequest"), username, applicationName, ParameterFunction.FormatParameters(null, filters));
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("BadRequest"), username, applicationName, ParameterFunction.FormatParameters(null, filters));
 
                 response = new ResponseModel()
                 {
@@ -102,7 +102,7 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
                     new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.ToDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
             var result = await _auditHistoryService.GetAuditHistory(0, filters.IPAddress, filters.Endpoint, filters.Username, filters.Application, DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), DateTime.SpecifyKind(DateTime.ParseExact(filters.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), filters.PageSize, filters.PageNumber);
@@ -164,14 +164,14 @@ namespace HunterIndustriesAPI.Controllers
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
-            string username = ClaimFunctions.GetUsername(principal);
-            string applicationName = ClaimFunctions.GetApplicationName(principal);
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
 
             ResponseModel response;
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunctions.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
+            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
                     new string[] { id.ToString() });
 
             var result = await _auditHistoryService.GetAuditHistory(id, null, null, null, null, _Clock.DefaultDate, _Clock.DefaultDate, 25, 1);

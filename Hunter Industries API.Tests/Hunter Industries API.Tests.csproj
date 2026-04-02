@@ -124,13 +124,16 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ConfigurationControllerTest.cs" />
     <Compile Include="Controllers\ErrorControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Converters\Audit History Converter Test.cs" />
+    <Compile Include="Converters\Configuration Converter Test.cs" />
     <Compile Include="Converters\Token Converter Test.cs" />
     <Compile Include="Filters\Dependency Resolver Test.cs" />
-    <Compile Include="Functions\Audit History Functions Test.cs" />
-    <Compile Include="Functions\Claim Functions Test.cs" />
+    <Compile Include="Functions\Audit History Function Test.cs" />
+    <Compile Include="Functions\Claim Function Test.cs" />
+    <Compile Include="Functions\Configuration Function Test.cs" />
     <Compile Include="Functions\Hash Function Test.cs" />
     <Compile Include="Functions\Parameter Function Test.cs" />
     <Compile Include="Functions\Response Function Test.cs" />
@@ -142,6 +145,7 @@
     <Compile Include="Services\Token Service Test.cs" />
     <Compile Include="Services\Change Service Test.cs" />
     <Compile Include="Services\Audit History Service Test.cs" />
+    <Compile Include="Services\Configuration Service Test.cs" />
     <Compile Include="Services\Assistant\Config Service Test.cs" />
     <Compile Include="Services\Assistant\Deletion Service Test.cs" />
     <Compile Include="Services\Assistant\Location Service Test.cs" />

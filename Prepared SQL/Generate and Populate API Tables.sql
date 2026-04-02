@@ -12,14 +12,13 @@ CREATE TABLE [dbo].[APIUser](
 	[UserId] [int] IDENTITY(1,1) NOT NULL,
 	[Username] [varchar](255) NOT NULL,
 	[Password] [varchar](255) NOT NULL,
-	[IsDeleted] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_APIUser] PRIMARY KEY CLUSTERED 
 (
 	[UserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
 ALTER TABLE [dbo].[APIUser] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
@@ -32,11 +31,37 @@ CREATE TABLE [dbo].[Application](
 	[ApplicationId] [int] IDENTITY(1,1) NOT NULL,
 	[PhraseId] [int] NOT NULL,
 	[Name] [varchar](50) NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Applications] PRIMARY KEY CLUSTERED 
 (
 	[ApplicationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Application] ADD DEFAULT ((0)) FOR [IsDeleted]
+GO
+
+/****** Object:  Table [dbo].[ApplicationSetting]    Script Date: 25/03/2026 15:30:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ApplicationSetting](
+	[ApplicationSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[ApplicationId] [int] NOT NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Type] [varchar](20) NOT NULL,
+	[Required] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
+ CONSTRAINT [PK_ApplicationSetting] PRIMARY KEY CLUSTERED 
+(
+	[ApplicationSettingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[ApplicationSetting] ADD DEFAULT ((0)) FOR [Required]
+GO
+ALTER TABLE [dbo].[ApplicationSetting] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 /****** Object:  Table [dbo].[AuditHistory]    Script Date: 18/12/2024 21:19:28 ******/
@@ -54,7 +79,7 @@ CREATE TABLE [dbo].[AuditHistory](
 	[StatusId] [int] NOT NULL,
 	[IPAddress] [varchar](15) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
-	[Parameters] [varchar](max) NULL,
+	[Parameters] [varchar](max) NULL
  CONSTRAINT [PK_AuditHistory] PRIMARY KEY CLUSTERED 
 (
 	[AuditId] ASC
@@ -70,11 +95,14 @@ GO
 CREATE TABLE [dbo].[Authorisation](
 	[PhraseId] [int] IDENTITY(1,1) NOT NULL,
 	[Phrase] [varchar](max) NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Authorisation] PRIMARY KEY CLUSTERED 
 (
 	[PhraseId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Authorisation] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 /****** Object:  Table [dbo].[Change]    Script Date: 18/12/2024 21:19:28 ******/
@@ -84,11 +112,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Change](
 	[ChangeId] [int] IDENTITY(1,1) NOT NULL,
-	[EndpointId] [int] NOT NULL,
 	[AuditId] [int] NOT NULL,
 	[Field] [varchar](50) NOT NULL,
 	[OldValue] [varchar](255) NOT NULL,
-	[NewValue] [varchar](255) NOT NULL,
+	[NewValue] [varchar](255) NOT NULL
  CONSTRAINT [PK_Change] PRIMARY KEY CLUSTERED 
 (
 	[ChangeId] ASC
@@ -103,7 +130,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Endpoint](
 	[EndpointId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](50) NOT NULL,
+	[Value] [varchar](50) NOT NULL
  CONSTRAINT [PK_Endpoint] PRIMARY KEY CLUSTERED 
 (
 	[EndpointId] ASC
@@ -114,13 +141,11 @@ GO
 /****** Object:  Table [dbo].[EndpointVersion]    Script Date: 23/03/2026 14:01:26 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[EndpointVersion](
 	[EndpointVersionId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](10) NOT NULL,
+	[Value] [varchar](10) NOT NULL
  CONSTRAINT [PK_EndpointVersion] PRIMARY KEY CLUSTERED 
 (
 	[EndpointVersionId] ASC
@@ -138,7 +163,7 @@ CREATE TABLE [dbo].[ErrorLog](
 	[DateOccured] [datetime] NOT NULL,
 	[IPAddress] [varchar](15) NOT NULL,
 	[Summary] [varchar](255) NOT NULL,
-	[Message] [varchar](max) NOT NULL,
+	[Message] [varchar](max) NOT NULL
  CONSTRAINT [PK_ErrorLog] PRIMARY KEY CLUSTERED 
 (
 	[ErrorId] ASC
@@ -157,7 +182,7 @@ CREATE TABLE [dbo].[LoginAttempt](
 	[PhraseId] [int] NULL,
 	[AuditId] [int] NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
-	[IsSuccessful] [bit] NOT NULL,
+	[IsSuccessful] [bit] NOT NULL
  CONSTRAINT [PK_LoginAttempt] PRIMARY KEY CLUSTERED 
 (
 	[AttemptId] ASC
@@ -172,7 +197,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Method](
 	[MethodId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](6) NOT NULL,
+	[Value] [varchar](6) NOT NULL
  CONSTRAINT [PK_Methods] PRIMARY KEY CLUSTERED 
 (
 	[MethodId] ASC
@@ -187,7 +212,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Scope](
 	[ScopeId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](255) NOT NULL,
+	[Value] [varchar](255) NOT NULL
  CONSTRAINT [PK_Scope] PRIMARY KEY CLUSTERED 
 (
 	[ScopeId] ASC
@@ -202,7 +227,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[StatusCode](
 	[StatusId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](100) NOT NULL,
+	[Value] [varchar](100) NOT NULL
  CONSTRAINT [PK_StatusCode] PRIMARY KEY CLUSTERED 
 (
 	[StatusId] ASC
@@ -218,7 +243,7 @@ GO
 CREATE TABLE [dbo].[UserScope](
 	[UserScopeId] [int] IDENTITY(1,1) NOT NULL,
 	[UserId] [int] NOT NULL,
-	[ScopeId] [int] NOT NULL,
+	[ScopeId] [int] NOT NULL
  CONSTRAINT [PK_UserScope] PRIMARY KEY CLUSTERED 
 (
 	[UserScopeId] ASC
@@ -236,7 +261,7 @@ CREATE TABLE [dbo].[UserSetting](
 	[UserId] [int] NOT NULL,
 	[ApplicationId] [int] NOT NULL,
 	[Name] [varchar](255) NOT NULL,
-	[Value] [varchar](255) NOT NULL,
+	[Value] [varchar](255) NOT NULL
  CONSTRAINT [PK_UserSetting] PRIMARY KEY CLUSTERED 
 (
 	[UserSettingId] ASC
@@ -252,7 +277,7 @@ GO
 CREATE TABLE [dbo].[VersionHistory](
 	[VersionId] [int] IDENTITY(1,1) NOT NULL,
 	[ReleaseVersion] [varchar](11) NOT NULL,
-	[DateUpdated] [datetime] NOT NULL,
+	[DateUpdated] [datetime] NOT NULL
  CONSTRAINT [PK_VersionHistory] PRIMARY KEY CLUSTERED 
 (
 	[VersionId] ASC
@@ -274,7 +299,7 @@ CREATE TABLE [dbo].[AssistantInformation](
 	[VersionId] [int] NOT NULL,
 	[UserId] [int] NOT NULL,
 	[Name] [varchar](50) NOT NULL,
-	[IDNumber] [varchar](10) NOT NULL,
+	[IDNumber] [varchar](10) NOT NULL
  CONSTRAINT [PK_AssistantInformation] PRIMARY KEY CLUSTERED 
 (
 	[AssistantId] ASC
@@ -289,7 +314,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Deletion](
 	[StatusId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](5) NOT NULL,
+	[Value] [varchar](5) NOT NULL
  CONSTRAINT [PK_Deletion] PRIMARY KEY CLUSTERED 
 (
 	[StatusId] ASC
@@ -305,7 +330,7 @@ GO
 CREATE TABLE [dbo].[Location](
 	[LocationId] [int] IDENTITY(1,1) NOT NULL,
 	[HostName] [varchar](100) NOT NULL,
-	[IPAddress] [varchar](15) NOT NULL,
+	[IPAddress] [varchar](15) NOT NULL
  CONSTRAINT [PK_Location] PRIMARY KEY CLUSTERED 
 (
 	[LocationId] ASC
@@ -320,7 +345,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[User](
 	[UserId] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](50) NOT NULL,
+	[Name] [varchar](50) NOT NULL
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[UserId] ASC
@@ -335,7 +360,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Version](
 	[VersionId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](7) NULL,
+	[Value] [varchar](7) NULL
  CONSTRAINT [PK_Version] PRIMARY KEY CLUSTERED 
 (
 	[VersionId] ASC
@@ -353,11 +378,14 @@ GO
 CREATE TABLE [dbo].[Component](
 	[ComponentId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](17) NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Component] PRIMARY KEY CLUSTERED 
 (
 	[ComponentId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Component] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 /****** Object:  Table [dbo].[ComponentInformation]    Script Date: 17/05/2025 12:29:22 ******/
@@ -370,7 +398,7 @@ CREATE TABLE [dbo].[ComponentInformation](
 	[ServerInformationId] [int] NOT NULL,
 	[ComponentId] [int] NOT NULL,
 	[ComponentStatusId] [int] NOT NULL,
-	[DateOccured] [datetime] NOT NULL,
+	[DateOccured] [datetime] NOT NULL
  CONSTRAINT [PK_ComponentInformation] PRIMARY KEY CLUSTERED 
 (
 	[ComponentInformationId] ASC
@@ -385,7 +413,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ComponentStatus](
 	[ComponentStatusId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](7) NOT NULL,
+	[Value] [varchar](7) NOT NULL
  CONSTRAINT [PK_ComponentStatus] PRIMARY KEY CLUSTERED 
 (
 	[ComponentStatusId] ASC
@@ -396,54 +424,58 @@ GO
 /****** Object:  Table [dbo].[Connection]    Script Date: 14/08/2025 20:59:26 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[Connection](
 	[ConnectionId] [int] IDENTITY(1,1) NOT NULL,
 	[IPAddress] [varchar](50) NOT NULL,
 	[Port] [int] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Connection] PRIMARY KEY CLUSTERED 
 (
 	[ConnectionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+ALTER TABLE [dbo].[Connection] ADD DEFAULT ((0)) FOR [IsDeleted]
+GO
 
 /****** Object:  Table [dbo].[Downtime]    Script Date: 14/08/2025 20:59:47 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[Downtime](
 	[DowntimeId] [int] IDENTITY(1,1) NOT NULL,
 	[Time] [varchar](8) NOT NULL,
+	[Duration] [int] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Downtime] PRIMARY KEY CLUSTERED 
 (
 	[DowntimeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+ALTER TABLE [dbo].[Downtime] ADD DEFAULT ((0)) FOR [IsDeleted]
+GO
 
 /****** Object:  Table [dbo].[Game]    Script Date: 14/08/2025 21:00:01 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[Game](
 	[GameId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](255) NOT NULL,
 	[Version] [varchar](20) NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Game] PRIMARY KEY CLUSTERED 
 (
 	[GameId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Game] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 /****** Object:  Table [dbo].[Machine]    Script Date: 17/05/2025 12:29:22 ******/
@@ -454,11 +486,14 @@ GO
 CREATE TABLE [dbo].[Machine](
 	[MachineId] [int] IDENTITY(1,1) NOT NULL,
 	[HostName] [varchar](255) NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Machine] PRIMARY KEY CLUSTERED 
 (
 	[MachineId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Machine] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 /****** Object:  Table [dbo].[ServerAlert]    Script Date: 17/05/2025 12:29:22 ******/
@@ -473,7 +508,7 @@ CREATE TABLE [dbo].[ServerAlert](
 	[ComponentId] [int] NOT NULL,
 	[ComponentStatusId] [int] NOT NULL,
 	[AlertStatusId] [int] NOT NULL,
-	[DateOccured] [datetime] NOT NULL,
+	[DateOccured] [datetime] NOT NULL
  CONSTRAINT [PK_ServerAlert] PRIMARY KEY CLUSTERED 
 (
 	[ServerAlertId] ASC
@@ -488,7 +523,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ServerAlertStatus](
 	[AlertStatusId] [int] IDENTITY(1,1) NOT NULL,
-	[Value] [varchar](13) NOT NULL,
+	[Value] [varchar](13) NOT NULL
  CONSTRAINT [PK_ServerAlertStatus] PRIMARY KEY CLUSTERED 
 (
 	[AlertStatusId] ASC
@@ -499,10 +534,8 @@ GO
 /****** Object:  Table [dbo].[ServerInformation]    Script Date: 14/08/2025 21:00:33 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[ServerInformation](
 	[ServerInformationId] [int] IDENTITY(1,1) NOT NULL,
 	[MachineId] [int] NOT NULL,
@@ -510,14 +543,13 @@ CREATE TABLE [dbo].[ServerInformation](
 	[ConnectionId] [int] NOT NULL,
 	[DowntimeId] [int] NULL,
 	[Name] [varchar](255) NULL,
-	[IsActive] [bit] NOT NULL,
+	[IsActive] [bit] NOT NULL
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
 	[ServerInformationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
 ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((0)) FOR [IsActive]
 GO
 
@@ -527,6 +559,11 @@ ALTER TABLE [dbo].[Application]  WITH CHECK ADD  CONSTRAINT [FK_Applications_Aut
 REFERENCES [dbo].[Authorisation] ([PhraseId])
 GO
 ALTER TABLE [dbo].[Application] CHECK CONSTRAINT [FK_Applications_Authorisation]
+GO
+ALTER TABLE [dbo].[ApplicationSetting]  WITH CHECK ADD  CONSTRAINT [FK_ApplicationSetting_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
+GO
+ALTER TABLE [dbo].[ApplicationSetting] CHECK CONSTRAINT [FK_ApplicationSetting_Application]
 GO
 ALTER TABLE [dbo].[AssistantInformation]  WITH CHECK ADD  CONSTRAINT [FK_AssistantInformation_Deletion] FOREIGN KEY([DeletionStatusId])
 REFERENCES [dbo].[Deletion] ([StatusId])
@@ -582,11 +619,6 @@ ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Audit] FOREIGN
 REFERENCES [dbo].[AuditHistory] ([AuditId])
 GO
 ALTER TABLE [dbo].[Change] CHECK CONSTRAINT [FK_Change_Audit]
-GO
-ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Endpoint] FOREIGN KEY([EndpointId])
-REFERENCES [dbo].[Endpoint] ([EndpointId])
-GO
-ALTER TABLE [dbo].[Change] CHECK CONSTRAINT [FK_Change_Endpoint]
 GO
 ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_Component] FOREIGN KEY([ComponentId])
 REFERENCES [dbo].[Component] ([ComponentId])

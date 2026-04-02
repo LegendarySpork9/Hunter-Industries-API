@@ -14,7 +14,7 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the parameters from the stored SQL format to the output format or converts the model into a string array.
         /// </summary>
-        public static string[] FormatParameters(string parameters = null, object model = null, bool hashString = false)
+        public static string[] FormatParameters(string parameters = null, object model = null)
         {
             string[] formattedParameters = Array.Empty<string>();
 
@@ -47,7 +47,7 @@ namespace HunterIndustriesAPI.Functions
                             }
                         }
 
-                        else if (property.Name == "Password" && hashString)
+                        else if (property.Name == "Password")
                         {
                             formattedParameters = formattedParameters.Append(HashFunction.HashString(property.GetValue(model).ToString())).ToArray();
                         }
@@ -115,7 +115,7 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the model into a log friendly format.
         /// </summary>
-        public static string FormatParameters(object model, bool hashString = false)
+        public static string FormatParameters(object model)
         {
             string formattedParameters = string.Empty;
 
@@ -135,7 +135,7 @@ namespace HunterIndustriesAPI.Functions
                             }
                         }
 
-                        else if (property.Name == "Password" && hashString)
+                        else if (property.Name == "Password")
                         {
                             formattedParameters += $"\"{HashFunction.HashString(value.ToString())}\", ";
                         }
@@ -230,6 +230,50 @@ namespace HunterIndustriesAPI.Functions
             }
 
             return formattedParameters;
+        }
+
+        /// <summary>
+        /// Converts the model into a string array.
+        /// </summary>
+        public static string[] FormatParameters(object model, string[] otherParameters)
+        {
+            string[] parameters = otherParameters;
+
+            if (model == null)
+            {
+                return parameters;
+            }
+
+            foreach (PropertyInfo property in model.GetType().GetProperties())
+            {
+                if (property.GetValue(model) != null)
+                {
+                    if (property.GetValue(model) is IList list)
+                    {
+                        foreach (object item in list)
+                        {
+                            parameters = parameters.Append(item.ToString()).ToArray();
+                        }
+                    }
+
+                    else if (property.Name == "Password")
+                    {
+                        parameters = parameters.Append(HashFunction.HashString(property.GetValue(model).ToString())).ToArray();
+                    }
+
+                    else
+                    {
+                        parameters = parameters.Append(property.GetValue(model).ToString()).ToArray();
+                    }
+                }
+
+                else
+                {
+                    parameters = parameters.Append("").ToArray();
+                }
+            }
+
+            return parameters;
         }
     }
 }

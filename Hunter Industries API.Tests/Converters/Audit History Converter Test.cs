@@ -165,6 +165,18 @@ namespace HunterIndustriesAPI.Tests.Converters
             Assert.AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Tests whether the GetEndpointID method returns 13 when given "configuration".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointIDConfiguration()
+        {
+            int expected = 13;
+            int actual = AuditHistoryConverter.GetEndpointID("configuration");
+
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region GetEndpointVersionID

@@ -63,7 +63,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     {
                         downtime = new DowntimeRecord()
                         {
-                            Time = reader.GetString(7)
+                            Time = reader.GetString(7),
+                            Duration = reader.GetInt32(8)
                         };
                     }
 
@@ -80,7 +81,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                             Port = reader.GetInt32(6),
                         },
                         Downtime = downtime,
-                        IsActive = reader.GetBoolean(8)
+                        IsActive = reader.GetBoolean(9)
                     };
                 }, parameterList.ToArray());
 
@@ -169,7 +170,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = server.GameVersion },
                     new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = server.IPAddress },
                     new SqlParameter("@Port", SqlDbType.Int) { Value = server.Port },
-                    new SqlParameter("@Time", SqlDbType.VarChar) { Value = server.Time ?? "null" }
+                    new SqlParameter("@Time", SqlDbType.VarChar) { Value = (object)server.Time ?? DBNull.Value },
+                    new SqlParameter("@Duration", SqlDbType.Int) { Value = (object)server.Duration ?? DBNull.Value }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);

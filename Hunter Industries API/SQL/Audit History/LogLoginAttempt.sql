@@ -5,7 +5,7 @@ select
 	@AuditId,
 	GETUTCDATE(),
 	@IsSuccessful
-from (select 1 as Placeholder) Src
+from (select 1 as Dummy) D
 left join APIUser AU with (nolock) on AU.Username = @Username
 	and AU.[Password] = @Password
 left join Authorisation A with (nolock) on A.Phrase = @Phrase

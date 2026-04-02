@@ -19,6 +19,7 @@ namespace HunterIndustriesAPI.Mappings
                     "Assistant.Location",
                     "Assistant.Version",
                     "AuditHistory",
+                    "Configuration",
                     "ErrorLog",
                     "ServerStatus.Alert",
                     "ServerStatus.Event",
