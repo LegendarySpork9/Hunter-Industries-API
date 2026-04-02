@@ -12,6 +12,6 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Configuration
         /// <summary>
         /// The amount of time, in seconds, that the server is offline.
         /// </summary>
-        public int Duration { get; set; }
+        public int? Duration { get; set; }
     }
 }

@@ -1,2 +1,3 @@
-update Component set [Name] = @Name
+update Component set
+	[Name] = @Name
 where ComponentId = @ComponentId

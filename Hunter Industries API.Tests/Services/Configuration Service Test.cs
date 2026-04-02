@@ -50,7 +50,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, null, 10, 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(5, totalRecords);
@@ -71,7 +71,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, null, 10, 1);
 
             Assert.AreEqual(0, actual.Count);
             Assert.AreEqual(0, totalRecords);
@@ -98,7 +98,7 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("component", 1, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("component", 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(0, totalRecords);
@@ -119,7 +119,7 @@ namespace HunterIndustriesAPI.Tests.Services
                     IsDeleted = false,
                     Settings = new List<ApplicationSettingRecord>
                     {
-                        new ApplicationSettingRecord { Id = 1, Name = "Setting1", Required = true, IsDeleted = false }
+                        new ApplicationSettingRecord { Id = 1, Name = "Setting1", Type = "String", Required = true, IsDeleted = false }
                     }
                 },
                 new ApplicationRecord
@@ -129,7 +129,7 @@ namespace HunterIndustriesAPI.Tests.Services
                     IsDeleted = false,
                     Settings = new List<ApplicationSettingRecord>
                     {
-                        new ApplicationSettingRecord { Id = 2, Name = "Setting2", Required = false, IsDeleted = false }
+                        new ApplicationSettingRecord { Id = 2, Name = "Setting2", Type = "Boolean", Required = false, IsDeleted = false }
                     }
                 }
             };
@@ -140,10 +140,80 @@ namespace HunterIndustriesAPI.Tests.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("application", 0, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("application", 0, null, 10, 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(2, ((ApplicationRecord)actual[0]).Settings.Count);
+        }
+
+        /// <summary>
+        /// Checks whether the GetRecords method filters out deleted application settings when grouping.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetRecordsApplicationGroupingFiltersDeleted()
+        {
+            List<object> records = new List<object>
+            {
+                new ApplicationRecord
+                {
+                    Id = 1,
+                    Name = "App1",
+                    IsDeleted = false,
+                    Settings = new List<ApplicationSettingRecord>
+                    {
+                        new ApplicationSettingRecord { Id = 1, Name = "Setting1", Type = "String", Required = true, IsDeleted = false }
+                    }
+                },
+                new ApplicationRecord
+                {
+                    Id = 1,
+                    Name = "App1",
+                    IsDeleted = false,
+                    Settings = new List<ApplicationSettingRecord>
+                    {
+                        new ApplicationSettingRecord { Id = 2, Name = "Setting2", Type = "Boolean", Required = false, IsDeleted = true }
+                    }
+                }
+            };
+
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
+            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+
+            ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
+
+            (List<object> actual, int totalRecords) = await service.GetRecords("application", 0, null, 10, 1);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(1, ((ApplicationRecord)actual[0]).Settings.Count);
+            Assert.AreEqual("Setting1", ((ApplicationRecord)actual[0]).Settings[0].Name);
+        }
+
+        /// <summary>
+        /// Checks whether the GetRecords method filters by parent entity id when provided.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetRecordsByParentEntityId()
+        {
+            List<object> records = new List<object>
+            {
+                new ComponentRecord
+                {
+                    Id = 1,
+                    Name = "TestComponent",
+                    IsDeleted = false
+                }
+            };
+
+            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
+
+            ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
+
+            (List<object> actual, int totalRecords) = await service.GetRecords("applicationSetting", 0, 1);
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(0, totalRecords);
         }
 
         #endregion

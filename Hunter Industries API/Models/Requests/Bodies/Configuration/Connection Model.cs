@@ -12,6 +12,6 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Configuration
         /// <summary>
         /// The port the server runs on.
         /// </summary>
-        public int Port { get; set; }
+        public int? Port { get; set; }
     }
 }

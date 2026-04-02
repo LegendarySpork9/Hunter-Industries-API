@@ -38,9 +38,9 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all records that match the parameters.
         /// </summary>
-        public async Task<(List<object>, int)> GetRecords(string entity, int id, int pageSize, int pageNumber)
+        public async Task<(List<object>, int)> GetRecords(string entity, int id, int? parentEntityId = null, int pageSize = 0, int pageNumber = 0)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigurationService.GetRecords called with the parameters {ParameterFunction.FormatParameters(new string[] { entity, id.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigurationService.GetRecords called with the parameters {ParameterFunction.FormatParameters(new string[] { entity, id.ToString(), parentEntityId.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<object> records = new List<object>();
             int totalRecords = 0;
@@ -54,6 +54,16 @@ namespace HunterIndustriesAPI.Services
                 {
                     sql += ConfigurationConverter.GetSQLFilterId(entity);
                     parameters = ConfigurationConverter.GetParametersGetSingle(entity, id);
+                }
+
+                else if (parentEntityId.HasValue && entity == "applicationSetting")
+                {
+                    sql += @"
+where ApplicationId = @ApplicationId";
+                    parameters = new SqlParameter[]
+                    {
+                        new SqlParameter("@ApplicationId", SqlDbType.VarChar) { Value =  parentEntityId.Value }
+                    };
                 }
 
                 else
@@ -84,7 +94,7 @@ namespace HunterIndustriesAPI.Services
                         {
                             if (current != null && record.Id == current.Id)
                             {
-                                settings.AddRange(record.Settings);
+                                settings.AddRange(record.Settings.Where(s => s.IsDeleted == false));
                             }
 
                             else

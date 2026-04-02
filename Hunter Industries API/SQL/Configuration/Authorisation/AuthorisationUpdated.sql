@@ -1,2 +1,3 @@
-update Authorisation set Phrase = @Phrase
+update Authorisation set
+	Phrase = @Phrase
 where PhraseId = @PhraseId

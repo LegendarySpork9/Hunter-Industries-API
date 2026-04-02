@@ -261,6 +261,71 @@ namespace HunterIndustriesAPI.Tests.Functions
             Assert.AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Tests whether the CleanSQL method removes the trailing comma from the last SET line when a property is null.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLRemovesTrailingCommaFromLastSetLine()
+        {
+            object model = new
+            {
+                Name = "Test",
+                Value = (string)null
+            };
+            string sql = string.Join(Environment.NewLine, new[]
+            {
+                "update Table",
+                "set [Name] = @Name,",
+                "[Value] = @Value",
+                "where Id = @Id"
+            });
+
+            string actual = ConfigurationFunction.CleanSQL(model, sql);
+
+            string expected = string.Join(Environment.NewLine, new[]
+            {
+                "update Table",
+                "set [Name] = @Name",
+                "where Id = @Id"
+            });
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the CleanSQL method removes the trailing comma from the last SET line when the last property is null.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLRemovesTrailingCommaWhenLastPropertyNull()
+        {
+            object model = new
+            {
+                Name = "Test",
+                Type = "String",
+                Value = (string)null
+            };
+            string sql = string.Join(Environment.NewLine, new[]
+            {
+                "update Table set",
+                "[Name] = @Name,",
+                "[Type] = @Type,",
+                "[Value] = @Value",
+                "where Id = @Id"
+            });
+
+            string actual = ConfigurationFunction.CleanSQL(model, sql);
+
+            string expected = string.Join(Environment.NewLine, new[]
+            {
+                "update Table set",
+                "[Name] = @Name,",
+                "[Type] = @Type",
+                "where Id = @Id"
+            });
+
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
     }
 }

@@ -1206,7 +1206,7 @@ where MachineId = @MachineId";
             SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("applicationSetting", 1);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
+            Assert.AreEqual("@ApplicationSettingId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
         }
 
@@ -1586,17 +1586,20 @@ where MachineId = @MachineId";
             ApplicationSettingModel model = new ApplicationSettingModel()
             {
                 Name = "TestSetting",
+                Type = "String",
                 Required = true
             };
             SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("applicationSetting", model, 1);
 
-            Assert.AreEqual(3, actual.Length);
+            Assert.AreEqual(4, actual.Length);
             Assert.AreEqual("@ApplicationId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
             Assert.AreEqual("@Name", actual[1].ParameterName);
             Assert.AreEqual("TestSetting", actual[1].Value);
-            Assert.AreEqual("@Required", actual[2].ParameterName);
-            Assert.AreEqual(true, actual[2].Value);
+            Assert.AreEqual("@Type", actual[2].ParameterName);
+            Assert.AreEqual("String", actual[2].Value);
+            Assert.AreEqual("@Required", actual[3].ParameterName);
+            Assert.AreEqual(true, actual[3].Value);
         }
 
         /// <summary>
@@ -1753,17 +1756,20 @@ where MachineId = @MachineId";
             ApplicationSettingModel model = new ApplicationSettingModel()
             {
                 Name = "TestSetting",
+                Type = "String",
                 Required = true
             };
             SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("applicationSetting", model, 1);
 
-            Assert.AreEqual(3, actual.Length);
+            Assert.AreEqual(4, actual.Length);
             Assert.AreEqual("@ApplicationSettingId", actual[0].ParameterName);
             Assert.AreEqual(1, actual[0].Value);
             Assert.AreEqual("@Name", actual[1].ParameterName);
             Assert.AreEqual("TestSetting", actual[1].Value);
-            Assert.AreEqual("@Required", actual[2].ParameterName);
-            Assert.AreEqual(true, actual[2].Value);
+            Assert.AreEqual("@Type", actual[2].ParameterName);
+            Assert.AreEqual("String", actual[2].Value);
+            Assert.AreEqual("@Required", actual[3].ParameterName);
+            Assert.AreEqual(true, actual[3].Value);
         }
 
         /// <summary>
@@ -2026,7 +2032,7 @@ where MachineId = @MachineId";
         [TestMethod]
         public void TestGetRequestObjectApplicationSetting()
         {
-            ApplicationSettingModel model = new ApplicationSettingModel { Name = "TestSetting", Required = true };
+            ApplicationSettingModel model = new ApplicationSettingModel { Name = "TestSetting", Type = "String", Required = true };
             object actual = ConfigurationConverter.GetRequestObject("applicationSetting", JObject.FromObject(model));
 
             Assert.IsInstanceOfType(actual, typeof(ApplicationSettingModel));

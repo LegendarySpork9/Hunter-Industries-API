@@ -86,6 +86,13 @@ GO
 
 PRINT('Added Foreign Key to EndpointVersionId Field')
 
+ALTER TABLE [dbo].[Change] DROP CONSTRAINT [FK_Change_Endpoint]
+GO
+
+ALTER TABLE [Change] DROP COLUMN [EndpointId]
+
+PRINT('Removed EndpointId from Change Table')
+
 INSERT INTO EndpointVersion([Value])
 VALUES ('v2.0')
 
@@ -133,6 +140,7 @@ CREATE TABLE [dbo].[ApplicationSetting](
 	[ApplicationSettingId] [int] IDENTITY(1,1) NOT NULL,
 	[ApplicationId] [int] NOT NULL,
 	[Name] [varchar](255) NOT NULL,
+	[Type] [varchar](20) NOT NULL,
 	[Required] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_ApplicationSetting] PRIMARY KEY CLUSTERED 

@@ -50,6 +50,7 @@ CREATE TABLE [dbo].[ApplicationSetting](
 	[ApplicationSettingId] [int] IDENTITY(1,1) NOT NULL,
 	[ApplicationId] [int] NOT NULL,
 	[Name] [varchar](255) NOT NULL,
+	[Type] [varchar](20) NOT NULL,
 	[Required] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_ApplicationSetting] PRIMARY KEY CLUSTERED 
@@ -111,7 +112,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Change](
 	[ChangeId] [int] IDENTITY(1,1) NOT NULL,
-	[EndpointId] [int] NOT NULL,
 	[AuditId] [int] NOT NULL,
 	[Field] [varchar](50) NOT NULL,
 	[OldValue] [varchar](255) NOT NULL,
@@ -619,11 +619,6 @@ ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Audit] FOREIGN
 REFERENCES [dbo].[AuditHistory] ([AuditId])
 GO
 ALTER TABLE [dbo].[Change] CHECK CONSTRAINT [FK_Change_Audit]
-GO
-ALTER TABLE [dbo].[Change]  WITH CHECK ADD  CONSTRAINT [FK_Change_Endpoint] FOREIGN KEY([EndpointId])
-REFERENCES [dbo].[Endpoint] ([EndpointId])
-GO
-ALTER TABLE [dbo].[Change] CHECK CONSTRAINT [FK_Change_Endpoint]
 GO
 ALTER TABLE [dbo].[ComponentInformation]  WITH CHECK ADD  CONSTRAINT [FK_ComponentInformation_Component] FOREIGN KEY([ComponentId])
 REFERENCES [dbo].[Component] ([ComponentId])

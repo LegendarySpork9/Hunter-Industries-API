@@ -1,2 +1,4 @@
-update [Connection] set IPAddress = @IPAddress, [Port] = @Port
+update [Connection] set
+	IPAddress = @IPAddress,
+	[Port] = @Port
 where ConnectionId = @ConnectionId

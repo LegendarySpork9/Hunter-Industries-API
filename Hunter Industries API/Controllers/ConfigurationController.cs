@@ -110,13 +110,14 @@ namespace HunterIndustriesAPI.Controllers
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="entity">The name of the configuration object.</param>
+        /// <param name="entityId">The id number of the parent entity record.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Configuration.Read")]
         [VersionedRoute("configuration/{entity}", "2.0")]
         [SwaggerOperation("GetConfigurationList")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ConfigurationResponseModel>), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Get(string entity, [FromUri] int pageSize = 25, [FromUri] int pageNumber = 1)
+        public async Task<IHttpActionResult> Get(string entity, [FromUri] int pageSize = 25, [FromUri] int pageNumber = 1, [FromUri] int entityId = 0)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
             ConfigurationService _configurationService = new ConfigurationService(_Logger, _FileSystem, _Options, _Database);
@@ -127,12 +128,19 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+
+            int? parentEntityId = null;
+
+            if (entityId != 0)
+            {
+                parentEntityId = entityId;
+            }
 
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, new string[] { entity, pageSize.ToString(), pageNumber.ToString() });
+                    username, applicationName, new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() });
 
-            var result = await _configurationService.GetRecords(entity, 0, pageSize, pageNumber);
+            var result = await _configurationService.GetRecords(entity, 0, parentEntityId, pageSize, pageNumber);
             List<object> records = result.Item1;
 
             if (records.Count == 0)
@@ -204,7 +212,7 @@ namespace HunterIndustriesAPI.Controllers
             await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
                     username, applicationName, new string[] { entity, id.ToString() });
 
-            List<object> records = (await _configurationService.GetRecords(entity, id, 0, 0)).Item1;
+            List<object> records = (await _configurationService.GetRecords(entity, id)).Item1;
 
             if (records.Count == 0)
             {
@@ -341,7 +349,7 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            List<object> records = (await _configurationService.GetRecords(entity, id, 0, 0)).Item1;
+            List<object> records = (await _configurationService.GetRecords(entity, id)).Item1;
 
             if (records.Count == 0)
             {
@@ -442,7 +450,7 @@ namespace HunterIndustriesAPI.Controllers
 
             if (await _configurationService.RecordExists(entity, id))
             {
-                object record = (await _configurationService.GetRecords(entity, id, 0, 0)).Item1[0];
+                object record = (await _configurationService.GetRecords(entity, id)).Item1[0];
 
                 if (await _configurationService.RecordUpdated(entity, id, request))
                 {
@@ -476,7 +484,7 @@ namespace HunterIndustriesAPI.Controllers
                         }
                     }
 
-                    object updatedRecord = (await _configurationService.GetRecords(entity, id, 0, 0)).Item1[0];
+                    object updatedRecord = (await _configurationService.GetRecords(entity, id)).Item1[0];
 
                     response = new ResponseModel()
                     {

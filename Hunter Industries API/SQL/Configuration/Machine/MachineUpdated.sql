@@ -1,2 +1,3 @@
-update Machine set HostName = @HostName
+update Machine set
+	HostName = @HostName
 where MachineId = @MachineId

@@ -25,7 +25,7 @@ namespace HunterIndustriesAPI.Mappings
                     Phrase = reader.GetString(3),
                 },
                 Settings = new List<ApplicationSettingRecord>(),
-                IsDeleted = reader.GetBoolean(7)
+                IsDeleted = reader.GetBoolean(9)
             };
 
             if (!reader.IsDBNull(4))
@@ -34,7 +34,9 @@ namespace HunterIndustriesAPI.Mappings
                 {
                     Id = reader.GetInt32(4),
                     Name = reader.GetString(5),
-                    Required = reader.GetBoolean(6)
+                    Type = reader.GetString(6),
+                    Required = reader.GetBoolean(7),
+                    IsDeleted = reader.GetBoolean(8)
                 });
             }
 
@@ -50,8 +52,9 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Id = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                Required = reader.GetBoolean(2),
-                IsDeleted = reader.GetBoolean(3)
+                Type = reader.GetString(2),
+                Required = reader.GetBoolean(3),
+                IsDeleted = reader.GetBoolean(4)
             };
 
             return applicationSetting;

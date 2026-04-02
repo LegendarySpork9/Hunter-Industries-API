@@ -56,6 +56,14 @@ namespace HunterIndustriesAPI.Functions
                 }
             }
 
+            string lastSet = sqlLines.LastOrDefault(s => s.Contains(','));
+
+            if (lastSet != null)
+            {
+                int index = sqlLines.IndexOf(lastSet);
+                sqlLines[index] = sqlLines[index].Replace(",", "");
+            }
+
             string whereCondition = sqlLines.Find(s => s.Contains("where"));
 
             if (string.IsNullOrWhiteSpace(whereCondition))

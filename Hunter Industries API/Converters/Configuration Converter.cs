@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Web.Helpers;
 
 namespace HunterIndustriesAPI.Converters
 {
@@ -298,7 +297,7 @@ where MachineId = @MachineId";
                 case "applicationSetting":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@ApplicationSettingId", SqlDbType.Int) { Value = entityId }
                     };
                 case "authorisation":
                     return new SqlParameter[]
@@ -478,6 +477,7 @@ where MachineId = @MachineId";
                     {
                         new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = parentEntityId },
                         new SqlParameter("@Name", SqlDbType.VarChar) { Value = applicationSetting.Name },
+                        new SqlParameter("@Type", SqlDbType.VarChar) { Value = applicationSetting.Type },
                         new SqlParameter("@Required", SqlDbType.Bit) { Value = applicationSetting.Required }
                     };
                 case "authorisation":
@@ -551,6 +551,7 @@ where MachineId = @MachineId";
                     {
                         new SqlParameter("@ApplicationSettingId", SqlDbType.Int) { Value = entityId },
                         new SqlParameter("@Name", SqlDbType.VarChar) { Value = applicationSetting.Name },
+                        new SqlParameter("@Type", SqlDbType.VarChar) { Value = applicationSetting.Type },
                         new SqlParameter("@Required", SqlDbType.Bit) { Value = applicationSetting.Required }
 
                     };
