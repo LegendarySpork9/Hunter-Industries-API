@@ -52,38 +52,38 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Error Log\GetErrorLog.sql");
                 List<SqlParameter> parameterList = new List<SqlParameter>
                 {
-                    new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                    new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                    new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                    new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
 
                 if (errorId != 0)
                 {
-                    sql += "\nand errorId = @ErrorId";
-                    parameterList.Add(new SqlParameter("@ErrorId", SqlDbType.Int) { Value = errorId });
+                    sql += "\nand errorId = @errorId";
+                    parameterList.Add(new SqlParameter("@errorId", SqlDbType.Int) { Value = errorId });
                 }
 
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
-                    sql += "\nand IPAddress = @IPAddress";
-                    parameterList.Add(new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress });
+                    sql += "\nand IPAddress = @ipAddress";
+                    parameterList.Add(new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress });
                 }
 
                 if (!string.IsNullOrEmpty(summary))
                 {
-                    sql += "\nand Summary = @Summary";
-                    parameterList.Add(new SqlParameter("@Summary", SqlDbType.VarChar) { Value = summary });
+                    sql += "\nand Summary = @summary";
+                    parameterList.Add(new SqlParameter("@summary", SqlDbType.VarChar) { Value = summary });
                 }
 
                 if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate != _Clock.DefaultDate)
                 {
-                    sql += "\nand DateOccured >= cast(@FromDate as datetime)";
-                    parameterList.Add(new SqlParameter("@FromDate", SqlDbType.DateTime) { Value = fromDate });
+                    sql += "\nand DateOccured >= cast(@fromDate as datetime)";
+                    parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
                 sql += @"
 order by errorId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
 
                 (List<ErrorLogRecord> results, Exception ex) = await _Database.Query(sql, reader =>
                 {
@@ -138,20 +138,20 @@ fetch next @PageSize rows only";
 
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
-                    sql += "\nand IPAddress = @IPAddress";
-                    parameterList.Add(new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress });
+                    sql += "\nand IPAddress = @ipAddress";
+                    parameterList.Add(new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress });
                 }
 
                 if (!string.IsNullOrEmpty(summary))
                 {
-                    sql += "\nand Summary = @Summary";
-                    parameterList.Add(new SqlParameter("@Summary", SqlDbType.VarChar) { Value = summary });
+                    sql += "\nand Summary = @summary";
+                    parameterList.Add(new SqlParameter("@summary", SqlDbType.VarChar) { Value = summary });
                 }
 
                 if (!string.IsNullOrEmpty(fromDate.ToString()) && fromDate != _Clock.DefaultDate)
                 {
-                    sql += "\nand DateOccured >= cast(@FromDate as datetime)";
-                    parameterList.Add(new SqlParameter("@FromDate", SqlDbType.DateTime) { Value = fromDate });
+                    sql += "\nand DateOccured >= cast(@fromDate as datetime)";
+                    parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
                 (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());

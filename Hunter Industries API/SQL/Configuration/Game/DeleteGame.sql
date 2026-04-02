@@ -1,2 +1,2 @@
 ﻿update Game set IsDeleted = 1
-where GameId = @GameId
+where GameId = @gameId

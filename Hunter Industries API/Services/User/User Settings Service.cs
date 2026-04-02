@@ -53,14 +53,14 @@ namespace HunterIndustriesAPI.Services.User
 
                 if (id != 0)
                 {
-                    sql += "\nand UserID = @Id";
-                    parameterList.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
+                    sql += "\nand UserID = @id";
+                    parameterList.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
                 }
 
                 if (!string.IsNullOrEmpty(application))
                 {
-                    sql += "\nand [Application].[Name] = @Application";
-                    parameterList.Add(new SqlParameter("@Application", SqlDbType.VarChar) { Value = application });
+                    sql += "\nand [Application].[Name] = @application";
+                    parameterList.Add(new SqlParameter("@application", SqlDbType.VarChar) { Value = application });
                 }
 
                 (List<(string, int, string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3)), parameterList.ToArray());
@@ -131,7 +131,7 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\GetUserSetting.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
                 (SettingRecord result, Exception ex) = await _Database.QuerySingle(sql, reader => new SettingRecord()
@@ -179,9 +179,9 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = username },
-                    new SqlParameter("@Application", SqlDbType.VarChar) { Value = application },
-                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = settingName }
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = application },
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = settingName }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -224,7 +224,7 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExistsById.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -267,10 +267,10 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingAdded.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = userSetting.Username },
-                    new SqlParameter("@Application", SqlDbType.VarChar) { Value = userSetting.Application },
-                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = userSetting.SettingName },
-                    new SqlParameter("@Value", SqlDbType.VarChar) { Value = userSetting.SettingValue }
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = userSetting.Username },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = userSetting.Application },
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = userSetting.SettingName },
+                    new SqlParameter("@value", SqlDbType.VarChar) { Value = userSetting.SettingValue }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
@@ -317,8 +317,8 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingUpdated.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Value", SqlDbType.VarChar) { Value = value },
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@value", SqlDbType.VarChar) { Value = value },
+                    new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

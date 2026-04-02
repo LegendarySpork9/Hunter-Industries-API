@@ -1,3 +1,3 @@
 update Authorisation set
-	Phrase = @Phrase
-where PhraseId = @PhraseId
+	Phrase = @phrase
+where PhraseId = @phraseId

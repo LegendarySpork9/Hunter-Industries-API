@@ -42,32 +42,32 @@ namespace HunterIndustriesAPI.Converters
             {
                 case "application": return @"
 order by ApplicationId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 case "authorisation": return @"
 order by PhraseId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 case "component": return @"
 order by ComponentId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 case "connection": return @"
 order by ConnectionId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 case "downtime": return @"
 order by DowntimeId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 case "game": return @"
 order by GameId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 case "machine": return @"
 order by MachineId asc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only";
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 default: return "Unknown.sql";
             }
         }
@@ -118,25 +118,25 @@ fetch next @PageSize rows only";
             switch (entity)
             {
                 case "application": return @"
-where [Name] = @Name";
+where [Name] = @name";
                 case "applicationSetting": return @"
-where ApplicationId = @ApplicationId
-and [Name] = @Name";
+where ApplicationId = @applicationId
+and [Name] = @name";
                 case "authorisation": return @"
-where Phrase = @Phrase";
+where Phrase = @phrase";
                 case "component": return @"
-where [Name] = @Name";
+where [Name] = @name";
                 case "connection": return @"
-where IPAddress = @IPAddress
-and [Port] = @Port";
+where IPAddress = @ipAddress
+and [Port] = @port";
                 case "downtime": return @"
-where Time = @Time
-and Duration = @Duration";
+where Time = @time
+and Duration = @duration";
                 case "game": return @"
-where [Name] = @Name
-and [Version] = @Version";
+where [Name] = @name
+and [Version] = @version";
                 case "machine": return @"
-where HostName = @HostName";
+where HostName = @hostName";
                 default: return "Unknown.sql";
             }
         }
@@ -149,21 +149,21 @@ where HostName = @HostName";
             switch (entity)
             {
                 case "application": return @"
-where [Application].ApplicationId = @ApplicationId";
+where [Application].ApplicationId = @applicationId";
                 case "applicationSetting": return @"
-where ApplicationSettingId = @ApplicationSettingId";
+where ApplicationSettingId = @applicationSettingId";
                 case "authorisation": return @"
-where PhraseId = @PhraseId";
+where PhraseId = @phraseId";
                 case "component": return @"
-where ComponentId = @ComponentId";
+where ComponentId = @componentId";
                 case "connection": return @"
-where ConnectionId = @ConnectionId";
+where ConnectionId = @connectionId";
                 case "downtime": return @"
-where DowntimeId = @DowntimeId";
+where DowntimeId = @downtimeId";
                 case "game": return @"
-where GameId = @GameId";
+where GameId = @gameId";
                 case "machine": return @"
-where MachineId = @MachineId";
+where MachineId = @machineId";
                 default: return "Unknown.sql";
             }
         }
@@ -239,44 +239,44 @@ where MachineId = @MachineId";
                 case "application":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                        new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 case "authorisation":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                        new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 case "component":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                        new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 case "connection":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                        new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 case "downtime":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                        new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 case "game":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                        new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 case "machine":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                        new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 default: return Array.Empty<SqlParameter>();
             }
@@ -292,42 +292,42 @@ where MachineId = @MachineId";
                 case "application":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@applicationId", SqlDbType.Int) { Value = entityId }
                     };
                 case "applicationSetting":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationSettingId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@applicationSettingId", SqlDbType.Int) { Value = entityId }
                     };
                 case "authorisation":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PhraseId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@phraseId", SqlDbType.Int) { Value = entityId }
                     };
                 case "component":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ComponentId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@componentId", SqlDbType.Int) { Value = entityId }
                     };
                 case "connection":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ConnectionId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@connectionId", SqlDbType.Int) { Value = entityId }
                     };
                 case "downtime":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@DowntimeId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@downtimeId", SqlDbType.Int) { Value = entityId }
                     };
                 case "game":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@GameId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@gameId", SqlDbType.Int) { Value = entityId }
                     };
                 case "machine":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@MachineId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@machineId", SqlDbType.Int) { Value = entityId }
                     };
                 default: return Array.Empty<SqlParameter>();
             }
@@ -345,60 +345,60 @@ where MachineId = @MachineId";
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = application.Name }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = application.Name }
                     };
                 case "applicationSetting":
                     ApplicationSettingModel applicationSetting = record as ApplicationSettingModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = parentEntityId },
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = applicationSetting.Name }
+                        new SqlParameter("@applicationId", SqlDbType.Int) { Value = parentEntityId },
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = applicationSetting.Name }
                     };
                 case "authorisation":
                     AuthorisationModel authorisation = record as AuthorisationModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = authorisation.Phrase }
+                        new SqlParameter("@phrase", SqlDbType.VarChar) { Value = authorisation.Phrase }
                     };
                 case "component":
                     ComponentModel component = record as ComponentModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = component.Name }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = component.Name }
                     };
                 case "connection":
                     ConnectionModel connection = record as ConnectionModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
-                        new SqlParameter("@Port", SqlDbType.Int) { Value = connection.Port }
+                        new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
+                        new SqlParameter("@port", SqlDbType.Int) { Value = connection.Port }
                     };
                 case "downtime":
                     DowntimeModel downtime = record as DowntimeModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time },
-                        new SqlParameter("@Duration", SqlDbType.Int) { Value= downtime.Duration }
+                        new SqlParameter("@time", SqlDbType.VarChar) { Value = downtime.Time },
+                        new SqlParameter("@duration", SqlDbType.Int) { Value= downtime.Duration }
                     };
                 case "game":
                     GameModel game = record as GameModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = game.Name },
-                        new SqlParameter("@Version", SqlDbType.VarChar) { Value = game.Version }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = game.Name },
+                        new SqlParameter("@version", SqlDbType.VarChar) { Value = game.Version }
                     };
                 case "machine":
                     MachineModel machine = record as MachineModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@HostName", SqlDbType.VarChar) { Value = machine.HostName }
+                        new SqlParameter("@hostName", SqlDbType.VarChar) { Value = machine.HostName }
                     };
                 default: return Array.Empty<SqlParameter>();
             }
@@ -414,42 +414,42 @@ where MachineId = @MachineId";
                 case "application":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@applicationId", SqlDbType.Int) { Value = entityId }
                     };
                 case "applicationSetting":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationSettingId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@applicationSettingId", SqlDbType.Int) { Value = entityId }
                     };
                 case "authorisation":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PhraseId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@phraseId", SqlDbType.Int) { Value = entityId }
                     };
                 case "component":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ComponentId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@componentId", SqlDbType.Int) { Value = entityId }
                     };
                 case "connection":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ConnectionId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@connectionId", SqlDbType.Int) { Value = entityId }
                     };
                 case "downtime":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@DowntimeId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@downtimeId", SqlDbType.Int) { Value = entityId }
                     };
                 case "game":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@GameId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@gameId", SqlDbType.Int) { Value = entityId }
                     };
                 case "machine":
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@MachineId", SqlDbType.Int) { Value = entityId }
+                        new SqlParameter("@machineId", SqlDbType.Int) { Value = entityId }
                     };
                 default: return Array.Empty<SqlParameter>();
             }
@@ -467,63 +467,63 @@ where MachineId = @MachineId";
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = application.Name },
-                        new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = application.Phrase }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = application.Name },
+                        new SqlParameter("@phrase", SqlDbType.VarChar) { Value = application.Phrase }
                     };
                 case "applicationSetting":
                     ApplicationSettingModel applicationSetting = record as ApplicationSettingModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = parentEntityId },
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = applicationSetting.Name },
-                        new SqlParameter("@Type", SqlDbType.VarChar) { Value = applicationSetting.Type },
-                        new SqlParameter("@Required", SqlDbType.Bit) { Value = applicationSetting.Required }
+                        new SqlParameter("@applicationId", SqlDbType.Int) { Value = parentEntityId },
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = applicationSetting.Name },
+                        new SqlParameter("@type", SqlDbType.VarChar) { Value = applicationSetting.Type },
+                        new SqlParameter("@required", SqlDbType.Bit) { Value = applicationSetting.Required }
                     };
                 case "authorisation":
                     AuthorisationModel authorisation = record as AuthorisationModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = authorisation.Phrase }
+                        new SqlParameter("@phrase", SqlDbType.VarChar) { Value = authorisation.Phrase }
                     };
                 case "component":
                     ComponentModel component = record as ComponentModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = component.Name }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = component.Name }
                     };
                 case "connection":
                     ConnectionModel connection = record as ConnectionModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
-                        new SqlParameter("@Port", SqlDbType.Int) { Value = connection.Port }
+                        new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
+                        new SqlParameter("@port", SqlDbType.Int) { Value = connection.Port }
                     };
                 case "downtime":
                     DowntimeModel downtime = record as DowntimeModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time },
-                        new SqlParameter("@Duration", SqlDbType.Int) { Value= downtime.Duration }
+                        new SqlParameter("@time", SqlDbType.VarChar) { Value = downtime.Time },
+                        new SqlParameter("@duration", SqlDbType.Int) { Value= downtime.Duration }
                     };
                 case "game":
                     GameModel game = record as GameModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = game.Name },
-                        new SqlParameter("@Version", SqlDbType.VarChar) { Value = game.Version }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = game.Name },
+                        new SqlParameter("@version", SqlDbType.VarChar) { Value = game.Version }
                     };
                 case "machine":
                     MachineModel machine = record as MachineModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@HostName", SqlDbType.VarChar) { Value = machine.HostName }
+                        new SqlParameter("@hostName", SqlDbType.VarChar) { Value = machine.HostName }
                     };
                 default: return Array.Empty<SqlParameter>();
             }
@@ -541,18 +541,18 @@ where MachineId = @MachineId";
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = application.Name }
+                        new SqlParameter("@applicationId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = application.Name }
                     };
                 case "applicationSetting":
                     ApplicationSettingModel applicationSetting = record as ApplicationSettingModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationSettingId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = applicationSetting.Name },
-                        new SqlParameter("@Type", SqlDbType.VarChar) { Value = applicationSetting.Type },
-                        new SqlParameter("@Required", SqlDbType.Bit) { Value = applicationSetting.Required }
+                        new SqlParameter("@applicationSettingId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = applicationSetting.Name },
+                        new SqlParameter("@type", SqlDbType.VarChar) { Value = applicationSetting.Type },
+                        new SqlParameter("@required", SqlDbType.Bit) { Value = applicationSetting.Required }
 
                     };
                 case "authorisation":
@@ -560,51 +560,51 @@ where MachineId = @MachineId";
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@PhraseId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = authorisation.Phrase }
+                        new SqlParameter("@phraseId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@phrase", SqlDbType.VarChar) { Value = authorisation.Phrase }
                     };
                 case "component":
                     ComponentModel component = record as ComponentModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ComponentId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = component.Name }
+                        new SqlParameter("@componentId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = component.Name }
                     };
                 case "connection":
                     ConnectionModel connection = record as ConnectionModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@ConnectionId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
-                        new SqlParameter("@Port", SqlDbType.Int) { Value = connection.Port }
+                        new SqlParameter("@connectionId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
+                        new SqlParameter("@port", SqlDbType.Int) { Value = connection.Port }
                     };
                 case "downtime":
                     DowntimeModel downtime = record as DowntimeModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@DowntimeId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@Time", SqlDbType.VarChar) { Value = downtime.Time },
-                        new SqlParameter("@Duration", SqlDbType.Int) { Value= downtime.Duration }
+                        new SqlParameter("@downtimeId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@time", SqlDbType.VarChar) { Value = downtime.Time },
+                        new SqlParameter("@duration", SqlDbType.Int) { Value= downtime.Duration }
                     };
                 case "game":
                     GameModel game = record as GameModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@GameId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = game.Name },
-                        new SqlParameter("@Version", SqlDbType.VarChar) { Value = game.Version }
+                        new SqlParameter("@gameId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = game.Name },
+                        new SqlParameter("@version", SqlDbType.VarChar) { Value = game.Version }
                     };
                 case "machine":
                     MachineModel machine = record as MachineModel;
 
                     return new SqlParameter[]
                     {
-                        new SqlParameter("@MachineId", SqlDbType.Int) { Value = entityId },
-                        new SqlParameter("@HostName", SqlDbType.VarChar) { Value = machine.HostName }
+                        new SqlParameter("@machineId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@hostName", SqlDbType.VarChar) { Value = machine.HostName }
                     };
                 default: return Array.Empty<SqlParameter>();
             }

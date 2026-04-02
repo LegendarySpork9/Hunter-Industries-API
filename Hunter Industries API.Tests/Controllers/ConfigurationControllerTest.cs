@@ -247,7 +247,7 @@ namespace HunterIndustriesAPI.Tests.Controllers
         public async Task TestPatch()
         {
             Mock<IFileSystem> mockFileSystem = new Mock<IFileSystem>();
-            mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("update Component set\n[Name] = @Name\nwhere ComponentId = @ComponentId");
+            mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("update Component set\n[Name] = @name\nwhere ComponentId = @componentId");
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));

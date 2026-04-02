@@ -2,7 +2,7 @@
 	select
 		VersionId
 	from [Version] with (nolock)
-	where [Value] = @Version
+	where [Value] = @version
 )
-where [Name] = @AssistantName
-and IDNumber = @IDNumber
+where [Name] = @assistantName
+and IDNumber = @idNumber

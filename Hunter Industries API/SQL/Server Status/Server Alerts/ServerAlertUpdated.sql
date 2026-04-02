@@ -2,6 +2,6 @@
 	select
 		AlertStatusId
 	from ServerAlertStatus with (nolock)
-	where [Value] = @AlertStatus
+	where [Value] = @alertStatus
 )
-where ServerAlertId = @AlertId
+where ServerAlertId = @alertId

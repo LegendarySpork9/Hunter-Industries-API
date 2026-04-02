@@ -59,10 +59,10 @@ namespace HunterIndustriesAPI.Services
                 else if (parentEntityId.HasValue && entity == "applicationSetting")
                 {
                     sql += @"
-where ApplicationId = @ApplicationId";
+where ApplicationId = @applicationId";
                     parameters = new SqlParameter[]
                     {
-                        new SqlParameter("@ApplicationId", SqlDbType.VarChar) { Value =  parentEntityId.Value }
+                        new SqlParameter("@applicationId", SqlDbType.VarChar) { Value =  parentEntityId.Value }
                     };
                 }
 

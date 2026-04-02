@@ -1,7 +1,7 @@
 ﻿insert into [Change] (AuditId, Field, OldValue, NewValue)
 values (
-	@AuditId,
-	@Field,
-	@OldValue,
-	@NewValue
+	@auditId,
+	@field,
+	@oldValue,
+	@newValue
 )

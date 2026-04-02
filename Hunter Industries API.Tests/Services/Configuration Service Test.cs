@@ -361,7 +361,7 @@ namespace HunterIndustriesAPI.Tests.Services
         [TestMethod]
         public async Task TestRecordUpdated()
         {
-            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("update Table\nset Name = @Name\nwhere Id = @Id");
+            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("update Table\nset Name = @name\nwhere Id = @id");
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
@@ -379,7 +379,7 @@ namespace HunterIndustriesAPI.Tests.Services
         [TestMethod]
         public async Task TestRecordUpdatedNoRowsAffected()
         {
-            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("update Table\nset Name = @Name\nwhere Id = @Id");
+            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("update Table\nset Name = @name\nwhere Id = @id");
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
@@ -397,7 +397,7 @@ namespace HunterIndustriesAPI.Tests.Services
         [TestMethod]
         public async Task TestRecordUpdatedWithError()
         {
-            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("update Table\nset Name = @Name\nwhere Id = @Id");
+            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("update Table\nset Name = @name\nwhere Id = @id");
 
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
             _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, new Exception("Database error")));

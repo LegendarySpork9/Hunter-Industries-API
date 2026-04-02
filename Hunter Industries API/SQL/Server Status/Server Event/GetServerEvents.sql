@@ -19,7 +19,7 @@
 	join ServerInformation SI with (nolock) on CI.ServerInformationId = SI.ServerInformationId
 	join Machine with (nolock) on SI.MachineId = Machine.MachineId
 	join Game with (nolock) on SI.GameId = Game.GameId
-	where Component.[Name] = @Component
+	where Component.[Name] = @component
 )
 select
 	ComponentInformationId,

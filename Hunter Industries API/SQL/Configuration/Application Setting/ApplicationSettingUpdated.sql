@@ -1,5 +1,5 @@
 update [ApplicationSetting] set
-	[Name] = @Name,
-	[Type] = @Type,
-	[Required] = @Required
-where ApplicationSettingId = @ApplicationSettingId
+	[Name] = @name,
+	[Type] = @type,
+	[Required] = @required
+where ApplicationSettingId = @applicationSettingId

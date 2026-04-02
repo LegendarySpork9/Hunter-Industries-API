@@ -47,8 +47,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Version\GetAssistantVersion.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (VersionResponseModel result, Exception ex) = await _Database.QuerySingle(sql, reader => new VersionResponseModel()
@@ -96,9 +96,9 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Version\AssistantVersionUpdated.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Version", SqlDbType.VarChar) { Value = version },
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@version", SqlDbType.VarChar) { Value = version },
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@idNumber", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

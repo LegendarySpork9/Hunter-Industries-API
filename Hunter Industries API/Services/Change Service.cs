@@ -46,10 +46,10 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\LogChange.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AuditID", SqlDbType.Int) { Value = auditId },
-                    new SqlParameter("@Field", SqlDbType.VarChar) { Value = field },
-                    new SqlParameter("@OldValue", SqlDbType.VarChar) { Value = oldValue },
-                    new SqlParameter("@NewValue", SqlDbType.VarChar) { Value = newValue }
+                    new SqlParameter("@auditID", SqlDbType.Int) { Value = auditId },
+                    new SqlParameter("@field", SqlDbType.VarChar) { Value = field },
+                    new SqlParameter("@oldValue", SqlDbType.VarChar) { Value = oldValue },
+                    new SqlParameter("@newValue", SqlDbType.VarChar) { Value = newValue }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

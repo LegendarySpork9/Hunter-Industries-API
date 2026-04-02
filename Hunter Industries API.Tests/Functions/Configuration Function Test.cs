@@ -24,14 +24,14 @@ namespace HunterIndustriesAPI.Tests.Functions
             };
             SqlParameter[] parameters =
             {
-                new SqlParameter("@Name", "Test"),
-                new SqlParameter("@Value", "SomeValue")
+                new SqlParameter("@name", "Test"),
+                new SqlParameter("@value", "SomeValue")
             };
 
             SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
 
             Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@Name", actual[0].ParameterName);
+            Assert.AreEqual("@name", actual[0].ParameterName);
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace HunterIndustriesAPI.Tests.Functions
             };
             SqlParameter[] parameters =
             {
-                new SqlParameter("@Name", "Test"),
-                new SqlParameter("@Value", "Present")
+                new SqlParameter("@name", "Test"),
+                new SqlParameter("@value", "Present")
             };
 
             SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
@@ -69,8 +69,8 @@ namespace HunterIndustriesAPI.Tests.Functions
             };
             SqlParameter[] parameters =
             {
-                new SqlParameter("@Name", "Test"),
-                new SqlParameter("@Value", "SomeValue")
+                new SqlParameter("@name", "Test"),
+                new SqlParameter("@value", "SomeValue")
             };
 
             SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
@@ -106,16 +106,16 @@ namespace HunterIndustriesAPI.Tests.Functions
             };
             SqlParameter[] parameters =
             {
-                new SqlParameter("@First", "A"),
-                new SqlParameter("@Second", "B"),
-                new SqlParameter("@Third", "C")
+                new SqlParameter("@first", "A"),
+                new SqlParameter("@second", "B"),
+                new SqlParameter("@third", "C")
             };
 
             SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
 
             Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@First", actual[0].ParameterName);
-            Assert.AreEqual("@Third", actual[1].ParameterName);
+            Assert.AreEqual("@first", actual[0].ParameterName);
+            Assert.AreEqual("@third", actual[1].ParameterName);
         }
 
         #endregion
@@ -137,8 +137,8 @@ namespace HunterIndustriesAPI.Tests.Functions
             {
                 "select *",
                 "from Table with (nolock)",
-                "where Name = @Name",
-                "and Value = @Value"
+                "where Name = @name",
+                "and Value = @value"
             });
 
             string actual = ConfigurationFunction.CleanSQL(model, sql);
@@ -147,7 +147,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             {
                 "select *",
                 "from Table with (nolock)",
-                "where Name = @Name"
+                "where Name = @name"
             });
 
             Assert.AreEqual(expected, actual);
@@ -168,8 +168,8 @@ namespace HunterIndustriesAPI.Tests.Functions
             {
                 "select *",
                 "from Table with (nolock)",
-                "where Name = @Name",
-                "and Value = @Value"
+                "where Name = @name",
+                "and Value = @value"
             });
 
             string actual = ConfigurationFunction.CleanSQL(model, sql);
@@ -192,8 +192,8 @@ namespace HunterIndustriesAPI.Tests.Functions
             {
                 "select *",
                 "from Table with (nolock)",
-                "where Name = @Name",
-                "and Value = @Value"
+                "where Name = @name",
+                "and Value = @value"
             });
 
             string actual = ConfigurationFunction.CleanSQL(model, sql);
@@ -202,7 +202,7 @@ namespace HunterIndustriesAPI.Tests.Functions
             {
                 "select *",
                 "from Table with (nolock)",
-                "where Value = @Value"
+                "where Value = @value"
             });
 
             Assert.AreEqual(expected, actual);
@@ -243,9 +243,9 @@ namespace HunterIndustriesAPI.Tests.Functions
             {
                 "select *",
                 "from Table with (nolock)",
-                "where First = @First",
-                "and Second = @Second",
-                "and Third = @Third"
+                "where First = @first",
+                "and Second = @second",
+                "and Third = @third"
             });
 
             string actual = ConfigurationFunction.CleanSQL(model, sql);
@@ -254,8 +254,8 @@ namespace HunterIndustriesAPI.Tests.Functions
             {
                 "select *",
                 "from Table with (nolock)",
-                "where First = @First",
-                "and Third = @Third"
+                "where First = @first",
+                "and Third = @third"
             });
 
             Assert.AreEqual(expected, actual);
@@ -275,9 +275,9 @@ namespace HunterIndustriesAPI.Tests.Functions
             string sql = string.Join(Environment.NewLine, new[]
             {
                 "update Table",
-                "set [Name] = @Name,",
-                "[Value] = @Value",
-                "where Id = @Id"
+                "set [Name] = @name,",
+                "[Value] = @value",
+                "where Id = @id"
             });
 
             string actual = ConfigurationFunction.CleanSQL(model, sql);
@@ -285,8 +285,8 @@ namespace HunterIndustriesAPI.Tests.Functions
             string expected = string.Join(Environment.NewLine, new[]
             {
                 "update Table",
-                "set [Name] = @Name",
-                "where Id = @Id"
+                "set [Name] = @name",
+                "where Id = @id"
             });
 
             Assert.AreEqual(expected, actual);
@@ -307,10 +307,10 @@ namespace HunterIndustriesAPI.Tests.Functions
             string sql = string.Join(Environment.NewLine, new[]
             {
                 "update Table set",
-                "[Name] = @Name,",
-                "[Type] = @Type,",
-                "[Value] = @Value",
-                "where Id = @Id"
+                "[Name] = @name,",
+                "[Type] = @type,",
+                "[Value] = @value",
+                "where Id = @id"
             });
 
             string actual = ConfigurationFunction.CleanSQL(model, sql);
@@ -318,9 +318,9 @@ namespace HunterIndustriesAPI.Tests.Functions
             string expected = string.Join(Environment.NewLine, new[]
             {
                 "update Table set",
-                "[Name] = @Name,",
-                "[Type] = @Type",
-                "where Id = @Id"
+                "[Name] = @name,",
+                "[Type] = @type",
+                "where Id = @id"
             });
 
             Assert.AreEqual(expected, actual);
