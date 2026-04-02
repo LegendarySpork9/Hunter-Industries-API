@@ -177,6 +177,23 @@ namespace HunterIndustriesAPI.Services.User
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
+                sql += @"
+and UserId = (
+    select
+        UserId
+    from APIUser with (nolock)
+    where Username = @username
+)";
+                sql += @"
+and ApplicationId = (
+    select
+        ApplicationId
+    from [Application] with (nolock)
+    where [Name] = @application
+)";
+                sql += @"
+and [Name] = @name";
+
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
@@ -221,7 +238,9 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExistsById.sql");
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
+                sql += "\nand UserSettingId = @id";
+
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@id", SqlDbType.Int) { Value = id }

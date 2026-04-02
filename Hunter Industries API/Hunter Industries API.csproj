@@ -555,7 +555,6 @@
     <Content Include="SQL\User\User Settings\GetUserSetting.sql" />
     <Content Include="SQL\User\User Settings\GetUserSettings.sql" />
     <Content Include="SQL\User\User Settings\UserSettingAdded.sql" />
-    <Content Include="SQL\User\User Settings\UserSettingExistsById.sql" />
     <Content Include="SQL\User\User Settings\UserSettingExists.sql" />
     <Content Include="SQL\User\User Settings\UserSettingUpdated.sql" />
     <Content Include="SQL\User\UserDeleted.sql" />
