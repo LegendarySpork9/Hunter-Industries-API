@@ -202,6 +202,10 @@ ALTER TABLE Downtime ALTER COLUMN [Duration] [int] NOT NULL
 
 PRINT('Added Duration Field to Downtime Table')
 
+ALTER TABLE [ServerInformation] ADD [EventInterval] [int] NOT NULL DEFAULT(300)
+
+PRINT('Added EventInterval Field to ServerInformation Table')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 

@@ -34,6 +34,10 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// </summary>
         public DowntimeRecord Downtime { get; set; }
         /// <summary>
+        /// The time, in seconds, between server events.
+        /// </summary>
+        public int EventInterval { get; set; }
+        /// <summary>
         /// Whether the server is active.
         /// </summary>
         public bool IsActive { get; set; }

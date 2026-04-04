@@ -545,6 +545,14 @@
     <Content Include="SQL\Server Status\Server Information\ServerExists.sql" />
     <Content Include="SQL\Server Status\Server Alerts\ServerAlertExists.sql" />
     <Content Include="SQL\Server Status\Server Alerts\ServerAlertUpdated.sql" />
+    <Content Include="SQL\Statistics\GetAPITraffic.sql" />
+    <Content Include="SQL\Statistics\GetChangesByField.sql" />
+    <Content Include="SQL\Statistics\GetCallsByStatus.sql" />
+    <Content Include="SQL\Statistics\GetCallsByMethod.sql" />
+    <Content Include="SQL\Statistics\GetCallsByEndpoint.sql" />
+    <Content Include="SQL\Statistics\GetLoginAttemptsByUsernameAndApplication.sql" />
+    <Content Include="SQL\Statistics\GetErrorsByIpAndSummary.sql" />
+    <Content Include="SQL\Statistics\GetTopBarStats.sql" />
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />
