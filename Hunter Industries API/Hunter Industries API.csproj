@@ -344,6 +344,7 @@
     <Compile Include="Controllers\User\UserController.cs" />
     <Compile Include="Controllers\User\UserSettingsController.cs" />
     <Compile Include="Converters\Audit History Converter.cs" />
+    <Compile Include="Converters\Statistics Converter.cs" />
     <Compile Include="Converters\Configuration Converter.cs" />
     <Compile Include="Converters\Standard Values.cs" />
     <Compile Include="Converters\Token Converter.cs" />
@@ -575,7 +576,7 @@
     <Content Include="SQL\Statistics\Shared\GetCallsByMethod.sql" />
     <Content Include="SQL\Statistics\Shared\GetCallsByEndpoint.sql" />
     <Content Include="SQL\Statistics\Dashboard\GetLoginAttemptsByUsernameAndApplication.sql" />
-    <Content Include="SQL\Statistics\Dashboard\GetErrorsByIpAndSummary.sql" />
+    <Content Include="SQL\Statistics\Dashboard\GetErrorsByIPAndSummary.sql" />
     <Content Include="SQL\Statistics\Dashboard\GetServerHealth30Days.sql" />
     <Content Include="SQL\Statistics\Dashboard\GetServerHealthOverview.sql" />
     <Content Include="SQL\Statistics\Dashboard\GetTopBarStats.sql" />
