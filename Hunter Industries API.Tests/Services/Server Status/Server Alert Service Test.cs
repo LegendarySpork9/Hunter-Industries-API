@@ -45,7 +45,7 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
                         ComponentStatus = "Critical",
                         AlertStatus = "Open",
                         AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-                        server = new RelatedServerRecord
+                        Server = new RelatedServerRecord
                         {
                             Id = 1,
                             Name = "Test",
@@ -105,7 +105,7 @@ namespace HunterIndustriesAPI.Tests.Services.ServerStatus
                     ComponentStatus = "Critical",
                     AlertStatus = "Open",
                     AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-                    server = new RelatedServerRecord
+                    Server = new RelatedServerRecord
                     {
                         Name = "Test",
                         HostName = "TestServer",

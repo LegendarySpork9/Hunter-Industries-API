@@ -1,11 +1,11 @@
-// Copyright © - Unpublished - Toby Hunter
+﻿// Copyright © - Unpublished - Toby Hunter
 using System;
 
-namespace HunterIndustriesAPI.Objects.ServerStatus
+namespace HunterIndustriesAPI.Objects.Statistics.Server
 {
     /// <summary>
     /// </summary>
-    public class ServerAlertRecord
+    public class RecentAlertRecord
     {
         /// <summary>
         /// The id number of the alert.
@@ -31,9 +31,5 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// The date and time the alert occured.
         /// </summary>
         public DateTime AlertDate { get; set; }
-        /// <summary>
-        /// The server information the alert relates to.
-        /// </summary>
-        public RelatedServerRecord Server { get; set; }
     }
 }
