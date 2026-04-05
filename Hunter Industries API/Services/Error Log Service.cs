@@ -81,7 +81,7 @@ namespace HunterIndustriesAPI.Services
                 }
 
                 sql += @"
-order by errorId asc
+order by ErrorId desc
 offset (@pageSize * (@pageNumber - 1)) rows
 fetch next @pageSize rows only";
 

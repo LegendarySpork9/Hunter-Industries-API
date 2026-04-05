@@ -189,7 +189,7 @@ namespace HunterIndustriesAPI.Services
                 }
 
                 sql += @"
-order by AH.AuditID asc
+order by AH.AuditID desc
 offset (@pageSize * (@pageNumber - 1)) rows
 fetch next @pageSize rows only";
 
