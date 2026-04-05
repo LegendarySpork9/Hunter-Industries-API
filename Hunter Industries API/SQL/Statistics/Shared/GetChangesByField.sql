@@ -3,7 +3,7 @@ select
 	count(*) as ChangeCount
 from [Change] with (nolock)
 join AuditHistory with (nolock) on [Change].AuditId = AuditHistory.AuditId
-where DateOccured >= DATEADD(DAY, -30, GETUTCDATE())
+where DateOccured >= dateadd(day, -30, getutcdate())
 /* Move to Service
 
 group by Field

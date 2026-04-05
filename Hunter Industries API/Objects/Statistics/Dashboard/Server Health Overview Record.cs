@@ -10,6 +10,10 @@ namespace HunterIndustriesAPI.Objects.Statistics.Dashboard
         /// </summary>
         public int ServerId { get; set; }
         /// <summary>
+        /// The name of the server.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
         /// The percentage of time the server was online.
         /// </summary>
         public float Uptime { get; set; }

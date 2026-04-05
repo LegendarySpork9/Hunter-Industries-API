@@ -1,40 +1,39 @@
-SELECT
+select
     SI.ServerInformationId,
     SI.[Name],
-    EventDays.EventDate AS Date,
-    CAST(
-        (MIN(ISNULL(OnlineEvents.EventCount, 0)) * SI.EventInterval)
-        / (86400.0 - ISNULL(D.Duration, 0))
+    EventDays.EventDate as [Date],
+    cast(
+        (min(isnull(OnlineEvents.EventCount, 0)) * SI.EventInterval)
+        / (86400.0 - isnull(D.Duration, 0))
         * 100
-    AS DECIMAL(5, 2)) AS UptimePercentage
-FROM ServerInformation SI with (nolock)
-LEFT JOIN Downtime D with (nolock) ON SI.DowntimeId = D.DowntimeId
-CROSS APPLY (
-    SELECT
-        CAST(CI.DateOccured AS DATE) AS EventDate,
-        COUNT(*) / COUNT(DISTINCT CI.ComponentId) AS EventCount
-    FROM ComponentInformation CI with (nolock)
-    WHERE CI.ServerInformationId = SI.ServerInformationId
-    AND CI.DateOccured >= DATEADD(DAY, -30, GETUTCDATE())
-    GROUP BY CAST(CI.DateOccured AS DATE)
+    as decimal(5, 2)) as UptimePercentage
+from ServerInformation SI with (nolock)
+left join Downtime D with (nolock) ON SI.DowntimeId = D.DowntimeId
+cross apply (
+    select
+        cast(CI.DateOccured as date) as EventDate,
+        count(*) / count(distinct CI.ComponentId) as EventCount
+    from ComponentInformation CI with (nolock)
+    where CI.ServerInformationId = SI.ServerInformationId
+    and CI.DateOccured >= dateadd(day, -30, getutcdate())
+    group by cast(CI.DateOccured as date)
 ) EventDays
-CROSS APPLY (
-    SELECT DISTINCT
+cross apply (
+    select distinct
       CI.ComponentId
-    FROM ComponentInformation CI with (nolock)
-    WHERE CI.ServerInformationId = SI.ServerInformationId
+    from ComponentInformation CI with (nolock)
+    where CI.ServerInformationId = SI.ServerInformationId
 ) ServerComponents
-LEFT JOIN (
-    SELECT
+left join (
+    select
       CI.ComponentId,
-      CAST(CI.DateOccured AS DATE) AS EventDate,
-      COUNT(*) AS EventCount
-    FROM ComponentInformation CI with (nolock)
-    INNER JOIN ComponentStatus CS with (nolock) ON CI.ComponentStatusId = CS.ComponentStatusId
-    WHERE CS.[Value] = 'Online'
-    GROUP BY CI.ComponentId, CAST(CI.DateOccured AS DATE)
-) OnlineEvents ON OnlineEvents.ComponentId = ServerComponents.ComponentId
-    AND OnlineEvents.EventDate = EventDays.EventDate
-WHERE SI.IsActive = 1
-GROUP BY SI.ServerInformationId, SI.[Name], EventDays.EventDate, EventDays.EventCount
-ORDER BY SI.ServerInformationId, EventDays.EventDate asc
+      cast(CI.DateOccured as date) as EventDate,
+      count(*) as EventCount
+    from ComponentInformation CI with (nolock)
+    inner join ComponentStatus CS with (nolock) ON CI.ComponentStatusId = CS.ComponentStatusId
+    where CS.[Value] = 'Online'
+    group by CI.ComponentId, cast(CI.DateOccured as date)
+) OnlineEvents on OnlineEvents.ComponentId = ServerComponents.ComponentId and OnlineEvents.EventDate = EventDays.EventDate
+where SI.IsActive = 1
+group by SI.ServerInformationId, SI.[Name], EventDays.EventDate, SI.EventInterval, D.Duration, EventDays.EventCount
+order by SI.ServerInformationId, EventDays.EventDate asc

@@ -375,6 +375,10 @@
     <Compile Include="Implementations\File System Wrapper.cs" />
     <Compile Include="Implementations\Logger Service Wrapper.cs" />
     <Compile Include="Implementations\System Clock Provider.cs" />
+    <Compile Include="Mappings\Statistics\Server Data Reader Mapping.cs" />
+    <Compile Include="Mappings\Statistics\Error Data Reader Mapping.cs" />
+    <Compile Include="Mappings\Statistics\Shared Data Reader Mapping.cs" />
+    <Compile Include="Mappings\Statistics\Dashboard Data Reader Mapping.cs" />
     <Compile Include="Models\Database Model.cs" />
     <Compile Include="Models\Requests\Authentication Model.cs" />
     <Compile Include="Models\Requests\Bodies\Assistant\Config Model.cs" />

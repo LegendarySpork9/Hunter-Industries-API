@@ -3,7 +3,7 @@ select
 	count(*) as StatusCalls
 from AuditHistory with (nolock)
 join StatusCode with (nolock) on AuditHistory.StatusId = StatusCode.StatusId
-where DateOccured >= DATEADD(DAY, -30, GETUTCDATE())
+where DateOccured >= dateadd(day, -30, getutcdate())
 /* Move to Service
 
 group by [Value]

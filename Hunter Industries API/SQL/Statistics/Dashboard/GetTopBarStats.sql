@@ -15,24 +15,24 @@ select
 	select
 		count(*) as CallCount
 	from AuditHistory with (nolock)
-	where DateOccured >= DATEADD(DAY, -30, GETUTCDATE())
+	where DateOccured >= dateadd(day, -30, getutcdate())
 ) as CallCount,
 (
 	select
 		count(*) as LoginAttemptCount
 	from LoginAttempt with (nolock)
-	where DateOccured >= DATEADD(DAY, -30, GETUTCDATE())
+	where DateOccured >= dateadd(day, -30, getutcdate())
 ) as LoginAttemptCount,
 (
 	select
 		count(*) as ChangeCount
 	from [Change] with (nolock)
 	join AuditHistory with (nolock) on [Change].AuditId = AuditHistory.AuditId
-	where DateOccured >= DATEADD(DAY, -30, GETUTCDATE())
+	where DateOccured >= dateadd(day, -30, getutcdate())
 ) as ChangeCount,
 (
 	select
 		count(*) as ErrorCount
 	from ErrorLog with (nolock)
-	where DateOccured >= DATEADD(DAY, -30, GETUTCDATE())
+	where DateOccured >= dateadd(day, -30, getutcdate())
 ) as ErrorCount

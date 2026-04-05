@@ -6,6 +6,10 @@ namespace HunterIndustriesAPI.Objects.Statistics.Dashboard
     public class APITrafficRecord
     {
         /// <summary>
+        /// The day of the calls.
+        /// </summary>
+        public string Day { get; set; }
+        /// <summary>
         /// The number of sucessful API calls.
         /// </summary>
         public int SuccessfulCalls { get; set; }
