@@ -4,7 +4,3 @@ select
 from AuditHistory with (nolock)
 join Method with (nolock) on AuditHistory.MethodId = Method.MethodId
 where DateOccured >= dateadd(day, -30, getutcdate())
-/* Move to Service
-
-group by [Value]
-order by MethodCalls desc*/

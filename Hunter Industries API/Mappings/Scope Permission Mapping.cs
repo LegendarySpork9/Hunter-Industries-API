@@ -24,6 +24,7 @@ namespace HunterIndustriesAPI.Mappings
                     "ServerStatus.Alert",
                     "ServerStatus.Event",
                     "ServerStatus.Information",
+                    "Statistic",
                     "User",
                     "UserSettings"
 

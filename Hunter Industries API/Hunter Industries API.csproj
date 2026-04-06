@@ -335,6 +335,7 @@
     <Compile Include="Controllers\Assistant\VersionController.cs" />
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
+    <Compile Include="Controllers\StatisticController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\Server Status\ServerAlertController.cs" />
     <Compile Include="Controllers\Server Status\ServerEventController.cs" />

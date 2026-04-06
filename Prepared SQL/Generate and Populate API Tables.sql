@@ -761,6 +761,10 @@ INSERT [dbo].[Endpoint] ([Value]) VALUES ('/serverstatus/serveralert')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('/errorlog')
 GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/configuration')
+GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/statistic')
+GO
 INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v1.0')
 GO
 INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v1.1')

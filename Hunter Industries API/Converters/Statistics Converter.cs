@@ -44,6 +44,29 @@ namespace HunterIndustriesAPI.Converters
         }
 
         /// <summary>
+        /// Returns the Getx group query.
+        /// </summary>
+        public static string GetSQLSharedSort(string part)
+        {
+            switch (part)
+            {
+                case "endpointCalls": return @"
+group by [Value]
+order by EndpointCalls desc";
+                case "methodCalls": return @"
+group by [Value]
+order by MethodCalls desc";
+                case "statusCalls": return @"
+group by [Value]
+order by StatusCalls desc";
+                case "changeCalls": return @"
+group by Field
+order by ChangeCount desc";
+                default: return "Unknown.sql";
+            }
+        }
+
+        /// <summary>
         /// Returns the Getx sql file to load for the server page.
         /// </summary>
         public static string GetSQLServer(string part)

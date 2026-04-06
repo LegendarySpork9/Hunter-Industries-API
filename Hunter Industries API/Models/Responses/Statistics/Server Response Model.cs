@@ -2,7 +2,7 @@
 using HunterIndustriesAPI.Objects.Statistics.Server;
 using System.Collections.Generic;
 
-namespace HunterIndustriesAPI.Models.Responses
+namespace HunterIndustriesAPI.Models.Responses.Statistics
 {
     /// <summary>
     /// </summary>

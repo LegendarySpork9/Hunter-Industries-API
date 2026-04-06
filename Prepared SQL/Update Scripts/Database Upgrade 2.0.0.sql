@@ -206,6 +206,11 @@ ALTER TABLE [ServerInformation] ADD [EventInterval] [int] NOT NULL DEFAULT(300)
 
 PRINT('Added EventInterval Field to ServerInformation Table')
 
+INSERT INTO [Endpoint]([Value])
+VALUES ('/statistic')
+
+PRINT('Added Statistic Endpoint')
+
 INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
 VALUES ('2.0.0', GETUTCDATE())
 

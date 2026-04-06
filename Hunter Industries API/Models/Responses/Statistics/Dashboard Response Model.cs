@@ -3,7 +3,7 @@ using HunterIndustriesAPI.Objects.Statistics.Dashboard;
 using HunterIndustriesAPI.Objects.Statistics.Shared;
 using System.Collections.Generic;
 
-namespace HunterIndustriesAPI.Models.Responses
+namespace HunterIndustriesAPI.Models.Responses.Statistics
 {
     /// <summary>
     /// </summary>
