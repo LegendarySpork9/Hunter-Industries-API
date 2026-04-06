@@ -464,6 +464,7 @@
     <Compile Include="Services\Assistant\Deletion Service.cs" />
     <Compile Include="Services\Assistant\Location Service.cs" />
     <Compile Include="Services\Assistant\Version Service.cs" />
+    <Compile Include="Services\Statistic Service.cs" />
     <Compile Include="Services\Audit History Service.cs" />
     <Compile Include="Services\Change Service.cs" />
     <Compile Include="Services\Configuration Service.cs" />
