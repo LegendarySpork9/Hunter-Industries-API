@@ -40,7 +40,7 @@ namespace HunterIndustriesAPI.Models.Responses.Statistics
         /// <summary>
         /// The login attempt records.
         /// </summary>
-        public List<LoginAttemptRecord> LoginAttempts { get; set; }
+        public List<LoginAttemptStatisticRecord> LoginAttempts { get; set; }
         /// <summary>
         /// The server health records.
         /// </summary>

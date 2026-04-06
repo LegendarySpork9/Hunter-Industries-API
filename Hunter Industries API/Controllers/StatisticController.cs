@@ -100,7 +100,7 @@ namespace HunterIndustriesAPI.Controllers
             List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>().ToList();
 
             records = await _statisticService.GetDashboardStatistic("loginAttempts");
-            List<LoginAttemptRecord> loginAttemptRecords = records.Cast<LoginAttemptRecord>().ToList();
+            List<LoginAttemptStatisticRecord> loginAttemptRecords = records.Cast<LoginAttemptStatisticRecord>().ToList();
 
             records = await _statisticService.GetDashboardStatistic("serverHealthOverview");
             List<ServerHealthOverviewRecord> serverHealthOverviewRecords = records.Cast<ServerHealthOverviewRecord>().ToList();
@@ -211,7 +211,7 @@ namespace HunterIndustriesAPI.Controllers
         [RequiredPolicyAuthorisationAttributeFilter("Statistic.Read")]
         [VersionedRoute("statistic/error", "2.0")]
         [SwaggerOperation("GetStatisticError")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(DashboardResponseModel), Description = "Returns the statistics for the dashboard.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ErrorResponseModel), Description = "Returns the statistics for the dashboard.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetError()

@@ -34,4 +34,5 @@ left join (
 	and IsSuccessful = 0
 	group by Username, [Name]
 ) Unsuccessful on isnull(APIUser.Username, 'Unknown') = Unsuccessful.Username and isnull([Name], 'Unknown') = Unsuccessful.[Application]
+where isnull(Successful.Attempts, 0) + isnull(Unsuccessful.Attempts, 0) > 0
 order by Username asc, TotalAttempts desc

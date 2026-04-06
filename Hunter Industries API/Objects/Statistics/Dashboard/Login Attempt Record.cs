@@ -3,7 +3,7 @@ namespace HunterIndustriesAPI.Objects.Statistics.Dashboard
 {
     /// <summary>
     /// </summary>
-    public class LoginAttemptRecord
+    public class LoginAttemptStatisticRecord
     {
         /// <summary>
         /// The name of the user that logged in.

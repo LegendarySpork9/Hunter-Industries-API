@@ -42,9 +42,9 @@ namespace HunterIndustriesAPI.Mappings
         /// <summary>
         /// The SQL row to model mappings for the login attempt record.
         /// </summary>
-        public static readonly Func<IDataReader, LoginAttemptRecord> LoginAttemptMapper = reader =>
+        public static readonly Func<IDataReader, LoginAttemptStatisticRecord> LoginAttemptMapper = reader =>
         {
-            LoginAttemptRecord loginAttempt = new LoginAttemptRecord()
+            LoginAttemptStatisticRecord loginAttempt = new LoginAttemptStatisticRecord()
             {
                 Username = reader.GetString(0),
                 Application = reader.GetString(1),
