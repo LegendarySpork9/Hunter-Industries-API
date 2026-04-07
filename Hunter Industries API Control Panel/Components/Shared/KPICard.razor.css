@@ -1,0 +1,23 @@
+.kpi-card {
+    background-color: #3E3E3E;
+    border-color: #555;
+    border-radius: 8px;
+}
+
+.kpi-title {
+    font-size: 0.85rem;
+}
+
+.kpi-icon {
+    font-size: 1.25rem;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.kpi-trend {
+    font-size: 0.75rem;
+}

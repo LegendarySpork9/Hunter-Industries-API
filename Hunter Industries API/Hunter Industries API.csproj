@@ -345,7 +345,6 @@
     <Compile Include="Converters\Audit History Converter.cs" />
     <Compile Include="Converters\Statistics Converter.cs" />
     <Compile Include="Converters\Configuration Converter.cs" />
-    <Compile Include="Converters\Standard Values.cs" />
     <Compile Include="Converters\Token Converter.cs" />
     <Compile Include="Filters\Document\Base Url Document Filter.cs" />
     <Compile Include="Filters\Operation\Parameter Detail Operation Filter.cs" />
@@ -356,6 +355,7 @@
     <Compile Include="Filters\Required Policy Authorisation Attribute Filter.cs" />
     <Compile Include="Functions\Configuration Function.cs" />
     <Compile Include="Functions\IP Address Function.cs" />
+    <Compile Include="Implementations\Logger Service Wrapper.cs" />
     <Compile Include="Mappings\Configuration Data Reader Mapping.cs" />
     <Compile Include="Mappings\Scope Permission Mapping.cs" />
     <Compile Include="Filters\Versioned Direct Route Provider.cs" />
@@ -609,11 +609,16 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hunter Industries API Common\Hunter Industries API Common.csproj">
+      <Project>{f7d388e9-5a96-420e-9a90-9b8d91cdd67e}</Project>
+      <Name>Hunter Industries API Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

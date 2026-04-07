@@ -1,27 +1,22 @@
-@{
-    var cardStyle = "background-color: #3E3E3E;";
-    var iconStyle = "color: " + IconColour + ";";
-}
-
-<div class="card h-100" style="@cardStyle border-color: #555; border-radius: 8px;">
+<div class="card h-100 kpi-card">
     <div class="card-body d-flex flex-column justify-content-between p-3">
         <div class="d-flex justify-content-between align-items-start">
-            <span class="text-muted" style="font-size: 0.85rem;">@Title</span>
-            <span style="@iconStyle font-size: 1.25rem;">@((MarkupString)Icon)</span>
+            <span class="text-muted kpi-title">@Title</span>
+            <span class="kpi-icon" style="color: @IconColour;">@((MarkupString)Icon)</span>
         </div>
         <div>
-            <h2 class="mb-0 mt-2" style="font-size: 2rem; font-weight: 700; color: #fff;">@Value</h2>
+            <h2 class="mb-0 mt-2 kpi-value">@Value</h2>
             @if (!string.IsNullOrEmpty(Trend))
             {
                 @if (IsError)
                 {
-                    <small class="@(Trend.StartsWith("-") ? "text-success" : Trend.StartsWith("+") ? "text-danger" : "text-muted")" style="font-size: 0.75rem;">
+                    <small class="kpi-trend @(Trend.StartsWith("-") ? "text-success" : Trend.StartsWith("+") ? "text-danger" : "text-muted")">
                         @Trend vs last month
                     </small>
                 }
                 else
                 {
-                    <small class="@(Trend.StartsWith("+") ? "text-success" : Trend.StartsWith("-") ? "text-danger" : "text-muted")" style="font-size: 0.75rem;">
+                    <small class="kpi-trend @(Trend.StartsWith("+") ? "text-success" : Trend.StartsWith("-") ? "text-danger" : "text-muted")">
                         @Trend vs last month
                     </small>
                 }

@@ -30,7 +30,7 @@ else
     <!-- Donut Charts -->
     <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
                     @if (_summary.CallsByEndpoint.Count > 0)
@@ -41,12 +41,12 @@ else
                                                 Fills="@_endpointColours" Strokes="@_endpointColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
-                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                             @for (int i = 0; i < _summary.CallsByEndpoint.Count; i++)
                             {
                                 var item = _summary.CallsByEndpoint[i];
                                 var colour = _endpointColours[i % _endpointColours.Length];
-                                <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                             }
                         </div>
                     }
@@ -58,7 +58,7 @@ else
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method</h6>
                     @if (_summary.CallsByMethod.Count > 0)
@@ -69,12 +69,12 @@ else
                                                 Fills="@_methodColours" Strokes="@_methodColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
-                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                             @for (int i = 0; i < _summary.CallsByMethod.Count; i++)
                             {
                                 var item = _summary.CallsByMethod[i];
                                 var colour = _methodColours[i % _methodColours.Length];
-                                <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                             }
                         </div>
                     }
@@ -86,7 +86,7 @@ else
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
                     @if (_summary.CallsByStatusCode.Count > 0)
@@ -97,12 +97,12 @@ else
                                                 Fills="@_statusColours" Strokes="@_statusColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
-                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                             @for (int i = 0; i < _summary.CallsByStatusCode.Count; i++)
                             {
                                 var item = _summary.CallsByStatusCode[i];
                                 var colour = _statusColours[i % _statusColours.Length];
-                                <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                             }
                         </div>
                     }
@@ -114,7 +114,7 @@ else
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field</h6>
                     @if (_summary.ChangesByField.Count > 0)
@@ -125,12 +125,12 @@ else
                                                 Fills="@_fieldColours" Strokes="@_fieldColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
-                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                             @for (int i = 0; i < _summary.ChangesByField.Count; i++)
                             {
                                 var item = _summary.ChangesByField[i];
                                 var colour = _fieldColours[i % _fieldColours.Length];
-                                <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                             }
                         </div>
                     }
@@ -144,7 +144,7 @@ else
     </div>
 
     <!-- Filter Bar -->
-    <div class="card mb-4" style="border-radius: 8px;">
+    <div class="card mb-4 card-rounded">
         <div class="card-body">
             <div class="row g-3 align-items-end">
                 <div class="col-md-2">
@@ -231,7 +231,7 @@ else
             }
         </div>
         <div class="d-flex gap-2 align-items-center">
-            <select class="form-select form-select-sm" style="width: auto;" @bind="_pageSize" @bind:after="ApplyFilters">
+            <select class="form-select form-select-sm page-size-select" @bind="_pageSize" @bind:after="ApplyFilters">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>

@@ -10,13 +10,15 @@ using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Objects.Assistant;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.Assistant;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
-using System.Security.Claims;
 using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers.Assistant

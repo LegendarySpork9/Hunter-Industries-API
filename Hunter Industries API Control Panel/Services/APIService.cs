@@ -4,8 +4,6 @@ namespace HunterIndustriesAPIControlPanel.Services
 {
     public class APIService
     {
-        private readonly LoggerService _logger;
-
         private static readonly List<string> AvailableScopes = new()
         {
             "User", "Assistant API", "Book Reader API", "Control Panel API", "Server Status API"
@@ -322,15 +320,8 @@ namespace HunterIndustriesAPIControlPanel.Services
             ErrorLogs = ErrorLogs.OrderByDescending(e => e.DateOccured).ToList();
         }
 
-        public APIService(LoggerService logger)
-        {
-            _logger = logger;
-        }
-
         public (bool Success, string Token) Authenticate(string username, string password, string phrase)
         {
-            _logger.LogInfo($"Authentication attempt for user: {username}");
-
             var user = Users.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) && !u.IsDeleted);
 
             if (user != null && phrase == "HunterIndustries")
@@ -338,7 +329,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 return (true, $"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy.token.{Guid.NewGuid():N}");
             }
 
-            _logger.LogWarning($"Failed authentication attempt for user: {username}");
             return (false, string.Empty);
         }
 
@@ -456,7 +446,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"User created: {username}");
             return true;
         }
 
@@ -469,7 +458,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (!string.IsNullOrEmpty(password)) user.Password = password;
             if (scopes != null) user.Scopes = scopes;
 
-            _logger.LogInfo($"User updated: {user.Username}");
             return true;
         }
 
@@ -479,7 +467,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (user == null) return false;
 
             user.IsDeleted = true;
-            _logger.LogInfo($"User deleted: {user.Username}");
             return true;
         }
 
@@ -531,7 +518,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (appSettings.Settings.Any(s => s.Name == settingName)) return false;
 
             appSettings.Settings.Add(new SettingRecord { Id = _nextSettingId++, Name = settingName, Value = value });
-            _logger.LogInfo($"Setting added for {username}/{application}: {settingName} = {value}");
             return true;
         }
 
@@ -544,7 +530,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (setting == null) return false;
 
             setting.Value = value;
-            _logger.LogInfo($"Setting updated for {username}/{application}: {setting.Name} = {value}");
             return true;
         }
 
@@ -578,7 +563,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsActive = isActive
             });
 
-            _logger.LogInfo($"Server created: {name}");
             return true;
         }
 
@@ -597,7 +581,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (eventInterval.HasValue) server.EventInterval = eventInterval.Value;
             if (isActive.HasValue) server.IsActive = isActive.Value;
 
-            _logger.LogInfo($"Server updated: {server.Name}");
             return true;
         }
 
@@ -801,7 +784,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration application created: {name}");
             return true;
         }
 
@@ -813,7 +795,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (!string.IsNullOrEmpty(name)) app.Name = name;
             if (!string.IsNullOrEmpty(phrase)) app.Phrase = phrase;
 
-            _logger.LogInfo($"Configuration application updated: {app.Name}");
             return true;
         }
 
@@ -823,7 +804,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (app == null) return false;
 
             app.IsDeleted = true;
-            _logger.LogInfo($"Configuration application deleted: {app.Name}");
             return true;
         }
 
@@ -843,7 +823,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration application setting created: {name} for {app.Name}");
             return true;
         }
 
@@ -857,7 +836,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (!string.IsNullOrEmpty(type)) setting.Type = type;
             if (required.HasValue) setting.Required = required.Value;
 
-            _logger.LogInfo($"Configuration application setting updated: {setting.Name}");
             return true;
         }
 
@@ -868,7 +846,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (setting == null) return false;
 
             setting.IsDeleted = true;
-            _logger.LogInfo($"Configuration application setting deleted: {setting.Name}");
             return true;
         }
 
@@ -885,7 +862,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration authorisation created");
             return true;
         }
 
@@ -895,8 +871,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (auth == null) return false;
 
             if (!string.IsNullOrEmpty(phrase)) auth.Phrase = phrase;
-
-            _logger.LogInfo($"Configuration authorisation updated: {id}");
             return true;
         }
 
@@ -906,7 +880,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (auth == null) return false;
 
             auth.IsDeleted = true;
-            _logger.LogInfo($"Configuration authorisation deleted: {id}");
             return true;
         }
 
@@ -923,7 +896,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration component created: {name}");
             return true;
         }
 
@@ -934,7 +906,6 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             if (!string.IsNullOrEmpty(name)) comp.Name = name;
 
-            _logger.LogInfo($"Configuration component updated: {comp.Name}");
             return true;
         }
 
@@ -944,7 +915,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (comp == null) return false;
 
             comp.IsDeleted = true;
-            _logger.LogInfo($"Configuration component deleted: {comp.Name}");
             return true;
         }
 
@@ -962,7 +932,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration connection created: {ipAddress}:{port}");
             return true;
         }
 
@@ -974,7 +943,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (!string.IsNullOrEmpty(ipAddress)) conn.IPAddress = ipAddress;
             if (port.HasValue) conn.Port = port.Value;
 
-            _logger.LogInfo($"Configuration connection updated: {conn.IPAddress}:{conn.Port}");
             return true;
         }
 
@@ -984,7 +952,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (conn == null) return false;
 
             conn.IsDeleted = true;
-            _logger.LogInfo($"Configuration connection deleted: {conn.IPAddress}:{conn.Port}");
             return true;
         }
 
@@ -1002,7 +969,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration downtime created: {time}");
             return true;
         }
 
@@ -1014,7 +980,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (!string.IsNullOrEmpty(time)) dt.Time = time;
             if (duration.HasValue) dt.Duration = duration.Value;
 
-            _logger.LogInfo($"Configuration downtime updated: {dt.Time}");
             return true;
         }
 
@@ -1024,7 +989,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (dt == null) return false;
 
             dt.IsDeleted = true;
-            _logger.LogInfo($"Configuration downtime deleted: {dt.Time}");
             return true;
         }
 
@@ -1042,7 +1006,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration game created: {name} {version}");
             return true;
         }
 
@@ -1054,7 +1017,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (!string.IsNullOrEmpty(name)) game.Name = name;
             if (!string.IsNullOrEmpty(version)) game.Version = version;
 
-            _logger.LogInfo($"Configuration game updated: {game.Name} {game.Version}");
             return true;
         }
 
@@ -1064,7 +1026,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (game == null) return false;
 
             game.IsDeleted = true;
-            _logger.LogInfo($"Configuration game deleted: {game.Name}");
             return true;
         }
 
@@ -1081,7 +1042,6 @@ namespace HunterIndustriesAPIControlPanel.Services
                 IsDeleted = false
             });
 
-            _logger.LogInfo($"Configuration machine created: {hostName}");
             return true;
         }
 
@@ -1092,7 +1052,6 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             if (!string.IsNullOrEmpty(hostName)) machine.HostName = hostName;
 
-            _logger.LogInfo($"Configuration machine updated: {machine.HostName}");
             return true;
         }
 
@@ -1102,7 +1061,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             if (machine == null) return false;
 
             machine.IsDeleted = true;
-            _logger.LogInfo($"Configuration machine deleted: {machine.HostName}");
             return true;
         }
     }

@@ -10,6 +10,8 @@ using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.Assistant;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System.Net;
 using System.Threading.Tasks;

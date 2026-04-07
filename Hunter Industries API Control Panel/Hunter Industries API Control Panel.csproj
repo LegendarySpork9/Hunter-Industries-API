@@ -21,4 +21,8 @@
     <PackageReference Include="Radzen.Blazor" Version="7.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hunter Industries API Common\Hunter Industries API Common.csproj" />
+  </ItemGroup>
+
 </Project>

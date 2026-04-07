@@ -3,6 +3,8 @@ using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Objects.Configuration;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;

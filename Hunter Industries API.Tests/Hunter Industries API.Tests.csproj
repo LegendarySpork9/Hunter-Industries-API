@@ -124,52 +124,52 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ConfigurationControllerTest.cs" />
-    <Compile Include="Controllers\ErrorControllerTest.cs" />
+    <Compile Include="API\Controllers\ConfigurationControllerTest.cs" />
+    <Compile Include="API\Controllers\ErrorControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Converters\Audit History Converter Test.cs" />
-    <Compile Include="Converters\Configuration Converter Test.cs" />
-    <Compile Include="Converters\Token Converter Test.cs" />
-    <Compile Include="Filters\Dependency Resolver Test.cs" />
-    <Compile Include="Functions\Audit History Function Test.cs" />
-    <Compile Include="Functions\Claim Function Test.cs" />
-    <Compile Include="Functions\Configuration Function Test.cs" />
-    <Compile Include="Functions\Hash Function Test.cs" />
-    <Compile Include="Functions\IP Address Function Test.cs" />
-    <Compile Include="Functions\Parameter Function Test.cs" />
-    <Compile Include="Functions\Response Function Test.cs" />
-    <Compile Include="Functions\Token Function Test.cs" />
-    <Compile Include="Functions\User Function Test.cs" />
-    <Compile Include="Mappings\Scope Permission Mapping Test.cs" />
-    <Compile Include="Services\Error Log Service Test.cs" />
-    <Compile Include="Services\Model Validation Service Test.cs" />
-    <Compile Include="Services\Token Service Test.cs" />
-    <Compile Include="Services\Change Service Test.cs" />
-    <Compile Include="Services\Audit History Service Test.cs" />
-    <Compile Include="Services\Configuration Service Test.cs" />
-    <Compile Include="Services\Assistant\Config Service Test.cs" />
-    <Compile Include="Services\Assistant\Deletion Service Test.cs" />
-    <Compile Include="Services\Assistant\Location Service Test.cs" />
-    <Compile Include="Services\Assistant\Version Service Test.cs" />
-    <Compile Include="Services\User\User Service Test.cs" />
-    <Compile Include="Services\User\User Settings Service Test.cs" />
-    <Compile Include="Services\Server Status\Server Information Service Test.cs" />
-    <Compile Include="Services\Server Status\Server Alert Service Test.cs" />
-    <Compile Include="Services\Server Status\Server Event Service Test.cs" />
-    <Compile Include="Controllers\AuditControllerTest.cs" />
-    <Compile Include="Controllers\Assistant\ConfigControllerTest.cs" />
-    <Compile Include="Controllers\Assistant\DeletionControllerTest.cs" />
-    <Compile Include="Controllers\Assistant\LocationControllerTest.cs" />
-    <Compile Include="Controllers\Server Status\ServerAlertControllerTest.cs" />
-    <Compile Include="Controllers\Server Status\ServerEventControllerTest.cs" />
-    <Compile Include="Controllers\TokenControllerTest.cs" />
-    <Compile Include="Controllers\Assistant\VersionControllerTest.cs" />
-    <Compile Include="Controllers\User\UserControllerTest.cs" />
-    <Compile Include="Controllers\User\UserSettingsControllerTest.cs" />
-    <Compile Include="Controllers\Server Status\ServerInformationControllerTest.cs" />
-    <Compile Include="Controllers\StatisticControllerTest.cs" />
-    <Compile Include="Converters\Statistics Converter Test.cs" />
-    <Compile Include="Services\Statistic Service Test.cs" />
+    <Compile Include="API\Converters\Audit History Converter Test.cs" />
+    <Compile Include="API\Converters\Configuration Converter Test.cs" />
+    <Compile Include="API\Converters\Token Converter Test.cs" />
+    <Compile Include="API\Filters\Dependency Resolver Test.cs" />
+    <Compile Include="API\Functions\Audit History Function Test.cs" />
+    <Compile Include="API\Functions\Claim Function Test.cs" />
+    <Compile Include="API\Functions\Configuration Function Test.cs" />
+    <Compile Include="API\Functions\Hash Function Test.cs" />
+    <Compile Include="API\Functions\IP Address Function Test.cs" />
+    <Compile Include="API\Functions\Parameter Function Test.cs" />
+    <Compile Include="API\Functions\Response Function Test.cs" />
+    <Compile Include="API\Functions\Token Function Test.cs" />
+    <Compile Include="API\Functions\User Function Test.cs" />
+    <Compile Include="API\Mappings\Scope Permission Mapping Test.cs" />
+    <Compile Include="API\Services\Error Log Service Test.cs" />
+    <Compile Include="API\Services\Model Validation Service Test.cs" />
+    <Compile Include="API\Services\Token Service Test.cs" />
+    <Compile Include="API\Services\Change Service Test.cs" />
+    <Compile Include="API\Services\Audit History Service Test.cs" />
+    <Compile Include="API\Services\Configuration Service Test.cs" />
+    <Compile Include="API\Services\Assistant\Config Service Test.cs" />
+    <Compile Include="API\Services\Assistant\Deletion Service Test.cs" />
+    <Compile Include="API\Services\Assistant\Location Service Test.cs" />
+    <Compile Include="API\Services\Assistant\Version Service Test.cs" />
+    <Compile Include="API\Services\User\User Service Test.cs" />
+    <Compile Include="API\Services\User\User Settings Service Test.cs" />
+    <Compile Include="API\Services\Server Status\Server Information Service Test.cs" />
+    <Compile Include="API\Services\Server Status\Server Alert Service Test.cs" />
+    <Compile Include="API\Services\Server Status\Server Event Service Test.cs" />
+    <Compile Include="API\Controllers\AuditControllerTest.cs" />
+    <Compile Include="API\Controllers\Assistant\ConfigControllerTest.cs" />
+    <Compile Include="API\Controllers\Assistant\DeletionControllerTest.cs" />
+    <Compile Include="API\Controllers\Assistant\LocationControllerTest.cs" />
+    <Compile Include="API\Controllers\Server Status\ServerAlertControllerTest.cs" />
+    <Compile Include="API\Controllers\Server Status\ServerEventControllerTest.cs" />
+    <Compile Include="API\Controllers\TokenControllerTest.cs" />
+    <Compile Include="API\Controllers\Assistant\VersionControllerTest.cs" />
+    <Compile Include="API\Controllers\User\UserControllerTest.cs" />
+    <Compile Include="API\Controllers\User\UserSettingsControllerTest.cs" />
+    <Compile Include="API\Controllers\Server Status\ServerInformationControllerTest.cs" />
+    <Compile Include="API\Controllers\StatisticControllerTest.cs" />
+    <Compile Include="API\Converters\Statistics Converter Test.cs" />
+    <Compile Include="API\Services\Statistic Service Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -181,6 +181,10 @@
     <ProjectReference Include="..\Hunter Industries API\Hunter Industries API.csproj">
       <Project>{27642CB4-EBCC-4ACC-8019-A83CA194455D}</Project>
       <Name>Hunter Industries API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hunter Industries API Common\Hunter Industries API Common.csproj">
+      <Project>{f7d388e9-5a96-420e-9a90-9b8d91cdd67e}</Project>
+      <Name>Hunter Industries API Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

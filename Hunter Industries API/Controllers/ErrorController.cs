@@ -7,6 +7,8 @@ using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Objects;
 using HunterIndustriesAPI.Services;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;

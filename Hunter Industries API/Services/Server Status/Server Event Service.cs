@@ -1,9 +1,10 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;

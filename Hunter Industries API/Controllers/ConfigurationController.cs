@@ -5,6 +5,8 @@ using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Services;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;

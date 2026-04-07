@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "1lDJzuE1MNM=",
+  "dgSpecHash": "JpkIzjnLQek=",
   "success": true,
   "projectFilePath": "C:\\Users\\TobyH\\OneDrive - Nurtur Limited\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\TobyH\\.nuget\\packages\\log4net\\3.3.0\\log4net.3.3.0.nupkg.sha512",
     "C:\\Users\\TobyH\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.5\\microsoft.aspnetcore.app.internal.assets.10.0.5.nupkg.sha512",
-    "C:\\Users\\TobyH\\.nuget\\packages\\radzen.blazor\\7.4.3\\radzen.blazor.7.4.3.nupkg.sha512"
+    "C:\\Users\\TobyH\\.nuget\\packages\\radzen.blazor\\7.4.3\\radzen.blazor.7.4.3.nupkg.sha512",
+    "C:\\Users\\TobyH\\.nuget\\packages\\system.configuration.configurationmanager\\4.5.0\\system.configuration.configurationmanager.4.5.0.nupkg.sha512",
+    "C:\\Users\\TobyH\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.5.0\\system.security.cryptography.protecteddata.4.5.0.nupkg.sha512",
+    "C:\\Users\\TobyH\\.nuget\\packages\\system.security.permissions\\4.5.0\\system.security.permissions.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

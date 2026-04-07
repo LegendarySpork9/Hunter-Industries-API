@@ -1,7 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Services;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Services;
 using System.Web;
 
 namespace HunterIndustriesAPI.Implementations

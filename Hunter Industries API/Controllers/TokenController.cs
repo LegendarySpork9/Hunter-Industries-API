@@ -9,6 +9,8 @@ using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Objects;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.User;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.Swagger.Annotations;
 using System.ComponentModel.DataAnnotations;

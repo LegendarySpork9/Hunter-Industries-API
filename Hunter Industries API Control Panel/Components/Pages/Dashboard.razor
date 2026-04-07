@@ -43,7 +43,7 @@ else
     <!-- Row 2: Traffic & Errors -->
     <div class="row g-3 mb-4">
         <div class="col-md-6">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">API Traffic Over Time (30 Days)</h6>
                     <RadzenChart Style="height: 280px;">
@@ -61,7 +61,7 @@ else
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Errors by IP Address &amp; Summary</h6>
                     <RadzenChart Style="height: 280px;">
@@ -84,7 +84,7 @@ else
     <!-- Row 3: Donut Charts -->
     <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
                     <RadzenChart Style="height: 160px;">
@@ -93,19 +93,19 @@ else
                                             Fills="@_endpointColours" Strokes="@_endpointColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
-                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                         @for (int i = 0; i < _summary.CallsByEndpoint.Count; i++)
                         {
                             var item = _summary.CallsByEndpoint[i];
                             var colour = _endpointColours[i % _endpointColours.Length];
-                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method</h6>
                     <RadzenChart Style="height: 160px;">
@@ -114,19 +114,19 @@ else
                                             Fills="@_methodColours" Strokes="@_methodColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
-                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                         @for (int i = 0; i < _summary.CallsByMethod.Count; i++)
                         {
                             var item = _summary.CallsByMethod[i];
                             var colour = _methodColours[i % _methodColours.Length];
-                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
                     <RadzenChart Style="height: 160px;">
@@ -135,19 +135,19 @@ else
                                             Fills="@_statusColours" Strokes="@_statusColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
-                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                         @for (int i = 0; i < _summary.CallsByStatusCode.Count; i++)
                         {
                             var item = _summary.CallsByStatusCode[i];
                             var colour = _statusColours[i % _statusColours.Length];
-                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field</h6>
                     <RadzenChart Style="height: 160px;">
@@ -156,12 +156,12 @@ else
                                             Fills="@_fieldColours" Strokes="@_fieldColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
-                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                         @for (int i = 0; i < _summary.ChangesByField.Count; i++)
                         {
                             var item = _summary.ChangesByField[i];
                             var colour = _fieldColours[i % _fieldColours.Length];
-                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
                         }
                     </div>
                 </div>
@@ -172,7 +172,7 @@ else
     <!-- Row 4: Login Attempts & Server Health -->
     <div class="row g-3 mb-4">
         <div class="col-md-6">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Login Attempts by Username &amp; Application</h6>
                     <RadzenChart Style="height: 250px;">
@@ -191,7 +191,7 @@ else
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card h-100" style="border-radius: 8px;">
+            <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Server Health Overview</h6>
                     <RadzenChart Style="height: 250px;">
@@ -215,18 +215,18 @@ else
     <!-- Row 5: Recent Activity Feed -->
     <div class="row g-3 mb-4">
         <div class="col-12">
-            <div class="card" style="border-radius: 8px;">
+            <div class="card card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Latest Activity</h6>
                     <div class="d-flex flex-column gap-2">
                         @foreach (var entry in _recentActivity)
                         {
                             <a href="/audit-history/@entry.Id" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
-                                <span class="badge @GetMethodBadgeClass(entry.Method)" style="width: 60px; text-align: center;">@entry.Method</span>
-                                <span class="flex-grow-1" style="font-size: 0.9rem; color: #D7D7D7;">@entry.Endpoint</span>
-                                <span class="badge @GetStatusBadgeClass(entry.Status)" style="font-size: 0.75rem;">@entry.Status</span>
-                                <span class="text-muted" style="font-size: 0.8rem; min-width: 120px;">@entry.IPAddress</span>
-                                <span class="text-muted" style="font-size: 0.75rem; min-width: 100px; text-align: right;">@GetRelativeTime(entry.OccuredAt)</span>
+                                <span class="badge activity-method-badge @GetMethodBadgeClass(entry.Method)">@entry.Method</span>
+                                <span class="flex-grow-1 activity-endpoint">@entry.Endpoint</span>
+                                <span class="badge activity-status @GetStatusBadgeClass(entry.Status)">@entry.Status</span>
+                                <span class="text-muted activity-ip">@entry.IPAddress</span>
+                                <span class="text-muted activity-time">@GetRelativeTime(entry.OccuredAt)</span>
                             </a>
                         }
                     </div>

@@ -1,11 +1,18 @@
+using HunterIndustriesAPIControlPanel.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using HunterIndustriesAPIControlPanel.Models;
 
 namespace HunterIndustriesAPIControlPanel.Components.Layout
 {
     public partial class MainLayout
     {
+        [Inject]
+        private UserModel User { get; set; } = default!;
+        [Inject]
+        private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private ProtectedSessionStorage SessionStorage { get; set; } = default!;
+
         private bool _isInitialised;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -14,14 +21,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
             {
                 try
                 {
-                    var usernameResult = await SessionStorage.GetAsync<string>("username");
-                    var tokenResult = await SessionStorage.GetAsync<string>("token");
+                    ProtectedBrowserStorageResult<string> usernameResult = await SessionStorage.GetAsync<string>("username");
 
-                    if (usernameResult.Success && tokenResult.Success &&
-                        !string.IsNullOrEmpty(usernameResult.Value) && !string.IsNullOrEmpty(tokenResult.Value))
+                    if (usernameResult.Success && !string.IsNullOrEmpty(usernameResult.Value))
                     {
                         User.Username = usernameResult.Value;
-                        User.Token = tokenResult.Value;
                         _isInitialised = true;
                         StateHasChanged();
                     }
@@ -40,10 +44,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
         private async Task SignOut()
         {
             User.Username = string.Empty;
-            User.Token = string.Empty;
 
             await SessionStorage.DeleteAsync("username");
-            await SessionStorage.DeleteAsync("token");
 
             Navigation.NavigateTo("/login", forceLoad: true);
         }
