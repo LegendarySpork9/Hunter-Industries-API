@@ -28,6 +28,10 @@ else
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-4">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" @bind="_editName" />
+                </div>
+                <div class="col-md-4">
                     <label class="form-label">Host Name</label>
                     <input type="text" class="form-control" @bind="_editHostName" />
                 </div>
@@ -50,6 +54,10 @@ else
                 <div class="col-md-3">
                     <label class="form-label">Downtime</label>
                     <input type="text" class="form-control" @bind="_editDowntime" placeholder="HH:MM:SS" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Event Interval (s)</label>
+                    <input type="number" class="form-control" @bind="_editEventInterval" />
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">&nbsp;</label>

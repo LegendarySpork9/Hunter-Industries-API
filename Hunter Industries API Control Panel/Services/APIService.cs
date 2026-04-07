@@ -100,10 +100,97 @@ namespace Hunter_Industries_API_Control_Panel.Services
         private static readonly List<AuditHistoryRecord> AuditHistory;
         private static readonly List<ErrorLogRecord> ErrorLogs;
 
+        private static readonly List<ConfigurationApplicationRecord> ConfigApplications = new()
+        {
+            new ConfigurationApplicationRecord
+            {
+                Id = 1, Name = "Hunter Assistant", Phrase = "HunterIndustries", IsDeleted = false,
+                Settings = new List<ConfigurationApplicationSettingRecord>
+                {
+                    new() { Id = 1, Name = "DarkMode", Type = "Boolean", Required = false, IsDeleted = false },
+                    new() { Id = 2, Name = "Language", Type = "String", Required = true, IsDeleted = false },
+                    new() { Id = 3, Name = "NotificationsEnabled", Type = "Boolean", Required = false, IsDeleted = false }
+                }
+            },
+            new ConfigurationApplicationRecord
+            {
+                Id = 2, Name = "Server Monitor", Phrase = "HunterIndustries", IsDeleted = false,
+                Settings = new List<ConfigurationApplicationSettingRecord>
+                {
+                    new() { Id = 4, Name = "RefreshInterval", Type = "Integer", Required = true, IsDeleted = false },
+                    new() { Id = 5, Name = "AlertThreshold", Type = "Integer", Required = false, IsDeleted = false },
+                    new() { Id = 6, Name = "AutoRestart", Type = "Boolean", Required = false, IsDeleted = false },
+                    new() { Id = 7, Name = "DiscordName", Type = "String", Required = true, IsDeleted = false }
+                }
+            },
+            new ConfigurationApplicationRecord
+            {
+                Id = 3, Name = "API Dashboard", Phrase = "HunterIndustries", IsDeleted = false,
+                Settings = new List<ConfigurationApplicationSettingRecord>
+                {
+                    new() { Id = 8, Name = "PageSize", Type = "Integer", Required = true, IsDeleted = false },
+                    new() { Id = 9, Name = "DefaultView", Type = "String", Required = false, IsDeleted = false },
+                    new() { Id = 10, Name = "ShowCharts", Type = "Boolean", Required = false, IsDeleted = false }
+                }
+            }
+        };
+
+        private static readonly List<ConfigurationAuthorisationRecord> ConfigAuthorisations = new()
+        {
+            new() { Id = 1, Phrase = "HunterIndustries", IsDeleted = false },
+            new() { Id = 2, Phrase = "ServerAccess2024", IsDeleted = false },
+            new() { Id = 3, Phrase = "AdminOverride", IsDeleted = true }
+        };
+
+        private static readonly List<ConfigurationComponentRecord> ConfigComponents = new()
+        {
+            new() { Id = 1, Name = "PC Status", IsDeleted = false },
+            new() { Id = 2, Name = "Server Status", IsDeleted = false },
+            new() { Id = 3, Name = "Connection Status", IsDeleted = false }
+        };
+
+        private static readonly List<ConfigurationConnectionRecord> ConfigConnections = new()
+        {
+            new() { Id = 1, IPAddress = "192.168.1.10", Port = 25565, IsDeleted = false },
+            new() { Id = 2, IPAddress = "192.168.1.11", Port = 25566, IsDeleted = false },
+            new() { Id = 3, IPAddress = "192.168.1.20", Port = 2456, IsDeleted = false },
+            new() { Id = 4, IPAddress = "192.168.1.12", Port = 25567, IsDeleted = false }
+        };
+
+        private static readonly List<ConfigurationDowntimeRecord> ConfigDowntimes = new()
+        {
+            new() { Id = 1, Time = "03:00:00", Duration = 3600, IsDeleted = false },
+            new() { Id = 2, Time = "04:00:00", Duration = 1800, IsDeleted = false },
+            new() { Id = 3, Time = "05:00:00", Duration = 7200, IsDeleted = false }
+        };
+
+        private static readonly List<ConfigurationGameRecord> ConfigGames = new()
+        {
+            new() { Id = 1, Name = "Minecraft", Version = "1.20.4", IsDeleted = false },
+            new() { Id = 2, Name = "Minecraft", Version = "1.19.2", IsDeleted = false },
+            new() { Id = 3, Name = "Valheim", Version = "0.217.46", IsDeleted = false }
+        };
+
+        private static readonly List<ConfigurationMachineRecord> ConfigMachines = new()
+        {
+            new() { Id = 1, HostName = "MC-SURVIVAL-01", IsDeleted = false },
+            new() { Id = 2, HostName = "MC-CREATIVE-01", IsDeleted = false },
+            new() { Id = 3, HostName = "VH-EXPLORE-01", IsDeleted = false },
+            new() { Id = 4, HostName = "MC-MODDED-01", IsDeleted = false }
+        };
+
         private static int _nextUserId = 6;
         private static int _nextServerId = 5;
         private static int _nextAlertId = 11;
         private static int _nextSettingId = 17;
+        private static int _nextConfigAppId = 4;
+        private static int _nextConfigAppSettingId = 11;
+        private static int _nextConfigAuthId = 4;
+        private static int _nextConfigComponentId = 4;
+        private static int _nextConfigConnectionId = 5;
+        private static int _nextConfigDowntimeId = 4;
+        private static int _nextConfigGameId = 4;
+        private static int _nextConfigMachineId = 5;
 
         static APIService()
         {
@@ -472,37 +559,41 @@ namespace Hunter_Industries_API_Control_Panel.Services
 
         public ServerInformationRecord? GetServer(int id) => Servers.FirstOrDefault(s => s.Id == id);
 
-        public bool CreateServer(string hostName, string game, string gameVersion, string ipAddress, int port, string? downtime, bool isActive)
+        public bool CreateServer(string name, string hostName, string game, string gameVersion, string ipAddress, int port, string? downtime, int eventInterval, bool isActive)
         {
             Servers.Add(new ServerInformationRecord
             {
                 Id = _nextServerId++,
+                Name = name,
                 HostName = hostName,
                 Game = game,
                 GameVersion = gameVersion,
                 Connection = new ConnectionRecord { IPAddress = ipAddress, Port = port },
                 Downtime = downtime != null ? new DowntimeRecord { Time = downtime } : null,
+                EventInterval = eventInterval,
                 IsActive = isActive
             });
 
-            _logger.LogInfo($"Server created: {hostName}");
+            _logger.LogInfo($"Server created: {name}");
             return true;
         }
 
-        public bool UpdateServer(int id, string? hostName, string? game, string? gameVersion, string? ipAddress, int? port, string? downtime, bool? isActive)
+        public bool UpdateServer(int id, string? name, string? hostName, string? game, string? gameVersion, string? ipAddress, int? port, string? downtime, int? eventInterval, bool? isActive)
         {
             var server = Servers.FirstOrDefault(s => s.Id == id);
             if (server == null) return false;
 
+            if (!string.IsNullOrEmpty(name)) server.Name = name;
             if (!string.IsNullOrEmpty(hostName)) server.HostName = hostName;
             if (!string.IsNullOrEmpty(game)) server.Game = game;
             if (!string.IsNullOrEmpty(gameVersion)) server.GameVersion = gameVersion;
             if (!string.IsNullOrEmpty(ipAddress)) server.Connection.IPAddress = ipAddress;
             if (port.HasValue) server.Connection.Port = port.Value;
             if (downtime != null) server.Downtime = new DowntimeRecord { Time = downtime };
+            if (eventInterval.HasValue) server.EventInterval = eventInterval.Value;
             if (isActive.HasValue) server.IsActive = isActive.Value;
 
-            _logger.LogInfo($"Server updated: {server.HostName}");
+            _logger.LogInfo($"Server updated: {server.Name}");
             return true;
         }
 
@@ -634,5 +725,334 @@ namespace Hunter_Industries_API_Control_Panel.Services
         }
 
         public ErrorLogRecord? GetError(int id) => ErrorLogs.FirstOrDefault(e => e.Id == id);
+
+        // Configuration Methods
+
+        public List<string> GetConfigurationTypes()
+        {
+            return new List<string> { "application", "authorisation", "component", "connection", "downtime", "game", "machine" };
+        }
+
+        // Application Configuration
+
+        public List<ConfigurationApplicationRecord> GetConfigurationApplications() => ConfigApplications.ToList();
+
+        public ConfigurationApplicationRecord? GetConfigurationApplication(int id) => ConfigApplications.FirstOrDefault(a => a.Id == id);
+
+        public bool CreateConfigurationApplication(string name, string phrase)
+        {
+            ConfigApplications.Add(new ConfigurationApplicationRecord
+            {
+                Id = _nextConfigAppId++,
+                Name = name,
+                Phrase = phrase,
+                Settings = new List<ConfigurationApplicationSettingRecord>(),
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration application created: {name}");
+            return true;
+        }
+
+        public bool UpdateConfigurationApplication(int id, string? name, string? phrase)
+        {
+            var app = ConfigApplications.FirstOrDefault(a => a.Id == id);
+            if (app == null) return false;
+
+            if (!string.IsNullOrEmpty(name)) app.Name = name;
+            if (!string.IsNullOrEmpty(phrase)) app.Phrase = phrase;
+
+            _logger.LogInfo($"Configuration application updated: {app.Name}");
+            return true;
+        }
+
+        public bool DeleteConfigurationApplication(int id)
+        {
+            var app = ConfigApplications.FirstOrDefault(a => a.Id == id);
+            if (app == null) return false;
+
+            app.IsDeleted = true;
+            _logger.LogInfo($"Configuration application deleted: {app.Name}");
+            return true;
+        }
+
+        // Application Setting Configuration
+
+        public bool CreateConfigurationApplicationSetting(int applicationId, string name, string type, bool required)
+        {
+            var app = ConfigApplications.FirstOrDefault(a => a.Id == applicationId);
+            if (app == null) return false;
+
+            app.Settings.Add(new ConfigurationApplicationSettingRecord
+            {
+                Id = _nextConfigAppSettingId++,
+                Name = name,
+                Type = type,
+                Required = required,
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration application setting created: {name} for {app.Name}");
+            return true;
+        }
+
+        public bool UpdateConfigurationApplicationSetting(int applicationId, int settingId, string? name, string? type, bool? required)
+        {
+            var app = ConfigApplications.FirstOrDefault(a => a.Id == applicationId);
+            var setting = app?.Settings.FirstOrDefault(s => s.Id == settingId);
+            if (setting == null) return false;
+
+            if (!string.IsNullOrEmpty(name)) setting.Name = name;
+            if (!string.IsNullOrEmpty(type)) setting.Type = type;
+            if (required.HasValue) setting.Required = required.Value;
+
+            _logger.LogInfo($"Configuration application setting updated: {setting.Name}");
+            return true;
+        }
+
+        public bool DeleteConfigurationApplicationSetting(int applicationId, int settingId)
+        {
+            var app = ConfigApplications.FirstOrDefault(a => a.Id == applicationId);
+            var setting = app?.Settings.FirstOrDefault(s => s.Id == settingId);
+            if (setting == null) return false;
+
+            setting.IsDeleted = true;
+            _logger.LogInfo($"Configuration application setting deleted: {setting.Name}");
+            return true;
+        }
+
+        // Authorisation Configuration
+
+        public List<ConfigurationAuthorisationRecord> GetConfigurationAuthorisations() => ConfigAuthorisations.ToList();
+
+        public bool CreateConfigurationAuthorisation(string phrase)
+        {
+            ConfigAuthorisations.Add(new ConfigurationAuthorisationRecord
+            {
+                Id = _nextConfigAuthId++,
+                Phrase = phrase,
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration authorisation created");
+            return true;
+        }
+
+        public bool UpdateConfigurationAuthorisation(int id, string? phrase)
+        {
+            var auth = ConfigAuthorisations.FirstOrDefault(a => a.Id == id);
+            if (auth == null) return false;
+
+            if (!string.IsNullOrEmpty(phrase)) auth.Phrase = phrase;
+
+            _logger.LogInfo($"Configuration authorisation updated: {id}");
+            return true;
+        }
+
+        public bool DeleteConfigurationAuthorisation(int id)
+        {
+            var auth = ConfigAuthorisations.FirstOrDefault(a => a.Id == id);
+            if (auth == null) return false;
+
+            auth.IsDeleted = true;
+            _logger.LogInfo($"Configuration authorisation deleted: {id}");
+            return true;
+        }
+
+        // Component Configuration
+
+        public List<ConfigurationComponentRecord> GetConfigurationComponents() => ConfigComponents.ToList();
+
+        public bool CreateConfigurationComponent(string name)
+        {
+            ConfigComponents.Add(new ConfigurationComponentRecord
+            {
+                Id = _nextConfigComponentId++,
+                Name = name,
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration component created: {name}");
+            return true;
+        }
+
+        public bool UpdateConfigurationComponent(int id, string? name)
+        {
+            var comp = ConfigComponents.FirstOrDefault(c => c.Id == id);
+            if (comp == null) return false;
+
+            if (!string.IsNullOrEmpty(name)) comp.Name = name;
+
+            _logger.LogInfo($"Configuration component updated: {comp.Name}");
+            return true;
+        }
+
+        public bool DeleteConfigurationComponent(int id)
+        {
+            var comp = ConfigComponents.FirstOrDefault(c => c.Id == id);
+            if (comp == null) return false;
+
+            comp.IsDeleted = true;
+            _logger.LogInfo($"Configuration component deleted: {comp.Name}");
+            return true;
+        }
+
+        // Connection Configuration
+
+        public List<ConfigurationConnectionRecord> GetConfigurationConnections() => ConfigConnections.ToList();
+
+        public bool CreateConfigurationConnection(string ipAddress, int port)
+        {
+            ConfigConnections.Add(new ConfigurationConnectionRecord
+            {
+                Id = _nextConfigConnectionId++,
+                IPAddress = ipAddress,
+                Port = port,
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration connection created: {ipAddress}:{port}");
+            return true;
+        }
+
+        public bool UpdateConfigurationConnection(int id, string? ipAddress, int? port)
+        {
+            var conn = ConfigConnections.FirstOrDefault(c => c.Id == id);
+            if (conn == null) return false;
+
+            if (!string.IsNullOrEmpty(ipAddress)) conn.IPAddress = ipAddress;
+            if (port.HasValue) conn.Port = port.Value;
+
+            _logger.LogInfo($"Configuration connection updated: {conn.IPAddress}:{conn.Port}");
+            return true;
+        }
+
+        public bool DeleteConfigurationConnection(int id)
+        {
+            var conn = ConfigConnections.FirstOrDefault(c => c.Id == id);
+            if (conn == null) return false;
+
+            conn.IsDeleted = true;
+            _logger.LogInfo($"Configuration connection deleted: {conn.IPAddress}:{conn.Port}");
+            return true;
+        }
+
+        // Downtime Configuration
+
+        public List<ConfigurationDowntimeRecord> GetConfigurationDowntimes() => ConfigDowntimes.ToList();
+
+        public bool CreateConfigurationDowntime(string time, int duration)
+        {
+            ConfigDowntimes.Add(new ConfigurationDowntimeRecord
+            {
+                Id = _nextConfigDowntimeId++,
+                Time = time,
+                Duration = duration,
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration downtime created: {time}");
+            return true;
+        }
+
+        public bool UpdateConfigurationDowntime(int id, string? time, int? duration)
+        {
+            var dt = ConfigDowntimes.FirstOrDefault(d => d.Id == id);
+            if (dt == null) return false;
+
+            if (!string.IsNullOrEmpty(time)) dt.Time = time;
+            if (duration.HasValue) dt.Duration = duration.Value;
+
+            _logger.LogInfo($"Configuration downtime updated: {dt.Time}");
+            return true;
+        }
+
+        public bool DeleteConfigurationDowntime(int id)
+        {
+            var dt = ConfigDowntimes.FirstOrDefault(d => d.Id == id);
+            if (dt == null) return false;
+
+            dt.IsDeleted = true;
+            _logger.LogInfo($"Configuration downtime deleted: {dt.Time}");
+            return true;
+        }
+
+        // Game Configuration
+
+        public List<ConfigurationGameRecord> GetConfigurationGames() => ConfigGames.ToList();
+
+        public bool CreateConfigurationGame(string name, string version)
+        {
+            ConfigGames.Add(new ConfigurationGameRecord
+            {
+                Id = _nextConfigGameId++,
+                Name = name,
+                Version = version,
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration game created: {name} {version}");
+            return true;
+        }
+
+        public bool UpdateConfigurationGame(int id, string? name, string? version)
+        {
+            var game = ConfigGames.FirstOrDefault(g => g.Id == id);
+            if (game == null) return false;
+
+            if (!string.IsNullOrEmpty(name)) game.Name = name;
+            if (!string.IsNullOrEmpty(version)) game.Version = version;
+
+            _logger.LogInfo($"Configuration game updated: {game.Name} {game.Version}");
+            return true;
+        }
+
+        public bool DeleteConfigurationGame(int id)
+        {
+            var game = ConfigGames.FirstOrDefault(g => g.Id == id);
+            if (game == null) return false;
+
+            game.IsDeleted = true;
+            _logger.LogInfo($"Configuration game deleted: {game.Name}");
+            return true;
+        }
+
+        // Machine Configuration
+
+        public List<ConfigurationMachineRecord> GetConfigurationMachines() => ConfigMachines.ToList();
+
+        public bool CreateConfigurationMachine(string hostName)
+        {
+            ConfigMachines.Add(new ConfigurationMachineRecord
+            {
+                Id = _nextConfigMachineId++,
+                HostName = hostName,
+                IsDeleted = false
+            });
+
+            _logger.LogInfo($"Configuration machine created: {hostName}");
+            return true;
+        }
+
+        public bool UpdateConfigurationMachine(int id, string? hostName)
+        {
+            var machine = ConfigMachines.FirstOrDefault(m => m.Id == id);
+            if (machine == null) return false;
+
+            if (!string.IsNullOrEmpty(hostName)) machine.HostName = hostName;
+
+            _logger.LogInfo($"Configuration machine updated: {machine.HostName}");
+            return true;
+        }
+
+        public bool DeleteConfigurationMachine(int id)
+        {
+            var machine = ConfigMachines.FirstOrDefault(m => m.Id == id);
+            if (machine == null) return false;
+
+            machine.IsDeleted = true;
+            _logger.LogInfo($"Configuration machine deleted: {machine.HostName}");
+            return true;
+        }
     }
 }

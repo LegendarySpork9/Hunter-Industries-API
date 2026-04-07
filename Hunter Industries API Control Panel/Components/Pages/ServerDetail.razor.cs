@@ -24,12 +24,14 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
             "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
         };
 
+        private string _editName = string.Empty;
         private string _editHostName = string.Empty;
         private string _editGame = string.Empty;
         private string _editGameVersion = string.Empty;
         private string _editIPAddress = string.Empty;
         private int _editPort;
         private string _editDowntime = string.Empty;
+        private int _editEventInterval;
         private bool _editIsActive;
         private bool _saveSuccess;
 
@@ -44,12 +46,14 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
 
             if (_server != null)
             {
+                _editName = _server.Name;
                 _editHostName = _server.HostName;
                 _editGame = _server.Game;
                 _editGameVersion = _server.GameVersion;
                 _editIPAddress = _server.Connection.IPAddress;
                 _editPort = _server.Connection.Port;
                 _editDowntime = _server.Downtime?.Time ?? string.Empty;
+                _editEventInterval = _server.EventInterval;
                 _editIsActive = _server.IsActive;
 
                 _alerts = APIService.GetServerAlerts(hostName: _server.HostName);
@@ -90,8 +94,8 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
         {
             if (_server == null) return;
 
-            APIService.UpdateServer(_server.Id, _editHostName, _editGame, _editGameVersion,
-                _editIPAddress, _editPort, string.IsNullOrEmpty(_editDowntime) ? null : _editDowntime, _editIsActive);
+            APIService.UpdateServer(_server.Id, _editName, _editHostName, _editGame, _editGameVersion,
+                _editIPAddress, _editPort, string.IsNullOrEmpty(_editDowntime) ? null : _editDowntime, _editEventInterval, _editIsActive);
 
             _server = APIService.GetServer(Id);
             _saveSuccess = true;
