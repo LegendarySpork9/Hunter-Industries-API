@@ -237,6 +237,8 @@ namespace Hunter_Industries_API_Control_Panel.Services
             var methods = new[] { "GET", "GET", "GET", "GET", "POST", "POST", "PATCH", "DELETE" };
             var statusCodes = new[] { "200 OK", "200 OK", "200 OK", "200 OK", "200 OK", "201 Created", "400 Bad Request", "401 Unauthorized", "401 Unauthorized", "500 Internal Server Error" };
             var ips = new[] { "192.168.1.100", "10.0.0.50", "172.16.0.25", "192.168.1.200", "6.144.200.221", "20.68.171.243" };
+            var userIds = new[] { 1, 2, 3, 4 };
+            var applicationIds = new[] { 1, 2, 3 };
 
             AuditHistory = new List<AuditHistoryRecord>();
 
@@ -255,7 +257,9 @@ namespace Hunter_Industries_API_Control_Panel.Services
                     Method = method,
                     Status = status,
                     OccuredAt = now.AddDays(-daysAgo).AddHours(-random.Next(24)).AddMinutes(-random.Next(60)),
-                    Paramaters = random.Next(3) == 0 ? new[] { $"PageSize=10", $"PageNumber=1" } : null
+                    Paramaters = random.Next(3) == 0 ? new[] { $"PageSize=10", $"PageNumber=1" } : null,
+                    UserId = userIds[random.Next(userIds.Length)],
+                    ApplicationId = applicationIds[random.Next(applicationIds.Length)]
                 };
 
                 if (endpoint == "/api/v1.0/auth/token" && i <= 10)
@@ -664,9 +668,15 @@ namespace Hunter_Industries_API_Control_Panel.Services
             return query.OrderByDescending(e => e.DateOccured).ToList();
         }
 
-        public PaginatedResponse<AuditHistoryRecord> GetAuditHistory(DateTime? fromDate = null, DateTime? toDate = null, string? endpoint = null, string? ipAddress = null, string? method = null, string? status = null, int pageSize = 10, int pageNumber = 1)
+        public PaginatedResponse<AuditHistoryRecord> GetAuditHistory(DateTime? fromDate = null, DateTime? toDate = null, string? endpoint = null, string? ipAddress = null, string? method = null, string? status = null, int pageSize = 10, int pageNumber = 1, int? userId = null, int? applicationId = null)
         {
             var query = AuditHistory.AsEnumerable();
+
+            if (userId.HasValue)
+                query = query.Where(a => a.UserId == userId.Value);
+
+            if (applicationId.HasValue)
+                query = query.Where(a => a.ApplicationId == applicationId.Value);
 
             if (fromDate.HasValue)
                 query = query.Where(a => a.OccuredAt >= fromDate.Value);
@@ -699,6 +709,47 @@ namespace Hunter_Industries_API_Control_Panel.Services
                 TotalPageCount = (int)Math.Ceiling((double)totalCount / pageSize),
                 TotalCount = totalCount
             };
+        }
+
+        public DashboardSummary GetLogsSummary(int? userId = null, int? applicationId = null)
+        {
+            var records = AuditHistory.AsEnumerable();
+
+            if (userId.HasValue)
+                records = records.Where(a => a.UserId == userId.Value);
+
+            if (applicationId.HasValue)
+                records = records.Where(a => a.ApplicationId == applicationId.Value);
+
+            var filtered = records.ToList();
+
+            var summary = new DashboardSummary();
+
+            summary.CallsByEndpoint = filtered
+                .GroupBy(a => a.Endpoint.Split('/').Last())
+                .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
+                .OrderByDescending(c => c.Value)
+                .Take(5)
+                .ToList();
+
+            summary.CallsByMethod = filtered
+                .GroupBy(a => a.Method)
+                .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
+                .ToList();
+
+            summary.CallsByStatusCode = filtered
+                .GroupBy(a => a.Status)
+                .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
+                .ToList();
+
+            summary.ChangesByField = filtered
+                .Where(a => a.Change != null)
+                .SelectMany(a => a.Change!)
+                .GroupBy(c => c.Field)
+                .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
+                .ToList();
+
+            return summary;
         }
 
         public AuditHistoryRecord? GetAuditHistoryRecord(int id) => AuditHistory.FirstOrDefault(a => a.Id == id);

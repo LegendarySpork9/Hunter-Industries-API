@@ -34,12 +34,15 @@
                 }
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="UserRecord" Title="Actions" Width="120px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="UserRecord" Title="Actions" Width="160px" Sortable="false" Filterable="false">
             <Template Context="user">
                 @if (!user.IsDeleted)
                 {
                     <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToEdit(user.Id)" @onclick:stopPropagation="true" title="Edit">
                         &#9998;
+                    </button>
+                    <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToLogs(user.Id)" @onclick:stopPropagation="true" title="Logs">
+                        &#128203;
                     </button>
                     <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(user)" @onclick:stopPropagation="true" title="Delete">
                         &#128465;

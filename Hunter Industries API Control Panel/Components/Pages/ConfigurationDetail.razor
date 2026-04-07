@@ -135,6 +135,7 @@
                         <div class="mt-3 d-flex justify-content-between">
                             <div>
                                 <button class="btn btn-primary" @onclick="() => SaveApplication(app)">Save Changes</button>
+                                <button class="btn btn-outline-light ms-2" @onclick="() => NavigateToLogs(app.Id)" title="Logs">&#128203; Logs</button>
                                 @if (_saveSuccessId == app.Id)
                                 {
                                     <span class="text-success ms-2">Saved successfully!</span>

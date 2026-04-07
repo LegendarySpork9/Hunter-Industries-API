@@ -67,6 +67,8 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
 
         private void NavigateToEdit(int id) => Navigation.NavigateTo($"/users/{id}");
 
+        private void NavigateToLogs(int id) => Navigation.NavigateTo($"/logs?user={id}");
+
         private void ConfirmDelete(UserRecord user)
         {
             _userToDelete = user;

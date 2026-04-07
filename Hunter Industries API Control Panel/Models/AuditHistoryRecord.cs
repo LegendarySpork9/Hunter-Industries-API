@@ -11,5 +11,7 @@ namespace Hunter_Industries_API_Control_Panel.Models
         public string[]? Paramaters { get; set; }
         public LoginAttemptRecord? LoginAttempt { get; set; }
         public List<ChangeRecord>? Change { get; set; }
+        public int UserId { get; set; }
+        public int ApplicationId { get; set; }
     }
 }

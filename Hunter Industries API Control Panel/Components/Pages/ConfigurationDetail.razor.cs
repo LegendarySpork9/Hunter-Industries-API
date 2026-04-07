@@ -204,6 +204,8 @@ namespace Hunter_Industries_API_Control_Panel.Components.Pages
             LoadData();
         }
 
+        private void NavigateToLogs(int applicationId) => Navigation.NavigateTo($"/logs?application={applicationId}");
+
         // Save methods per entity type
 
         private void SaveApplication(ConfigurationApplicationRecord app)
