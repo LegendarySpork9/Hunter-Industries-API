@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Hunter_Industries_API_Control_Panel.Models;
+using HunterIndustriesAPIControlPanel.Models;
 
-namespace Hunter_Industries_API_Control_Panel.Components.Layout
+namespace HunterIndustriesAPIControlPanel.Components.Layout
 {
     public partial class MainLayout
     {

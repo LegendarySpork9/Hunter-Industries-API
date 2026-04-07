@@ -1,4 +1,4 @@
-namespace Hunter_Industries_API_Control_Panel.Services
+namespace HunterIndustriesAPIControlPanel.Services
 {
     public class LoggerService
     {

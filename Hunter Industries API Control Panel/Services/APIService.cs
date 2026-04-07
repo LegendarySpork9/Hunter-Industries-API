@@ -1,6 +1,6 @@
-using Hunter_Industries_API_Control_Panel.Models;
+using HunterIndustriesAPIControlPanel.Models;
 
-namespace Hunter_Industries_API_Control_Panel.Services
+namespace HunterIndustriesAPIControlPanel.Services
 {
     public class APIService
     {

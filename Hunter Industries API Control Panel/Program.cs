@@ -1,8 +1,8 @@
-using Hunter_Industries_API_Control_Panel.Components;
-using Hunter_Industries_API_Control_Panel.Models;
-using Hunter_Industries_API_Control_Panel.Services;
+using HunterIndustriesAPIControlPanel.Components;
+using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Services;
 
-namespace Hunter_Industries_API_Control_Panel
+namespace HunterIndustriesAPIControlPanel
 {
     public class Program
     {

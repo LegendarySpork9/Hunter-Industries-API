@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace Hunter_Industries_API_Control_Panel.Components.Shared
+namespace HunterIndustriesAPIControlPanel.Components.Shared
 {
     public partial class StatusBadge
     {

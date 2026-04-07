@@ -324,8 +324,6 @@
     <Compile Include="Abstractions\IClock.cs" />
     <Compile Include="Abstractions\IDatabase.cs" />
     <Compile Include="Abstractions\IDatabase Options.cs" />
-    <Compile Include="Abstractions\IFile System.cs" />
-    <Compile Include="Abstractions\ILogger Service.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
@@ -374,8 +372,6 @@
     </Compile>
     <Compile Include="Implementations\Database Wrapper.cs" />
     <Compile Include="Implementations\Database Options Provider.cs" />
-    <Compile Include="Implementations\File System Wrapper.cs" />
-    <Compile Include="Implementations\Logger Service Wrapper.cs" />
     <Compile Include="Implementations\System Clock Provider.cs" />
     <Compile Include="Mappings\Statistics\Server Data Reader Mapping.cs" />
     <Compile Include="Mappings\Statistics\Error Data Reader Mapping.cs" />
@@ -470,7 +466,6 @@
     <Compile Include="Services\Change Service.cs" />
     <Compile Include="Services\Configuration Service.cs" />
     <Compile Include="Services\Error Log Service.cs" />
-    <Compile Include="Services\Logger Service.cs" />
     <Compile Include="Services\Model Validation Service.cs" />
     <Compile Include="Services\Server Status\Server Alert Service.cs" />
     <Compile Include="Services\Server Status\Server Event Service.cs" />

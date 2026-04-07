@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
-using Hunter_Industries_API_Control_Panel.Services;
+using HunterIndustriesAPIControlPanel.Services;
 
-namespace Hunter_Industries_API_Control_Panel.Components.Pages
+namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
     public partial class Configuration
     {
