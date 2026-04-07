@@ -1,0 +1,237 @@
+@page "/"
+
+<PageTitle>Dashboard - HI Control Panel</PageTitle>
+
+@if (_summary == null)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Row 1: KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4 col-xl-2">
+            <KPICard Title="Applications" Value="@_summary.ApplicationCount.ToString()" Icon="&#9783;" IconColour="#20c997"
+                     Trend="@("")" />
+        </div>
+        <div class="col-md-4 col-xl-2">
+            <KPICard Title="Active Users" Value="@_summary.ActiveUserCount.ToString()" Icon="&#9823;" IconColour="#28a745"
+                     Trend="@("")" />
+        </div>
+        <div class="col-md-4 col-xl-2">
+            <KPICard Title="Calls This Month" Value="@_summary.CallsThisMonth.ToString("N0")" Icon="&#9978;" IconColour="#17a2b8"
+                     Trend="@GetTrend(_summary.CallsThisMonth, _summary.CallsLastMonth)" />
+        </div>
+        <div class="col-md-4 col-xl-2">
+            <KPICard Title="Login Attempts" Value="@_summary.LoginAttemptsThisMonth.ToString()" Icon="&#9919;" IconColour="#ffc107"
+                     Trend="@GetTrend(_summary.LoginAttemptsThisMonth, _summary.LoginAttemptsLastMonth)" />
+        </div>
+        <div class="col-md-4 col-xl-2">
+            <KPICard Title="Changes" Value="@_summary.ChangesThisMonth.ToString()" Icon="&#9998;" IconColour="#6f42c1"
+                     Trend="@GetTrend(_summary.ChangesThisMonth, _summary.ChangesLastMonth)" />
+        </div>
+        <div class="col-md-4 col-xl-2">
+            <KPICard Title="Errors This Month" Value="@_summary.ErrorsThisMonth.ToString()" Icon="&#9888;" IconColour="#dc3545"
+                     Trend="@GetTrend(_summary.ErrorsThisMonth, _summary.ErrorsLastMonth)" IsError="true" />
+        </div>
+    </div>
+
+    <!-- Row 2: Traffic & Errors -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">API Traffic Over Time (30 Days)</h6>
+                    <RadzenChart Style="height: 280px;">
+                        <RadzenAreaSeries Data="@_summary.DailyTraffic" CategoryProperty="Date" ValueProperty="SuccessCount"
+                                          Title="Successful" Fill="rgba(40, 167, 69, 0.3)" Stroke="rgb(40, 167, 69)" />
+                        <RadzenAreaSeries Data="@_summary.DailyTraffic" CategoryProperty="Date" ValueProperty="FailureCount"
+                                          Title="Failed" Fill="rgba(220, 53, 69, 0.3)" Stroke="rgb(220, 53, 69)" />
+                        <RadzenCategoryAxis FormatString="{0:dd MMM}" />
+                        <RadzenValueAxis>
+                            <RadzenGridLines Visible="true" Stroke="#555" />
+                        </RadzenValueAxis>
+                        <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                    </RadzenChart>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Errors by IP Address &amp; Summary</h6>
+                    <RadzenChart Style="height: 280px;">
+                        @foreach (var group in _errorsByIPGrouped)
+                        {
+                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value"
+                                                     Title="@group.Key" StrokeWidth="0" />
+                        }
+                        <RadzenCategoryAxis />
+                        <RadzenValueAxis>
+                            <RadzenGridLines Visible="true" Stroke="#555" />
+                        </RadzenValueAxis>
+                        <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                    </RadzenChart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3: Donut Charts -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
+                    <RadzenChart Style="height: 160px;">
+                        <RadzenDonutSeries Data="@_summary.CallsByEndpoint" CategoryProperty="Label" ValueProperty="Value"
+                                            InnerRadius="40" Radius="70"
+                                            Fills="@_endpointColours" Strokes="@_endpointColours" />
+                        <RadzenLegend Visible="false" />
+                    </RadzenChart>
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        @for (int i = 0; i < _summary.CallsByEndpoint.Count; i++)
+                        {
+                            var item = _summary.CallsByEndpoint[i];
+                            var colour = _endpointColours[i % _endpointColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Calls by Method</h6>
+                    <RadzenChart Style="height: 160px;">
+                        <RadzenDonutSeries Data="@_summary.CallsByMethod" CategoryProperty="Label" ValueProperty="Value"
+                                            InnerRadius="40" Radius="70"
+                                            Fills="@_methodColours" Strokes="@_methodColours" />
+                        <RadzenLegend Visible="false" />
+                    </RadzenChart>
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        @for (int i = 0; i < _summary.CallsByMethod.Count; i++)
+                        {
+                            var item = _summary.CallsByMethod[i];
+                            var colour = _methodColours[i % _methodColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
+                    <RadzenChart Style="height: 160px;">
+                        <RadzenDonutSeries Data="@_summary.CallsByStatusCode" CategoryProperty="Label" ValueProperty="Value"
+                                            InnerRadius="40" Radius="70"
+                                            Fills="@_statusColours" Strokes="@_statusColours" />
+                        <RadzenLegend Visible="false" />
+                    </RadzenChart>
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        @for (int i = 0; i < _summary.CallsByStatusCode.Count; i++)
+                        {
+                            var item = _summary.CallsByStatusCode[i];
+                            var colour = _statusColours[i % _statusColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Changes by Field</h6>
+                    <RadzenChart Style="height: 160px;">
+                        <RadzenDonutSeries Data="@_summary.ChangesByField" CategoryProperty="Label" ValueProperty="Value"
+                                            InnerRadius="40" Radius="70"
+                                            Fills="@_fieldColours" Strokes="@_fieldColours" />
+                        <RadzenLegend Visible="false" />
+                    </RadzenChart>
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size: 0.75rem;">
+                        @for (int i = 0; i < _summary.ChangesByField.Count; i++)
+                        {
+                            var item = _summary.ChangesByField[i];
+                            var colour = _fieldColours[i % _fieldColours.Length];
+                            <span class="text-muted"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@colour;margin-right:4px;"></span>@item.Label (@item.Value)</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 4: Login Attempts & Server Health -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Login Attempts by Username &amp; Application</h6>
+                    <RadzenChart Style="height: 250px;">
+                        @foreach (var group in _loginAttemptsByApp)
+                        {
+                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value"
+                                                     Title="@group.Key" StrokeWidth="0" />
+                        }
+                        <RadzenCategoryAxis />
+                        <RadzenValueAxis>
+                            <RadzenGridLines Visible="true" Stroke="#555" />
+                        </RadzenValueAxis>
+                        <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                    </RadzenChart>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Server Health Overview</h6>
+                    <RadzenChart Style="height: 250px;">
+                        <RadzenBarSeries Data="@_summary.ServerHealth" CategoryProperty="ServerName" ValueProperty="UptimePercent"
+                                          Title="Uptime %" />
+                        <RadzenBarSeries Data="@_summary.ServerHealth" CategoryProperty="ServerName" ValueProperty="AlertCount"
+                                          Title="Alerts" />
+                        <RadzenBarSeries Data="@_summary.ServerHealth" CategoryProperty="ServerName" ValueProperty="EventCount"
+                                          Title="Events" />
+                        <RadzenCategoryAxis />
+                        <RadzenValueAxis>
+                            <RadzenGridLines Visible="true" Stroke="#555" />
+                        </RadzenValueAxis>
+                        <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                    </RadzenChart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 5: Recent Activity Feed -->
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card" style="border-radius: 8px;">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Latest Activity</h6>
+                    <div class="d-flex flex-column gap-2">
+                        @foreach (var entry in _recentActivity)
+                        {
+                            <a href="/audit-history/@entry.Id" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
+                                <span class="badge @GetMethodBadgeClass(entry.Method)" style="width: 60px; text-align: center;">@entry.Method</span>
+                                <span class="flex-grow-1" style="font-size: 0.9rem; color: #D7D7D7;">@entry.Endpoint</span>
+                                <span class="badge @GetStatusBadgeClass(entry.Status)" style="font-size: 0.75rem;">@entry.Status</span>
+                                <span class="text-muted" style="font-size: 0.8rem; min-width: 120px;">@entry.IPAddress</span>
+                                <span class="text-muted" style="font-size: 0.75rem; min-width: 100px; text-align: right;">@GetRelativeTime(entry.OccuredAt)</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

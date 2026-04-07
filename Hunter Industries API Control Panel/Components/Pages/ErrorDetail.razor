@@ -1,0 +1,47 @@
+@page "/errors/{Id:int}"
+
+<PageTitle>Error Detail - HI Control Panel</PageTitle>
+
+<div class="mb-3">
+    <a href="/errors" class="btn btn-outline-light btn-sm">&larr; Back to Errors</a>
+</div>
+
+@if (_error == null)
+{
+    <div class="alert alert-warning">Error record not found.</div>
+}
+else
+{
+    <!-- Error Info -->
+    <div class="card mb-4" style="border-radius: 8px;">
+        <div class="card-header">
+            <h5 class="mb-0">Error #@_error.Id</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label text-muted">Date</label>
+                    <div>@_error.DateOccured.ToString("dd MMM yyyy HH:mm:ss")</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted">IP Address</label>
+                    <div>@_error.IPAddress</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted">Summary</label>
+                    <div>@_error.Summary</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full Message -->
+    <div class="card mb-4" style="border-radius: 8px;">
+        <div class="card-header">
+            <h6 class="mb-0">Full Message</h6>
+        </div>
+        <div class="card-body">
+            <div class="code-block">@_error.Message</div>
+        </div>
+    </div>
+}

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hunter Industries API", "Hu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hunter Industries API.Tests", "Hunter Industries API.Tests\Hunter Industries API.Tests.csproj", "{F1555F61-D6CA-48FF-9C7C-46233C734390}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hunter Industries API Control Panel", "Hunter Industries API Control Panel\Hunter Industries API Control Panel.csproj", "{24F96A8F-6413-CF02-A8D0-7CCFF7A6F1AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F1555F61-D6CA-48FF-9C7C-46233C734390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1555F61-D6CA-48FF-9C7C-46233C734390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1555F61-D6CA-48FF-9C7C-46233C734390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24F96A8F-6413-CF02-A8D0-7CCFF7A6F1AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24F96A8F-6413-CF02-A8D0-7CCFF7A6F1AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24F96A8F-6413-CF02-A8D0-7CCFF7A6F1AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24F96A8F-6413-CF02-A8D0-7CCFF7A6F1AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
