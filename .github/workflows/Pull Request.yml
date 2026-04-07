@@ -13,11 +13,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2.1.0
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
 
     - name: Setup VSTest
       uses: darenm/Setup-VSTest@v1
+
+    - name: Restore NuGet packages
+      run: |
+        nuget restore "Hunter Industries API.sln"
+        dotnet restore "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj"
 
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
