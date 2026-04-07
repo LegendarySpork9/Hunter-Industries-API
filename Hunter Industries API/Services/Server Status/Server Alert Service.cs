@@ -62,7 +62,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     ComponentStatus = reader.GetString(3),
                     AlertStatus = reader.GetString(4),
                     AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
-                    server = new RelatedServerRecord()
+                    Server = new RelatedServerRecord()
                     {
                         Id = reader.GetInt32(6),
                         Name = reader.GetString(7),
@@ -119,7 +119,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     ComponentStatus = reader.GetString(3),
                     AlertStatus = reader.GetString(4),
                     AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
-                    server = new RelatedServerRecord()
+                    Server = new RelatedServerRecord()
                     {
                         Id = reader.GetInt32(6),
                         Name = reader.GetString(7),

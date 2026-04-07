@@ -10,6 +10,10 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// The time, in seconds, between server events.
+        /// </summary>
+        public int EventInterval { get; set; }
+        /// <summary>
         /// The name of the server machine.
         /// </summary>
         public string HostName { get; set; }

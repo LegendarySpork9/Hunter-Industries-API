@@ -8,6 +8,7 @@
 	[Port],
 	[Time],
 	Duration,
+	EventInterval,
 	IsActive
 from ServerInformation with (nolock)
 join Machine with (nolock) on ServerInformation.MachineId = Machine.MachineId

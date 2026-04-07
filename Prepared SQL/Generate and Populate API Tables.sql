@@ -542,7 +542,8 @@ CREATE TABLE [dbo].[ServerInformation](
 	[GameId] [int] NOT NULL,
 	[ConnectionId] [int] NOT NULL,
 	[DowntimeId] [int] NULL,
-	[Name] [varchar](255) NULL,
+	[Name] [varchar](255) NOT NULL,
+	[EventInterval] [int] NOT NULL,
 	[IsActive] [bit] NOT NULL
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
@@ -551,6 +552,8 @@ CREATE TABLE [dbo].[ServerInformation](
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((0)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((300)) FOR [IsActive]
 GO
 
 /* Constraints */
@@ -757,6 +760,10 @@ GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('/serverstatus/serveralert')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('/errorlog')
+GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/configuration')
+GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/statistic')
 GO
 INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v1.0')
 GO

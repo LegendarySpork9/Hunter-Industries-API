@@ -287,7 +287,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     ComponentStatus = request.ComponentStatus,
                     AlertStatus = request.AlertStatus,
                     AlertDate = _Clock.UtcNow,
-                    server = new RelatedServerRecord()
+                    Server = new RelatedServerRecord()
                     {
                         Id = request.ServerId,
                         Name = request.Name,

@@ -81,7 +81,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                             Port = reader.GetInt32(6),
                         },
                         Downtime = downtime,
-                        IsActive = reader.GetBoolean(9)
+                        EventInterval = reader.GetInt32(9),
+                        IsActive = reader.GetBoolean(10)
                     };
                 }, parameterList.ToArray());
 
@@ -165,6 +166,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = server.Name },
+                    new SqlParameter("@eventInterval", SqlDbType.Int) { Value = server.EventInterval },
                     new SqlParameter("@hostName", SqlDbType.VarChar) { Value = server.HostName },
                     new SqlParameter("@game", SqlDbType.VarChar) { Value = server.Game },
                     new SqlParameter("@gameVersion", SqlDbType.VarChar) { Value = server.GameVersion },

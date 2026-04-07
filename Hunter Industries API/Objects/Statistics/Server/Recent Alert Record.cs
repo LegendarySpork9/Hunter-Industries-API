@@ -1,0 +1,35 @@
+﻿// Copyright © - Unpublished - Toby Hunter
+using System;
+
+namespace HunterIndustriesAPI.Objects.Statistics.Server
+{
+    /// <summary>
+    /// </summary>
+    public class RecentAlertRecord
+    {
+        /// <summary>
+        /// The id number of the alert.
+        /// </summary>
+        public int AlertId { get; set; }
+        /// <summary>
+        /// The name of the reporter.
+        /// </summary>
+        public string Reporter { get; set; }
+        /// <summary>
+        /// The name of the component.
+        /// </summary>
+        public string Component { get; set; }
+        /// <summary>
+        /// The status of the component.
+        /// </summary>
+        public string ComponentStatus { get; set; }
+        /// <summary>
+        /// The status of the alert.
+        /// </summary>
+        public string AlertStatus { get; set; }
+        /// <summary>
+        /// The date and time the alert occured.
+        /// </summary>
+        public DateTime AlertDate { get; set; }
+    }
+}

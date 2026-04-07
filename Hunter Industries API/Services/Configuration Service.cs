@@ -62,7 +62,7 @@ namespace HunterIndustriesAPI.Services
 where ApplicationId = @applicationId";
                     parameters = new SqlParameter[]
                     {
-                        new SqlParameter("@applicationId", SqlDbType.VarChar) { Value =  parentEntityId.Value }
+                        new SqlParameter("@applicationId", SqlDbType.VarChar) { Value = parentEntityId.Value }
                     };
                 }
 

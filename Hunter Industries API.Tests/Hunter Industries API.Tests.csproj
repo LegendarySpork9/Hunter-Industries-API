@@ -167,6 +167,9 @@
     <Compile Include="Controllers\User\UserControllerTest.cs" />
     <Compile Include="Controllers\User\UserSettingsControllerTest.cs" />
     <Compile Include="Controllers\Server Status\ServerInformationControllerTest.cs" />
+    <Compile Include="Controllers\StatisticControllerTest.cs" />
+    <Compile Include="Converters\Statistics Converter Test.cs" />
+    <Compile Include="Services\Statistic Service Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
