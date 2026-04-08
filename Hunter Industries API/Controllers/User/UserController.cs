@@ -107,7 +107,7 @@ namespace HunterIndustriesAPI.Controllers.User
             await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("user"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
                     username, applicationName, new string[] { filters.Id.ToString(), filters.Username });
 
-            List<UserRecord> users = await _userService.GetUsers(filters.Id, filters.Username);
+            List<UserRecord> users = await _userService.GetUsers(filters.Id, filters.Username, filters.IncludeDeleted);
 
             if (users.Count == 0)
             {
