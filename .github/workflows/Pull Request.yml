@@ -32,9 +32,15 @@ jobs:
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
 
-    - name: Build solution
+    - name: Build .NET Framework projects
       run: |
-        MSBuild.exe "Hunter Industries API.sln" /p:configuration="Release"
+        MSBuild.exe "Hunter Industries API/Hunter Industries API.csproj" /p:configuration="Release"
+        MSBuild.exe "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" /p:configuration="Release"
+
+    - name: Build .NET projects
+      run: |
+        dotnet build "Hunter Industries API Common/Hunter Industries API Common.csproj" --configuration Release
+        dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release
 
     - name: Run tests
       run: vstest.console.exe ".\Hunter Industries API.Tests\bin\Release\Hunter Industries API.Tests.dll"
