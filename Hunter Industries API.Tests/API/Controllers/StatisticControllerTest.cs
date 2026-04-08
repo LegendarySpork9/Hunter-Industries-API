@@ -59,10 +59,26 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                     {
                         Applications = 1,
                         Users = 2,
-                        Calls = 3,
-                        LoginAttempts = 4,
-                        Changes = 5,
-                        Errors = 6
+                        Calls = new MonthlyStatRecord
+                        {
+                            ThisMonth = 3,
+                            LastMonth = 2
+                        },
+                        LoginAttempts = new MonthlyStatRecord
+                        {
+                            ThisMonth = 4,
+                            LastMonth = 3
+                        },
+                        Changes = new MonthlyStatRecord
+                        {
+                            ThisMonth = 5,
+                            LastMonth = 4
+                        },
+                        Errors = new MonthlyStatRecord
+                        {
+                            ThisMonth = 6,
+                            LastMonth = 5
+                        }
                     }
                 }, (Exception)null))
                 .Returns((new List<object>

@@ -15,7 +15,8 @@ cross apply (
         count(*) / count(distinct CI.ComponentId) as EventCount
     from ComponentInformation CI with (nolock)
     where CI.ServerInformationId = SI.ServerInformationId
-    and CI.DateOccured >= dateadd(day, -30, getutcdate())
+    and CI.DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+    and CI.DateOccured < dateadd(day, 1, eomonth(getutcdate()))
     group by cast(CI.DateOccured as date)
 ) EventDays
 cross apply (

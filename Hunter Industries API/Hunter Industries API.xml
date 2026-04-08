@@ -2986,6 +2986,20 @@
             The number of logged alerts.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.MonthlyStatRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.MonthlyStatRecord.ThisMonth">
+            <summary>
+            The count for this month.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.MonthlyStatRecord.LastMonth">
+            <summary>
+            The count for last month.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord">
             <summary>
             </summary>

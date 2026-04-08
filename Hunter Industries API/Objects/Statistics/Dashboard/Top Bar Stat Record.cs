@@ -1,4 +1,4 @@
-﻿// Copyright © - Unpublished - Toby Hunter
+// Copyright © - Unpublished - Toby Hunter
 namespace HunterIndustriesAPI.Objects.Statistics.Dashboard
 {
     /// <summary>
@@ -16,18 +16,18 @@ namespace HunterIndustriesAPI.Objects.Statistics.Dashboard
         /// <summary>
         /// The number of calls made.
         /// </summary>
-        public int Calls { get; set; }
+        public MonthlyStatRecord Calls { get; set; }
         /// <summary>
         /// The number of login attempts made.
         /// </summary>
-        public int LoginAttempts { get; set; }
+        public MonthlyStatRecord LoginAttempts { get; set; }
         /// <summary>
         /// The number of changes made.
         /// </summary>
-        public int Changes { get; set; }
+        public MonthlyStatRecord Changes { get; set; }
         /// <summary>
         /// The number of errors occured.
         /// </summary>
-        public int Errors { get; set; }
+        public MonthlyStatRecord Errors { get; set; }
     }
 }
