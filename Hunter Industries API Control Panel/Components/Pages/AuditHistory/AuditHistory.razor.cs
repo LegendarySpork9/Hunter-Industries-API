@@ -12,21 +12,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         [SupplyParameterFromQuery(Name = "page")]
         public int? QueryPage { get; set; }
 
-        private PaginatedResponse<AuditHistoryRecord> _results = new();
-        private DateTime? _filterFromDate;
-        private DateTime? _filterToDate;
-        private string _filterEndpoint = string.Empty;
-        private string _filterIPAddress = string.Empty;
-        private string _filterMethod = "All";
-        private string _filterStatus = "All";
-        private int _pageSize = 25;
-        private int _pageNumber = 1;
+        private PaginatedResponse<AuditHistoryRecord> Results = new();
+        private DateTime? FilterFromDate;
+        private DateTime? FilterToDate;
+        private string FilterEndpoint = string.Empty;
+        private string FilterIPAddress = string.Empty;
+        private string FilterMethod = string.Empty;
+        private string FilterStatus = string.Empty;
+        private int PageSize = 25;
+        private int PageNumber = 1;
 
         protected override void OnInitialized()
         {
             if (QueryPage.HasValue && QueryPage.Value > 0)
             {
-                _pageNumber = QueryPage.Value;
+                PageNumber = QueryPage.Value;
             }
 
             LoadData();
@@ -34,53 +34,53 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
 
         private void LoadData()
         {
-            _results = APIService.GetAuditHistory(
-                _filterFromDate, _filterToDate,
-                string.IsNullOrWhiteSpace(_filterEndpoint) ? null : _filterEndpoint,
-                string.IsNullOrWhiteSpace(_filterIPAddress) ? null : _filterIPAddress,
-                _filterMethod, _filterStatus,
-                _pageSize, _pageNumber);
+            Results = APIService.GetAuditHistory(
+                FilterFromDate, FilterToDate,
+                string.IsNullOrWhiteSpace(FilterEndpoint) ? null : FilterEndpoint,
+                string.IsNullOrWhiteSpace(FilterIPAddress) ? null : FilterIPAddress,
+                FilterMethod, FilterStatus,
+                PageSize, PageNumber);
 
             UpdateUrl();
         }
 
         private void UpdateUrl()
         {
-            Navigation.NavigateTo($"/audit-history?page={_pageNumber}", replace: true);
+            Navigation.NavigateTo($"/audit-history?page={PageNumber}", replace: true);
         }
 
         private void ApplyFilters()
         {
-            _pageNumber = 1;
+            PageNumber = 1;
             LoadData();
         }
 
         private void ClearFilters()
         {
-            _filterFromDate = null;
-            _filterToDate = null;
-            _filterEndpoint = string.Empty;
-            _filterIPAddress = string.Empty;
-            _filterMethod = "All";
-            _filterStatus = "All";
-            _pageNumber = 1;
+            FilterFromDate = null;
+            FilterToDate = null;
+            FilterEndpoint = string.Empty;
+            FilterIPAddress = string.Empty;
+            FilterMethod = string.Empty;
+            FilterStatus = string.Empty;
+            PageNumber = 1;
             LoadData();
         }
 
         private void PreviousPage()
         {
-            if (_pageNumber > 1)
+            if (PageNumber > 1)
             {
-                _pageNumber--;
+                PageNumber--;
                 LoadData();
             }
         }
 
         private void NextPage()
         {
-            if (_pageNumber < _results.TotalPageCount)
+            if (PageNumber < Results.TotalPageCount)
             {
-                _pageNumber++;
+                PageNumber++;
                 LoadData();
             }
         }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Services;
 
-namespace HunterIndustriesAPIControlPanel.Components.Pages.Error
+namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
 {
     public partial class ErrorDetail
     {

@@ -936,30 +936,6 @@
             Returns the request model in the correct format.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Converters.StandardValues">
-            <summary>
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Converters.StandardValues.LoggerValues">
-            <summary>
-            </summary>
-        </member>
-        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Debug">
-            <summary>
-            </summary>
-        </member>
-        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Error">
-            <summary>
-            </summary>
-        </member>
-        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Info">
-            <summary>
-            </summary>
-        </member>
-        <member name="F:HunterIndustriesAPI.Converters.StandardValues.LoggerValues.Warning">
-            <summary>
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Converters.TokenConverter">
             <summary>
             </summary>
