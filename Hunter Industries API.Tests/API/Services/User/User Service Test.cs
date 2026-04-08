@@ -35,7 +35,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         public async Task TestGetUsers()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (int, string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(int, string, string)> { (1, "TestUser", "HashedPassword") }, null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(int, string, string, bool)> { (1, "TestUser", "HashedPassword", false) }, null));
             _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<string> { "User", "Assistant API" }, null));
 
             UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
@@ -47,6 +47,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
             Assert.AreEqual("TestUser", actual[0].Username);
             Assert.AreEqual("HashedPassword", actual[0].Password);
             Assert.AreEqual(2, actual[0].Scopes.Count);
+            Assert.AreEqual(false, actual[0].IsDeleted);
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         public async Task TestGetUsersEmpty()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (int, string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(int, string, string)>(), null));
+            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(int, string, string, bool)>(), null));
 
             UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 

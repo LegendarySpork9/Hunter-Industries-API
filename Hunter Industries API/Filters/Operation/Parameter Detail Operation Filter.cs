@@ -219,6 +219,11 @@ namespace HunterIndustriesAPI.Filters.Operation
                     {
                         param.name = "username";
                     }
+
+                    if (param.name == "filters.includeDeleted")
+                    {
+                        param.name = "includeDeleted";
+                    }
                 }
 
                 foreach (Parameter param in operation.parameters)

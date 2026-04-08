@@ -40,7 +40,7 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns all user records that match the parameters.
         /// </summary>
-        public async Task<List<UserRecord>> GetUsers(int id, string username)
+        public async Task<List<UserRecord>> GetUsers(int id, string username, bool includeDeleted = false)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUsers called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
 
@@ -63,7 +63,12 @@ namespace HunterIndustriesAPI.Services.User
                     parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
-                (List<(int, string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetInt32(0), reader.GetString(1), reader.GetString(2)), parameterList.ToArray());
+                if (!includeDeleted)
+                {
+                    sql += "\nand IsDeleted = 0";
+                }
+
+                (List<(int, string, string, bool)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetBoolean(3)), parameterList.ToArray());
 
                 if (ex != null)
                 {
@@ -79,7 +84,8 @@ namespace HunterIndustriesAPI.Services.User
                         Id = result.Item1,
                         Username = result.Item2,
                         Password = result.Item3,
-                        Scopes = await GetUserScopes(result.Item1)
+                        Scopes = await GetUserScopes(result.Item1),
+                        IsDeleted = result.Item4
                     };
 
                     users.Add(user);

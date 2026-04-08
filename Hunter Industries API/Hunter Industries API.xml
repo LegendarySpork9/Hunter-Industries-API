@@ -1945,6 +1945,11 @@
             The name of the user.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.IncludeDeleted">
+            <summary>
+            Whether to return deleted users.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel">
             <summary>
             </summary>
@@ -3252,6 +3257,11 @@
             The scopes applied to the user.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.User.UserRecord.IsDeleted">
+            <summary>
+            Whether the user is deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.User.SettingRecord">
             <summary>
             </summary>
@@ -3651,7 +3661,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.Int32,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.Int32,System.String,System.Boolean)">
             <summary>
             Returns all user records that match the parameters.
             </summary>
