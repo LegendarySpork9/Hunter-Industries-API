@@ -8,7 +8,8 @@ left join (
 		ServerInformationId,
 		count(*) as EventCount
 	from ComponentInformation with (nolock)
-	where DateOccured >= dateadd(day, -30, getutcdate())
+	where DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+		and DateOccured < dateadd(day, 1, eomonth(getutcdate()))
 	group by ServerInformationId
 ) [Events] on SI.ServerInformationId = [Events].ServerInformationId
 left join (
@@ -16,7 +17,8 @@ left join (
 		ServerInformationId,
 		count(*) as AlertCount
 	from ServerAlert with (nolock)
-	where DateOccured >= dateadd(day, -30, getutcdate())
+	where DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+		and DateOccured < dateadd(day, 1, eomonth(getutcdate()))
 	group by ServerInformationId
 ) Alerts on SI.ServerInformationId = Alerts.ServerInformationId
 where IsActive = 1

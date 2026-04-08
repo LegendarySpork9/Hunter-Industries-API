@@ -95,10 +95,26 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Applications = reader.GetInt32(0),
                 Users = reader.GetInt32(1),
-                Calls = reader.GetInt32(2),
-                LoginAttempts = reader.GetInt32(3),
-                Changes = reader.GetInt32(4),
-                Errors = reader.GetInt32(5)
+                Calls = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(2),
+                    LastMonth = reader.GetInt32(3)
+                },
+                LoginAttempts = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(4),
+                    LastMonth = reader.GetInt32(5)
+                },
+                Changes = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(6),
+                    LastMonth = reader.GetInt32(7)
+                },
+                Errors = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(8),
+                    LastMonth = reader.GetInt32(9)
+                }
             };
 
             return topBarStats;

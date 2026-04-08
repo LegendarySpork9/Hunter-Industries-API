@@ -9,7 +9,8 @@ join (
 		count (*) as CallCount
 	from AuditHistory with (nolock)
 	join StatusCode with (nolock) on AuditHistory.StatusId = StatusCode.StatusId
-	where DateOccured >= dateadd(day, -30, getutcdate())
+	where DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+	and DateOccured < dateadd(day, 1, eomonth(getutcdate()))
 	and [Value] like '20%'
 	group by format(DateOccured, 'MMM dd')
 ) as SuccessfulCalls on format(DateOccured, 'MMM dd') = SuccessfulCalls.[Day]
@@ -19,7 +20,8 @@ join (
 		count (*) as CallCount
 	from AuditHistory with (nolock)
 	join StatusCode with (nolock) on AuditHistory.StatusId = StatusCode.StatusId
-	where DateOccured >= dateadd(day, -30, getutcdate())
+	where DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+	and DateOccured < dateadd(day, 1, eomonth(getutcdate()))
 	and [Value] not like '20%'
 	group by format(DateOccured, 'MMM dd')
 ) as UnsuccessfulCalls on format(DateOccured, 'MMM dd') = UnsuccessfulCalls.[Day]
