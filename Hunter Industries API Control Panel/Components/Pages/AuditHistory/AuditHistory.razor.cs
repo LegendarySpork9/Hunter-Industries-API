@@ -6,13 +6,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
 {
     public partial class AuditHistory
     {
-        [Inject] private APIService APIService { get; set; } = default!;
-        [Inject] private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
+        [Inject]
+        private NavigationManager Navigation { get; set; } = default!;
 
         [SupplyParameterFromQuery(Name = "page")]
         public int? QueryPage { get; set; }
 
         private PaginatedResponse<AuditHistoryRecord> Results = new();
+
         private DateTime? FilterFromDate;
         private DateTime? FilterToDate;
         private string FilterEndpoint = string.Empty;
@@ -85,23 +88,48 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
             }
         }
 
-        private string GetMethodBadgeClass(string method) => method switch
+        private static string GetMethodBadgeClass(string method)
         {
-            "GET" => "badge-method-get",
-            "POST" => "badge-method-post",
-            "PATCH" => "badge-method-patch",
-            "DELETE" => "badge-method-delete",
-            _ => "bg-secondary"
-        };
+            return method switch
+            {
+                "GET" => "badge-method-get",
+                "POST" => "badge-method-post",
+                "PATCH" => "badge-method-patch",
+                "DELETE" => "badge-method-delete",
+                _ => "bg-secondary"
+            };
+        }
 
-        private string GetStatusBadgeClass(string status)
+        private static string GetStatusBadgeClass(string status)
         {
-            if (status.StartsWith("200")) return "badge-status-200";
-            if (status.StartsWith("201")) return "badge-status-201";
-            if (status.StartsWith("400")) return "badge-status-400";
-            if (status.StartsWith("401")) return "badge-status-401";
-            if (status.StartsWith("500")) return "badge-status-500";
-            return "bg-secondary";
+            string className = "bg-secondary";
+
+            if (status.StartsWith("200"))
+            {
+                className = "badge-status-200";
+            }
+
+            else if (status.StartsWith("201"))
+            {
+                className = "badge-status-201";
+            }
+
+            else if (status.StartsWith("400"))
+            {
+                className = "badge-status-400";
+            }
+
+            else if (status.StartsWith("401"))
+            {
+                className = "badge-status-401";
+            }
+
+            else if (status.StartsWith("500"))
+            {
+                className = "badge-status-500";
+            }
+
+            return className;
         }
     }
 }

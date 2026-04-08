@@ -5,14 +5,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 {
     public partial class Configuration
     {
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
 
-        private Dictionary<string, (string DisplayName, string Icon)> _configTypes = new();
+        private readonly Dictionary<string, (string DisplayName, string Icon)> ConfigTypes = [];
 
         protected override void OnInitialized()
         {
-            var types = APIService.GetConfigurationTypes();
-            var iconMap = new Dictionary<string, (string, string)>
+            List<string> types = APIService.GetConfigurationTypes();
+            Dictionary<string, (string, string)> iconMap = new()
             {
                 ["application"] = ("Application", "&#x1F4E6;"),
                 ["authorisation"] = ("Authorisation", "&#x1F512;"),
@@ -23,11 +24,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 ["machine"] = ("Machine", "&#x1F5A5;")
             };
 
-            foreach (var type in types)
+            foreach (string type in types)
             {
-                if (iconMap.TryGetValue(type, out var info))
+                if (iconMap.TryGetValue(type, out (string, string) info))
                 {
-                    _configTypes[type] = info;
+                    ConfigTypes[type] = info;
                 }
             }
         }

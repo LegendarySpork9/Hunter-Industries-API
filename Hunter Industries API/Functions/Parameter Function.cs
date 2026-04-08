@@ -1,4 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Functions;
 using System;
 using System.Collections;
 using System.Collections.Generic;

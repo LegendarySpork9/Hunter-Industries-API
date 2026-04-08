@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Security.Claims;
 using System.Web.Http;
+using HunterIndustriesAPICommon.Functions;
 
 namespace HunterIndustriesAPI.Controllers.User
 {

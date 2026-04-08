@@ -1,5 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPICommon.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HunterIndustriesAPI.Tests.API.Functions

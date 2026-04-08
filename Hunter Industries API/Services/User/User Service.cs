@@ -4,6 +4,7 @@ using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Objects.User;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPICommon.Functions;
 using System;
 using System.Collections.Generic;
 using System.Data;

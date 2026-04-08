@@ -13,8 +13,4 @@
     <PackageReference Include="log4net" Version="3.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Functions\" />
-  </ItemGroup>
-
 </Project>

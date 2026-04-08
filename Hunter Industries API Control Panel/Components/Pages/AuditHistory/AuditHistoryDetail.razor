@@ -3,41 +3,46 @@
 <PageTitle>Audit Record - HI Control Panel</PageTitle>
 
 <div class="mb-3">
-    <a href="/audit-history?page=@_fromPage" class="btn btn-outline-light btn-sm">&larr; Back to Audit History</a>
+    <a href="/audit-history?page=@FromPage" class="btn btn-outline-light btn-sm">&larr; Back to Audit History</a>
 </div>
 
-@if (_record == null)
+@if (Record == null)
 {
     <div class="alert alert-warning">Audit record not found.</div>
 }
+
 else
 {
     <!-- General Info -->
     <div class="card mb-4 card-rounded">
         <div class="card-header">
-            <h5 class="mb-0">Audit Record #@_record.Id</h5>
+            <h5 class="mb-0">Audit Record #@Record.Id</h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-3">
                     <label class="form-label text-muted">IP Address</label>
-                    <div>@_record.IPAddress</div>
+                    <div>@Record.IPAddress</div>
                 </div>
                 <div class="col-md-3">
                     <label class="form-label text-muted">Endpoint</label>
-                    <div>@_record.Endpoint</div>
+                    <div>@Record.Endpoint</div>
                 </div>
                 <div class="col-md-2">
                     <label class="form-label text-muted">Method</label>
-                    <div><span class="badge @GetMethodBadgeClass(_record.Method)">@_record.Method</span></div>
+                    <div>
+                        <span class="badge @GetMethodBadgeClass(Record.Method)">@Record.Method</span>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <label class="form-label text-muted">Status</label>
-                    <div><span class="badge @GetStatusBadgeClass(_record.Status)">@_record.Status</span></div>
+                    <div>
+                        <span class="badge @GetStatusBadgeClass(Record.Status)">@Record.Status</span>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <label class="form-label text-muted">Date</label>
-                    <div>@_record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")</div>
+                    <div>@Record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")</div>
                 </div>
             </div>
         </div>
@@ -49,15 +54,16 @@ else
             <h6 class="mb-0">Parameters</h6>
         </div>
         <div class="card-body">
-            @if (_record.Paramaters != null && _record.Paramaters.Length > 0)
+            @if (Record.Paramaters != null && Record.Paramaters.Length > 0)
             {
                 <ul class="mb-0">
-                    @foreach (var param in _record.Paramaters)
+                    @foreach (var param in Record.Paramaters)
                     {
                         <li>@param</li>
                     }
                 </ul>
             }
+
             else
             {
                 <span class="text-muted">None</span>
@@ -66,7 +72,7 @@ else
     </div>
 
     <!-- Login Attempt -->
-    @if (_record.LoginAttempt != null)
+    @if (Record.LoginAttempt != null)
     {
         <div class="card mb-4 card-rounded">
             <div class="card-header">
@@ -76,19 +82,20 @@ else
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label text-muted">Username</label>
-                        <div class="text-light-grey">@_record.LoginAttempt.Username</div>
+                        <div class="text-light-grey">@Record.LoginAttempt.Username</div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label text-muted">Phrase</label>
-                        <div class="text-light-grey">@_record.LoginAttempt.Phrase</div>
+                        <div class="text-light-grey">@Record.LoginAttempt.Phrase</div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label text-muted">Successful</label>
                         <div>
-                            @if (_record.LoginAttempt.IsSuccessful)
+                            @if (Record.LoginAttempt.IsSuccessful)
                             {
                                 <StatusBadge Text="Yes" Type="active" />
                             }
+
                             else
                             {
                                 <StatusBadge Text="No" Type="deleted" />
@@ -101,7 +108,7 @@ else
     }
 
     <!-- Changes -->
-    @if (_record.Change != null && _record.Change.Count > 0)
+    @if (Record.Change != null && Record.Change.Count > 0)
     {
         <div class="card mb-4 card-rounded">
             <div class="card-header">
@@ -118,7 +125,7 @@ else
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var change in _record.Change)
+                        @foreach (var change in Record.Change)
                         {
                             <tr>
                                 <td class="text-light-grey">@change.Endpoint</td>

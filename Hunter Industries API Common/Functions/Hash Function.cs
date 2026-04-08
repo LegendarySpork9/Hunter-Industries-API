@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace HunterIndustriesAPI.Functions
+namespace HunterIndustriesAPICommon.Functions
 {
     /// <summary>
     /// </summary>
@@ -17,7 +17,7 @@ namespace HunterIndustriesAPI.Functions
 
             if (!string.IsNullOrWhiteSpace(value))
             {
-                StringBuilder hashedValue = new StringBuilder();
+                StringBuilder hashedValue = new();
                 SHA512 shaHash = SHA512.Create();
 
                 byte[] hashBytes = shaHash.ComputeHash(Encoding.UTF8.GetBytes(value));

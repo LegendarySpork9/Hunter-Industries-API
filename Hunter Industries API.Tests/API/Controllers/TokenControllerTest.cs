@@ -1,9 +1,9 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Controllers;
-using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests;
 using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;

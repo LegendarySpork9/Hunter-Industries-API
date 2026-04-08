@@ -56,9 +56,7 @@
 </div>
 
 <!-- Results -->
-<RadzenDataGrid Data="@Results.Entries" TItem="AuditHistoryRecord" AllowSorting="true"
-                RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}?fromPage={PageNumber}"))"
-                Style="cursor: pointer;">
+<RadzenDataGrid Data="@Results.Entries" TItem="AuditHistoryRecord" AllowSorting="true" RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}?fromPage={PageNumber}"))" Style="cursor: pointer;">
     <Columns>
         <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="Id" Title="ID" Width="70px" />
         <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="IPAddress" Title="IP Address" />

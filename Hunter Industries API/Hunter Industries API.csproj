@@ -362,7 +362,6 @@
     <Compile Include="Filters\Versioned Route Attribute.cs" />
     <Compile Include="Functions\Audit History Function.cs" />
     <Compile Include="Functions\Claim Function.cs" />
-    <Compile Include="Functions\Hash Function.cs" />
     <Compile Include="Functions\Parameter Function.cs" />
     <Compile Include="Functions\Response Function.cs" />
     <Compile Include="Functions\Token Function.cs" />
