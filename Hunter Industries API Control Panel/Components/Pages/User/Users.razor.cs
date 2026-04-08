@@ -6,7 +6,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 {
     public partial class Users
     {
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private List<UserRecord> _users = new();

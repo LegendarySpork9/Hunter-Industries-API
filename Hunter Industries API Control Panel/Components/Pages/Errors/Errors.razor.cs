@@ -6,7 +6,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
 {
     public partial class Errors
     {
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private List<ErrorLogRecord> _allErrors = new();

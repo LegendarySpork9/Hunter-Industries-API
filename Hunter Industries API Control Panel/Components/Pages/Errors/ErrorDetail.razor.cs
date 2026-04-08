@@ -7,7 +7,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
     public partial class ErrorDetail
     {
         [Parameter] public int Id { get; set; }
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
 
         private ErrorLogRecord? _error;
 

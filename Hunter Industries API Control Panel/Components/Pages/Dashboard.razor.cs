@@ -6,7 +6,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
     public partial class Dashboard
     {
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private DashboardSummary? _summary;

@@ -7,7 +7,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
     public partial class ServerDetail
     {
         [Parameter] public int Id { get; set; }
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
 
         private ServerInformationRecord? _server;
         private List<ServerAlertRecord> _alerts = new();

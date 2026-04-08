@@ -2,7 +2,7 @@
 using HunterIndustriesAPICommon.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HunterIndustriesAPI.Tests.API.Functions
+namespace HunterIndustriesAPI.Tests.Common.Functions
 {
     [TestClass]
     public class HashFunctionTest

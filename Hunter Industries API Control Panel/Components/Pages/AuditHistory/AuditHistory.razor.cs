@@ -7,7 +7,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
     public partial class AuditHistory
     {
         [Inject]
-        private APIService APIService { get; set; } = default!;
+        private ExampleAPIService APIService { get; set; } = default!;
         [Inject]
         private NavigationManager Navigation { get; set; } = default!;
 

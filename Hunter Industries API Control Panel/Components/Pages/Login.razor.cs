@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Services;
+using HunterIndustriesAPIControlPanel.Models;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
     public partial class Login
     {
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
         [Inject] private UserModel User { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
         [Inject] private ProtectedSessionStorage SessionStorage { get; set; } = default!;

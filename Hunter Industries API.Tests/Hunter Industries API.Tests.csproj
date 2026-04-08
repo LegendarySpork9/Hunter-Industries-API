@@ -134,7 +134,7 @@
     <Compile Include="API\Functions\Audit History Function Test.cs" />
     <Compile Include="API\Functions\Claim Function Test.cs" />
     <Compile Include="API\Functions\Configuration Function Test.cs" />
-    <Compile Include="API\Functions\Hash Function Test.cs" />
+    <Compile Include="Common\Functions\Hash Function Test.cs" />
     <Compile Include="API\Functions\IP Address Function Test.cs" />
     <Compile Include="API\Functions\Parameter Function Test.cs" />
     <Compile Include="API\Functions\Response Function Test.cs" />
@@ -187,6 +187,7 @@
       <Name>Hunter Industries API Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

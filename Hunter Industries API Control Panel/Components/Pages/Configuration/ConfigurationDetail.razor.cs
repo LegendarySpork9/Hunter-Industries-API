@@ -7,7 +7,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
     public partial class ConfigurationDetail
     {
         [Parameter] public string Entity { get; set; } = string.Empty;
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private string _displayName = string.Empty;

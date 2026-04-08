@@ -6,8 +6,6 @@ namespace HunterIndustriesAPICommon.Abstractions
     /// </summary>
     public interface IFileSystem
     {
-        /// <summary>
-        /// </summary>
         string ReadAllText(string path);
     }
 }

@@ -1151,15 +1151,6 @@
             Extracts the application name from the claims principal.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Functions.HashFunction">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Functions.HashFunction.HashString(System.String)">
-            <summary>
-            Takes the given value and hashes it.
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Functions.ParameterFunction">
             <summary>
             </summary>

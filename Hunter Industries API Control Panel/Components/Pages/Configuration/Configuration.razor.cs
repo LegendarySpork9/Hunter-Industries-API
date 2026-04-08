@@ -6,7 +6,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
     public partial class Configuration
     {
         [Inject]
-        private APIService APIService { get; set; } = default!;
+        private ExampleAPIService APIService { get; set; } = default!;
 
         private readonly Dictionary<string, (string DisplayName, string Icon)> ConfigTypes = [];
 

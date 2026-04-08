@@ -2,7 +2,7 @@ using HunterIndustriesAPIControlPanel.Models;
 
 namespace HunterIndustriesAPIControlPanel.Services
 {
-    public class APIService
+    public class ExampleAPIService
     {
         private static readonly List<string> AvailableScopes = new()
         {
@@ -190,7 +190,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         private static int _nextConfigGameId = 4;
         private static int _nextConfigMachineId = 5;
 
-        static APIService()
+        static ExampleAPIService()
         {
             var now = DateTime.UtcNow;
             var random = new Random(42);

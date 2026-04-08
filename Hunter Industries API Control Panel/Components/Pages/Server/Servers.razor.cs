@@ -6,7 +6,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 {
     public partial class Servers
     {
-        [Inject] private APIService APIService { get; set; } = default!;
+        [Inject] private ExampleAPIService APIService { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private List<ServerInformationRecord> _servers = new();

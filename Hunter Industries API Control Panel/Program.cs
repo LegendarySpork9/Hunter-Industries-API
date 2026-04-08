@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Components;
@@ -24,7 +25,14 @@ namespace HunterIndustriesAPIControlPanel
 
             builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
-            builder.Services.AddSingleton<APIService>();
+            APISettingsModel apiSettings = new();
+
+            builder.Configuration.Bind("AppSettings", apiSettings);
+
+            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Loaded Configuration");
+
+            builder.Services.AddSingleton(apiSettings);
+            builder.Services.AddSingleton<ExampleAPIService>();
             builder.Services.AddScoped<Radzen.DialogService>();
             builder.Services.AddScoped<Radzen.NotificationService>();
             builder.Services.AddScoped<Radzen.TooltipService>();
