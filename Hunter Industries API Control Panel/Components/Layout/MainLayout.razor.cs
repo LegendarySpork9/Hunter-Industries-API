@@ -1,39 +1,38 @@
-using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace HunterIndustriesAPIControlPanel.Components.Layout
 {
     public partial class MainLayout
     {
         [Inject]
-        private UserModel User { get; set; } = default!;
-        [Inject]
         private NavigationManager Navigation { get; set; } = default!;
         [Inject]
-        private ProtectedSessionStorage SessionStorage { get; set; } = default!;
+        private UserModel User { get; set; } = default!;
 
-        private bool _isInitialised;
+        private bool IsInitialised;
 
+        /// <summary>
+        /// Checks if the user is logged in.
+        /// </summary>
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
                 try
                 {
-                    ProtectedBrowserStorageResult<string> usernameResult = await SessionStorage.GetAsync<string>("username");
-
-                    if (usernameResult.Success && !string.IsNullOrEmpty(usernameResult.Value))
+                    if (User.IsLoggedIn)
                     {
-                        User.Username = usernameResult.Value;
-                        _isInitialised = true;
+                        IsInitialised = true;
                         StateHasChanged();
                     }
+
                     else
                     {
                         Navigation.NavigateTo("/login", forceLoad: true);
                     }
                 }
+
                 catch
                 {
                     Navigation.NavigateTo("/login", forceLoad: true);
@@ -41,11 +40,12 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
             }
         }
 
+        /// <summary>
+        /// Performs the logout steps.
+        /// </summary>
         private async Task SignOut()
         {
-            User.Username = string.Empty;
-
-            await SessionStorage.DeleteAsync("username");
+            User.IsLoggedIn = false;
 
             Navigation.NavigateTo("/login", forceLoad: true);
         }

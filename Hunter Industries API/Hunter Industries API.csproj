@@ -321,7 +321,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\IClock.cs" />
     <Compile Include="Abstractions\IDatabase.cs" />
     <Compile Include="Abstractions\IDatabase Options.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -371,7 +370,6 @@
     </Compile>
     <Compile Include="Implementations\Database Wrapper.cs" />
     <Compile Include="Implementations\Database Options Provider.cs" />
-    <Compile Include="Implementations\System Clock Provider.cs" />
     <Compile Include="Mappings\Statistics\Server Data Reader Mapping.cs" />
     <Compile Include="Mappings\Statistics\Error Data Reader Mapping.cs" />
     <Compile Include="Mappings\Statistics\Shared Data Reader Mapping.cs" />

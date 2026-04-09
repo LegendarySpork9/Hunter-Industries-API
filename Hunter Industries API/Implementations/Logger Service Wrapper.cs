@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Implementations
         /// </summary>
         public void LogMessage(string level, string message, string summary = null)
         {
-            LoggerService _logger = new LoggerService(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)));
+            LoggerService _logger = new LoggerService(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), "APILog");
             _logger.LogMessage(level, message, summary);
         }
     }

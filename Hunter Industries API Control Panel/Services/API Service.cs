@@ -7,18 +7,21 @@ namespace HunterIndustriesAPIControlPanel.Services
 {
     public class APIService
     {
-        private readonly ILoggerService _Logger;
+        private readonly IConfigurableLoggerService _Logger;
         private readonly IAPIClient _APIClient;
+        private readonly IClock _Clock;
         
         public DateTime ExpiryTime { get; set; }
 
         // Sets the class's global variables.
         public APIService(
-            ILoggerService _logger,
-            IAPIClient _apiClient)
+            IConfigurableLoggerService _logger,
+            IAPIClient _apiClient,
+            IClock _clock)
         {
             _Logger = _logger;
             _APIClient = _apiClient;
+            _Clock = _clock;
         }
 
         /// <summary>
@@ -26,7 +29,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// </summary>
         public async Task Authorise()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Obtaining Bearer token from API");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Obtaining Bearer Token from API");
 
             try
             {
@@ -38,9 +41,10 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Bearer Token: {auth.Token}");
 
-                    ExpiryTime = DateTime.SpecifyKind(auth.Expires, DateTimeKind.Utc);
+                    ExpiryTime = DateTime.SpecifyKind(auth.Info.Expires, DateTimeKind.Utc);
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Expiry Time: {ExpiryTime}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Obtained Bearer Token from API");
                 }
             }
 
@@ -48,15 +52,14 @@ namespace HunterIndustriesAPIControlPanel.Services
             {
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to Obtain Bearer Token from API");
             }
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Obtained Bearer token from API");
         }
 
         /// <summary>
         /// Gets a list of the users from the API.
         /// </summary>
-        /*public async Task<List<UserModel>> GetUsers()
+        public async Task<List<UserModel>> GetUsers(bool includeDeleted)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching users from API");
 
@@ -69,9 +72,9 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             try
             {
-                (users, bool success) = await _APIClient.GetUsers();
+                users = await _APIClient.GetUsers(includeDeleted);
 
-                if (success)
+                if (users.Count > 0)
                 {
                     foreach (UserModel user in users)
                     {
@@ -82,24 +85,6 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched users from API");
                 }
-
-                else
-                {
-                    if (RetryCount != 4)
-                    {
-                        RetryCount++;
-
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Retry {RetryCount} of 4");
-
-                        await Authorise();
-                        users = await GetUsers();
-                    }
-
-                    else
-                    {
-                        _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch users from API");
-                    }
-                }
             }
 
             catch (Exception ex)
@@ -109,8 +94,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch users from API");
             }
 
-            RetryCount = 0;
             return users;
-        }*/
+        }
     }
 }

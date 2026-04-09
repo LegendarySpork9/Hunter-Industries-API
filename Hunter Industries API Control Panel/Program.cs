@@ -1,9 +1,12 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPICommon.Implementations;
+using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Components;
 using HunterIndustriesAPIControlPanel.Implementations;
 using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 
 namespace HunterIndustriesAPIControlPanel
@@ -15,7 +18,7 @@ namespace HunterIndustriesAPIControlPanel
         {
             log4net.Config.XmlConfigurator.Configure(new FileInfo(Path.Combine(AppContext.BaseDirectory, "log4net.config")));
 
-            ILoggerService _logger = new LoggerServiceWrapper("System");
+            IConfigurableLoggerService _logger = new LoggerServiceWrapper("System");
 
             _logger.LogMessage(StandardValues.LoggerValues.Info, "Starting Website");
 
@@ -32,12 +35,19 @@ namespace HunterIndustriesAPIControlPanel
             _logger.LogMessage(StandardValues.LoggerValues.Debug, "Loaded Configuration");
 
             builder.Services.AddSingleton(apiSettings);
+            builder.Services.AddSingleton<IConfigurableLoggerService>(_logger);
+            builder.Services.AddSingleton<IClock, SystemClockProvider>();
+            builder.Services.AddSingleton<IFileSystem, FileSystemWrapper>();
+            builder.Services.AddSingleton<IAPIClient, APIClientWrapper>();
+            builder.Services.AddSingleton<IHTTPClient, HTTPClientWrapper>();
+            builder.Services.AddSingleton<APIService>();
             builder.Services.AddSingleton<ExampleAPIService>();
             builder.Services.AddScoped<Radzen.DialogService>();
             builder.Services.AddScoped<Radzen.NotificationService>();
             builder.Services.AddScoped<Radzen.TooltipService>();
             builder.Services.AddScoped<Radzen.ContextMenuService>();
             builder.Services.AddScoped<UserModel>();
+            builder.Services.AddHttpContextAccessor();
 
             _logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Services");
 

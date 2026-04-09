@@ -8,5 +8,7 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses.Related
     {
         public required string ApplicationName { get; set; }
         public required List<string> Scopes { get; set; }
+        public required DateTime Issued { get; set; }
+        public required DateTime Expires { get; set; }
     }
 }

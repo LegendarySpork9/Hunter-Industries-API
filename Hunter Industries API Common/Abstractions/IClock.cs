@@ -1,7 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-using System;
-
-namespace HunterIndustriesAPI.Abstractions
+namespace HunterIndustriesAPICommon.Abstractions
 {
     /// <summary>
     /// Interface for the DateTime object.

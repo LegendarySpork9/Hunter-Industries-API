@@ -7,11 +7,11 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 {
     public class HTTPClientWrapper : IHTTPClient
     {
-        private readonly ILoggerService _Logger;
+        private readonly IConfigurableLoggerService _Logger;
 
         // Sets the class's global variables.
         public HTTPClientWrapper(
-            ILoggerService _logger)
+            IConfigurableLoggerService _logger)
         {
             _Logger = _logger;
         }

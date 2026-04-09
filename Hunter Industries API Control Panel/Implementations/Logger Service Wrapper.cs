@@ -6,9 +6,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 {
     /// <summary>
     /// </summary>
-    public class LoggerServiceWrapper : ILoggerService
+    public class LoggerServiceWrapper : IConfigurableLoggerService
     {
-        private readonly string IPAddress;
+        private string IPAddress;
 
         public LoggerServiceWrapper(string ipAddress)
         {
@@ -16,11 +16,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
+        /// Changes the identifier of the logger.
+        /// </summary>
+        public void ChangeIdentifier(string value) => IPAddress = value;
+
+        /// <summary>
         /// Logs the given message to the log file.
         /// </summary>
         public void LogMessage(string level, string message, string summary = null)
         {
-            LoggerService _logger = new(IPAddress);
+            LoggerService _logger = new(IPAddress, "Logs");
             _logger.LogMessage(level, message, summary);
         }
     }

@@ -4,19 +4,6 @@
         <name>Hunter Industries API</name>
     </assembly>
     <members>
-        <member name="T:HunterIndustriesAPI.Abstractions.IClock">
-            <summary>
-            Interface for the DateTime object.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Abstractions.IClock.UtcNow">
-            <summary>
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Abstractions.IClock.DefaultDate">
-            <summary>
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Abstractions.IDatabase">
             <summary>
             Interface for the database.
@@ -91,7 +78,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -129,7 +116,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -165,7 +152,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.VersionController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.VersionController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -201,7 +188,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.LocationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.LocationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -237,7 +224,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.AuditController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.AuditController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -268,7 +255,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -331,7 +318,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -362,7 +349,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -434,7 +421,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -477,7 +464,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -519,7 +506,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.TokenController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.TokenController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -543,7 +530,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -638,7 +625,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -718,7 +705,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -1266,20 +1253,6 @@
         <member name="P:HunterIndustriesAPI.Implementations.DatabaseOptionsProvider.SQLFiles">
             <summary>
             Returns the SQLFiles from the DatabaseModel.
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Implementations.SystemClockProvider">
-            <summary>
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Implementations.SystemClockProvider.UtcNow">
-            <summary>
-            Returns the current UTC Date and time.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Implementations.SystemClockProvider.DefaultDate">
-            <summary>
-            Returns the default date and time.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping">
@@ -3218,7 +3191,7 @@
             The application the call was made from.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.TokenInfo.Scope">
+        <member name="P:HunterIndustriesAPI.Objects.TokenInfo.Scopes">
             <summary>
             The scopes the token can access.
             </summary>
@@ -3414,7 +3387,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -3498,7 +3471,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>

@@ -13,7 +13,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 {
     public class APIClientWrapper : IAPIClient
     {
-        private readonly ILoggerService _Logger;
+        private readonly IConfigurableLoggerService _Logger;
         private readonly IFileSystem _FileSystem;
         private readonly APISettingsModel APISettings;
 
@@ -21,7 +21,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
         // Sets the class's global variables.
         public APIClientWrapper(
-            ILoggerService _logger,
+            IConfigurableLoggerService _logger,
             IFileSystem _fileSystem,
             APISettingsModel apiSettings)
         {
@@ -95,7 +95,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/users", ignoreQuery: includeDeleted);
+                string url = BuildURL("/user", ignoreQuery: !includeDeleted);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -139,7 +139,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// </summary>
         private string BuildURL(string endpoint, object? entityId = null, List<KeyValuePair<string, object>>? queryParameters = null, bool ignoreQuery = false)
         {
-            string url = $"{APISettings.BaseURL}{endpoint}";
+            string url = $"{APISettings.BaseURL}/{APISettings.Version}{endpoint}";
             string query = APIConverter.GetQuery(endpoint);
 
             if (entityId != null)

@@ -167,7 +167,7 @@ namespace HunterIndustriesAPI.Controllers
                         Info = new TokenInfo()
                         {
                             ApplicationName = applicationName,
-                            Scope = claims.Where(c => c.Type == "scope").Select(c => c.Value),
+                            Scopes = claims.Where(c => c.Type == "scope").Select(c => c.Value),
                             Issued = _Clock.UtcNow,
                             Expires = _Clock.UtcNow.AddMinutes(15)
                         }

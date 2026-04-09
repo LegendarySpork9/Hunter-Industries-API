@@ -1,8 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPI.Abstractions;
-using System;
+using HunterIndustriesAPICommon.Abstractions;
 
-namespace HunterIndustriesAPI.Implementations
+namespace HunterIndustriesAPICommon.Implementations
 {
     /// <summary>
     /// </summary>
@@ -16,6 +15,6 @@ namespace HunterIndustriesAPI.Implementations
         /// <summary>
         /// Returns the default date and time.
         /// </summary>
-        public DateTime DefaultDate => new DateTime(1900, 01, 01, 0, 0, 0, DateTimeKind.Utc);
+        public DateTime DefaultDate => new(1900, 01, 01, 0, 0, 0, DateTimeKind.Utc);
     }
 }

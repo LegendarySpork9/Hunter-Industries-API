@@ -8,12 +8,13 @@ namespace HunterIndustriesAPICommon.Services
     public class LoggerService
     {
         private readonly string Identifier;
-        private readonly ILog Logger = LogManager.GetLogger("APILog");
+        private readonly ILog Logger;
 
         // Sets the class's global variables.
-        public LoggerService(string id)
+        public LoggerService(string id, string logAppender)
         {
             Identifier = id;
+            Logger = LogManager.GetLogger(logAppender);
         }
 
         /// <summary>
