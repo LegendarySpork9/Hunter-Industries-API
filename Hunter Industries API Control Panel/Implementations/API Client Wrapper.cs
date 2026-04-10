@@ -36,7 +36,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         public void SetBearerToken(string bearerToken) => BearerToken = bearerToken;
 
         /// <summary>
-        /// Returns the token expiry time from the API.
+        /// Returns the authentication from the API.
         /// </summary>
         public async Task<AuthenticationModel?> Authorise()
         {
@@ -135,6 +135,98 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
+        /// Returns the statistics for the dashboard from the API.
+        /// </summary>
+        public async Task<DashboardStatisticsModel?> GetDashboardStatistics()
+        {
+            DashboardStatisticsModel? dashboardStatistics = null;
+
+            try
+            {
+                string url = BuildURL("/statistic/dashboard");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    dashboardStatistics = JsonConvert.DeserializeObject<DashboardStatisticsModel>(response.Content) ?? null;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return dashboardStatistics;
+        }
+
+        /// <summary>
+        /// Returns the paged audit history from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<AuditHistoryModel>?> GetPagedAuditHistory(List<KeyValuePair<string, object>>? queryParameters = null)
+        {
+            PagedAPIResponseModel<AuditHistoryModel>? pagedAuditHistory = null;
+
+            try
+            {
+                string url = BuildURL("/auditHistory", queryParameters: queryParameters);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    pagedAuditHistory = JsonConvert.DeserializeObject<PagedAPIResponseModel<AuditHistoryModel>>(response.Content) ?? null;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return pagedAuditHistory;
+        }
+
+        /// <summary>
         /// Returns the API url.
         /// </summary>
         private string BuildURL(string endpoint, object? entityId = null, List<KeyValuePair<string, object>>? queryParameters = null, bool ignoreQuery = false)
@@ -147,11 +239,31 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 url += $"/{entityId}";
             }
 
-            if (queryParameters != null)
+            if (queryParameters != null && queryParameters.Count > 0)
             {
-                foreach(KeyValuePair<string, object> queryParameter in queryParameters)
+                if (string.IsNullOrEmpty(query))
                 {
-                    query = query.Replace($"{queryParameter.Key}", $"{queryParameter.Value}");
+                    query = "?";
+
+                    for (int x = 0; x < queryParameters.Count; x++)
+                    {
+                        KeyValuePair<string, object> queryParameter = queryParameters[x];
+
+                        query += $"{queryParameter.Key}={queryParameter.Value}";
+
+                        if (x != (queryParameters.Count - 1))
+                        {
+                            query += "&";
+                        }
+                    }
+                }
+
+                else
+                {
+                    foreach (KeyValuePair<string, object> queryParameter in queryParameters)
+                    {
+                        query = query.Replace($"{queryParameter.Key}", $"{queryParameter.Value}");
+                    }
                 }
             }
 

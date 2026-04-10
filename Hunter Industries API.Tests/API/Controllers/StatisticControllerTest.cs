@@ -148,20 +148,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                     {
                         ServerId = 1,
                         Name = "Test",
-                        Uptime = 0,
-                        Events = 3,
-                        Alerts = 1
-                    }
-                }, (Exception)null))
-                .Returns((new List<object>
-                {
-                    new ServerHealthOverviewRecord
-                    {
-                        ServerId = 1,
-                        Name = "Test",
-                        Uptime = 99.5f,
-                        Events = 0,
-                        Alerts = 0
+                        Uptime = 99.5m
                     }
                 }, (Exception)null));
 

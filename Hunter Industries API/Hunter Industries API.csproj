@@ -573,7 +573,6 @@
     <Content Include="SQL\Statistics\Dashboard\GetLoginAttemptsByUsernameAndApplication.sql" />
     <Content Include="SQL\Statistics\Dashboard\GetErrorsByIPAndSummary.sql" />
     <Content Include="SQL\Statistics\Dashboard\GetServerHealth30Days.sql" />
-    <Content Include="SQL\Statistics\Dashboard\GetServerHealthOverview.sql" />
     <Content Include="SQL\Statistics\Dashboard\GetTopBarStats.sql" />
     <Content Include="SQL\Statistics\Error\GetErrorsBySummary.sql" />
     <Content Include="SQL\Statistics\Error\GetErrorsByIPAddress.sql" />

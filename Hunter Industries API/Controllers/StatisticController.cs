@@ -104,19 +104,14 @@ namespace HunterIndustriesAPI.Controllers
             records = await _statisticService.GetDashboardStatistic("loginAttempts");
             List<LoginAttemptStatisticRecord> loginAttemptRecords = records.Cast<LoginAttemptStatisticRecord>().ToList();
 
-            records = await _statisticService.GetDashboardStatistic("serverHealthOverview");
-            List<ServerHealthOverviewRecord> serverHealthOverviewRecords = records.Cast<ServerHealthOverviewRecord>().ToList();
-
-            records = await _statisticService.GetDashboardStatistic("serverHealthUptime");
+            records = await _statisticService.GetDashboardStatistic("serverHealth");
             List<ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<ServerHealthOverviewRecord>().ToList();
 
-            List<ServerHealthOverviewRecord> serverHealthRecords = serverHealthOverviewRecords.Join(serverHealthUptimeRecords, overview => overview.ServerId, uptime => uptime.ServerId, (overview, uptime) => new ServerHealthOverviewRecord
+            List<ServerHealthOverviewRecord> serverHealthRecords = serverHealthUptimeRecords.GroupBy(u => u.ServerId).Select(g => new ServerHealthOverviewRecord
             {
-                ServerId = overview.ServerId,
-                Name = uptime.Name,
-                Uptime = uptime.Uptime,
-                Events = overview.Events,
-                Alerts = overview.Alerts
+                ServerId = g.Key,
+                Name = g.First().Name,
+                Uptime = g.Average(u => u.Uptime)
             }).ToList();
 
             ResponseModel response = new ResponseModel()
@@ -124,7 +119,7 @@ namespace HunterIndustriesAPI.Controllers
                 StatusCode = 200,
                 Data = new DashboardResponseModel()
                 {
-                    Metric = topBarStatsRecord,
+                    Metrics = topBarStatsRecord,
                     APITraffic = apiTrafficRecords,
                     Errors = errorRecords,
                     EndpointCalls = endpointCallRecords,

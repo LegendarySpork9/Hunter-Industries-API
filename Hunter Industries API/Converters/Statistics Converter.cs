@@ -22,8 +22,7 @@ namespace HunterIndustriesAPI.Converters
                 case "apiTraffic": return "GetAPITraffic.sql";
                 case "errors": return "GetErrorsByIPAndSummary.sql";
                 case "loginAttempts": return "GetLoginAttemptsByUsernameAndApplication.sql";
-                case "serverHealthOverview": return "GetServerHealthOverview.sql";
-                case "serverHealthUptime": return "GetServerHealth30Days.sql";
+                case "serverHealth": return "GetServerHealth30Days.sql";
                 default: return "Unknown.sql";
             }
         }
@@ -111,8 +110,7 @@ order by ChangeCount desc";
                 case "apiTraffic": return DashboardDataReaderMapping.APITrafficMapper;
                 case "errors": return DashboardDataReaderMapping.IPAndSummaryErrorMapper;
                 case "loginAttempts": return DashboardDataReaderMapping.LoginAttemptMapper;
-                case "serverHealthOverview": return DashboardDataReaderMapping.ServerHealthOverviewMapper;
-                case "serverHealthUptime": return DashboardDataReaderMapping.ServerHealthUptimeMapper;
+                case "serverHealth": return DashboardDataReaderMapping.ServerHealthUptimeMapper;
                 default: return null;
             }
         }

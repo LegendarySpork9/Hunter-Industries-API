@@ -71,18 +71,6 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         }
 
         /// <summary>
-        /// Tests whether the GetSQLDashboard method returns "GetServerHealthOverview.sql" when given "serverHealthOverview".
-        /// </summary>
-        [TestMethod]
-        public void TestGetSQLDashboardServerHealthOverview()
-        {
-            string expected = "GetServerHealthOverview.sql";
-            string actual = StatisticsConverter.GetSQLDashboard("serverHealthOverview");
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        /// <summary>
         /// Tests whether the GetSQLDashboard method returns "GetServerHealth30Days.sql" when given "serverHealthUptime".
         /// </summary>
         [TestMethod]
@@ -405,17 +393,6 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         public void TestGetDataReaderMappingsDashboardLoginAttempts()
         {
             var actual = StatisticsConverter.GetDataReaderMappingsDashboard("loginAttempts");
-
-            Assert.IsNotNull(actual);
-        }
-
-        /// <summary>
-        /// Tests whether the GetDataReaderMappingsDashboard method returns a mapping when given "serverHealthOverview".
-        /// </summary>
-        [TestMethod]
-        public void TestGetDataReaderMappingsDashboardServerHealthOverview()
-        {
-            var actual = StatisticsConverter.GetDataReaderMappingsDashboard("serverHealthOverview");
 
             Assert.IsNotNull(actual);
         }

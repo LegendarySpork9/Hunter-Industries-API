@@ -12,7 +12,7 @@ namespace HunterIndustriesAPI.Models.Responses.Statistics
         /// <summary>
         /// The top bar record.
         /// </summary>
-        public TopBarStatRecord Metric { get; set; }
+        public TopBarStatRecord Metrics { get; set; }
         /// <summary>
         /// The API traffic records.
         /// </summary>

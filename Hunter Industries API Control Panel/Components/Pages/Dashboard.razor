@@ -1,8 +1,9 @@
 @page "/"
+@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Dashboard - HI Control Panel</PageTitle>
 
-@if (_summary == null)
+@if (Statistics == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -10,33 +11,28 @@
         </div>
     </div>
 }
+
 else
 {
     <!-- Row 1: KPI Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Applications" Value="@_summary.ApplicationCount.ToString()" Icon="&#9783;" IconColour="#20c997"
-                     Trend="@("")" />
+            <KPICard Title="Applications" Value="@Statistics.Metrics.Applications.ToString()" Icon="&#9783;" IconColour="#20c997" Trend="@("")" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Active Users" Value="@_summary.ActiveUserCount.ToString()" Icon="&#9823;" IconColour="#28a745"
-                     Trend="@("")" />
+            <KPICard Title="Active Users" Value="@Statistics.Metrics.Users.ToString()" Icon="&#9823;" IconColour="#28a745" Trend="@("")" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Calls This Month" Value="@_summary.CallsThisMonth.ToString("N0")" Icon="&#9978;" IconColour="#17a2b8"
-                     Trend="@GetTrend(_summary.CallsThisMonth, _summary.CallsLastMonth)" />
+            <KPICard Title="Calls This Month" Value="@Statistics.Metrics.Calls.ThisMonth.ToString()" Icon="&#9978;" IconColour="#17a2b8" Trend="@GetTrend(Statistics.Metrics.Calls.ThisMonth, Statistics.Metrics.Calls.LastMonth)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Login Attempts" Value="@_summary.LoginAttemptsThisMonth.ToString()" Icon="&#9919;" IconColour="#ffc107"
-                     Trend="@GetTrend(_summary.LoginAttemptsThisMonth, _summary.LoginAttemptsLastMonth)" />
+            <KPICard Title="Login Attempts" Value="@Statistics.Metrics.LoginAttempts.ThisMonth.ToString()" Icon="&#9919;" IconColour="#ffc107" Trend="@GetTrend(Statistics.Metrics.LoginAttempts.ThisMonth, Statistics.Metrics.LoginAttempts.LastMonth)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Changes" Value="@_summary.ChangesThisMonth.ToString()" Icon="&#9998;" IconColour="#6f42c1"
-                     Trend="@GetTrend(_summary.ChangesThisMonth, _summary.ChangesLastMonth)" />
+            <KPICard Title="Changes" Value="@Statistics.Metrics.Changes.ThisMonth.ToString()" Icon="&#9998;" IconColour="#6f42c1" Trend="@GetTrend(Statistics.Metrics.Changes.ThisMonth, Statistics.Metrics.Changes.LastMonth)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Errors This Month" Value="@_summary.ErrorsThisMonth.ToString()" Icon="&#9888;" IconColour="#dc3545"
-                     Trend="@GetTrend(_summary.ErrorsThisMonth, _summary.ErrorsLastMonth)" IsError="true" />
+            <KPICard Title="Errors This Month" Value="@Statistics.Metrics.Errors.ThisMonth.ToString()" Icon="&#9888;" IconColour="#dc3545" Trend="@GetTrend(Statistics.Metrics.Errors.ThisMonth, Statistics.Metrics.Errors.LastMonth)" IsError="true" />
         </div>
     </div>
 
@@ -47,10 +43,8 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">API Traffic Over Time (30 Days)</h6>
                     <RadzenChart Style="height: 280px;">
-                        <RadzenAreaSeries Data="@_summary.DailyTraffic" CategoryProperty="Date" ValueProperty="SuccessCount"
-                                          Title="Successful" Fill="rgba(40, 167, 69, 0.3)" Stroke="rgb(40, 167, 69)" />
-                        <RadzenAreaSeries Data="@_summary.DailyTraffic" CategoryProperty="Date" ValueProperty="FailureCount"
-                                          Title="Failed" Fill="rgba(220, 53, 69, 0.3)" Stroke="rgb(220, 53, 69)" />
+                        <RadzenAreaSeries Data="@Statistics.ApiTraffic" CategoryProperty="Day" ValueProperty="SuccessfulCalls" Title="Successful" Fill="rgba(40, 167, 69, 0.3)" Stroke="rgb(40, 167, 69)" />
+                        <RadzenAreaSeries Data="@Statistics.ApiTraffic" CategoryProperty="Day" ValueProperty="UnsuccessfulCalls" Title="Failed" Fill="rgba(220, 53, 69, 0.3)" Stroke="rgb(220, 53, 69)" />
                         <RadzenCategoryAxis FormatString="{0:dd MMM}" />
                         <RadzenValueAxis>
                             <RadzenGridLines Visible="true" Stroke="#555" />
@@ -65,17 +59,27 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Errors by IP Address &amp; Summary</h6>
                     <RadzenChart Style="height: 280px;">
-                        @foreach (var group in _errorsByIPGrouped)
+                        @foreach (KeyValuePair<string, List<ChartDataItem>> group in ErrorsByIPGrouped)
                         {
-                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value"
-                                                     Title="@group.Key" StrokeWidth="0" />
+                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value" Title="@group.Key" StrokeWidth="0" Fill="@ErrorColours[group.Key]" />
                         }
                         <RadzenCategoryAxis />
                         <RadzenValueAxis>
                             <RadzenGridLines Visible="true" Stroke="#555" />
                         </RadzenValueAxis>
-                        <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                        <RadzenLegend Visible="false" />
                     </RadzenChart>
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                        @foreach (KeyValuePair<string, List<ChartDataItem>> item in ErrorsByIPGrouped)
+                        {
+                            string colour = ErrorColours[item.Key];
+
+                            <span class="text-muted">
+                                <span class="legend-dot" style="background:@colour;"></span>
+                                @item.Key (@item.Value.Sum(i => i.Value))
+                            </span>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,17 +92,19 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
                     <RadzenChart Style="height: 160px;">
-                        <RadzenDonutSeries Data="@_summary.CallsByEndpoint" CategoryProperty="Label" ValueProperty="Value"
-                                            InnerRadius="40" Radius="70"
-                                            Fills="@_endpointColours" Strokes="@_endpointColours" />
+                        <RadzenDonutSeries Data="@Statistics.EndpointCalls" CategoryProperty="Endpoint" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@EndpointColours" Strokes="@EndpointColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @for (int i = 0; i < _summary.CallsByEndpoint.Count; i++)
+                        @for (int x = 0; x < Statistics.EndpointCalls.Count; x++)
                         {
-                            var item = _summary.CallsByEndpoint[i];
-                            var colour = _endpointColours[i % _endpointColours.Length];
-                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                            EndpointCallModel item = Statistics.EndpointCalls[x];
+                            string colour = EndpointColours[x % EndpointColours.Length];
+
+                            <span class="text-muted">
+                                <span class="legend-dot" style="background:@colour;"></span>
+                                @item.Endpoint (@item.Calls)
+                            </span>
                         }
                     </div>
                 </div>
@@ -109,17 +115,19 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method</h6>
                     <RadzenChart Style="height: 160px;">
-                        <RadzenDonutSeries Data="@_summary.CallsByMethod" CategoryProperty="Label" ValueProperty="Value"
-                                            InnerRadius="40" Radius="70"
-                                            Fills="@_methodColours" Strokes="@_methodColours" />
+                        <RadzenDonutSeries Data="@Statistics.MethodCalls" CategoryProperty="Method" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@MethodColours" Strokes="@MethodColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @for (int i = 0; i < _summary.CallsByMethod.Count; i++)
+                        @for (int x = 0; x < Statistics.MethodCalls.Count; x++)
                         {
-                            var item = _summary.CallsByMethod[i];
-                            var colour = _methodColours[i % _methodColours.Length];
-                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                            MethodCallModel item = Statistics.MethodCalls[x];
+                            string colour = MethodColours[x % MethodColours.Length];
+
+                            <span class="text-muted">
+                                <span class="legend-dot" style="background:@colour;"></span>
+                                @item.Method (@item.Calls)
+                            </span>
                         }
                     </div>
                 </div>
@@ -130,17 +138,19 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
                     <RadzenChart Style="height: 160px;">
-                        <RadzenDonutSeries Data="@_summary.CallsByStatusCode" CategoryProperty="Label" ValueProperty="Value"
-                                            InnerRadius="40" Radius="70"
-                                            Fills="@_statusColours" Strokes="@_statusColours" />
+                        <RadzenDonutSeries Data="@Statistics.StatusCalls" CategoryProperty="Status" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@StatusColours" Strokes="@StatusColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @for (int i = 0; i < _summary.CallsByStatusCode.Count; i++)
+                        @for (int x = 0; x < Statistics.StatusCalls.Count; x++)
                         {
-                            var item = _summary.CallsByStatusCode[i];
-                            var colour = _statusColours[i % _statusColours.Length];
-                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                            StatusCallModel item = Statistics.StatusCalls[x];
+                            string colour = StatusColours[x % StatusColours.Length];
+
+                            <span class="text-muted">
+                                <span class="legend-dot" style="background:@colour;"></span>
+                                @item.Status (@item.Calls)
+                            </span>
                         }
                     </div>
                 </div>
@@ -151,17 +161,19 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field</h6>
                     <RadzenChart Style="height: 160px;">
-                        <RadzenDonutSeries Data="@_summary.ChangesByField" CategoryProperty="Label" ValueProperty="Value"
-                                            InnerRadius="40" Radius="70"
-                                            Fills="@_fieldColours" Strokes="@_fieldColours" />
+                        <RadzenDonutSeries Data="@Statistics.Changes" CategoryProperty="Field" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@FieldColours" Strokes="@FieldColours" />
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @for (int i = 0; i < _summary.ChangesByField.Count; i++)
+                        @for (int x = 0; x < Statistics.Changes.Count; x++)
                         {
-                            var item = _summary.ChangesByField[i];
-                            var colour = _fieldColours[i % _fieldColours.Length];
-                            <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                            ChangeCallModel item = Statistics.Changes[x];
+                            string colour = FieldColours[x % FieldColours.Length];
+
+                            <span class="text-muted">
+                                <span class="legend-dot" style="background:@colour;"></span>
+                                @item.Field (@item.Calls)
+                            </span>
                         }
                     </div>
                 </div>
@@ -176,37 +188,54 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Login Attempts by Username &amp; Application</h6>
                     <RadzenChart Style="height: 250px;">
-                        @foreach (var group in _loginAttemptsByApp)
+                        @foreach (KeyValuePair<string, List<ChartDataItem>> group in LoginAttemptsByApp)
                         {
-                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value"
-                                                     Title="@group.Key" StrokeWidth="0" />
+                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value" Title="@group.Key" StrokeWidth="0" Fill="@LoginAttemptColours[group.Key]" />
                         }
                         <RadzenCategoryAxis />
                         <RadzenValueAxis>
                             <RadzenGridLines Visible="true" Stroke="#555" />
                         </RadzenValueAxis>
-                        <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                        <RadzenLegend Visible="false" />
                     </RadzenChart>
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                        @foreach (KeyValuePair<string, List<ChartDataItem>> item in LoginAttemptsByApp)
+                        {
+                            string colour = LoginAttemptColours[item.Key];
+
+                            <span class="text-muted">
+                                <span class="legend-dot" style="background:@colour;"></span>
+                                @item.Key (@item.Value.Sum(i => i.Value))
+                            </span>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Server Health Overview</h6>
+                    <h6 class="card-title text-muted mb-3">Server Health Overview (Average 30 Days)</h6>
                     <RadzenChart Style="height: 250px;">
-                        <RadzenBarSeries Data="@_summary.ServerHealth" CategoryProperty="ServerName" ValueProperty="UptimePercent"
-                                          Title="Uptime %" />
-                        <RadzenBarSeries Data="@_summary.ServerHealth" CategoryProperty="ServerName" ValueProperty="AlertCount"
-                                          Title="Alerts" />
-                        <RadzenBarSeries Data="@_summary.ServerHealth" CategoryProperty="ServerName" ValueProperty="EventCount"
-                                          Title="Events" />
+                        <RadzenBarSeries Data="@Statistics.ServerHealth" CategoryProperty="Name" ValueProperty="Uptime" Title="Uptime %" />
                         <RadzenCategoryAxis />
                         <RadzenValueAxis>
                             <RadzenGridLines Visible="true" Stroke="#555" />
                         </RadzenValueAxis>
-                        <RadzenLegend Visible="true" Position="LegendPosition.Bottom" />
+                        <RadzenLegend Visible="false" />
                     </RadzenChart>
+                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                        @for (int x = 0; x < Statistics.ServerHealth.Count; x++)
+                        {
+                            ServerHealthModel item = Statistics.ServerHealth[x];
+                            string colour = ServerHealthColours[x % ServerHealthColours.Length];
+
+                            <span class="text-muted">
+                                <span class="legend-dot" style="background:@colour;"></span>
+                                @item.Name (@item.Uptime.ToString("0.00")%)
+                            </span>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -219,13 +248,13 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Latest Activity</h6>
                     <div class="d-flex flex-column gap-2">
-                        @foreach (var entry in _recentActivity)
+                        @foreach (var entry in RecentActivity)
                         {
                             <a href="/audit-history/@entry.Id" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
                                 <span class="badge activity-method-badge @GetMethodBadgeClass(entry.Method)">@entry.Method</span>
                                 <span class="flex-grow-1 activity-endpoint">@entry.Endpoint</span>
                                 <span class="badge activity-status @GetStatusBadgeClass(entry.Status)">@entry.Status</span>
-                                <span class="text-muted activity-ip">@entry.IPAddress</span>
+                                <span class="text-muted activity-ip">@entry.IpAddress</span>
                                 <span class="text-muted activity-time">@GetRelativeTime(entry.OccuredAt)</span>
                             </a>
                         }

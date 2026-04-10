@@ -11,5 +11,7 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         public void SetBearerToken(string bearerToken);
         Task<AuthenticationModel?> Authorise();
         Task<List<UserModel>> GetUsers(bool includeDeleted);
+        Task<DashboardStatisticsModel?> GetDashboardStatistics();
+        Task<PagedAPIResponseModel<AuditHistoryModel>?> GetPagedAuditHistory(List<KeyValuePair<string, object>>? queryParameters = null);
     }
 }

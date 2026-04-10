@@ -1,5 +1,8 @@
 namespace HunterIndustriesAPIControlPanel.Models.Responses
 {
+    /// <summary>
+    /// Stores the user api response.
+    /// </summary>
     public class UserModel
     {
         public required int Id { get; set; }

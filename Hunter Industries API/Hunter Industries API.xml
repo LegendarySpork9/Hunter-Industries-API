@@ -1400,11 +1400,6 @@
             The SQL row to model mappings for the login attempt record.
             </summary>
         </member>
-        <member name="F:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping.ServerHealthOverviewMapper">
-            <summary>
-            The SQL row to model mappings for the server health overview record.
-            </summary>
-        </member>
         <member name="F:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping.ServerHealthUptimeMapper">
             <summary>
             The SQL row to model mappings for the uptime stat in the server health overview record.
@@ -2163,7 +2158,7 @@
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.Metric">
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.Metrics">
             <summary>
             The top bar record.
             </summary>
@@ -2943,16 +2938,6 @@
         <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.ServerHealthOverviewRecord.Uptime">
             <summary>
             The percentage of time the server was online.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.ServerHealthOverviewRecord.Events">
-            <summary>
-            The number of logged events.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.ServerHealthOverviewRecord.Alerts">
-            <summary>
-            The number of logged alerts.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.MonthlyStatRecord">
