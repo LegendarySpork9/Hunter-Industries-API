@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Objects.User
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Objects.User
 {
     /// <summary>
     /// </summary>

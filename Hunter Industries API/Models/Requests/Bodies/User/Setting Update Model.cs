@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.User
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models.Requests.Bodies.User
 {
     /// <summary>
     /// </summary>

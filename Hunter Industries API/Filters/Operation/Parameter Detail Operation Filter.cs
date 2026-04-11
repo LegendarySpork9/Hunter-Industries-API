@@ -1,4 +1,5 @@
-﻿using HunterIndustriesAPI.Controllers;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
 using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Controllers.User;
@@ -50,6 +51,11 @@ namespace HunterIndustriesAPI.Filters.Operation
                         param.name = "fromDate";
                     }
 
+                    if (param.name == "filters.toDate")
+                    {
+                        param.name = "toDate";
+                    }
+
                     if (param.name == "filters.ipAddress")
                     {
                         param.name = "ipAddress";
@@ -58,6 +64,47 @@ namespace HunterIndustriesAPI.Filters.Operation
                     if (param.name == "filters.endpoint")
                     {
                         param.name = "endpoint";
+                    }
+
+                    if (param.name == "filters.username")
+                    {
+                        param.name = "username";
+                    }
+
+                    if (param.name == "filters.application")
+                    {
+                        param.name = "application";
+                    }
+
+                    if (param.name == "filters.pageSize")
+                    {
+                        param.name = "pageSize";
+                    }
+
+                    if (param.name == "filters.pageNumber")
+                    {
+                        param.name = "pageNumber";
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ErrorController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "filters.fromDate")
+                    {
+                        param.name = "fromDate";
+                    }
+
+                    if (param.name == "filters.ipAddress")
+                    {
+                        param.name = "ipAddress";
+                    }
+
+                    if (param.name == "filters.summary")
+                    {
+                        param.name = "summary";
                     }
 
                     if (param.name == "filters.pageSize")
@@ -172,6 +219,11 @@ namespace HunterIndustriesAPI.Filters.Operation
                     {
                         param.name = "username";
                     }
+
+                    if (param.name == "filters.includeDeleted")
+                    {
+                        param.name = "includeDeleted";
+                    }
                 }
 
                 foreach (Parameter param in operation.parameters)
@@ -250,6 +302,20 @@ namespace HunterIndustriesAPI.Filters.Operation
                         if (param.name == "request")
                         {
                             param.name = "status";
+                        }
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ConfigurationController))
+            {
+                if (operation.parameters != null)
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "entityObject";
                         }
                     }
                 }

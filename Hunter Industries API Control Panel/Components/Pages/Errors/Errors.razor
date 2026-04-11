@@ -1,0 +1,129 @@
+@page "/errors"
+
+<PageTitle>Errors - HI Control Panel</PageTitle>
+
+<div class="page-header">
+    <h1>Errors</h1>
+</div>
+
+<!-- Summary Charts -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card h-100 card-rounded">
+            <div class="card-body">
+                <h6 class="card-title text-muted mb-3">Errors Over Time</h6>
+                <RadzenChart Style="height: 200px;">
+                    <RadzenLineSeries Data="@_errorsOverTime" CategoryProperty="Label" ValueProperty="Value"
+                                      Title="Errors" Stroke="rgb(220, 53, 69)" />
+                    <RadzenCategoryAxis />
+                    <RadzenValueAxis>
+                        <RadzenGridLines Visible="true" Stroke="#555" />
+                    </RadzenValueAxis>
+                    <RadzenLegend Visible="false" />
+                </RadzenChart>
+                <div class="text-center text-muted year-range">@_errorsYearRange</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 card-rounded">
+            <div class="card-body">
+                <h6 class="card-title text-muted mb-3">Errors by IP Address</h6>
+                <RadzenChart Style="height: 160px;">
+                    <RadzenDonutSeries Data="@_errorsByIP" CategoryProperty="Label" ValueProperty="Value"
+                                        InnerRadius="40" Radius="70"
+                                        Fills="@_errorsByIPColours" Strokes="@_errorsByIPColours" />
+                    <RadzenLegend Visible="false" />
+                </RadzenChart>
+                <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                    @for (int i = 0; i < _errorsByIP.Count; i++)
+                    {
+                        var item = _errorsByIP[i];
+                        var colour = _errorsByIPColours[i % _errorsByIPColours.Length];
+                        <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 card-rounded">
+            <div class="card-body">
+                <h6 class="card-title text-muted mb-3">Errors by Summary</h6>
+                <RadzenChart Style="height: 200px;">
+                    <RadzenBarSeries Data="@_errorsBySummary" CategoryProperty="Label" ValueProperty="Value"
+                                      Title="Count">
+                        <RadzenSeriesDataLabels Visible="true" />
+                    </RadzenBarSeries>
+                    <RadzenCategoryAxis />
+                    <RadzenValueAxis>
+                        <RadzenGridLines Visible="true" Stroke="#555" />
+                    </RadzenValueAxis>
+                    <RadzenLegend Visible="false" />
+                </RadzenChart>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="card mb-4 card-rounded">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label class="form-label">From Date</label>
+                <input type="date" class="form-control" @bind="_filterFromDate" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">IP Address</label>
+                <input type="text" class="form-control" @bind="_filterIPAddress" placeholder="e.g. 192.168.1.100" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Summary</label>
+                <input type="text" class="form-control" @bind="_filterSummary" placeholder="Search by summary..." />
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button class="btn btn-primary btn-sm" @onclick="ApplyFilters">Apply</button>
+                <button class="btn btn-outline-light btn-sm" @onclick="ClearFilters">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error List -->
+<RadzenDataGrid Data="@_pagedErrors" TItem="ErrorLogRecord" AllowSorting="true"
+                RowClick="@(args => Navigation.NavigateTo($"/errors/{args.Data.Id}"))"
+                Style="cursor: pointer;">
+    <Columns>
+        <RadzenDataGridColumn TItem="ErrorLogRecord" Property="Id" Title="ID" Width="70px" />
+        <RadzenDataGridColumn TItem="ErrorLogRecord" Title="Date" Width="170px">
+            <Template Context="error">
+                @error.DateOccured.ToString("dd MMM yyyy HH:mm:ss")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ErrorLogRecord" Property="IPAddress" Title="IP Address" Width="150px" />
+        <RadzenDataGridColumn TItem="ErrorLogRecord" Title="Summary">
+            <Template Context="error">
+                @ExtractClassMethod(error.Summary)
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted">
+        Showing @(_filteredErrors.Count == 0 ? 0 : (_pageNumber - 1) * _pageSize + 1)-@Math.Min(_pageNumber * _pageSize, _filteredErrors.Count)
+        of @_filteredErrors.Count records
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+        <select class="form-select form-select-sm page-size-select" @bind="_pageSize" @bind:after="OnPageSizeChanged">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+        <button class="btn btn-outline-light btn-sm" disabled="@(_pageNumber <= 1)" @onclick="PreviousPage">&laquo; Prev</button>
+        <span class="text-muted">Page @_pageNumber of @TotalPages</span>
+        <button class="btn btn-outline-light btn-sm" disabled="@(_pageNumber >= TotalPages)" @onclick="NextPage">Next &raquo;</button>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,9 +19,12 @@ namespace HunterIndustriesAPI.Mappings
                     "Assistant.Location",
                     "Assistant.Version",
                     "AuditHistory",
+                    "Configuration",
+                    "ErrorLog",
                     "ServerStatus.Alert",
                     "ServerStatus.Event",
                     "ServerStatus.Information",
+                    "Statistic",
                     "User",
                     "UserSettings"
 

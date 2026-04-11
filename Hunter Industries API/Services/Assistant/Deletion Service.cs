@@ -1,7 +1,9 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Responses.Assistant;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -19,8 +21,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public DeletionService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -37,9 +39,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<DeletionResponseModel> GetAssistantDeletion(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             DeletionResponseModel deletion = new DeletionResponseModel();
 
@@ -48,8 +48,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Deletion\GetAssistantDeletion.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (DeletionResponseModel result, Exception ex) = await _Database.QuerySingle(sql, reader => new DeletionResponseModel()
@@ -79,7 +79,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion returned {_parameterFunction.FormatParameters(deletion)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion returned {ParameterFunction.FormatParameters(deletion)}.");
             return deletion;
         }
 
@@ -88,9 +88,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantDeletionUpdated(string assistantName, string assistantId, bool deletion)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, deletion.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, deletion.ToString() })}.");
 
             bool updated = true;
 
@@ -99,9 +97,9 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Deletion\AssistantDeletionUpdated.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Deletion", SqlDbType.Bit) { Value = deletion },
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@deletion", SqlDbType.Bit) { Value = deletion },
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@idNumber", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

@@ -1,12 +1,14 @@
 ﻿select
 	ServerAlertId,
-	US.[Value],
-	Component.[Name],
-	CS.[Value],
-	SAS.[Value],
+	US.[Value] as Reporter,
+	Component.[Name] as Component,
+	CS.[Value] as ComponentStatus,
+	SAS.[Value] as AlertStatus,
 	DateOccured,
+	SI.ServerInformationId,
+	SI.[Name],
 	HostName,
-	Game.[Name],
+	Game.[Name] as Game,
 	[Version]
 from ServerAlert SA with (nolock)
 join UserSetting US with (nolock) on SA.UserSettingId = US.UserSettingId
@@ -16,4 +18,4 @@ join ServerAlertStatus SAS with (nolock) on SA.AlertStatusId = SAS.AlertStatusId
 join ServerInformation SI with (nolock) on SA.ServerInformationId = SI.ServerInformationId
 join Machine with (nolock) on SI.MachineId = Machine.MachineId
 join Game with (nolock) on SI.GameId = Game.GameId
-where ServerAlertId = @AlertId
+where ServerAlertId = @alertId

@@ -1,7 +1,10 @@
 ﻿with RankedComponentInformation as (
 	select
+		ComponentInformationId,
 		Component.[Name] as Component,
 		CS.[Value] as [Status],
+		SI.ServerInformationId,
+		SI.[Name] as ServerName,
 		HostName,
 		Game.[Name] as Game,
 		[Version],
@@ -16,15 +19,18 @@
 	join ServerInformation SI with (nolock) on CI.ServerInformationId = SI.ServerInformationId
 	join Machine with (nolock) on SI.MachineId = Machine.MachineId
 	join Game with (nolock) on SI.GameId = Game.GameId
-	where Component.[Name] = @Component
+	where Component.[Name] = @component
 )
 select
+	ComponentInformationId,
 	Component,
 	[Status],
+	ServerInformationId,
+	ServerName,
 	HostName,
 	Game,
 	[Version],
 	DateOccured
-from RankedComponentInformation with (nolock)
+from RankedComponentInformation
 where rn = 1
-order by 6 desc
+order by DateOccured desc

@@ -1,7 +1,9 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Objects.Assistant;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,8 +22,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public ConfigService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -38,9 +40,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<(List<AssistantConfiguration>, int, string)> GetAssistantConfig(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             List<AssistantConfiguration> assistantConfigurations = new List<AssistantConfiguration>();
             int totalConfigs = 0;
@@ -53,14 +53,14 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 if (!string.IsNullOrEmpty(assistantName))
                 {
-                    sql += "\nand AI.Name = @AssistantName";
-                    parameterList.Add(new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName });
+                    sql += "\nand AI.Name = @assistantName";
+                    parameterList.Add(new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName });
                 }
 
                 if (!string.IsNullOrEmpty(assistantId))
                 {
-                    sql += "\nand AI.IDNumber = @AssistantID";
-                    parameterList.Add(new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId });
+                    sql += "\nand AI.IDNumber = @assistantID";
+                    parameterList.Add(new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId });
                 }
 
                 (List<AssistantConfiguration> results, Exception ex) = await _Database.Query(sql, reader => new AssistantConfiguration()
@@ -92,7 +92,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {_parameterFunction.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetAssistantConfig returned {ParameterFunction.FormatParameters(new string[] { assistantConfigurations.Count.ToString(), totalConfigs.ToString(), mostRecentVersion })}.");
             return (assistantConfigurations, totalConfigs, mostRecentVersion);
         }
 
@@ -101,6 +101,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         private async Task<int> GetTotalConfigs(string assistantName, string assistantId)
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetTotalConfigs called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+
             int totalRecords = 0;
 
             try
@@ -110,12 +112,12 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 if (!string.IsNullOrEmpty(assistantName))
                 {
-                    parameterList.Add(new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName });
+                    parameterList.Add(new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName });
                 }
 
                 if (!string.IsNullOrEmpty(assistantId))
                 {
-                    parameterList.Add(new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId });
+                    parameterList.Add(new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId });
                 }
 
                 (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());
@@ -137,6 +139,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetTotalConfigs returned {totalRecords}.");
             return totalRecords;
         }
 
@@ -145,6 +148,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<string> GetMostRecentVersion()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetMostRecentVersion called.");
+
             string version = string.Empty;
 
             try
@@ -172,6 +177,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.GetMostRecentVersion returned {version}.");
             return version;
         }
 
@@ -180,9 +186,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantExists(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantExists called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             bool exists = false;
 
@@ -191,8 +195,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\AssistantExists.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetString(1)), parameters);
@@ -229,9 +233,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantConfigCreated(string assistantName, string assistantId, string assignedUser, string hostName)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ConfigService.AssistantConfigCreated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, assignedUser, hostName })}.");
 
             bool created = true;
 
@@ -240,8 +242,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateLocation.sql");
                 SqlParameter[] locationParameters =
                 {
-                    new SqlParameter("@Hostname", SqlDbType.VarChar) { Value = hostName },
-                    new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = "PlaceHolder" }
+                    new SqlParameter("@hostname", SqlDbType.VarChar) { Value = hostName },
+                    new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = "PlaceHolder" }
                 };
 
                 (object locationId, Exception ex) = await _Database.ExecuteScalar(sql, locationParameters);
@@ -265,7 +267,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                     sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateUser.sql");
                     SqlParameter[] userParameters =
                     {
-                        new SqlParameter("@Name", SqlDbType.VarChar) { Value = assignedUser }
+                        new SqlParameter("@name", SqlDbType.VarChar) { Value = assignedUser }
                     };
 
                     (object userId, Exception ex2) = await _Database.ExecuteScalar(sql, userParameters);
@@ -289,10 +291,10 @@ namespace HunterIndustriesAPI.Services.Assistant
                         sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateAssistantConfiguration.sql");
                         SqlParameter[] configParameters =
                         {
-                            new SqlParameter("@LocationID", SqlDbType.Int) { Value = locationId },
-                            new SqlParameter("@UserID", SqlDbType.Int) { Value = userId },
-                            new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                            new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                            new SqlParameter("@locationID", SqlDbType.Int) { Value = locationId },
+                            new SqlParameter("@userID", SqlDbType.Int) { Value = userId },
+                            new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                            new SqlParameter("@idNumber", SqlDbType.VarChar) { Value = assistantId }
                         };
 
                         (int rowsAffected, Exception ex3) = await _Database.Execute(sql, configParameters);

@@ -4,19 +4,6 @@
         <name>Hunter Industries API</name>
     </assembly>
     <members>
-        <member name="T:HunterIndustriesAPI.Abstractions.IClock">
-            <summary>
-            Interface for the DateTime object.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Abstractions.IClock.UtcNow">
-            <summary>
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Abstractions.IClock.DefaultDate">
-            <summary>
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Abstractions.IDatabase">
             <summary>
             Interface for the database.
@@ -51,38 +38,13 @@
             <summary>
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Abstractions.IFileSystem">
-            <summary>
-            Interface for the file system operations.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Abstractions.IFileSystem.ReadAllText(System.String)">
-            <summary>
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Abstractions.ILoggerService">
-            <summary>
-            Interface for the logger service.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Abstractions.ILoggerService.LogMessage(System.String,System.String,System.String)">
-            <summary>
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.BundleConfig">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
-            <summary>
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.FilterConfig">
             <summary>
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.FilterConfig.RegisterGlobalFilters(System.Web.Mvc.GlobalFilterCollection)">
             <summary>
+            Sets up the global filters.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.RouteConfig">
@@ -91,6 +53,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.RouteConfig.RegisterRoutes(System.Web.Routing.RouteCollection)">
             <summary>
+            Setus up the routing.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.SwaggerConfig">
@@ -99,6 +62,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.SwaggerConfig.Register">
             <summary>
+            Sets up the Swagger page.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.WebApiConfig">
@@ -107,13 +71,14 @@
         </member>
         <member name="M:HunterIndustriesAPI.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
             <summary>
+            Sets up the application configuration.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.ConfigController">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.ConfigController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -151,7 +116,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.DeletionController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -181,12 +146,13 @@
                  }
              </remarks>
              <param name="request">An object containing the deletion value.</param>
+             <param name="filters">An object containing the fitler to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.VersionController">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.VersionController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.VersionController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -216,12 +182,13 @@
                  }
              </remarks>
              <param name="request">An object containing the version information.</param>
+             <param name="filters">An object containing the fitler to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.LocationController">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.Assistant.LocationController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.Assistant.LocationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -251,12 +218,13 @@
                  }
              </remarks>
              <param name="request">An object containing the location data.</param>
+             <param name="filters">An object containing the fitler to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.AuditController">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.AuditController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.AuditController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -267,7 +235,7 @@
              <remarks>
              Sample Request:
             
-                 GET /audithistory?FromDate=02/11/2024&amp;Endpoint=https://hunter-industries.co.uk/api/auth/token
+                 GET /audithistory?FromDate=02/11/2024&amp;Endpoint=https://api.hunter-industries.co.uk/v2.0/auth/token
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
         </member>
@@ -281,13 +249,107 @@
                  GET /audithistory/1
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
-             <param name="id">The id number of the user.</param>
+             <param name="id">The id number of the audit history record.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.StatisticController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.GetDashboard">
+             <summary>
+             Returns the statistics for the dashboard.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /statistic/dashboard
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.GetServer(System.Int32)">
+             <summary>
+             Returns the statistics for the server page.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /statistic/server/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.GetError">
+             <summary>
+             Returns the statistics for the error page.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /statistic/error
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.GetApplication(System.Int32)">
+             <summary>
+             Returns the statistics for the application page.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /statistic/application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.GetUser(System.Int32)">
+             <summary>
+             Returns the statistics for the user page.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /statistic/user/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ErrorController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.Get(HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel)">
+             <summary>
+             Returns a collection of errors logged by the api.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /errorlog?FromDate=24/03/2026
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ErrorController.Get(System.Int32)">
+             <summary>
+             Returns the record matching the given id.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /errorlog/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="id">The id number of the error log record.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerAlertController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -326,9 +388,11 @@
                  Content-Type: application/json
                  {
                      "reporter": "tester",
-                     "component": "PC Status",
+                     "component": "PC",
                      "componentStatus": "Unknown",
                      "alertStatus": "Reported",
+                     "serverId": 1,
+                     "name": "Test",
                      "hostName": "Test",
                      "game": "Minecraft",
                      "gameVersion": "1.7.10"
@@ -357,7 +421,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerEventController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -368,7 +432,7 @@
              <remarks>
              Sample Request:
             
-                 GET /serverstatus/serverevent?Component=PC Status
+                 GET /serverstatus/serverevent?Component=PC
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="component">Which component you want the status for.</param>
@@ -384,8 +448,11 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "component": "PC Status",
+                     "eventId": 1,
+                     "component": "PC",
                      "status": "Online",
+                     "serverId": 1,
+                     "name": "Test",
                      "hostName": "Test",
                      "game": "Minecraft",
                      "gameVersion": "1.7.10"
@@ -397,7 +464,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -424,6 +491,7 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
+                     "name": "Test",
                      "hostName": "Test",
                      "game": "Minecraft",
                      "gameVersion": "1.7.10",
@@ -438,7 +506,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.TokenController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.TokenController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -458,11 +526,106 @@
              </remarks>
              <param name="request">The application identifier.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.ConfigurationController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get">
+             <summary>
+             Returns a list of configuration entities.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get(System.String,System.Int32,System.Int32,System.Int32)">
+             <summary>
+             Returns a collection of records.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration/application
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="entityId">The id number of the parent entity record.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Get(System.String,System.Int32)">
+             <summary>
+             Returns the record matching the given id.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /configuration/application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the record.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Post(System.String,System.Object,System.Int32)">
+             <summary>
+             Creates a new record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 POST /configuration/application
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "Name": "Test",
+                     "Phrase": "This is a test phrase."
+                 }
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="entityId">The id number of the parent entity record.</param>
+             <param name="request">An object containing the record information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Patch(System.String,System.Int32,System.Object)">
+             <summary>
+             Updates the details of the record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 PATCH /configuration/application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "Name": "TestApplication"
+                 }
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the record.</param>
+             <param name="request">An object containing the record data.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.ConfigurationController.Delete(System.String,System.Int32)">
+             <summary>
+             Deletes the record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 Delete /configuration/Application/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="entity">The name of the configuration object.</param>
+             <param name="id">The id number of the user.</param>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.User.UserController">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -473,7 +636,7 @@
              <remarks>
              Sample Request:
             
-                 GET /User?Username=TestUser
+                 GET /user?Username=TestUser
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
         </member>
@@ -484,7 +647,7 @@
              <remarks>
              Sample Request:
             
-                 GET /User/1
+                 GET /user/1
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the user.</param>
@@ -542,7 +705,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
             </summary>
         </member>
@@ -553,7 +716,7 @@
              <remarks>
              Sample Request:
             
-                 GET /UserSettings/1?application=test
+                 GET /usersettings/1?application=test
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the user.</param>
@@ -607,6 +770,11 @@
             Returns the endpoint id number.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Converters.AuditHistoryConverter.GetEndpointVersionID(System.String)">
+            <summary>
+            Returns the endpoint version id number.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Converters.AuditHistoryConverter.GetMethodID(System.String)">
             <summary>
             Returns the method id number.
@@ -617,19 +785,149 @@
             Returns the status id number.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Converters.StandardValues">
+        <member name="T:HunterIndustriesAPI.Converters.StatisticsConverter">
             <summary>
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Converters.StandardValues.LoggerValues">
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetSQLDashboard(System.String)">
             <summary>
+            Returns the Getx sql file to load for the dashboard.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetSQLShared(System.String)">
+            <summary>
+            Returns the Getx sql file to load for the shared stats.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetSQLSharedSort(System.String)">
+            <summary>
+            Returns the Getx group query.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetSQLServer(System.String)">
+            <summary>
+            Returns the Getx sql file to load for the server page.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetSQLError(System.String)">
+            <summary>
+            Returns the Getx sql file to load for the error page.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetDataReaderMappingsDashboard(System.String)">
+            <summary>
+            Returns the data reader mappings for the dashboard.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetDataReaderMappingsShared(System.String)">
+            <summary>
+            Returns the data reader mappings for the shared stats.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetDataReaderMappingsServer(System.String)">
+            <summary>
+            Returns the data reader mappings for the server page.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetDataReaderMappingsError(System.String)">
+            <summary>
+            Returns the data reader mappings for the error page.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Converters.ConfigurationConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGet(System.String)">
+            <summary>
+            Returns the Getx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGetPagination(System.String)">
+            <summary>
+            Returns the Getx pagination sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLGetTotal(System.String)">
+            <summary>
+            Returns the GetTotalx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLExists(System.String)">
+            <summary>
+            Returns the xExists sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLFilter(System.String)">
+            <summary>
+            Returns the xExists sql filter.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLFilterId(System.String)">
+            <summary>
+            Returns the xExists sql filter.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLCreate(System.String)">
+            <summary>
+            Returns the Createx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLUpdated(System.String)">
+            <summary>
+            Returns the xUpdated sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetSQLDelete(System.String)">
+            <summary>
+            Returns the Deletex sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersGet(System.String,System.Int32,System.Int32)">
+            <summary>
+            Returns the parameters for the paginated Getx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersGetSingle(System.String,System.Int32)">
+            <summary>
+            Returns the parameters for the Getx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns the parameters for the xExists sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParameterExists(System.String,System.Int32)">
+            <summary>
+            Returns the parameters for the xExists sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersCreate(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns the parameters for the Createx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetParametersUpdated(System.String,System.Object,System.Int32)">
+            <summary>
+            Returns the parameters for the xUpdated sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetDataReaderMappings(System.String)">
+            <summary>
+            Returns the data reader mappings for the given entity.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.ConfigurationConverter.GetRequestObject(System.String,System.Object)">
+            <summary>
+            Returns the request model in the correct format.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.TokenConverter">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetClaims(System.Collections.Generic.List{System.String})">
+        <member name="M:HunterIndustriesAPI.Converters.TokenConverter.GetClaims(System.String,System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Converts the scope into a claim.
             </summary>
@@ -689,7 +987,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.#ctor(System.IServiceProvider)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Filters.DependencyResolver.BeginScope">
@@ -718,7 +1015,6 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.#ctor(System.String)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Filters.RequiredPolicyAuthorisationAttributeFilter.OnAuthorization(System.Web.Http.Controllers.HttpActionContext)">
@@ -739,6 +1035,11 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Filters.VersionedDirectRouteProvider.ExpandVersionedFactories(System.Collections.Generic.IReadOnlyList{System.Web.Http.Routing.IDirectRouteFactory})">
+            <summary>
+            Returns a list of routes based on the given descriptor.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Filters.VersionSpecificRouteFactory">
             <summary>
             Creates a route entry for a specific versioned route template.
@@ -750,17 +1051,16 @@
         </member>
         <member name="M:HunterIndustriesAPI.Filters.VersionSpecificRouteFactory.CreateRoute(System.Web.Http.Routing.DirectRouteFactoryContext)">
             <summary>
+            Creates the route for the given context.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Filters.VersionedRouteAttribute">
             <summary>
-            A route attribute that automatically registers routes for all API versions
-            from the minimum version up to the current version.
             </summary>
         </member>
         <member name="F:HunterIndustriesAPI.Filters.VersionedRouteAttribute.ApiVersions">
             <summary>
-            All known API versions in order. Add new versions to the end of this array.
+            All known API versions in order.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Filters.VersionedRouteAttribute.Path">
@@ -781,36 +1081,61 @@
         <member name="M:HunterIndustriesAPI.Filters.VersionedRouteAttribute.#ctor(System.String,System.String,System.String)">
             <summary>
             </summary>
-            <param name="path">The route path without the api/vN.N/ prefix.</param>
-            <param name="minVersion">The minimum API version this route is available from.</param>
-            <param name="maxVersion">The maximum API version this route is available up to. Defaults to the latest version.</param>
         </member>
         <member name="M:HunterIndustriesAPI.Filters.VersionedRouteAttribute.System#Web#Http#Routing#IDirectRouteFactory#CreateRoute(System.Web.Http.Routing.DirectRouteFactoryContext)">
             <summary>
+            Creates the route for the given context.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
-            <summary>
-            Maps broad database scopes to granular internal permissions.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Returns all granular permissions granted by the given broad scopes.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
-            <summary>
-            Checks if the given permissions contain any that match the required permission.
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Functions.HashFunction">
+        <member name="T:HunterIndustriesAPI.Functions.ConfigurationFunction">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.HashFunction.HashString(System.String)">
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanParameterArray(System.Object,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Takes the given value and hashes it.
+            Removes any null properties from the SQL parameter list.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanSQL(System.Object,System.String)">
+            <summary>
+            Removes any null properties from the SQL.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.GetProperties(System.Object)">
+            <summary>
+            Returns all the properties in the model.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.IPAddressFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.IPAddressFunction.FetchIpAddress(System.Web.HttpRequestBase)">
+            <summary>
+            Returns the IP address for logging.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.AuditHistoryFunction.ExtractVersionFromRequest(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Extracts the API version from the request URL.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Functions.ClaimFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunction.GetUsername(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Extracts the username from the claims principal.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ClaimFunction.GetApplicationName(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Extracts the application name from the claims principal.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.ParameterFunction">
@@ -832,7 +1157,7 @@
             Converts the model into a log friendly format.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatListParameters(System.Object,System.Boolean)">
             <summary>
             Converts the list into a log friendly format.
             </summary>
@@ -840,6 +1165,11 @@
         <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Collections.Generic.List{System.Object},System.Boolean)">
             <summary>
             Converts the list into a SQL friendly format.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.String[])">
+            <summary>
+            Converts the model into a string array.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.ResponseFunction">
@@ -853,11 +1183,6 @@
         </member>
         <member name="T:HunterIndustriesAPI.Functions.TokenFunction">
             <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService)">
-            <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Functions.TokenFunction.ExtractCredentialsFromBasicAuth(System.String)">
@@ -879,15 +1204,20 @@
             Compares the scopes and generates the update list.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.WebApiApplication">
+        <member name="T:HunterIndustriesAPI.Implementations.LoggerServiceWrapper">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.WebApiApplication.Application_Start">
+        <member name="M:HunterIndustriesAPI.Implementations.LoggerServiceWrapper.LogMessage(System.String,System.String,System.String)">
             <summary>
+            Logs the given message to the log file.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Implementations.DatabaseWrapper">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.#ctor(HunterIndustriesAPI.Abstractions.IDatabaseOptions)">
             <summary>
             </summary>
         </member>
@@ -925,36 +1255,167 @@
             Returns the SQLFiles from the DatabaseModel.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Implementations.FileSystemWrapper">
+        <member name="T:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Implementations.FileSystemWrapper.ReadAllText(System.String)">
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ApplicationMapper">
             <summary>
-            Returns the text in a given file.
+            The SQL row to model mappings for the application record.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Implementations.LoggerServiceWrapper">
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ApplicationSettingMapper">
+            <summary>
+            The SQL row to model mappings for the application setting record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.AuthorisationMapper">
+            <summary>
+            The SQL row to model mappings for the authorisation record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ComponentMapper">
+            <summary>
+            The SQL row to model mappings for the component record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.ConnectionMapper">
+            <summary>
+            The SQL row to model mappings for the connection record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.DowntimeMapper">
+            <summary>
+            The SQL row to model mappings for the downtime record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.GameMapper">
+            <summary>
+            The SQL row to model mappings for the game record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.MachineMapper">
+            <summary>
+            The SQL row to model mappings for the machine record.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
+            <summary>
+            Maps broad database scopes to granular internal permissions.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns all granular permissions granted by the given broad scopes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Mappings.ScopePermissionMapping.HasPermission(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Checks if the given permissions contain any that match the required permission.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ServerDataReaderMapping">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Implementations.LoggerServiceWrapper.LogMessage(System.String,System.String,System.String)">
+        <member name="F:HunterIndustriesAPI.Mappings.ServerDataReaderMapping.AlertComponentMapper">
             <summary>
-            Logs the given message to the log file.
+            The SQL row to model mappings for the alert component record.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Implementations.SystemClockProvider">
+        <member name="F:HunterIndustriesAPI.Mappings.ServerDataReaderMapping.AlertStatusMapper">
+            <summary>
+            The SQL row to model mappings for the alert status record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ServerDataReaderMapping.EventComponentMapper">
+            <summary>
+            The SQL row to model mappings for the event component record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ServerDataReaderMapping.RecentAlertMapper">
+            <summary>
+            The SQL row to model mappings for the recent alert record.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.ErrorDataReaderMapping">
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Implementations.SystemClockProvider.UtcNow">
+        <member name="F:HunterIndustriesAPI.Mappings.ErrorDataReaderMapping.ErrorOverTimeMapper">
             <summary>
-            Returns the current UTC Date and time.
+            The SQL row to model mappings for the error over time record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Implementations.SystemClockProvider.DefaultDate">
+        <member name="F:HunterIndustriesAPI.Mappings.ErrorDataReaderMapping.IPErrorMapper">
             <summary>
-            Returns the default date and time.
+            The SQL row to model mappings for the IP error record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ErrorDataReaderMapping.SummaryErrorMapper">
+            <summary>
+            The SQL row to model mappings for the summary error record.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.SharedDataReaderMapping">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.SharedDataReaderMapping.EndpointCallMapper">
+            <summary>
+            The SQL row to model mappings for the endpoint call record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.SharedDataReaderMapping.MethodCallMapper">
+            <summary>
+            The SQL row to model mappings for the method call record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.SharedDataReaderMapping.StatusCallMapper">
+            <summary>
+            The SQL row to model mappings for the status call record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.SharedDataReaderMapping.ChangeCallMapper">
+            <summary>
+            The SQL row to model mappings for the change call record.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping.APITrafficMapper">
+            <summary>
+            The SQL row to model mappings for the API traffic record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping.IPAndSummaryErrorMapper">
+            <summary>
+            The SQL row to model mappings for the IP and summary error record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping.LoginAttemptMapper">
+            <summary>
+            The SQL row to model mappings for the login attempt record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping.ServerHealthUptimeMapper">
+            <summary>
+            The SQL row to model mappings for the uptime stat in the server health overview record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.DashboardDataReaderMapping.TopBarStatusMapper">
+            <summary>
+            The SQL row to model mappings for the top bar stats record.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.WebApiApplication">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.WebApiApplication.Application_Start">
+            <summary>
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.DatabaseModel">
@@ -1051,6 +1512,112 @@
             The version of the assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel.Name">
+            <summary>
+            The name of the application.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationModel.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Name">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Type">
+            <summary>
+            The data type of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ApplicationSettingModel.Required">
+            <summary>
+            Whether the setting is required.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.AuthorisationModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.AuthorisationModel.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ComponentModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ComponentModel.Name">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel.IPAddress">
+            <summary>
+            The ip address of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.ConnectionModel.Port">
+            <summary>
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel.Time">
+            <summary>
+            The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel.Name">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.GameModel.Version">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.MachineModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.MachineModel.HostName">
+            <summary>
+            The name of the machine.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel">
+            <summary>
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel.Status">
             <summary>
             The status of the alert.
@@ -1080,9 +1647,19 @@
             The status of the alert.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.HostName">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.ServerId">
+            <summary>
+            The id number of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel.Game">
@@ -1109,9 +1686,19 @@
             The status of the component.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.HostName">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.ServerId">
+            <summary>
+            The id number of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.HostName">
+            <summary>
+            The name of the server Machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Game">
@@ -1128,9 +1715,19 @@
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.HostName">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.EventInterval">
+            <summary>
+            The time, in seconds, between server events.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Game">
@@ -1156,6 +1753,11 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Time">
             <summary>
             The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.User.SettingUpdateModel">
@@ -1233,6 +1835,11 @@
             The date from which to pull records.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.ToDate">
+            <summary>
+            The date to which to pull records.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.IPAddress">
             <summary>
             The IP address the records were made from.
@@ -1243,12 +1850,51 @@
             The endpoint which the calls were made to.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.Username">
+            <summary>
+            The username of the user who made the call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.Application">
+            <summary>
+            The application that made the call.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.PageSize">
             <summary>
             The number of records to pull per page.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.AuditHistoryFilterModel.PageNumber">
+            <summary>
+            The number of the page to pull.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.FromDate">
+            <summary>
+            The date from which to pull records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.IPAddress">
+            <summary>
+            The IP address the records were made from.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.Summary">
+            <summary>
+            The summary of the records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.PageSize">
+            <summary>
+            The number of records to pull per page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.PageNumber">
             <summary>
             The number of the page to pull.
             </summary>
@@ -1265,6 +1911,11 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.Username">
             <summary>
             The name of the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.IncludeDeleted">
+            <summary>
+            Whether to return deleted users.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel">
@@ -1353,6 +2004,40 @@
             The version of the assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.Entries">
+            <summary>
+            The configuration records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ConfigurationResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel">
             <summary>
             </summary>
@@ -1383,6 +2068,40 @@
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Responses.AuditHistoryResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.Entries">
+            <summary>
+            The error log records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.TotalCount">
             <summary>
             The total number of records returned.
             </summary>
@@ -1435,6 +2154,127 @@
             The total number of records returned.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.Metrics">
+            <summary>
+            The top bar record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.APITraffic">
+            <summary>
+            The API traffic records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.Errors">
+            <summary>
+            The error records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.EndpointCalls">
+            <summary>
+            The endpoint call records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.MethodCalls">
+            <summary>
+            The method call records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.StatusCalls">
+            <summary>
+            The status call records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.Changes">
+            <summary>
+            The change call records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.LoginAttempts">
+            <summary>
+            The login attempt records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel.ServerHealth">
+            <summary>
+            The server health records.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Statistics.ErrorResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ErrorResponseModel.Errors">
+            <summary>
+            The error records over a period of time.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ErrorResponseModel.IPErrors">
+            <summary>
+            The error records by ip.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ErrorResponseModel.SummaryErrors">
+            <summary>
+            The error records by summary.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.ComponentAlerts">
+            <summary>
+            The alerts by component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.StatusAlerts">
+            <summary>
+            The alerts by status.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.LatestEvents">
+            <summary>
+            The most recent events per component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.RecentAlerts">
+            <summary>
+            The recent alert records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.RecentEvents">
+            <summary>
+            The recent event records.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Statistics.SharedStatResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.SharedStatResponseModel.EndpointCalls">
+            <summary>
+            The endpoint call records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.SharedStatResponseModel.MethodCalls">
+            <summary>
+            The method call records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.SharedStatResponseModel.StatusCalls">
+            <summary>
+            The status call records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.SharedStatResponseModel.Changes">
+            <summary>
+            The change call records.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.TokenResponseModel">
             <summary>
             </summary>
@@ -1478,6 +2318,222 @@
             The valid secret key of the token.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.MachineRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.HostName">
+            <summary>
+            The name of the machine.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.MachineRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.GameRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Name">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.Version">
+            <summary>
+            The version of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.GameRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Time">
+            <summary>
+            The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationDowntimeRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.IPAddress">
+            <summary>
+            The ip address of the game.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.Port">
+            <summary>
+            The port the server runs on.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ConfigurationConnectionRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ComponentRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.Name">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ComponentRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Name">
+            <summary>
+            The name of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Type">
+            <summary>
+            The data type of the setting.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.Required">
+            <summary>
+            Whether the setting is required.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationSettingRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.Phrase">
+            <summary>
+            The authorisation phrase.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.AuthorisationRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Name">
+            <summary>
+            The name of the application.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Authorisation">
+            <summary>
+            The authorisation record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.Settings">
+            <summary>
+            The setting records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.ApplicationRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.ErrorLogRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.DateOccured">
+            <summary>
+            When the error happened.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.IPAddress">
+            <summary>
+            IP Address the call was made from.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.Summary">
+            <summary>
+            A short message about the error.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.Message">
+            <summary>
+            The full error including the trace.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ConnectionRecord">
             <summary>
             </summary>
@@ -1499,6 +2555,11 @@
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord.Time">
             <summary>
             The time that the server goes offline.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.DowntimeRecord.Duration">
+            <summary>
+            The amount of time, in seconds, that the server is offline.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord">
@@ -1535,13 +2596,18 @@
             The date and time the alert occured.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.server">
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerAlertRecord.Server">
             <summary>
             The server information the alert relates to.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord">
             <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.EventId">
+            <summary>
+            The id number of the event.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerEventRecord.Component">
@@ -1568,9 +2634,19 @@
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.HostName">
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.Id">
+            <summary>
+            The id number of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.RelatedServerRecord.Game">
@@ -1592,9 +2668,14 @@
             The id number of the server.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.HostName">
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Name">
             <summary>
             The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.HostName">
+            <summary>
+            The name of the server machine.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Game">
@@ -1615,6 +2696,11 @@
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.Downtime">
             <summary>
             The expected daily downtime of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.EventInterval">
+            <summary>
+            The time, in seconds, between server events.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IsActive">
@@ -1670,9 +2756,24 @@
             IP Address the call was made from.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Username">
+            <summary>
+            The username of the user who made the call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Application">
+            <summary>
+            The name of the application that made the call.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Endpoint">
             <summary>
             The endpoint that was called.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.EndpointVersion">
+            <summary>
+            The version of the endpoint that was called.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.Method">
@@ -1714,11 +2815,6 @@
             Id of the record.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Endpoint">
-            <summary>
-            The endpoint that was called.
-            </summary>
-        </member>
         <member name="P:HunterIndustriesAPI.Objects.ChangeRecord.Field">
             <summary>
             The field which was updated.
@@ -1758,6 +2854,319 @@
             Whether the attempt was successful.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.APITrafficRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.APITrafficRecord.Day">
+            <summary>
+            The day of the calls.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.APITrafficRecord.SuccessfulCalls">
+            <summary>
+            The number of sucessful API calls.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.APITrafficRecord.UnsuccessfulCalls">
+            <summary>
+            The number of unsucessful API calls.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.IPAndSummaryErrorRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.IPAndSummaryErrorRecord.IPAddress">
+            <summary>
+            The ip address of the failed call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.IPAndSummaryErrorRecord.Summary">
+            <summary>
+            The summary of the error.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.IPAndSummaryErrorRecord.Errors">
+            <summary>
+            The number of errors.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.LoginAttemptStatisticRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.LoginAttemptStatisticRecord.Username">
+            <summary>
+            The name of the user that logged in.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.LoginAttemptStatisticRecord.Application">
+            <summary>
+            The name of the application that made the call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.LoginAttemptStatisticRecord.SuccessfulAttempts">
+            <summary>
+            The successful number of login attempts made.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.LoginAttemptStatisticRecord.UnsuccessfulAttempts">
+            <summary>
+            The unsuccessful number of login attempts made.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.LoginAttemptStatisticRecord.TotalAttempts">
+            <summary>
+            The total number of login attempts made.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.ServerHealthOverviewRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.ServerHealthOverviewRecord.ServerId">
+            <summary>
+            The id number of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.ServerHealthOverviewRecord.Name">
+            <summary>
+            The name of the server.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.ServerHealthOverviewRecord.Uptime">
+            <summary>
+            The percentage of time the server was online.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.MonthlyStatRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.MonthlyStatRecord.ThisMonth">
+            <summary>
+            The count for this month.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.MonthlyStatRecord.LastMonth">
+            <summary>
+            The count for last month.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord.Applications">
+            <summary>
+            The number of applications registered.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord.Users">
+            <summary>
+            The number of users registered.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord.Calls">
+            <summary>
+            The number of calls made.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord.LoginAttempts">
+            <summary>
+            The number of login attempts made.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord.Changes">
+            <summary>
+            The number of changes made.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Dashboard.TopBarStatRecord.Errors">
+            <summary>
+            The number of errors occured.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Error.ErrorOverTimeRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Error.ErrorOverTimeRecord.Month">
+            <summary>
+            The month of the errors.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Error.ErrorOverTimeRecord.Errors">
+            <summary>
+            The number of errors.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Error.IPErrorRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Error.IPErrorRecord.IPAddress">
+            <summary>
+            The ip address of the failed call.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Error.IPErrorRecord.Errors">
+            <summary>
+            The number of errors.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Error.SummaryErrorRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Error.SummaryErrorRecord.Summary">
+            <summary>
+            The summary of the error.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Error.SummaryErrorRecord.Errors">
+            <summary>
+            The number of errors.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Server.AlertComponentRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.AlertComponentRecord.Component">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.AlertComponentRecord.Alerts">
+            <summary>
+            The number of alerts.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Server.AlertStatusRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.AlertStatusRecord.Status">
+            <summary>
+            The name of the status.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.AlertStatusRecord.Alerts">
+            <summary>
+            The number of alerts.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Server.EventComponentRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.EventComponentRecord.Component">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.EventComponentRecord.Status">
+            <summary>
+            The name of the status.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.EventComponentRecord.DateOccured">
+            <summary>
+            When the event occured.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord.AlertId">
+            <summary>
+            The id number of the alert.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord.Reporter">
+            <summary>
+            The name of the reporter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord.Component">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord.ComponentStatus">
+            <summary>
+            The status of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord.AlertStatus">
+            <summary>
+            The status of the alert.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord.AlertDate">
+            <summary>
+            The date and time the alert occured.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Shared.ChangeCallRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.ChangeCallRecord.Field">
+            <summary>
+            The name of the field.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.ChangeCallRecord.Calls">
+            <summary>
+            The number of changes made.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Shared.EndpointCallRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.EndpointCallRecord.Endpoint">
+            <summary>
+            The name of the endpoint.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.EndpointCallRecord.Calls">
+            <summary>
+            The number of calls made.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Shared.MethodCallRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.MethodCallRecord.Method">
+            <summary>
+            The name of the method.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.MethodCallRecord.Calls">
+            <summary>
+            The number of calls made.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Shared.StatusCallRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.StatusCallRecord.Status">
+            <summary>
+            The value of the status.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Shared.StatusCallRecord.Calls">
+            <summary>
+            The number of calls made.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.TokenInfo">
             <summary>
             </summary>
@@ -1767,7 +3176,7 @@
             The application the call was made from.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.TokenInfo.Scope">
+        <member name="P:HunterIndustriesAPI.Objects.TokenInfo.Scopes">
             <summary>
             The scopes the token can access.
             </summary>
@@ -1804,6 +3213,11 @@
         <member name="P:HunterIndustriesAPI.Objects.User.UserRecord.Scopes">
             <summary>
             The scopes applied to the user.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.User.UserRecord.IsDeleted">
+            <summary>
+            Whether the user is deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.User.SettingRecord">
@@ -1843,9 +3257,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.ConfigService.GetAssistantConfig(System.String,System.String)">
@@ -1877,9 +3290,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.DeletionService.GetAssistantDeletion(System.String,System.String)">
@@ -1896,9 +3308,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.LocationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.LocationService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.LocationService.GetAssistantLocation(System.String,System.String)">
@@ -1915,9 +3326,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Assistant.VersionService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.Assistant.VersionService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Assistant.VersionService.GetAssistantVersion(System.String,System.String)">
@@ -1930,16 +3340,43 @@
             Updates the version number of the given assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Services.StatisticService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.StatisticService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.StatisticService.GetDashboardStatistic(System.String)">
+            <summary>
+            Returns all statistic records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.StatisticService.GetSharedStatistic(System.String,System.String,System.Int32)">
+            <summary>
+            Returns all statistic records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.StatisticService.GetServerStatistic(System.String,System.Int32)">
+            <summary>
+            Returns all statistic records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.StatisticService.GetErrorStatistic(System.String)">
+            <summary>
+            Returns all statistic records that match the parameters.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Services.AuditHistoryService">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPICommon.Abstractions.IClock)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.String[])">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String,System.String[])">
             <summary>
             Logs the call made to the database.
             </summary>
@@ -1949,12 +3386,12 @@
             Logs any authorisation calls made to the database.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.Int32,System.String,System.String,System.DateTime,System.Int32,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.Int32,System.String,System.String,System.String,System.String,System.DateTime,System.DateTime,System.Int32,System.Int32)">
             <summary>
             Returns all audit history records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.Int32,System.String,System.String,System.DateTime)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.String,System.String,System.String,System.String,System.DateTime,System.DateTime)">
             <summary>
             Returns the number of audit history records that match the parameters.
             </summary>
@@ -1963,28 +3400,74 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ChangeService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.ChangeService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.Int32,System.String,System.String,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.String,System.String,System.String)">
             <summary>
             Creates a record in the Change table.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Services.LoggerService">
+        <member name="T:HunterIndustriesAPI.Services.ConfigurationService">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.LoggerService.#ctor(System.String)">
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.LoggerService.LogMessage(System.String,System.String,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetRecords(System.String,System.Int32,System.Nullable{System.Int32},System.Int32,System.Int32)">
             <summary>
-            Adds the message to the log file and SQL table.
+            Returns all records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetTotalRecord(System.String)">
+            <summary>
+            Returns the number of records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Returns whether a record already exists with the given parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Int32)">
+            <summary>
+            Returns whether a record already exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordCreated(System.String,System.Object,System.Nullable{System.Int32})">
+            <summary>
+            Creates the record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordUpdated(System.String,System.Int32,System.Object)">
+            <summary>
+            Updates the details of the given record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordDeleted(System.String,System.Int32)">
+            <summary>
+            Sets the record to deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.ErrorLogService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetErrorLog(System.Int32,System.String,System.String,System.DateTime,System.Int32,System.Int32)">
+            <summary>
+            Returns all error log records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetTotalErrorLog(System.String,System.String,System.DateTime)">
+            <summary>
+            Returns the number of error log records that match the parameters.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ModelValidationService">
@@ -2020,9 +3503,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Services.ServerStatus.ServerInformationService)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.GetServerAlerts(System.Int32,System.Int32)">
@@ -2040,9 +3522,14 @@
             Returns the number of server alert records in the table.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.LogServerAlert(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.LogServerAlert(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerAlertModel,System.String)">
             <summary>
             Logs the server alert.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertExists(System.Int32,System.String)">
+            <summary>
+            Returns whether a server alert exists with the given details.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerAlertService.ServerAlertExists(System.Int32)">
@@ -2059,9 +3546,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Services.ServerStatus.ServerInformationService)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerEventService.GetServerEvents(System.String)">
@@ -2078,9 +3564,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServers(System.Boolean)">
@@ -2088,12 +3573,7 @@
             Returns all the servers that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServer(System.String,System.String,System.String)">
-            <summary>
-            Returns the id of the server with the given values.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerExists(System.String,System.String,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerExists(System.String)">
             <summary>
             Returns whether a server already exists with the given values.
             </summary>
@@ -2107,9 +3587,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.TokenService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.TokenService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,System.String)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.TokenService.ApplicationName">
@@ -2136,12 +3615,11 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.Int32,System.String)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.Int32,System.String,System.Boolean)">
             <summary>
             Returns all user records that match the parameters.
             </summary>
@@ -2190,9 +3668,8 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.#ctor(HunterIndustriesAPI.Abstractions.ILoggerService,HunterIndustriesAPI.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
             <summary>
-            Sets the class's global variables.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.GetUserSettings(System.Int32,System.String)">
@@ -2231,6 +3708,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Startup.Configuration(Owin.IAppBuilder)">
             <summary>
+            Sets up the app.
             </summary>
         </member>
     </members>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿// Copyright © - Unpublished - Toby Hunter
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -12,6 +9,7 @@ namespace HunterIndustriesAPI
     public class RouteConfig
     {
         /// <summary>
+        /// Setus up the routing.
         /// </summary>
         public static void RegisterRoutes(RouteCollection routes)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿// Copyright © - Unpublished - Toby Hunter
+using System.Collections.Generic;
 
 namespace HunterIndustriesAPI.Objects.User
 {
@@ -22,5 +23,9 @@ namespace HunterIndustriesAPI.Objects.User
         /// The scopes applied to the user.
         /// </summary>
         public List<string> Scopes { get; set; }
+        /// <summary>
+        /// Whether the user is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models.Requests.Filters
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models.Requests.Filters
 {
     /// <summary>
     /// </summary>
@@ -12,5 +13,9 @@
         /// The name of the user.
         /// </summary>
         public string Username { get; set; }
+        /// <summary>
+        /// Whether to return deleted users.
+        /// </summary>
+        public bool IncludeDeleted { get; set; }
     }
 }

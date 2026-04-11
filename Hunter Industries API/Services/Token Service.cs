@@ -1,6 +1,8 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,8 +25,8 @@ namespace HunterIndustriesAPI.Services
         private string ProgramName;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public TokenService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -56,13 +58,15 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<(string[], string[])> GetUsers()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetUsers called.");
+
             string[] usernames = Array.Empty<string>();
             string[] passwords = Array.Empty<string>();
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetUsers.SQL");
-                (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(1), reader.GetString(2)));
+                (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetString(1)));
 
                 if (ex != null)
                 {
@@ -82,6 +86,7 @@ namespace HunterIndustriesAPI.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetUsers returned {usernames.Length} usernames | {passwords.Length} passwords.");
             return (usernames, passwords);
         }
 
@@ -90,12 +95,14 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<string[]> GetAuthorisationPhrases()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetAuthorisationPhrases called.");
+
             string[] phrases = Array.Empty<string>();
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetAuthorisationPhrases.SQL");
-                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(1));
+                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(0));
 
                 if (ex != null)
                 {
@@ -114,6 +121,7 @@ namespace HunterIndustriesAPI.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetAuthorisationPhrases returned {phrases.Length} phrases.");
             return phrases;
         }
 
@@ -122,9 +130,7 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         private async Task<string> GetApplicationName(string phrase)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with authorisation phrase {_parameterFunction.FormatParameters(new[] { phrase })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with the parameters {ParameterFunction.FormatParameters(new[] { phrase })}.");
 
             string name = string.Empty;
 
@@ -133,7 +139,7 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetApplicationName.SQL");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Phrase", SqlDbType.VarChar) { Value = phrase }
+                    new SqlParameter("@phrase", SqlDbType.VarChar) { Value = phrase }
                 };
 
                 (string result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetString(0), parameters);

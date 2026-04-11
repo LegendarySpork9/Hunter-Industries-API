@@ -1,7 +1,4 @@
 @inherits LayoutComponentBase
-@inject UserModel User
-@inject NavigationManager Navigation
-@inject ProtectedSessionStorage SessionStorage
 
 <div class="page">
     <div class="sidebar">
@@ -17,7 +14,7 @@
         </div>
 
         <article class="content px-4">
-            @if (_isInitialised)
+            @if (IsInitialised)
             {
                 @Body
             }

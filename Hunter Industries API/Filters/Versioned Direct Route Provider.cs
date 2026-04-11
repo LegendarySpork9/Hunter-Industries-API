@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using System;
 using System.Collections.Generic;
 using System.Web.Http.Controllers;
@@ -24,6 +25,9 @@ namespace HunterIndustriesAPI.Filters
             return ExpandVersionedFactories(base.GetControllerRouteFactories(controllerDescriptor));
         }
 
+        /// <summary>
+        /// Returns a list of routes based on the given descriptor.
+        /// </summary>
         private IReadOnlyList<IDirectRouteFactory> ExpandVersionedFactories(IReadOnlyList<IDirectRouteFactory> factories)
         {
             List<IDirectRouteFactory> expanded = new List<IDirectRouteFactory>();
@@ -37,7 +41,7 @@ namespace HunterIndustriesAPI.Filters
 
                     for (int i = minIndex; i <= maxIndex; i++)
                     {
-                        expanded.Add(new VersionSpecificRouteFactory($"api/v{VersionedRouteAttribute.ApiVersions[i]}/{versioned.Path}"));
+                        expanded.Add(new VersionSpecificRouteFactory($"v{VersionedRouteAttribute.ApiVersions[i]}/{versioned.Path}"));
                     }
                 }
                 else
@@ -65,6 +69,7 @@ namespace HunterIndustriesAPI.Filters
         }
 
         /// <summary>
+        /// Creates the route for the given context.
         /// </summary>
         public RouteEntry CreateRoute(DirectRouteFactoryContext context)
         {

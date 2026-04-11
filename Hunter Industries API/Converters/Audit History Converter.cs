@@ -1,13 +1,14 @@
-﻿namespace HunterIndustriesAPI.Converters
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Converters
 {
     /// <summary>
     /// </summary>
-    public class AuditHistoryConverter
+    public static class AuditHistoryConverter
     {
         /// <summary>
         /// Returns the endpoint id number.
         /// </summary>
-        public int GetEndpointID(string endpoint)
+        public static int GetEndpointID(string endpoint)
         {
             switch (endpoint)
             {
@@ -22,14 +23,31 @@
                 case "serverstatus/serverinformation": return 9;
                 case "serverstatus/serverevent": return 10;
                 case "serverstatus/serveralert": return 11;
+                case "errorlog": return 12;
+                case "configuration": return 13;
+                case "statistic": return 14;
                 default: return 0;
+            }
+        }
+
+        /// <summary>
+        /// Returns the endpoint version id number.
+        /// </summary>
+        public static int GetEndpointVersionID(string version)
+        {
+            switch (version)
+            {
+                case "1.0": return 1;
+                case "1.1": return 2;
+                case "2.0": return 3;
+                default: return 1;
             }
         }
 
         /// <summary>
         /// Returns the method id number.
         /// </summary>
-        public int GetMethodID(string method)
+        public static int GetMethodID(string method)
         {
             switch (method)
             {
@@ -44,7 +62,7 @@
         /// <summary>
         /// Returns the status id number.
         /// </summary>
-        public int GetStatusID(string status)
+        public static int GetStatusID(string status)
         {
             switch (status)
             {

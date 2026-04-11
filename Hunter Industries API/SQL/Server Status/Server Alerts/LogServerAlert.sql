@@ -1,37 +1,17 @@
-﻿insert into ServerAlert (ServerInformationId, UserSettingId, ComponentId, ComponentStatusId, AlertStatusId, DateOccured)
-output inserted.ServerAlertsId
-values (
-	@ServerId,
-	(
-		select
-			UserSettingId
-		from UserSetting with (nolock)
-		where ApplicationId = (
-			select
-				ApplicationId
-			from [Application] with (nolock)
-			where [Name] = 'Server Status Site'
-		)
-		and [Name] = 'DiscordName'
-		and [Value] = @Reporter
-	),
-	(
-		select
-			ComponentId
-		from Component with (nolock)
-		where [Name] = @Component
-	),
-	(
-		select
-			ComponentStatusId
-		from ComponentStatus with (nolock)
-		where [Value] = @ComponentStatus
-	),
-	(
-		select
-			AlertStatusId
-		from ServerAlertStatus with (nolock)
-		where [Value] = @AlertStatus
-	),
+insert into ServerAlert (ServerInformationId, UserSettingId, ComponentId, ComponentStatusId, AlertStatusId, DateOccured)
+output inserted.ServerAlertId
+select
+	@serverId,
+	US.UserSettingId,
+	C.ComponentId,
+	CS.ComponentStatusId,
+	SAS.AlertStatusId,
 	GETUTCDATE()
-)
+from UserSetting US with (nolock)
+join [Application] A with (nolock) on A.ApplicationId = US.ApplicationId
+	and A.[Name] = @application
+join Component C with (nolock) on C.[Name] = @component
+join ComponentStatus CS with (nolock) on CS.[Value] = @componentStatus
+join ServerAlertStatus SAS with (nolock) on SAS.[Value] = @alertStatus
+where US.[Name] = 'DiscordName'
+and US.[Value] = @reporter

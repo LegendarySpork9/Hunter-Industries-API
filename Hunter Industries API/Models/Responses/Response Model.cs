@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿// Copyright © - Unpublished - Toby Hunter
+using Newtonsoft.Json;
 
 namespace HunterIndustriesAPI.Models.Responses
 {

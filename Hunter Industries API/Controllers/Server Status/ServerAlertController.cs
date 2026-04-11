@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -8,11 +9,14 @@ using HunterIndustriesAPI.Models.Responses.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.ServerStatus;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -34,6 +38,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
         /// <summary>
         /// </summary>
+        // Sets the class's global variables.
         public ServerAlertController(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
@@ -63,19 +68,19 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get([FromUri] int pageSize = 25, [FromUri] int pageNumber = 1)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
-            ResponseFunction _responseFunction = new ResponseFunction();
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
+
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint called with the following parameters {_parameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { pageSize.ToString(), pageNumber.ToString() });
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
+                    username, applicationName, new string[] { pageSize.ToString(), pageNumber.ToString() });
 
             (List<ServerAlertRecord> serverAlerts, int totalAlerts) = await _serverAlertService.GetServerAlerts(pageSize, pageNumber);
 
@@ -90,7 +95,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -110,7 +115,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -132,19 +137,18 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(int id)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
-            ResponseFunction _responseFunction = new ResponseFunction();
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint called with the following parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Get) endpoint called with the following parameters \"{id}\".");
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"),
-                    new string[] { id.ToString() });
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
+                    username, applicationName, new string[] { id.ToString() });
 
             ServerAlertRecord serverAlert = await _serverAlertService.GetServerAlert(id);
 
@@ -159,7 +163,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -169,7 +173,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 Data = serverAlert
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -184,9 +188,11 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     Content-Type: application/json
         ///     {
         ///         "reporter": "tester",
-        ///         "component": "PC Status",
+        ///         "component": "PC",
         ///         "componentStatus": "Unknown",
         ///         "alertStatus": "Reported",
+        ///         "serverId": 1,
+        ///         "name": "Test",
         ///         "hostName": "Test",
         ///         "game": "Minecraft",
         ///         "gameVersion": "1.7.10"
@@ -200,13 +206,12 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Post([FromBody, Required] ServerAlertModel request)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
             ModelValidationService _modelValidator = new ModelValidationService();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
-            ResponseFunction _responseFunction = new ResponseFunction();
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
@@ -215,12 +220,12 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 request = new ServerAlertModel();
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request, true))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    null);
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                    username, applicationName, null);
 
                 response = new ResponseModel()
                 {
@@ -231,15 +236,32 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            (bool logged, int serverAlertId) = await _serverAlertService.LogServerAlert(request);
+            if (await _serverAlertService.ServerAlertExists(request.ServerId, request.Component))
+            {
+                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, request));
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 200,
+                    Data = new
+                    {
+                        information = "An unresolved server alert with the server id and component already exists."
+                    }
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(HttpStatusCode.OK, response.Data);
+            }
+
+            (bool logged, int serverAlertId) = await _serverAlertService.LogServerAlert(request, applicationName);
 
             if (!logged)
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("InternalServerError"), _parameterFunction.FormatParameters(null, request));
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
                 response = new ResponseModel()
                 {
@@ -249,11 +271,11 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("POST"), _auditHistoryConverter.GetStatusID("Created"), _parameterFunction.FormatParameters(null, request));
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
             response = new ResponseModel()
             {
@@ -266,8 +288,10 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     ComponentStatus = request.ComponentStatus,
                     AlertStatus = request.AlertStatus,
                     AlertDate = _Clock.UtcNow,
-                    server = new RelatedServerRecord()
+                    Server = new RelatedServerRecord()
                     {
+                        Id = request.ServerId,
+                        Name = request.Name,
                         HostName = request.HostName,
                         Game = request.Game,
                         GameVersion = request.GameVersion
@@ -275,7 +299,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.Created, response.Data);
         }
 
@@ -303,23 +327,22 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Patch(int id, [FromBody, Required] AlertUpdateModel request)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
             ModelValidationService _modelValidator = new ModelValidationService();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
-            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database, _serverInformationService);
-            ResponseFunction _responseFunction = new ResponseFunction();
+            ServerAlertService _serverAlertService = new ServerAlertService(_Logger, _FileSystem, _Options, _Database);
             ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint called with the following parameters \"{id}\", {_parameterFunction.FormatParameters(null, request)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint called with the following parameters \"{id}\", {ParameterFunction.FormatParameters(null, request)}.");
 
             if (!_modelValidator.IsValid(request))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                    null);
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                    username, applicationName, null);
 
                 response = new ResponseModel()
                 {
@@ -330,7 +353,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -340,12 +363,12 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
                 if (await _serverAlertService.ServerAlertUpdated(id, request.Status))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),
-                        new string[] { id.ToString(), request.Status });
+                    (bool, int) audit = await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                        username, applicationName, new string[] { id.ToString(), request.Status });
 
                     if (!string.IsNullOrEmpty(request.Status) && request.Status != alertRecord.AlertStatus)
                     {
-                        await _changeService.LogChange(_auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), auditID.Item2, "Alert Status", alertRecord.AlertStatus, request.Status);
+                        await _changeService.LogChange(audit.Item2, "Alert Status", alertRecord.AlertStatus, request.Status);
                         alertRecord.AlertStatus = request.Status;
                     }
 
@@ -355,12 +378,12 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                         Data = alertRecord
                     };
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                     return Content(HttpStatusCode.OK, response.Data);
                 }
 
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("PATCH"),
-                        _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { id.ToString(), request.Status });
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"),
+                        AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, new string[] { id.ToString(), request.Status });
 
                 response = new ResponseModel()
                 {
@@ -371,12 +394,12 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("serverstatus/serveralert"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
-                new string[] { id.ToString(), request.Status });
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serveralert"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
+                username, applicationName, new string[] { id.ToString(), request.Status });
 
             response = new ResponseModel()
             {
@@ -387,7 +410,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Alert (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.NotFound, response.Data);
         }
     }

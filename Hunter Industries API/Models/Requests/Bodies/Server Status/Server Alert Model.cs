@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
 {
     /// <summary>
     /// </summary>
@@ -21,7 +22,15 @@
         /// </summary>
         public string AlertStatus { get; set; }
         /// <summary>
+        /// The id number of the server.
+        /// </summary>
+        public int ServerId { get; set; }
+        /// <summary>
         /// The name of the server.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// The name of the server machine.
         /// </summary>
         public string HostName { get; set; }
         /// <summary>

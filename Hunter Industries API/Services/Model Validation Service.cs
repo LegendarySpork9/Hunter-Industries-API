@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Primitives;
+﻿// Copyright © - Unpublished - Toby Hunter
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections;
 using System.Globalization;
@@ -138,7 +139,7 @@ namespace HunterIndustriesAPI.Services
 
             if (allRequired)
             {
-                valid = validProperties.All(isValid => isValid);
+                valid = validProperties.Length > 0 && validProperties.All(isValid => isValid);
             }
 
             else

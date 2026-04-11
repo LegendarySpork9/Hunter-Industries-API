@@ -11,7 +11,7 @@ $(function () {
 
                 if (match) {
                     $(this).val(url);
-                    $(this).text('V' + match[1]);
+                    $(this).text('v' + match[1]);
                 }
             });
         }

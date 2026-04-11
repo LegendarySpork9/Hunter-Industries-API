@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 namespace HunterIndustriesAPI.Objects.ServerStatus
 {
     /// <summary>
@@ -10,6 +11,10 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         public int Id { get; set; }
         /// <summary>
         /// The name of the server.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// The name of the server machine.
         /// </summary>
         public string HostName { get; set; }
         /// <summary>
@@ -28,6 +33,10 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// The expected daily downtime of the server.
         /// </summary>
         public DowntimeRecord Downtime { get; set; }
+        /// <summary>
+        /// The time, in seconds, between server events.
+        /// </summary>
+        public int EventInterval { get; set; }
         /// <summary>
         /// Whether the server is active.
         /// </summary>

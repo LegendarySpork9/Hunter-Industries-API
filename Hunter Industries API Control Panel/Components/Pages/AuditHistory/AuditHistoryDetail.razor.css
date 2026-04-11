@@ -1,0 +1,15 @@
+.card-rounded {
+    border-radius: 8px;
+}
+
+.text-light-grey {
+    color: #D7D7D7;
+}
+
+.text-old-value {
+    color: #dc3545;
+}
+
+.text-new-value {
+    color: #28a745;
+}

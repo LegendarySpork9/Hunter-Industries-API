@@ -1,15 +1,1 @@
-@{
-    var badgeClass = Type switch
-    {
-        "active" => "badge-active",
-        "inactive" => "badge-inactive",
-        "deleted" => "badge-deleted",
-        "success" => "badge-active",
-        "warning" => "badge bg-warning text-dark",
-        "danger" => "badge bg-danger",
-        "info" => "badge bg-info text-dark",
-        _ => "badge bg-secondary"
-    };
-}
-
-<span class="badge rounded-pill @badgeClass">@Text</span>
+<span class="badge rounded-pill @GetClass()">@Text</span>

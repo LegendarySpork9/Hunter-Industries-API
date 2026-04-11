@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Copyright © - Unpublished - Toby Hunter
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -7,14 +8,18 @@ namespace HunterIndustriesAPI.Converters
 {
     /// <summary>
     /// </summary>
-    public class TokenConverter
+    public static class TokenConverter
     {
         /// <summary>
         /// Converts the scope into a claim.
         /// </summary>
-        public Claim[] GetClaims(List<string> scopes)
+        public static Claim[] GetClaims(string username, string applicationName, List<string> scopes)
         {
-            Claim[] claims = Array.Empty<Claim>();
+            Claim[] claims = new Claim[]
+            {
+                new Claim("username", username),
+                new Claim("application", applicationName)
+            };
 
             foreach (string scope in scopes)
             {

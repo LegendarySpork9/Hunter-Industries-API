@@ -1,6 +1,8 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -18,8 +20,8 @@ namespace HunterIndustriesAPI.Services
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public ChangeService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -34,11 +36,9 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Creates a record in the Change table.
         /// </summary>
-        public async Task<bool> LogChange(int endpointId, int auditId, string field, string oldValue, string newValue)
+        public async Task<bool> LogChange(int auditId, string field, string oldValue, string newValue)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {_parameterFunction.FormatParameters(new string[] { endpointId.ToString(), auditId.ToString(), field, oldValue, newValue })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), field, oldValue, newValue })}.");
 
             bool successful = false;
 
@@ -47,11 +47,10 @@ namespace HunterIndustriesAPI.Services
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\LogChange.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@EndpointID", SqlDbType.Int) { Value = endpointId },
-                    new SqlParameter("@AuditID", SqlDbType.Int) { Value = auditId },
-                    new SqlParameter("@Field", SqlDbType.VarChar) { Value = field },
-                    new SqlParameter("@OldValue", SqlDbType.VarChar) { Value = oldValue },
-                    new SqlParameter("@NewValue", SqlDbType.VarChar) { Value = newValue }
+                    new SqlParameter("@auditID", SqlDbType.Int) { Value = auditId },
+                    new SqlParameter("@field", SqlDbType.VarChar) { Value = field },
+                    new SqlParameter("@oldValue", SqlDbType.VarChar) { Value = oldValue },
+                    new SqlParameter("@newValue", SqlDbType.VarChar) { Value = newValue }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

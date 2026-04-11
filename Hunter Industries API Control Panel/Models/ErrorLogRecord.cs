@@ -1,4 +1,4 @@
-namespace Hunter_Industries_API_Control_Panel.Models
+namespace HunterIndustriesAPIControlPanel.Models
 {
     public class ErrorLogRecord
     {

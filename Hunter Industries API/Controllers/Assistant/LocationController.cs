@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -9,10 +10,13 @@ using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Models.Responses.Assistant;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.Assistant;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers.Assistant
@@ -32,6 +36,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
         /// <summary>
         /// </summary>
+        // Sets the class's global variables.
         public LocationController(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
@@ -61,12 +66,13 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get([FromUri] AssistantFilterModel filters)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
             LocationService _locationService = new LocationService(_Logger, _FileSystem, _Options, _Database);
-            ResponseFunction _responseFunction = new ResponseFunction();
+
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
 
             ResponseModel response;
 
@@ -75,11 +81,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 filters = new AssistantFilterModel();
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint called with the following parameters {_parameterFunction.FormatParameters(filters)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(filters, true))
             {
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"), _parameterFunction.FormatParameters(null, filters));
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"), username, applicationName, ParameterFunction.FormatParameters(null, filters));
 
                 response = new ResponseModel()
                 {
@@ -90,11 +96,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("GET"), _auditHistoryConverter.GetStatusID("OK"), _parameterFunction.FormatParameters(null, filters));
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, filters));
 
             LocationResponseModel locationResponse = await _locationService.GetAssistantLocation(filters.AssistantName, filters.AssistantId);
 
@@ -109,7 +115,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
@@ -119,7 +125,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 Data = locationResponse
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.OK, response.Data);
         }
 
@@ -137,6 +143,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the location data.</param>
+        /// <param name="filters">An object containing the fitler to apply the value to.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Assistant.Location.Update")]
         [MakeFiltersRequired]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(LocationResponseModel), Description = "Returns the updated item.")]
@@ -146,14 +153,15 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Patch([FromBody] LocationModel request, [FromUri] AssistantFilterModel filters)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            AuditHistoryConverter _auditHistoryConverter = new AuditHistoryConverter();
             ModelValidationService _modelValidator = new ModelValidationService();
             ConfigService _configService = new ConfigService(_Logger, _FileSystem, _Options, _Database);
             LocationService _locationService = new LocationService(_Logger, _FileSystem, _Options, _Database);
             ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
-            ResponseFunction _responseFunction = new ResponseFunction();
+
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
 
             ResponseModel response;
 
@@ -162,20 +170,20 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 filters = new AssistantFilterModel();
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint called with the following parameters {_parameterFunction.FormatParameters(request)}, {_parameterFunction.FormatParameters(filters)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}, {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(filters, true))
             {
                 if (request == null)
                 {
-                    await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                        new string[] { filters.AssistantName, filters.AssistantId, null });
+                    await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                        username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, null });
                 }
 
                 else
                 {
-                    await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("BadRequest"),
-                        new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+                    await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
+                        username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
                 }
 
                 response = new ResponseModel()
@@ -187,7 +195,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -197,18 +205,18 @@ namespace HunterIndustriesAPI.Controllers.Assistant
 
                 if (await _locationService.AssistantLocationUpdated(filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress))
                 {
-                    var auditID = await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("OK"),
-                        new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+                    (bool, int) audit = await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
+                        username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                     if (!string.IsNullOrEmpty(request.HostName) && request.HostName != locationResponse.HostName)
                     {
-                        await _changeService.LogChange(_auditHistoryConverter.GetEndpointID("assistant/location"), auditID.Item2, "Host Name", locationResponse.HostName, request.HostName);
+                        await _changeService.LogChange(audit.Item2, "Host Name", locationResponse.HostName, request.HostName);
                         locationResponse.HostName = request.HostName;
                     }
 
                     if (!string.IsNullOrEmpty(request.IPAddress) && request.IPAddress != locationResponse.IPAddress)
                     {
-                        await _changeService.LogChange(_auditHistoryConverter.GetEndpointID("assistant/location"), auditID.Item2, "IP Address", locationResponse.IPAddress, request.IPAddress);
+                        await _changeService.LogChange(audit.Item2, "IP Address", locationResponse.IPAddress, request.IPAddress);
                         locationResponse.IPAddress = request.IPAddress;
                     }
 
@@ -218,12 +226,12 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                         Data = locationResponse
                     };
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                     return Content(HttpStatusCode.OK, response.Data);
                 }
 
-                await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"),
-                        _auditHistoryConverter.GetStatusID("InternalServerError"), new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"),
+                        AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
                 response = new ResponseModel()
                 {
@@ -234,12 +242,12 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(HttpContext.Current.Request.UserHostAddress, _auditHistoryConverter.GetEndpointID("assistant/location"), _auditHistoryConverter.GetMethodID("PATCH"), _auditHistoryConverter.GetStatusID("NotFound"),
-                    new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("assistant/location"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
+                    username, applicationName, new string[] { filters.AssistantName, filters.AssistantId, request.HostName, request.IPAddress });
 
             response = new ResponseModel()
             {
@@ -250,7 +258,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {_responseFunction.GetModelJSON(response.Data)}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Assistant Location (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(HttpStatusCode.NotFound, response.Data);
         }
     }

@@ -1,0 +1,23 @@
+.card-rounded {
+    border-radius: 8px;
+}
+
+.table-fixed {
+    table-layout: fixed;
+}
+
+.col-setting-name {
+    width: 40%;
+}
+
+.col-setting-value {
+    width: 60%;
+}
+
+.text-light-grey {
+    color: #D7D7D7;
+}
+
+.setting-input {
+    max-width: 300px;
+}

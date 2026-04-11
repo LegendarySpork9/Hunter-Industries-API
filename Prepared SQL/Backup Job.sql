@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [Back Up Database - HunterIndustriesAPI]    Script Date: 12/20/2024 7:13:57 PM ******/
+/****** Object:  Job [Back Up Database - HunterIndustriesAPI]    Script Date: 14/03/2026 13:34:12 ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 12/20/2024 7:13:57 PM ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 14/03/2026 13:34:12 ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -23,9 +23,9 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'Back Up Database - HunterInd
 		@delete_level=0, 
 		@description=N'No description available.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'Central\HICentralAdmin', @job_id = @jobId OUTPUT
+		@owner_login_name=N'Central\CentralAdmin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [1]    Script Date: 12/20/2024 7:13:57 PM ******/
+/****** Object:  Step [1]    Script Date: 14/03/2026 13:34:12 ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'1', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -51,7 +51,7 @@ TO DISK = @BackupFileName
 WITH NOFORMAT, NOINIT,
      NAME = N''HunterIndustriesAPI-Full Database Backup'',
      SKIP, NOREWIND, NOUNLOAD, STATS = 10;
-',
+', 
 		@database_name=N'master', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
@@ -65,11 +65,11 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'Backup',
 		@freq_subday_interval=0, 
 		@freq_relative_interval=0, 
 		@freq_recurrence_factor=1, 
-		@active_start_date=20240908, 
+		@active_start_date=20260314, 
 		@active_end_date=99991231, 
 		@active_start_time=0, 
 		@active_end_time=235959, 
-		@schedule_uid=N'e8175bb6-c39b-4c06-8caa-139c251bff1f'
+		@schedule_uid=N'e1be0e25-5454-4bef-b571-c516cae3be31'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_add_jobserver @job_id = @jobId, @server_name = N'(local)'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback

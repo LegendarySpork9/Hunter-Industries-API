@@ -1,10 +1,10 @@
 ﻿select
-	AI.[Name],
+	AI.[Name] as AssistantName,
 	IDNumber,
-	U.[Name],
+	U.[Name] as AssignedUser,
 	L.HostName,
-	D.[Value],
-	V.[Value]
+	D.[Value] as DeletionStatus,
+	V.[Value] as [Version]
 from AssistantInformation AI with (nolock)
 join [Location] L with (nolock) on AI.LocationId = L.LocationId
 join Deletion D with (nolock) on AI.DeletionStatusId = D.StatusId

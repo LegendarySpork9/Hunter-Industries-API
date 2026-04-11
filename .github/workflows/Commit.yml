@@ -13,8 +13,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
+
+    - name: Restore NuGet packages
+      run: |
+        nuget restore "Hunter Industries API.sln"
+        dotnet restore "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj"
 
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
@@ -22,6 +32,12 @@ jobs:
     - name: Create build directory
       run: mkdir _build
 
-    - name: Build solution
+    - name: Build .NET Framework projects
       run: |
-        msbuild.exe "Hunter Industries API.sln" /p:configuration="Release"
+        msbuild.exe "Hunter Industries API/Hunter Industries API.csproj" /p:configuration="Release"
+        msbuild.exe "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" /p:configuration="Release"
+
+    - name: Build .NET projects
+      run: |
+        dotnet build "Hunter Industries API Common/Hunter Industries API Common.csproj" --configuration Release
+        dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release

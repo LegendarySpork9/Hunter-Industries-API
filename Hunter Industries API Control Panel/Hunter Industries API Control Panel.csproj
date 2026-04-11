@@ -4,13 +4,27 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Hunter_Industries_API_Control_Panel</RootNamespace>
-    <AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
+    <RootNamespace>HunterIndustriesAPIControlPanel</RootNamespace>
+    <AssemblyName>$(AssemblyName.Replace(' ', ''))</AssemblyName>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <Title>Hunter Industries API Control Panel</Title>
+    <Company>$(Authors)</Company>
+    <Authors>Hunter Industries</Authors>
+    <Product>Hunter Industries API Control Panel</Product>
+    <Description>The front end for the API to monitor/control the traffic passing through.</Description>
+    <Copyright>Copyright ©  2026</Copyright>
+    <RepositoryUrl>https://github.com/LegendarySpork9/Hunter-Industries-API</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Radzen.Blazor" Version="7.*" />
+    <PackageReference Include="RestSharp" Version="114.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hunter Industries API Common\Hunter Industries API Common.csproj" />
   </ItemGroup>
 
 </Project>

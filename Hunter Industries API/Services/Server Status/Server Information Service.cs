@@ -1,8 +1,10 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,8 +23,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public ServerInformationService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -39,9 +41,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<List<ServerInformationRecord>> GetServers(bool isActive)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameters \"{isActive}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameters {ParameterFunction.FormatParameters(new string[] { isActive.ToString() })}.");
 
             List<ServerInformationRecord> servers = new List<ServerInformationRecord>();
 
@@ -52,35 +52,38 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
                 if (isActive)
                 {
-                    sql += "\nwhere IsActive = @IsActive";
-                    parameterList.Add(new SqlParameter("@IsActive", SqlDbType.Bit) { Value = isActive });
+                    sql += "\nwhere IsActive = @isActive";
+                    parameterList.Add(new SqlParameter("@isActive", SqlDbType.Bit) { Value = isActive });
                 }
 
                 (List<ServerInformationRecord> results, Exception ex) = await _Database.Query(sql, reader =>
                 {
                     DowntimeRecord downtime = null;
 
-                    if (!reader.IsDBNull(6) && !string.IsNullOrWhiteSpace(reader.GetString(6)))
+                    if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                     {
                         downtime = new DowntimeRecord()
                         {
-                            Time = reader.GetString(6)
+                            Time = reader.GetString(7),
+                            Duration = reader.GetInt32(8)
                         };
                     }
 
                     return new ServerInformationRecord()
                     {
                         Id = reader.GetInt32(0),
-                        HostName = reader.GetString(1),
-                        Game = reader.GetString(2),
-                        GameVersion = reader.GetString(3),
+                        Name = reader.GetString(1),
+                        HostName = reader.GetString(2),
+                        Game = reader.GetString(3),
+                        GameVersion = reader.GetString(4),
                         Connection = new ConnectionRecord()
                         {
-                            IPAddress = reader.GetString(4),
-                            Port = reader.GetInt32(5),
+                            IPAddress = reader.GetString(5),
+                            Port = reader.GetInt32(6),
                         },
                         Downtime = downtime,
-                        IsActive = reader.GetBoolean(7)
+                        EventInterval = reader.GetInt32(9),
+                        IsActive = reader.GetBoolean(10)
                     };
                 }, parameterList.ToArray());
 
@@ -106,57 +109,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         }
 
         /// <summary>
-        /// Returns the id of the server with the given values.
-        /// </summary>
-        public async Task<int> GetServer(string hostName, string game, string gameVersion)
-        {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer called with the parameters {_parameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
-
-            int serverId = 0;
-
-            try
-            {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\GetServer.sql");
-                SqlParameter[] parameters =
-                {
-                    new SqlParameter("@HostName", SqlDbType.VarChar) { Value = hostName },
-                    new SqlParameter("@Game", SqlDbType.VarChar) { Value = game },
-                    new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = gameVersion }
-                };
-
-                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameters);
-
-                if (ex != null)
-                {
-                    string message = "An error occured when trying to run ServerInformationService.GetServer.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-                }
-
-                serverId = result;
-            }
-
-            catch (Exception ex)
-            {
-                string message = "An error occured when trying to run ServerInformationService.GetServer.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-            }
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer returned {serverId}.");
-            return serverId;
-        }
-
-        /// <summary>
         /// Returns whether a server already exists with the given values.
         /// </summary>
-        public async Task<bool> ServerExists(string hostName, string game, string gameVersion)
+        public async Task<bool> ServerExists(string name)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameters {_parameterFunction.FormatParameters(new string[] { hostName, game, gameVersion })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameters {ParameterFunction.FormatParameters(new string[] { name })}.");
 
             bool exists = false;
 
@@ -165,9 +122,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerExists.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@HostName", SqlDbType.VarChar) { Value = hostName },
-                    new SqlParameter("@Game", SqlDbType.VarChar) { Value = game },
-                    new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = gameVersion }
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = name }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -201,9 +156,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(bool, int)> ServerAdded(ServerInformationModel server)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded called with the parameters {_parameterFunction.FormatParameters(null, server)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded called with the parameters {ParameterFunction.FormatParameters(null, server)}.");
 
             bool added = true;
             int serverId = 0;
@@ -213,12 +166,15 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerAdded.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@HostName", SqlDbType.VarChar) { Value = server.HostName },
-                    new SqlParameter("@Game", SqlDbType.VarChar) { Value = server.Game },
-                    new SqlParameter("@GameVersion", SqlDbType.VarChar) { Value = server.GameVersion },
-                    new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = server.IPAddress },
-                    new SqlParameter("@Port", SqlDbType.Int) { Value = server.Port },
-                    new SqlParameter("@Time", SqlDbType.VarChar) { Value = server.Time ?? "null" }
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = server.Name },
+                    new SqlParameter("@eventInterval", SqlDbType.Int) { Value = server.EventInterval },
+                    new SqlParameter("@hostName", SqlDbType.VarChar) { Value = server.HostName },
+                    new SqlParameter("@game", SqlDbType.VarChar) { Value = server.Game },
+                    new SqlParameter("@gameVersion", SqlDbType.VarChar) { Value = server.GameVersion },
+                    new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = server.IPAddress },
+                    new SqlParameter("@port", SqlDbType.Int) { Value = server.Port },
+                    new SqlParameter("@time", SqlDbType.VarChar) { Value = (object)server.Time ?? DBNull.Value },
+                    new SqlParameter("@duration", SqlDbType.Int) { Value = (object)server.Duration ?? DBNull.Value }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);

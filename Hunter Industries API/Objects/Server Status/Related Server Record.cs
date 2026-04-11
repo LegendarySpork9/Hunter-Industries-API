@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 namespace HunterIndustriesAPI.Objects.ServerStatus
 {
     /// <summary>
@@ -5,7 +6,15 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
     public class RelatedServerRecord
     {
         /// <summary>
+        /// The id number of the server.
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
         /// The name of the server.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// The name of the server machine.
         /// </summary>
         public string HostName { get; set; }
         /// <summary>

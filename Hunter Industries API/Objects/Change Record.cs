@@ -1,4 +1,5 @@
-﻿namespace HunterIndustriesAPI.Objects
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Objects
 {
     /// <summary>
     /// </summary>
@@ -8,10 +9,6 @@
         /// Id of the record.
         /// </summary>
         public int Id { get; set; }
-        /// <summary>
-        /// The endpoint that was called.
-        /// </summary>
-        public string Endpoint { get; set; }
         /// <summary>
         /// The field which was updated.
         /// </summary>

@@ -1,8 +1,10 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.User;
 using HunterIndustriesAPI.Objects.User;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,8 +23,8 @@ namespace HunterIndustriesAPI.Services.User
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public UserSettingsService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -39,9 +41,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<List<UserSettingRecord>> GetUserSettings(int id, string application)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSettings called with the parameters {_parameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSettings called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
 
             List<UserSettingRecord> userSettings = new List<UserSettingRecord>();
 
@@ -54,14 +54,14 @@ namespace HunterIndustriesAPI.Services.User
 
                 if (id != 0)
                 {
-                    sql += "\nand UserID = @Id";
-                    parameterList.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
+                    sql += "\nand UserID = @id";
+                    parameterList.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
                 }
 
                 if (!string.IsNullOrEmpty(application))
                 {
-                    sql += "\nand [Application].[Name] = @Application";
-                    parameterList.Add(new SqlParameter("@Application", SqlDbType.VarChar) { Value = application });
+                    sql += "\nand [Application].[Name] = @application";
+                    parameterList.Add(new SqlParameter("@application", SqlDbType.VarChar) { Value = application });
                 }
 
                 (List<(string, int, string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3)), parameterList.ToArray());
@@ -123,7 +123,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<SettingRecord> GetUserSetting(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             SettingRecord setting = new SettingRecord();
 
@@ -132,7 +132,7 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\GetUserSetting.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
                 (SettingRecord result, Exception ex) = await _Database.QuerySingle(sql, reader => new SettingRecord()
@@ -171,20 +171,35 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingExists(string username, string application, string settingName)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {_parameterFunction.FormatParameters(new string[] { username, application, settingName })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { username, application, settingName })}.");
 
             bool exists = false;
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
+                sql += @"
+and UserId = (
+    select
+        UserId
+    from APIUser with (nolock)
+    where Username = @username
+)";
+                sql += @"
+and ApplicationId = (
+    select
+        ApplicationId
+    from [Application] with (nolock)
+    where [Name] = @application
+)";
+                sql += @"
+and [Name] = @name";
+
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = username },
-                    new SqlParameter("@Application", SqlDbType.VarChar) { Value = application },
-                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = settingName }
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = application },
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = settingName }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -218,18 +233,18 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingExists(int id)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             bool exists = false;
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExistsById.sql");
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
+                sql += "\nand UserSettingId = @id";
+
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -263,9 +278,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingAdded(UserSettingsModel userSetting)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded called with the parameters {_parameterFunction.FormatParameters(null, userSetting)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded called with the parameters {ParameterFunction.FormatParameters(null, userSetting)}.");
 
             bool added = true;
 
@@ -274,10 +287,10 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingAdded.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Username", SqlDbType.VarChar) { Value = userSetting.Username },
-                    new SqlParameter("@Application", SqlDbType.VarChar) { Value = userSetting.Application },
-                    new SqlParameter("@Name", SqlDbType.VarChar) { Value = userSetting.SettingName },
-                    new SqlParameter("@Value", SqlDbType.VarChar) { Value = userSetting.SettingValue }
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = userSetting.Username },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = userSetting.Application },
+                    new SqlParameter("@name", SqlDbType.VarChar) { Value = userSetting.SettingName },
+                    new SqlParameter("@value", SqlDbType.VarChar) { Value = userSetting.SettingValue }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
@@ -315,7 +328,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserSettingUpdated(int id, string value)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated called with the parameters \"{id}\", \"{value}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), value })}.");
 
             bool updated = true;
 
@@ -324,8 +337,8 @@ namespace HunterIndustriesAPI.Services.User
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingUpdated.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@Value", SqlDbType.VarChar) { Value = value },
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@value", SqlDbType.VarChar) { Value = value },
+                    new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

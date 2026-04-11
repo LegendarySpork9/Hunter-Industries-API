@@ -1,8 +1,10 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,22 +21,19 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         private readonly IFileSystem _FileSystem;
         private readonly IDatabaseOptions _Options;
         private readonly IDatabase _Database;
-        private readonly ServerInformationService _ServerInformationService;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public ServerAlertService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
-            IDatabase _database,
-            ServerInformationService _serverInformationService)
+            IDatabase _database)
         {
             _Logger = _logger;
             _FileSystem = _fileSystem;
             _Options = _options;
             _Database = _database;
-            _ServerInformationService = _serverInformationService;
         }
 
         /// <summary>
@@ -42,9 +41,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(List<ServerAlertRecord>, int)> GetServerAlerts(int pageSize, int pageNumber)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlerts called with the parameters {_parameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlerts called with the parameters {ParameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<ServerAlertRecord> serverAlerts = new List<ServerAlertRecord>();
             int totalRecords = 0;
@@ -54,8 +51,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetServerAlerts.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                    new SqlParameter("@PageNumber", SqlDbType.Int) { Value = pageNumber }
+                    new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                    new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
 
                 (List<ServerAlertRecord> results, Exception ex) = await _Database.Query(sql, reader => new ServerAlertRecord()
@@ -66,11 +63,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     ComponentStatus = reader.GetString(3),
                     AlertStatus = reader.GetString(4),
                     AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
-                    server = new RelatedServerRecord()
+                    Server = new RelatedServerRecord()
                     {
-                        HostName = reader.GetString(6),
-                        Game = reader.GetString(7),
-                        GameVersion = reader.GetString(8)
+                        Id = reader.GetInt32(6),
+                        Name = reader.GetString(7),
+                        HostName = reader.GetString(8),
+                        Game = reader.GetString(9),
+                        GameVersion = reader.GetString(10)
                     }
                 }, parameters);
 
@@ -101,7 +100,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<ServerAlertRecord> GetServerAlert(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
 
             ServerAlertRecord serverAlert = new ServerAlertRecord();
 
@@ -110,7 +109,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetServerAlert.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AlertID", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
                 (ServerAlertRecord result, Exception ex) = await _Database.QuerySingle(sql, reader => new ServerAlertRecord()
@@ -121,11 +120,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     ComponentStatus = reader.GetString(3),
                     AlertStatus = reader.GetString(4),
                     AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
-                    server = new RelatedServerRecord()
+                    Server = new RelatedServerRecord()
                     {
-                        HostName = reader.GetString(6),
-                        Game = reader.GetString(7),
-                        GameVersion = reader.GetString(8)
+                        Id = reader.GetInt32(6),
+                        Name = reader.GetString(7),
+                        HostName = reader.GetString(8),
+                        Game = reader.GetString(9),
+                        GameVersion = reader.GetString(10)
                     }
                 }, parameters);
 
@@ -158,6 +159,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         private async Task<int> GetTotalServerAlerts()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetTotalServerAlerts called.");
+
             int totalRecords = 0;
 
             try
@@ -182,17 +185,16 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetTotalServerAlerts returned {totalRecords}.");
             return totalRecords;
         }
 
         /// <summary>
         /// Logs the server alert.
         /// </summary>
-        public async Task<(bool, int)> LogServerAlert(ServerAlertModel serverAlert)
+        public async Task<(bool, int)> LogServerAlert(ServerAlertModel serverAlert, string applicationName)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert called with the parameters {_parameterFunction.FormatParameters(serverAlert)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert called with the parameters {ParameterFunction.FormatParameters(serverAlert)}, \"{applicationName}\".");
 
             bool logged = true;
             int serverAlertId = 0;
@@ -202,11 +204,12 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@ServerID", SqlDbType.Int) { Value = await _ServerInformationService.GetServer(serverAlert.HostName, serverAlert.Game, serverAlert.GameVersion) },
-                    new SqlParameter("@Reporter", SqlDbType.VarChar) { Value = serverAlert.Reporter },
-                    new SqlParameter("@Component", SqlDbType.VarChar) { Value = serverAlert.Component },
-                    new SqlParameter("@ComponentStatus", SqlDbType.VarChar) { Value = serverAlert.ComponentStatus },
-                    new SqlParameter("@AlertStatus", SqlDbType.VarChar) { Value = serverAlert.AlertStatus }
+                    new SqlParameter("@serverID", SqlDbType.Int) { Value = serverAlert.ServerId },
+                    new SqlParameter("@reporter", SqlDbType.VarChar) { Value = serverAlert.Reporter },
+                    new SqlParameter("@component", SqlDbType.VarChar) { Value = serverAlert.Component },
+                    new SqlParameter("@componentStatus", SqlDbType.VarChar) { Value = serverAlert.ComponentStatus },
+                    new SqlParameter("@alertStatus", SqlDbType.VarChar) { Value = serverAlert.AlertStatus },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = applicationName }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
@@ -245,22 +248,71 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         }
 
         /// <summary>
-        /// Returns whether a server alert exists with the given id.
+        /// Returns whether a server alert exists with the given details.
         /// </summary>
-        public async Task<bool> ServerAlertExists(int id)
+        public async Task<bool> ServerAlertExists(int serverId, string component)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters \"{id}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters {ParameterFunction.FormatParameters(new string[] { serverId.ToString(), component })}.");
 
             bool exists = false;
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql");
+                sql += @"
+where [Value] != 'Resolved'
+and ServerInformationId = @serverId
+and [Name] = @component";
+
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AlertID", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@serverId", SqlDbType.Int) { Value = serverId },
+                    new SqlParameter("@component", SqlDbType.VarChar) { Value = component }
+                };
+
+                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                }
+
+                if (results.Count > 0)
+                {
+                    exists = true;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+            }
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists returned {exists}.");
+            return exists;
+        }
+
+        /// <summary>
+        /// Returns whether a server alert exists with the given id.
+        /// </summary>
+        public async Task<bool> ServerAlertExists(int id)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+
+            bool exists = false;
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql");
+                sql += "\nwhere ServerAlertId = @alertId";
+
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
                 (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
@@ -294,7 +346,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<bool> ServerAlertUpdated(int id, string value)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated called with the parameters \"{id}\", \"{value}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), value })}.");
 
             bool updated = true;
 
@@ -303,8 +355,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertUpdated.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AlertStatus", SqlDbType.VarChar) { Value = value },
-                    new SqlParameter("@AlertID", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@alertStatus", SqlDbType.VarChar) { Value = value },
+                    new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);

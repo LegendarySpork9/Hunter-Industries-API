@@ -1,11 +1,11 @@
 ﻿insert into UserScope (UserId, ScopeId)
 output inserted.UserScopeId
 values (
-	@UserId,
+	@userId,
 	(
 		select
 			ScopeId
 		from Scope with (nolock)
-		where [Value] = @Scope
+		where [Value] = @scope
 	)
 )

@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using System;
 
 namespace HunterIndustriesAPI.Objects.ServerStatus
@@ -6,6 +7,10 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
     /// </summary>
     public class ServerEventRecord
     {
+        /// <summary>
+        /// The id number of the event.
+        /// </summary>
+        public int EventId { get; set; }
         /// <summary>
         /// The name of the component.
         /// </summary>

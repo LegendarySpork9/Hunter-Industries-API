@@ -1,19 +1,11 @@
-﻿insert into LoginAttempt (UserId, PhraseId, AuditId, DateOccured, IsSuccessful)
-values (
-	(
-		select
-			UserId
-		from APIUser with (nolock)
-		where Username = @Username
-		and [Password] = @Password
-	),
-	(
-		select
-			PhraseId
-		from Authorisation with (nolock)
-		where Phrase = @Phrase
-	),
-	@AuditId,
+insert into LoginAttempt (UserId, PhraseId, AuditId, DateOccured, IsSuccessful)
+select
+	AU.UserId,
+	A.PhraseId,
+	@auditId,
 	GETUTCDATE(),
-	@IsSuccessful
-)
+	@isSuccessful
+from (select 1 as Dummy) D
+left join APIUser AU with (nolock) on AU.Username = @username
+	and AU.[Password] = @password
+left join Authorisation A with (nolock) on A.Phrase = @phrase

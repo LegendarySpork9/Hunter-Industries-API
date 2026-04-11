@@ -1,5 +1,7 @@
-﻿using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Services;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Services;
 using System.Web;
 
 namespace HunterIndustriesAPI.Implementations
@@ -13,7 +15,7 @@ namespace HunterIndustriesAPI.Implementations
         /// </summary>
         public void LogMessage(string level, string message, string summary = null)
         {
-            LoggerService _logger = new LoggerService(HttpContext.Current.Request.UserHostAddress);
+            LoggerService _logger = new LoggerService(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), "APILog");
             _logger.LogMessage(level, message, summary);
         }
     }

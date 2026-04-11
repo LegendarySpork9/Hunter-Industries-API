@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Functions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +10,12 @@ namespace HunterIndustriesAPI.Functions
 {
     /// <summary>
     /// </summary>
-    public class ParameterFunction
+    public static class ParameterFunction
     {
         /// <summary>
         /// Converts the parameters from the stored SQL format to the output format or converts the model into a string array.
         /// </summary>
-        public string[] FormatParameters(string parameters = null, object model = null)
+        public static string[] FormatParameters(string parameters = null, object model = null)
         {
             string[] formattedParameters = Array.Empty<string>();
 
@@ -46,6 +48,11 @@ namespace HunterIndustriesAPI.Functions
                             }
                         }
 
+                        else if (property.Name == "Password")
+                        {
+                            formattedParameters = formattedParameters.Append(HashFunction.HashString(property.GetValue(model).ToString())).ToArray();
+                        }
+
                         else
                         {
                             formattedParameters = formattedParameters.Append(property.GetValue(model).ToString()).ToArray();
@@ -65,7 +72,7 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the parameters into a log/SQL friendly format.
         /// </summary>
-        public string FormatParameters(string[] parameters = null, bool forSQL = false)
+        public static string FormatParameters(string[] parameters = null, bool forSQL = false)
         {
             string formattedParameters = null;
 
@@ -109,7 +116,7 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the model into a log friendly format.
         /// </summary>
-        public string FormatParameters(object model)
+        public static string FormatParameters(object model)
         {
             string formattedParameters = string.Empty;
 
@@ -117,9 +124,11 @@ namespace HunterIndustriesAPI.Functions
             {
                 foreach (PropertyInfo property in model.GetType().GetProperties())
                 {
-                    if (property.GetValue(model) != null)
+                    object value = property.GetValue(model);
+
+                    if (value != null)
                     {
-                        if (property.GetValue(model) is IList list)
+                        if (value is IList list)
                         {
                             foreach (object item in list)
                             {
@@ -127,9 +136,14 @@ namespace HunterIndustriesAPI.Functions
                             }
                         }
 
+                        else if (property.Name == "Password")
+                        {
+                            formattedParameters += $"\"{HashFunction.HashString(value.ToString())}\", ";
+                        }
+
                         else
                         {
-                            formattedParameters += $"\"{property.GetValue(model)}\", ";
+                            formattedParameters += $"\"{value}\", ";
                         }
                     }
 
@@ -151,7 +165,7 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the list into a log friendly format.
         /// </summary>
-        public string FormatParameters(object listObject, bool isKeyPair)
+        public static string FormatListParameters(object listObject, bool isKeyPair)
         {
             string formattedParameters = string.Empty;
 
@@ -191,7 +205,7 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the list into a SQL friendly format.
         /// </summary>
-        public string FormatParameters(List<object> list, bool forAudit = false)
+        public static string FormatParameters(List<object> list, bool forAudit = false)
         {
             string formattedParameters = null;
 
@@ -217,6 +231,50 @@ namespace HunterIndustriesAPI.Functions
             }
 
             return formattedParameters;
+        }
+
+        /// <summary>
+        /// Converts the model into a string array.
+        /// </summary>
+        public static string[] FormatParameters(object model, string[] otherParameters)
+        {
+            string[] parameters = otherParameters;
+
+            if (model == null)
+            {
+                return parameters;
+            }
+
+            foreach (PropertyInfo property in model.GetType().GetProperties())
+            {
+                if (property.GetValue(model) != null)
+                {
+                    if (property.GetValue(model) is IList list)
+                    {
+                        foreach (object item in list)
+                        {
+                            parameters = parameters.Append(item.ToString()).ToArray();
+                        }
+                    }
+
+                    else if (property.Name == "Password")
+                    {
+                        parameters = parameters.Append(HashFunction.HashString(property.GetValue(model).ToString())).ToArray();
+                    }
+
+                    else
+                    {
+                        parameters = parameters.Append(property.GetValue(model).ToString()).ToArray();
+                    }
+                }
+
+                else
+                {
+                    parameters = parameters.Append("").ToArray();
+                }
+            }
+
+            return parameters;
         }
     }
 }

@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
 {
     /// <summary>
@@ -6,6 +7,14 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
     {
         /// <summary>
         /// The name of the server.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// The time, in seconds, between server events.
+        /// </summary>
+        public int EventInterval { get; set; }
+        /// <summary>
+        /// The name of the server machine.
         /// </summary>
         public string HostName { get; set; }
         /// <summary>
@@ -28,5 +37,9 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// The time that the server goes offline.
         /// </summary>
         public string Time { get; set; }
+        /// <summary>
+        /// The amount of time, in seconds, that the server is offline.
+        /// </summary>
+        public int Duration { get; set; }
     }
 }

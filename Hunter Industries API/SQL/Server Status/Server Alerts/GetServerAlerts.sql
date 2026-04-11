@@ -1,12 +1,14 @@
 ﻿select
 	ServerAlertId,
-	US.[Value],
-	Component.[Name],
-	CS.[Value],
-	SAS.[Value],
+	US.[Value] as Reporter,
+	Component.[Name] as Component,
+	CS.[Value] as ComponentStatus,
+	SAS.[Value] as AlertStatus,
 	DateOccured,
+	SI.ServerInformationId,
+	SI.[Name],
 	HostName,
-	Game.[Name],
+	Game.[Name] as Game,
 	[Version]
 from ServerAlert SA with (nolock)
 join UserSetting US with (nolock) on SA.UserSettingId = US.UserSettingId
@@ -17,5 +19,5 @@ join ServerInformation SI with (nolock) on SA.ServerInformationId = SI.ServerInf
 join Machine with (nolock) on SI.MachineId = Machine.MachineId
 join Game with (nolock) on SI.GameId = Game.GameId
 order by DateOccured desc
-offset (@PageSize * (@PageNumber - 1)) rows
-fetch next @PageSize rows only
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only

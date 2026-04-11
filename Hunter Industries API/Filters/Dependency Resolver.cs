@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace HunterIndustriesAPI.Filters
         private readonly IServiceProvider _Provider;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public DependencyResolver(IServiceProvider _provider)
         {
             _Provider = _provider;

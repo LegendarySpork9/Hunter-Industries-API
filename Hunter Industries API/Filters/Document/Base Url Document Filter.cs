@@ -1,4 +1,5 @@
-﻿using Swashbuckle.Swagger;
+﻿// Copyright © - Unpublished - Toby Hunter
+using Swashbuckle.Swagger;
 using System.Collections.Generic;
 using System.Web.Http.Description;
 
@@ -14,9 +15,9 @@ namespace HunterIndustriesAPI.Filters.Document
         public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
         {
             string version = swaggerDoc.info.version;
-            string versionPrefix = $"/api/{version}";
+            string versionPrefix = $"/{version}";
 
-            swaggerDoc.basePath = $"hunter-industries.co.uk{versionPrefix}";
+            swaggerDoc.basePath = "api.hunter-industries.co.uk";
 
             var updatedPaths = new Dictionary<string, PathItem>();
 

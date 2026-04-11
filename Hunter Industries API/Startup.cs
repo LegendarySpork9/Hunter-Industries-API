@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿// Copyright © - Unpublished - Toby Hunter
+using System.Text;
 using System.Web.Http;
 using HunterIndustriesAPI.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ namespace HunterIndustriesAPI
     public class Startup
     {
         /// <summary>
+        /// Sets up the app.
         /// </summary>
         public void Configuration(IAppBuilder app)
         {

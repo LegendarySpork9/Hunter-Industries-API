@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 
-namespace Hunter_Industries_API_Control_Panel.Components.Pages
+namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
     public partial class Error
     {

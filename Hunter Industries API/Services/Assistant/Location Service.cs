@@ -1,7 +1,9 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Responses.Assistant;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,8 +22,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         private readonly IDatabase _Database;
 
         /// <summary>
-        /// Sets the class's global variables.
         /// </summary>
+        // Sets the class's global variables.
         public LocationService(ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
@@ -38,9 +40,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<LocationResponseModel> GetAssistantLocation(string assistantName, string assistantId)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             LocationResponseModel location = new LocationResponseModel();
 
@@ -49,8 +49,8 @@ namespace HunterIndustriesAPI.Services.Assistant
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Location\GetAssistantLocation.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@AssistantID", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 (LocationResponseModel result, Exception ex) = await _Database.QuerySingle(sql, reader => new LocationResponseModel()
@@ -81,7 +81,7 @@ namespace HunterIndustriesAPI.Services.Assistant
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {_parameterFunction.FormatParameters(location)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.GetAssistantLocation returned {ParameterFunction.FormatParameters(location)}.");
             return location;
         }
 
@@ -90,9 +90,7 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// </summary>
         public async Task<bool> AssistantLocationUpdated(string assistantName, string assistantId, string hostName, string ipAddress)
         {
-            ParameterFunction _parameterFunction = new ParameterFunction();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {_parameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"LocationService.AssistantLocationUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, hostName, ipAddress })}.");
 
             bool updated = true;
 
@@ -102,28 +100,28 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 if (string.IsNullOrEmpty(hostName))
                 {
-                    sql = sql.Replace("HostName = @HostName, ", "");
+                    sql = sql.Replace("HostName = @hostName, ", "");
                 }
 
                 if (string.IsNullOrEmpty(ipAddress))
                 {
-                    sql = sql.Replace(", IPAddress = @IPAddress", "");
+                    sql = sql.Replace(", IPAddress = @ipAddress", "");
                 }
 
                 List<SqlParameter> parameterList = new List<SqlParameter>
                 {
-                    new SqlParameter("@AssistantName", SqlDbType.VarChar) { Value = assistantName },
-                    new SqlParameter("@IDNumber", SqlDbType.VarChar) { Value = assistantId }
+                    new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
+                    new SqlParameter("@idNumber", SqlDbType.VarChar) { Value = assistantId }
                 };
 
                 if (!string.IsNullOrEmpty(hostName))
                 {
-                    parameterList.Add(new SqlParameter("@HostName", SqlDbType.VarChar) { Value = hostName });
+                    parameterList.Add(new SqlParameter("@hostName", SqlDbType.VarChar) { Value = hostName });
                 }
 
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
-                    parameterList.Add(new SqlParameter("@IPAddress", SqlDbType.VarChar) { Value = ipAddress });
+                    parameterList.Add(new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress });
                 }
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameterList.ToArray());

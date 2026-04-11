@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using System;
 
 namespace HunterIndustriesAPI.Objects.ServerStatus
@@ -33,6 +34,6 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// <summary>
         /// The server information the alert relates to.
         /// </summary>
-        public RelatedServerRecord server { get; set; }
+        public RelatedServerRecord Server { get; set; }
     }
 }

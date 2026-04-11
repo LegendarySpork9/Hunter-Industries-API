@@ -1,0 +1,98 @@
+@page "/audit-history"
+
+<PageTitle>Audit History - HI Control Panel</PageTitle>
+
+<div class="page-header">
+    <h1>Audit History</h1>
+</div>
+
+<!-- Filter Bar -->
+<div class="card mb-4 card-rounded">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label class="form-label">From Date</label>
+                <input type="date" class="form-control" @bind="FilterFromDate" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">To Date</label>
+                <input type="date" class="form-control" @bind="FilterToDate" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Endpoint</label>
+                <input type="text" class="form-control" @bind="FilterEndpoint" placeholder="e.g. /user" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">IP Address</label>
+                <input type="text" class="form-control" @bind="FilterIPAddress" placeholder="e.g. 192.168.1.100" />
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">Method</label>
+                <select class="form-select" @bind="FilterMethod">
+                    <option value="All">All</option>
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">Status</label>
+                <select class="form-select" @bind="FilterStatus">
+                    <option value="All">All</option>
+                    <option value="200">200</option>
+                    <option value="201">201</option>
+                    <option value="400">400</option>
+                    <option value="401">401</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button class="btn btn-primary btn-sm" @onclick="ApplyFilters">Apply</button>
+                <button class="btn btn-outline-light btn-sm" @onclick="ClearFilters">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results -->
+<RadzenDataGrid Data="@Results.Entries" TItem="AuditHistoryRecord" AllowSorting="true" RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}?fromPage={PageNumber}"))" Style="cursor: pointer;">
+    <Columns>
+        <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="Id" Title="ID" Width="70px" />
+        <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="IPAddress" Title="IP Address" />
+        <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="Endpoint" Title="Endpoint" />
+        <RadzenDataGridColumn TItem="AuditHistoryRecord" Title="Method" Width="90px">
+            <Template Context="record">
+                <span class="badge @GetMethodBadgeClass(record.Method)">@record.Method</span>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AuditHistoryRecord" Title="Status" Width="200px">
+            <Template Context="record">
+                <span class="badge @GetStatusBadgeClass(record.Status)">@record.Status</span>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AuditHistoryRecord" Title="Date" Width="170px">
+            <Template Context="record">
+                @record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted">
+        Showing @((Results.PageNumber - 1) * Results.PageSize + 1)-@((Results.PageNumber - 1) * Results.PageSize + Results.EntryCount)
+        of @Results.TotalCount records
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+        <select class="form-select form-select-sm page-size-select" @bind="PageSize" @bind:after="ApplyFilters">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+        <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber <= 1)" @onclick="PreviousPage">&laquo; Prev</button>
+        <span class="text-muted">Page @PageNumber of @Results.TotalPageCount</span>
+        <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber >= Results.TotalPageCount)" @onclick="NextPage">Next &raquo;</button>
+    </div>
+</div>

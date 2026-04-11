@@ -1,0 +1,19 @@
+.config-card {
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.config-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.config-icon {
+    font-size: 2.5rem;
+    color: #7ec8e3;
+}
+
+.config-title {
+    color: #D7D7D7;
+}

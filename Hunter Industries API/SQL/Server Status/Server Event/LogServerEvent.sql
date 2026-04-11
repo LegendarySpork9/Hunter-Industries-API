@@ -1,18 +1,10 @@
-﻿insert into ComponentInformation (ServerInformationId, ComponentId, ComponentStatusId, DateOccured)
+insert into ComponentInformation (ServerInformationId, ComponentId, ComponentStatusId, DateOccured)
 output inserted.ComponentInformationId
-values (
-	@ServerId,
-	(
-		select
-			ComponentId
-		from Component with (nolock)
-		where [Name] = @Component
-	),
-	(
-		select
-			ComponentStatusId
-		from ComponentStatus with (nolock)
-		where [Value] = @Status
-	),
+select
+	@serverId,
+	C.ComponentId,
+	CS.ComponentStatusId,
 	GETUTCDATE()
-)
+from Component C with (nolock)
+join ComponentStatus CS with (nolock) on CS.[Value] = @status
+where C.[Name] = @component
