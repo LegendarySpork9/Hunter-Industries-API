@@ -211,7 +211,15 @@ VALUES ('/statistic')
 
 PRINT('Added Statistic Endpoint')
 
-INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
-VALUES ('2.0.0', GETUTCDATE())
+ALTER TABLE [VersionHistory] ADD [ScriptName] [varchar](255) NOT NULL
+
+PRINT('Added ScriptName Field to VersionHistory Table')
+
+EXEC sp_rename 'ServerAlert.UserSettingsId', 'UserSettingId', 'COLUMN'
+
+PRINT('Renamed ServerAlert.UserSettingsId to ServerAlert.UserSettingId')
+
+INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
+VALUES ('2.0.0', 'Database Upgrade 2.0.0', GETUTCDATE())
 
 PRINT('Added VersionHistory Record')

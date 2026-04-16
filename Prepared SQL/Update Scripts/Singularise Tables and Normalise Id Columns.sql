@@ -104,7 +104,7 @@ CLOSE column_cursor;
 DEALLOCATE column_cursor;
 GO
 
-INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
-VALUES ('2.0.0', GETUTCDATE())
+INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
+VALUES ('2.0.0', 'Singularise Tables and Normalise Id Columns', GETUTCDATE())
 
 PRINT('Added VersionHistory Record')

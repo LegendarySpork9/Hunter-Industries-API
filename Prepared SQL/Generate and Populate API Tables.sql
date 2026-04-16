@@ -277,6 +277,7 @@ GO
 CREATE TABLE [dbo].[VersionHistory](
 	[VersionId] [int] IDENTITY(1,1) NOT NULL,
 	[ReleaseVersion] [varchar](11) NOT NULL,
+	[ScriptName] [varchar](255) NOT NULL,
 	[DateUpdated] [datetime] NOT NULL
  CONSTRAINT [PK_VersionHistory] PRIMARY KEY CLUSTERED 
 (
@@ -504,7 +505,7 @@ GO
 CREATE TABLE [dbo].[ServerAlert](
 	[ServerAlertId] [int] IDENTITY(1,1) NOT NULL,
 	[ServerInformationId] [int] NOT NULL,
-	[UserSettingsId] [int] NOT NULL,
+	[UserSettingId] [int] NOT NULL,
 	[ComponentId] [int] NOT NULL,
 	[ComponentStatusId] [int] NOT NULL,
 	[AlertStatusId] [int] NOT NULL,
