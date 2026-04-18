@@ -9,6 +9,7 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses
         public required string Username { get; set; }
         public required string Password { get; set; }
         public required List<string> Scopes { get; set; }
+        public required bool IsDeleted { get; set; }
         public bool IsLoggedIn { get; set; }
     }
 }

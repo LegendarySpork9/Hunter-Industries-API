@@ -1,6 +1,6 @@
+// Copyright © - Unpublished - Toby Hunter
 using System.Diagnostics;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
@@ -12,7 +12,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private string? RequestId { get; set; }
         private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        protected override void OnInitialized() =>
-            RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+        protected override void OnInitialized() => RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
     }
 }

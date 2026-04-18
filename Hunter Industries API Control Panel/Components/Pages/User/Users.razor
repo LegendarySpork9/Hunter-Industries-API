@@ -1,40 +1,39 @@
 @page "/users"
+@using HunterIndustriesAPIControlPanel.Models.Responses
 
 <PageTitle>Users - HI Control Panel</PageTitle>
 
 <div class="page-header">
     <h1>Users</h1>
-    <button class="btn btn-primary" @onclick="ShowCreateModal">Create User</button>
+    <button class="btn btn-primary" @onclick="OpenCreateModal">Create User</button>
 </div>
 
-<RadzenDataGrid Data="@_users" TItem="UserRecord" AllowSorting="true" AllowFiltering="true"
-                FilterMode="FilterMode.Simple" PageSize="25" AllowPaging="true"
-                RowClick="@(args => Navigation.NavigateTo($"/users/{args.Data.Id}"))"
-                Style="cursor: pointer;">
+<RadzenDataGrid @ref="UserGrid" Data="@UserRecords" TItem="UserModel" AllowSorting="true" AllowFiltering="true" FilterMode="FilterMode.Simple" PageSize="25" AllowPaging="true" RowClick="@(args => Navigation.NavigateTo($"/users/{args.Data.Id}"))" Style="cursor: pointer;">
     <Columns>
-        <RadzenDataGridColumn TItem="UserRecord" Property="Id" Title="ID" Width="80px" />
-        <RadzenDataGridColumn TItem="UserRecord" Property="Username" Title="Username" />
-        <RadzenDataGridColumn TItem="UserRecord" Title="Scopes" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="UserModel" Property="Id" Title="ID" Width="80px" />
+        <RadzenDataGridColumn TItem="UserModel" Property="Username" Title="Username" />
+        <RadzenDataGridColumn TItem="UserModel" Title="Scopes" Sortable="false" Filterable="false">
             <Template Context="user">
-                @foreach (var scope in user.Scopes)
+                @foreach (string scope in user.Scopes)
                 {
                     <span class="badge bg-info text-dark me-1 scope-badge">@scope</span>
                 }
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="UserRecord" Title="Status" Width="120px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="UserModel" Title="Status" Width="120px" Sortable="false" Filterable="false">
             <Template Context="user">
                 @if (user.IsDeleted)
                 {
                     <StatusBadge Text="Deleted" Type="deleted" />
                 }
+
                 else
                 {
                     <StatusBadge Text="Active" Type="active" />
                 }
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="UserRecord" Title="Actions" Width="160px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="UserModel" Title="Actions" Width="160px" Sortable="false" Filterable="false">
             <Template Context="user">
                 @if (!user.IsDeleted)
                 {
@@ -54,7 +53,7 @@
 </RadzenDataGrid>
 
 <!-- Create User Modal -->
-@if (_showCreateModal)
+@if (ShowCreateModel)
 {
     <div class="modal fade show d-block modal-overlay" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -66,26 +65,25 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Username</label>
-                        <input type="text" class="form-control" @bind="_newUsername" placeholder="Enter username" />
+                        <input type="text" class="form-control" @bind="UserToCreate?.Username" placeholder="Enter username" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="password" class="form-control" @bind="_newPassword" placeholder="Enter password" />
+                        <input type="password" class="form-control" @bind="UserToCreate?.Password" placeholder="Enter password" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Scopes</label>
-                        @foreach (var scope in _availableScopes)
+                        @foreach (string scope in AvailableScopes)
                         {
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" checked="@_selectedScopes.Contains(scope)"
-                                       @onchange="(e) => ToggleScope(scope, (bool)e.Value!)" />
+                                <input class="form-check-input" type="checkbox" checked="@UserToCreate?.Scopes?.Contains(scope)" @onchange="(e) => ToggleScope(scope, (bool)e.Value!)" />
                                 <label class="form-check-label">@scope</label>
                             </div>
                         }
                     </div>
-                    @if (!string.IsNullOrEmpty(_createError))
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
                     {
-                        <div class="alert alert-danger py-2">@_createError</div>
+                        <div class="alert alert-danger py-2">@ErrorMessage</div>
                     }
                 </div>
                 <div class="modal-footer">
@@ -97,6 +95,4 @@
     </div>
 }
 
-<ConfirmDialog IsVisible="_showDeleteConfirm" Title="Delete User"
-               Message="@($"Are you sure you want to delete user '{_userToDelete?.Username}'?")"
-               ConfirmText="Delete" OnConfirm="DeleteUser" OnCancel="CancelDelete" />
+<ConfirmDialog IsVisible="ShowDeleteConfirm" Title="Delete User" Message="@($"Are you sure you want to delete user '{UserToDelete?.Username}'?")" ConfirmText="Delete" OnConfirm="DeleteUser" OnCancel="CancelDelete" />

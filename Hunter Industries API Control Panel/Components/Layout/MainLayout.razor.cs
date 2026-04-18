@@ -1,5 +1,7 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace HunterIndustriesAPIControlPanel.Components.Layout
 {
@@ -7,6 +9,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
     {
         [Inject]
         private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private ProtectedSessionStorage SessionStorage { get; set; } = default!;
         [Inject]
         private UserModel User { get; set; } = default!;
 
@@ -21,8 +25,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
             {
                 try
                 {
-                    if (User.IsLoggedIn)
+                    ProtectedBrowserStorageResult<UserModel> userResult = await SessionStorage.GetAsync<UserModel>("loggedInUser");
+
+                    if (userResult.Success && (userResult.Value != null && userResult.Value.IsLoggedIn))
                     {
+                        if (User.Id == 0)
+                        {
+                            User = userResult.Value;
+                        }
+
                         IsInitialised = true;
                         StateHasChanged();
                     }
@@ -45,6 +56,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
         /// </summary>
         private async Task SignOut()
         {
+            await SessionStorage.DeleteAsync("loggedInUser");
+
             User.IsLoggedIn = false;
 
             Navigation.NavigateTo("/login", forceLoad: true);

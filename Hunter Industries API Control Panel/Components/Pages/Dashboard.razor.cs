@@ -1,5 +1,6 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
@@ -40,12 +41,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Dashboard Page");
+
             Statistics = await APIService.GetDashboardStatistics();
             RecentActivity = await APIService.GetAuditHistories(pageSize: 10);
 
             if (Statistics != null)
             {
                 ServerHealthColours = [.. Statistics.ServerHealth.Select((_, e) => DefaultPalette[e % DefaultPalette.Length])];
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Health Colour(s): {ServerHealthColours.Length}");
 
                 List<string> ipAddresses = [.. Statistics.Errors.GroupBy(e => e.IpAddress).OrderByDescending(e => e.Sum(err => err.Errors)).Select(e => e.Key)];
                 ErrorsByIPGrouped = Statistics.Errors.GroupBy(e => ExtractClassMethod(e.Summary)).ToDictionary(e => e.Key, e =>
@@ -59,7 +64,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     }).ToList();
                 });
 
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Errors By IP: {ErrorsByIPGrouped.Count}");
+
                 ErrorColours = ErrorsByIPGrouped.Keys.Select((key, e) => (key, colour: DefaultPalette[e % DefaultPalette.Length])).ToDictionary(err => err.key, err => err.colour);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Error Colour(s): {ErrorColours.Count}");
 
                 MethodColours = [.. Statistics.MethodCalls.Select(m => m.Method switch
                 {
@@ -69,6 +78,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     "DELETE" => "#dc3545",
                     _ => "#6c757d"
                 })];
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Method Colour(s): {MethodColours.Length}");
 
                 StatusColours = [.. Statistics.StatusCalls.Select(s => s.Status switch {
                     string status when status.StartsWith("200") => "#28a745",
@@ -81,9 +92,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     _ => "#6c757d"
                 })];
 
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Status Colour(s): {StatusColours.Length}");
+
                 EndpointColours = [.. Statistics.EndpointCalls.Select((_, e) => DefaultPalette[e % DefaultPalette.Length])];
 
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Endpoint Colour(s): {EndpointColours.Length}");
+
                 FieldColours = [.. Statistics.Changes.Select((_, c) => DefaultPalette[c % DefaultPalette.Length])];
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Field Colour(s): {FieldColours.Length}");
 
                 string[] users = [.. Statistics.LoginAttempts.Select(u => u.Username).Distinct().OrderBy(u => u)];
                 string[] applications = [.. Statistics.LoginAttempts.Select(a => a.Application).Distinct().OrderBy(a => a)];
@@ -94,7 +111,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     Value = loginLookup.GetValueOrDefault((app, user), 0)
                 }).ToList());
 
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Login Attempts By App: {LoginAttemptsByApp.Count}");
+
                 LoginAttemptColours = LoginAttemptsByApp.Keys.Select((key, l) => (key, colour: DefaultPalette[l % DefaultPalette.Length])).ToDictionary(la => la.key, la => la.colour);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Login Attempt Colour(s): {LoginAttemptColours.Count}");
             }
         }
 
@@ -188,6 +209,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             return className;
         }
 
+        /// <summary>
+        /// Returns the x ago value for the given time.
+        /// </summary>
         private string GetRelativeTime(DateTime dateTime)
         {
             string relativeTime = dateTime.ToString("dd MMM yyyy");
@@ -259,29 +283,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             }
 
             return className;
-        }
-
-        private static string ExtractClassMethod(string summary)
-        {
-            var words = summary.TrimEnd('.').Split(' ');
-
-            for (int i = words.Length - 1; i >= 0; i--)
-            {
-                if (words[i].Contains('.'))
-                {
-                    var classMethod = words[i].TrimEnd('.');
-                    var dotIndex = classMethod.LastIndexOf('.');
-
-                    if (dotIndex >= 0)
-                    {
-                        return classMethod[(dotIndex + 1)..];
-                    }
-
-                    return classMethod;
-                }
-            }
-
-            return summary.Length > 40 ? summary[..40] + "..." : summary;
         }
     }
 }

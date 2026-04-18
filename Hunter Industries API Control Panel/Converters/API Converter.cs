@@ -10,7 +10,7 @@ namespace HunterIndustriesAPIControlPanel.Converters
         {
             return endpoint switch
             {
-                "/users" => "?includeDeleted=true",
+                "/user" => "?includeDeleted=true",
                 _ => string.Empty
             };
         }

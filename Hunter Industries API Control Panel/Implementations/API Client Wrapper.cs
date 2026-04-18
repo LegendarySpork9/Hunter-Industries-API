@@ -4,6 +4,7 @@ using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Converters;
 using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using Newtonsoft.Json;
 using RestSharp;
@@ -224,6 +225,148 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             }
 
             return pagedAuditHistory;
+        }
+
+        /// <summary>
+        /// Returns whether the user was created in the API.
+        /// </summary>
+        public async Task<UserModel?> CreateUser(UserRequestModel user)
+        {
+            UserModel? createdUser = null;
+
+            try
+            {
+                string url = BuildURL("/user", ignoreQuery: true);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(user);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Post
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
+                {
+                    createdUser = JsonConvert.DeserializeObject<UserModel>(response.Content) ?? null;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return createdUser;
+        }
+
+        /// <summary>
+        /// Returns whether the user was deleted in the API.
+        /// </summary>
+        public async Task<bool> DeleteUser(int userId)
+        {
+            bool deleted = false;
+
+            try
+            {
+                string url = BuildURL("/user", userId, ignoreQuery: true);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Delete
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    deleted = true;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return deleted;
+        }
+
+        /// <summary>
+        /// Returns a the user from the API.
+        /// </summary>
+        public async Task<UserModel?> GetUser(int userId)
+        {
+            UserModel? user = null;
+
+            try
+            {
+                string url = BuildURL("/user", userId, ignoreQuery: true);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    user = JsonConvert.DeserializeObject<UserModel>(response.Content) ?? null;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return user;
         }
 
         /// <summary>

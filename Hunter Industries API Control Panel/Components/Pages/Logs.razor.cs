@@ -1,19 +1,56 @@
-using Microsoft.AspNetCore.Components;
+// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
     public partial class Logs
     {
-        [Inject] private ExampleAPIService APIService { get; set; } = default!;
-        [Inject] private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private IConfigurableLoggerService _Logger { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
 
         [SupplyParameterFromQuery(Name = "user")]
         public int? QueryUserId { get; set; }
-
         [SupplyParameterFromQuery(Name = "application")]
         public int? QueryApplicationId { get; set; }
+
+        private int? UserId;
+        private int? ApplicationId;
+        private string PageTitle = "Logs";
+
+        private SharedStatisticsModel? Statistics;
+        private List<AuditHistoryModel> AuditLogs = [];
+
+        private DateTime? _FilterFromDate;
+        private DateTime? _FilterToDate;
+        private string _FilterEndpoint = string.Empty;
+        private string _FilterIPAddress = string.Empty;
+        private string _FilterMethod = "All";
+        private string _FilterStatus = "All";
+        private int _PageSize = 25;
+        private int _PageNumber = 1;
+
+        private string[] MethodColours = [];
+        private string[] StatusColours = [];
+        private string[] EndpointColours = [];
+        private string[] FieldColours = [];
+
+        private static readonly string[] DefaultPalette =
+        [
+            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
+            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
+        ];
+
+
+
+        [Inject] private ExampleAPIService ExampleAPIService { get; set; } = default!;
+        [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private int? _userId;
         private int? _applicationId;
@@ -35,25 +72,25 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private string[] _endpointColours = Array.Empty<string>();
         private string[] _fieldColours = Array.Empty<string>();
 
-        private static readonly string[] DefaultPalette = new[]
-        {
-            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
-            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
-        };
-
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
         protected override void OnInitialized()
         {
-            _userId = QueryUserId;
-            _applicationId = QueryApplicationId;
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Logs Page");
 
-            if (_userId.HasValue)
+            UserId = QueryUserId;
+            ApplicationId = QueryApplicationId;
+
+            if (UserId.HasValue)
             {
-                var user = APIService.GetUser(_userId.Value);
+                var user = ExampleAPIService.GetUser(_userId.Value);
                 _pageTitle = user != null ? $"Logs - {user.Username}" : "Logs - Unknown User";
             }
-            else if (_applicationId.HasValue)
+
+            else if (ApplicationId.HasValue)
             {
-                var app = APIService.GetConfigurationApplication(_applicationId.Value);
+                var app = ExampleAPIService.GetConfigurationApplication(_applicationId.Value);
                 _pageTitle = app != null ? $"Logs - {app.Name}" : "Logs - Unknown Application";
             }
 
@@ -63,7 +100,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
         private void LoadSummary()
         {
-            _summary = APIService.GetLogsSummary(_userId, _applicationId);
+            _summary = ExampleAPIService.GetLogsSummary(_userId, _applicationId);
 
             _methodColours = _summary.CallsByMethod.Select(m => m.Label switch
             {
@@ -97,7 +134,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
         private void LoadData()
         {
-            _results = APIService.GetAuditHistory(
+            _results = ExampleAPIService.GetAuditHistory(
                 _filterFromDate, _filterToDate,
                 string.IsNullOrWhiteSpace(_filterEndpoint) ? null : _filterEndpoint,
                 string.IsNullOrWhiteSpace(_filterIPAddress) ? null : _filterIPAddress,

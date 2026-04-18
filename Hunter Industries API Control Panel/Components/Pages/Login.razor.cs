@@ -6,6 +6,7 @@ using HunterIndustriesAPIControlPanel.Functions;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
@@ -19,6 +20,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
         [Inject]
         private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private ProtectedSessionStorage SessionStorage { get; set; } = default!;
         [Inject]
         private UserModel User { get; set; } = default!;
 
@@ -65,7 +68,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     User.Password = user.Password;
                     User.Scopes = user.Scopes;
                     User.IsLoggedIn = true;
-                    
+
+                    await SessionStorage.SetAsync("loggedInUser", User);
+
                     Navigation.NavigateTo("/");
                 }
 

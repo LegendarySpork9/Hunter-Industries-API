@@ -1,4 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 
 namespace HunterIndustriesAPIControlPanel.Abstractions
@@ -13,5 +14,8 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<List<UserModel>> GetUsers(bool includeDeleted);
         Task<DashboardStatisticsModel?> GetDashboardStatistics();
         Task<PagedAPIResponseModel<AuditHistoryModel>?> GetPagedAuditHistory(List<KeyValuePair<string, object>>? queryParameters = null);
+        Task<UserModel?> CreateUser(UserRequestModel user);
+        Task<bool> DeleteUser(int userId);
+        Task<UserModel?> GetUser(int userId);
     }
 }

@@ -2,6 +2,7 @@
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Abstractions;
+using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 namespace HunterIndustriesAPIControlPanel.Services
 {
@@ -81,6 +82,8 @@ namespace HunterIndustriesAPIControlPanel.Services
                         _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Id: {user.Id}");
                         _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Username: {user.Username}");
                         _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Password: {user.Password}");
+                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(',', user.Scopes)}");
+                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Deleted: {user.IsDeleted}");
                     }
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched users from API");
@@ -233,6 +236,127 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return auditHistories;
+        }
+
+        /// <summary>
+        /// Creates a user in the API.
+        /// </summary>
+        public async Task<UserModel?> CreateUser(UserRequestModel user)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating user, {user.Username}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            UserModel? createdUser = null;
+
+            try
+            {
+                createdUser = await _APIClient.CreateUser(user);
+
+                if (createdUser != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Id: {createdUser.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Username: {createdUser.Username}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Password: {createdUser.Password}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(',', createdUser.Scopes)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Created user, {user.Username}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create user, {user.Username}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create user, {user.Username}, in API");
+            }
+
+            return createdUser;
+        }
+
+        /// <summary>
+        /// Deletes a user in the API.
+        /// </summary>
+        public async Task<bool> DeleteUser(int userId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Deleting user, {userId}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            bool deleted = false;
+
+            try
+            {
+                deleted = await _APIClient.DeleteUser(userId);
+
+                if (deleted)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Deleted user, {userId}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to delete user, {userId}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to delete user, {userId}, in API");
+            }
+
+            return deleted;
+        }
+
+        /// <summary>
+        /// Gets the user from the API.
+        /// </summary>
+        public async Task<UserModel?> GetUser(int userId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching user {userId} from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            UserModel? user = null;
+
+            try
+            {
+                user = await _APIClient.GetUser(userId);
+
+                if (user != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched user {userId} from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user {userId} from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user {userId} from API");
+            }
+
+            return user;
         }
     }
 }
