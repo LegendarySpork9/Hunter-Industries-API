@@ -17,5 +17,7 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<UserModel?> CreateUser(UserRequestModel user);
         Task<bool> DeleteUser(int userId);
         Task<UserModel?> GetUser(int userId);
+        Task<ApplicationModel?> GetApplication(int applicationId);
+        Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId);
     }
 }

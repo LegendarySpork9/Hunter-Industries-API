@@ -44,7 +44,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Dashboard Page");
 
             Statistics = await APIService.GetDashboardStatistics();
-            RecentActivity = await APIService.GetAuditHistories(pageSize: 10);
+            RecentActivity = await APIService.GetRecentAuditLogs();
 
             if (Statistics != null)
             {

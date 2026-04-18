@@ -340,7 +340,7 @@ fetch next @pageSize rows only";
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    sql += "\nand AU2.Username = @username";
+                    sql += "\nand AU.Username = @username";
                     parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 

@@ -370,6 +370,98 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
+        /// Returns a the application from the API.
+        /// </summary>
+        public async Task<ApplicationModel?> GetApplication(int applicationId)
+        {
+            ApplicationModel? application = null;
+
+            try
+            {
+                string url = BuildURL("/configuration/application", applicationId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    application = JsonConvert.DeserializeObject<ApplicationModel>(response.Content) ?? null;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return application;
+        }
+
+        /// <summary>
+        /// Returns the statistics for the logs from the API.
+        /// </summary>
+        public async Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId)
+        {
+            SharedStatisticsModel? sharedStatistics = null;
+
+            try
+            {
+                string url = BuildURL($"/statistic/{entity}", entityId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    sharedStatistics = JsonConvert.DeserializeObject<SharedStatisticsModel>(response.Content) ?? null;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return sharedStatistics;
+        }
+
+        /// <summary>
         /// Returns the API url.
         /// </summary>
         private string BuildURL(string endpoint, object? entityId = null, List<KeyValuePair<string, object>>? queryParameters = null, bool ignoreQuery = false)

@@ -1,7 +1,6 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
-using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
@@ -13,6 +12,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
         [Inject]
+        private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
         private APIService APIService { get; set; } = default!;
 
         [SupplyParameterFromQuery(Name = "user")]
@@ -20,21 +21,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         [SupplyParameterFromQuery(Name = "application")]
         public int? QueryApplicationId { get; set; }
 
-        private int? UserId;
-        private int? ApplicationId;
+        private UserModel? User;
+        private ApplicationModel? Application;
         private string PageTitle = "Logs";
+        private string Entity = string.Empty;
+        private int EntityId = 0;
 
         private SharedStatisticsModel? Statistics;
-        private List<AuditHistoryModel> AuditLogs = [];
+        private PagedAPIResponseModel<AuditHistoryModel>? AuditLogs;
+        private int TotalPageCount = 0;
 
-        private DateTime? _FilterFromDate;
-        private DateTime? _FilterToDate;
-        private string _FilterEndpoint = string.Empty;
-        private string _FilterIPAddress = string.Empty;
-        private string _FilterMethod = "All";
-        private string _FilterStatus = "All";
-        private int _PageSize = 25;
-        private int _PageNumber = 1;
+        private DateTime? FilterFromDate;
+        private DateTime? FilterToDate;
+        private string FilterEndpoint = string.Empty;
+        private string FilterIPAddress = string.Empty;
+        private int PageSize = 25;
+        private int PageNumber = 1;
 
         private string[] MethodColours = [];
         private string[] StatusColours = [];
@@ -47,155 +49,211 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
         ];
 
-
-
-        [Inject] private ExampleAPIService ExampleAPIService { get; set; } = default!;
-        [Inject] private NavigationManager Navigation { get; set; } = default!;
-
-        private int? _userId;
-        private int? _applicationId;
-        private string _pageTitle = "Logs";
-        private DashboardSummary? _summary;
-        private PaginatedResponse<AuditHistoryRecord> _results = new();
-
-        private DateTime? _filterFromDate;
-        private DateTime? _filterToDate;
-        private string _filterEndpoint = string.Empty;
-        private string _filterIPAddress = string.Empty;
-        private string _filterMethod = "All";
-        private string _filterStatus = "All";
-        private int _pageSize = 25;
-        private int _pageNumber = 1;
-
-        private string[] _methodColours = Array.Empty<string>();
-        private string[] _statusColours = Array.Empty<string>();
-        private string[] _endpointColours = Array.Empty<string>();
-        private string[] _fieldColours = Array.Empty<string>();
-
         /// <summary>
-        /// Loads and transforms the data.
+        /// Sets the page title.
         /// </summary>
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Logs Page");
 
-            UserId = QueryUserId;
-            ApplicationId = QueryApplicationId;
-
-            if (UserId.HasValue)
+            if (QueryUserId.HasValue)
             {
-                var user = ExampleAPIService.GetUser(_userId.Value);
-                _pageTitle = user != null ? $"Logs - {user.Username}" : "Logs - Unknown User";
+                UserModel? user = await APIService.GetUser(QueryUserId.Value);
+
+                if (user != null)
+                {
+                    User = user;
+                }
+
+                PageTitle = user != null ? $"Logs - {user.Username}" : "Logs - Unknown User";
+                Entity = "user";
+                EntityId = QueryUserId.Value;
             }
 
-            else if (ApplicationId.HasValue)
+            else if (QueryApplicationId.HasValue)
             {
-                var app = ExampleAPIService.GetConfigurationApplication(_applicationId.Value);
-                _pageTitle = app != null ? $"Logs - {app.Name}" : "Logs - Unknown Application";
+                ApplicationModel? application = await APIService.GetApplication(QueryApplicationId.Value);
+
+                if (application != null)
+                {
+                    Application = application;
+                }
+
+                PageTitle = application != null ? $"Logs - {application.Name}" : "Logs - Unknown User";
+                Entity = "application";
+                EntityId = QueryApplicationId.Value;
             }
 
-            LoadSummary();
-            LoadData();
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Page Title: {PageTitle}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity: {Entity}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity Id: {EntityId}");
+
+            await LoadSummary();
+            await LoadData();
         }
 
-        private void LoadSummary()
+        /// <summary>
+        /// Loads and transforms the summary data.
+        /// </summary>
+        private async Task LoadSummary()
         {
-            _summary = ExampleAPIService.GetLogsSummary(_userId, _applicationId);
+            Statistics = await APIService.GetLogStatistics(Entity, EntityId);
 
-            _methodColours = _summary.CallsByMethod.Select(m => m.Label switch
+            if (Statistics != null)
             {
-                "GET" => "#28a745",
-                "POST" => "#ffc107",
-                "PATCH" => "#fd7e14",
-                "DELETE" => "#dc3545",
-                _ => "#6c757d"
-            }).ToArray();
+                MethodColours = [.. Statistics.MethodCalls.Select(m => m.Method switch
+                {
+                    "GET" => "#28a745",
+                    "POST" => "#ffc107",
+                    "PATCH" => "#fd7e14",
+                    "DELETE" => "#dc3545",
+                    _ => "#6c757d"
+                })];
 
-            _statusColours = _summary.CallsByStatusCode.Select(s => s.Label switch
-            {
-                var l when l.StartsWith("200") => "#28a745",
-                var l when l.StartsWith("201") => "#17a2b8",
-                var l when l.StartsWith("400") => "#ffc107",
-                var l when l.StartsWith("401") => "#fd7e14",
-                var l when l.StartsWith("403") => "#e83e8c",
-                var l when l.StartsWith("404") => "#6c757d",
-                var l when l.StartsWith("500") => "#dc3545",
-                _ => "#6c757d"
-            }).ToArray();
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Method Colour(s): {MethodColours.Length}");
 
-            _endpointColours = _summary.CallsByEndpoint
-                .Select((_, i) => DefaultPalette[i % DefaultPalette.Length])
-                .ToArray();
+                StatusColours = [.. Statistics.StatusCalls.Select(s => s.Status switch {
+                    string status when status.StartsWith("200") => "#28a745",
+                    string status when status.StartsWith("201") => "#17a2b8",
+                    string status when status.StartsWith("400") => "#ffc107",
+                    string status when status.StartsWith("401") => "#fd7e14",
+                    string status when status.StartsWith("403") => "#e83e8c",
+                    string status when status.StartsWith("404") => "#6c757d",
+                    string status when status.StartsWith("500") => "#dc3545",
+                    _ => "#6c757d"
+                })];
 
-            _fieldColours = _summary.ChangesByField
-                .Select((_, i) => DefaultPalette[i % DefaultPalette.Length])
-                .ToArray();
-        }
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Status Colour(s): {StatusColours.Length}");
 
-        private void LoadData()
-        {
-            _results = ExampleAPIService.GetAuditHistory(
-                _filterFromDate, _filterToDate,
-                string.IsNullOrWhiteSpace(_filterEndpoint) ? null : _filterEndpoint,
-                string.IsNullOrWhiteSpace(_filterIPAddress) ? null : _filterIPAddress,
-                _filterMethod, _filterStatus,
-                _pageSize, _pageNumber,
-                _userId, _applicationId);
-        }
+                EndpointColours = [.. Statistics.EndpointCalls.Select((_, e) => DefaultPalette[e % DefaultPalette.Length])];
 
-        private void ApplyFilters()
-        {
-            _pageNumber = 1;
-            LoadData();
-        }
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Endpoint Colour(s): {EndpointColours.Length}");
 
-        private void ClearFilters()
-        {
-            _filterFromDate = null;
-            _filterToDate = null;
-            _filterEndpoint = string.Empty;
-            _filterIPAddress = string.Empty;
-            _filterMethod = "All";
-            _filterStatus = "All";
-            _pageNumber = 1;
-            LoadData();
-        }
+                FieldColours = [.. Statistics.Changes.Select((_, c) => DefaultPalette[c % DefaultPalette.Length])];
 
-        private void PreviousPage()
-        {
-            if (_pageNumber > 1)
-            {
-                _pageNumber--;
-                LoadData();
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Field Colour(s): {FieldColours.Length}");
             }
         }
 
-        private void NextPage()
+        /// <summary>
+        /// Loads and transforms the audit data.
+        /// </summary>
+        private async Task LoadData()
         {
-            if (_pageNumber < _results.TotalPageCount)
+            string? fromDate = FilterFromDate?.ToString("dd/MM/yyyy");
+            string? toDate = FilterToDate?.ToString("dd/MM/yyyy");
+            string? username = User?.Username ?? null;
+            string? application = Application?.Name ?? null;
+
+            AuditLogs = await APIService.GetAuditHistories(fromDate, toDate, FilterIPAddress, FilterEndpoint, username, application, PageSize, PageNumber);
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Entries: {AuditLogs?.EntryCount ?? 0}");
+        }
+
+        /// <summary>
+        /// Applys the set filters.
+        /// </summary>
+        private async Task ApplyFilters()
+        {
+            PageNumber = 1;
+            await LoadData();
+        }
+
+        /// <summary>
+        /// Clears the applied filters.
+        /// </summary>
+        private async Task ClearFilters()
+        {
+            FilterFromDate = null;
+            FilterToDate = null;
+            FilterEndpoint = string.Empty;
+            FilterIPAddress = string.Empty;
+            PageNumber = 1;
+            await LoadData();
+        }
+
+        /// <summary>
+        /// Loads the last page of audit logs.
+        /// </summary>
+        private async Task PreviousPage()
+        {
+            if (PageNumber > 1)
             {
-                _pageNumber++;
-                LoadData();
+                PageNumber--;
+                await LoadData();
             }
         }
 
-        private string GetMethodBadgeClass(string method) => method switch
+        /// <summary>
+        /// Loads the next page of audit logs.
+        /// </summary>
+        private async Task NextPage()
         {
-            "GET" => "badge-method-get",
-            "POST" => "badge-method-post",
-            "PATCH" => "badge-method-patch",
-            "DELETE" => "badge-method-delete",
-            _ => "bg-secondary"
-        };
+            if (PageNumber < TotalPageCount)
+            {
+                PageNumber++;
+                await LoadData();
+            }
+        }
 
-        private string GetStatusBadgeClass(string status)
+        /// <summary>
+        /// Returns the badge class for the given method.
+        /// </summary>
+        private static string GetMethodBadgeClass(string method)
         {
-            if (status.StartsWith("200")) return "badge-status-200";
-            if (status.StartsWith("201")) return "badge-status-201";
-            if (status.StartsWith("400")) return "badge-status-400";
-            if (status.StartsWith("401")) return "badge-status-401";
-            if (status.StartsWith("500")) return "badge-status-500";
-            return "bg-secondary";
+            return method switch
+            {
+                "GET" => "badge-method-get",
+                "POST" => "badge-method-post",
+                "PATCH" => "badge-method-patch",
+                "DELETE" => "badge-method-delete",
+                _ => "bg-secondary"
+            };
+        }
+
+        /// <summary>
+        /// Returns the badge class for the given status.
+        /// </summary>
+        private static string GetStatusBadgeClass(string status)
+        {
+            string className = "bg-secondary";
+
+            if (status.StartsWith("200"))
+            {
+                className = "badge-status-200";
+            }
+
+            else if (status.StartsWith("201"))
+            {
+                className = "badge-status-201";
+            }
+
+            else if (status.StartsWith("400"))
+            {
+                className = "badge-status-400";
+            }
+
+            else if (status.StartsWith("401"))
+            {
+                className = "badge-status-401";
+            }
+
+            else if (status.StartsWith("403"))
+            {
+                className = "badge-status-403";
+            }
+
+            else if (status.StartsWith("404"))
+            {
+                className = "badge-status-404";
+            }
+
+            else if (status.StartsWith("500"))
+            {
+                className = "badge-status-500";
+            }
+
+            return className;
         }
     }
 }

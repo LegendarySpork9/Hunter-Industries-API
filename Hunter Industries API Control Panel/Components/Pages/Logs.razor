@@ -1,23 +1,26 @@
 @page "/logs"
+@using HunterIndustriesAPIControlPanel.Models.Responses
+@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Logs - HI Control Panel</PageTitle>
 
 <div class="mb-3">
-    @if (_userId.HasValue)
+    @if (QueryUserId.HasValue)
     {
-        <a href="/users/@_userId" class="btn btn-outline-light btn-sm">&larr; Back to User</a>
+        <a href="/users" class="btn btn-outline-light btn-sm">&larr; Back to User</a>
     }
-    else if (_applicationId.HasValue)
+
+    else if (QueryApplicationId.HasValue)
     {
         <a href="/configuration/application" class="btn btn-outline-light btn-sm">&larr; Back to Applications</a>
     }
 </div>
 
 <div class="page-header">
-    <h1>@_pageTitle</h1>
+    <h1>@PageTitle</h1>
 </div>
 
-@if (_summary == null)
+@if (Statistics == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -25,6 +28,7 @@
         </div>
     </div>
 }
+
 else
 {
     <!-- Donut Charts -->
@@ -33,23 +37,26 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
-                    @if (_summary.CallsByEndpoint.Count > 0)
+                    @if (Statistics.EndpointCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
-                            <RadzenDonutSeries Data="@_summary.CallsByEndpoint" CategoryProperty="Label" ValueProperty="Value"
-                                                InnerRadius="40" Radius="70"
-                                                Fills="@_endpointColours" Strokes="@_endpointColours" />
+                            <RadzenDonutSeries Data="@Statistics.EndpointCalls" CategoryProperty="Endpoint" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@EndpointColours" Strokes="@EndpointColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                            @for (int i = 0; i < _summary.CallsByEndpoint.Count; i++)
+                            @for (int x = 0; x < Statistics.EndpointCalls.Count; x++)
                             {
-                                var item = _summary.CallsByEndpoint[i];
-                                var colour = _endpointColours[i % _endpointColours.Length];
-                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                                EndpointCallModel item = Statistics.EndpointCalls[x];
+                                string colour = EndpointColours[x % EndpointColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Endpoint (@item.Calls)
+                                </span>
                             }
                         </div>
                     }
+
                     else
                     {
                         <p class="text-muted text-center mt-4">No data available.</p>
@@ -61,23 +68,26 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method</h6>
-                    @if (_summary.CallsByMethod.Count > 0)
+                    @if (Statistics.MethodCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
-                            <RadzenDonutSeries Data="@_summary.CallsByMethod" CategoryProperty="Label" ValueProperty="Value"
-                                                InnerRadius="40" Radius="70"
-                                                Fills="@_methodColours" Strokes="@_methodColours" />
+                            <RadzenDonutSeries Data="@Statistics.MethodCalls" CategoryProperty="Method" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@MethodColours" Strokes="@MethodColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                            @for (int i = 0; i < _summary.CallsByMethod.Count; i++)
+                            @for (int x = 0; x < Statistics.MethodCalls.Count; x++)
                             {
-                                var item = _summary.CallsByMethod[i];
-                                var colour = _methodColours[i % _methodColours.Length];
-                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                                MethodCallModel item = Statistics.MethodCalls[x];
+                                string colour = MethodColours[x % MethodColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Method (@item.Calls)
+                                </span>
                             }
                         </div>
                     }
+
                     else
                     {
                         <p class="text-muted text-center mt-4">No data available.</p>
@@ -89,23 +99,26 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
-                    @if (_summary.CallsByStatusCode.Count > 0)
+                    @if (Statistics.StatusCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
-                            <RadzenDonutSeries Data="@_summary.CallsByStatusCode" CategoryProperty="Label" ValueProperty="Value"
-                                                InnerRadius="40" Radius="70"
-                                                Fills="@_statusColours" Strokes="@_statusColours" />
+                            <RadzenDonutSeries Data="@Statistics.StatusCalls" CategoryProperty="Status" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@StatusColours" Strokes="@StatusColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                            @for (int i = 0; i < _summary.CallsByStatusCode.Count; i++)
+                            @for (int x = 0; x < Statistics.StatusCalls.Count; x++)
                             {
-                                var item = _summary.CallsByStatusCode[i];
-                                var colour = _statusColours[i % _statusColours.Length];
-                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                                StatusCallModel item = Statistics.StatusCalls[x];
+                                string colour = StatusColours[x % StatusColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Status (@item.Calls)
+                                </span>
                             }
                         </div>
                     }
+
                     else
                     {
                         <p class="text-muted text-center mt-4">No data available.</p>
@@ -117,23 +130,26 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field</h6>
-                    @if (_summary.ChangesByField.Count > 0)
+                    @if (Statistics.Changes.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
-                            <RadzenDonutSeries Data="@_summary.ChangesByField" CategoryProperty="Label" ValueProperty="Value"
-                                                InnerRadius="40" Radius="70"
-                                                Fills="@_fieldColours" Strokes="@_fieldColours" />
+                            <RadzenDonutSeries Data="@Statistics.Changes" CategoryProperty="Field" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@FieldColours" Strokes="@FieldColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                            @for (int i = 0; i < _summary.ChangesByField.Count; i++)
+                            @for (int x = 0; x < Statistics.Changes.Count; x++)
                             {
-                                var item = _summary.ChangesByField[i];
-                                var colour = _fieldColours[i % _fieldColours.Length];
-                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
+                                ChangeCallModel item = Statistics.Changes[x];
+                                string colour = FieldColours[x % FieldColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Field (@item.Calls)
+                                </span>
                             }
                         </div>
                     }
+
                     else
                     {
                         <p class="text-muted text-center mt-4">No data available.</p>
@@ -149,40 +165,19 @@ else
             <div class="row g-3 align-items-end">
                 <div class="col-md-2">
                     <label class="form-label">From Date</label>
-                    <input type="date" class="form-control" @bind="_filterFromDate" />
+                    <input type="date" class="form-control" @bind="FilterFromDate" />
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">To Date</label>
-                    <input type="date" class="form-control" @bind="_filterToDate" />
+                    <input type="date" class="form-control" @bind="FilterToDate" />
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">Endpoint</label>
-                    <input type="text" class="form-control" @bind="_filterEndpoint" placeholder="e.g. /user" />
+                    <input type="text" class="form-control" @bind="FilterEndpoint" placeholder="e.g. /user" />
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">IP Address</label>
-                    <input type="text" class="form-control" @bind="_filterIPAddress" placeholder="e.g. 192.168.1.100" />
-                </div>
-                <div class="col-md-1">
-                    <label class="form-label">Method</label>
-                    <select class="form-select" @bind="_filterMethod">
-                        <option value="All">All</option>
-                        <option value="GET">GET</option>
-                        <option value="POST">POST</option>
-                        <option value="PATCH">PATCH</option>
-                        <option value="DELETE">DELETE</option>
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <label class="form-label">Status</label>
-                    <select class="form-select" @bind="_filterStatus">
-                        <option value="All">All</option>
-                        <option value="200">200</option>
-                        <option value="201">201</option>
-                        <option value="400">400</option>
-                        <option value="401">401</option>
-                        <option value="500">500</option>
-                    </select>
+                    <input type="text" class="form-control" @bind="FilterIPAddress" placeholder="e.g. 192.168.1.100" />
                 </div>
                 <div class="col-md-2 d-flex gap-2">
                     <button class="btn btn-primary btn-sm" @onclick="ApplyFilters">Apply</button>
@@ -193,24 +188,22 @@ else
     </div>
 
     <!-- Results -->
-    <RadzenDataGrid Data="@_results.Entries" TItem="AuditHistoryRecord" AllowSorting="true"
-                    RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))"
-                    Style="cursor: pointer;">
+    <RadzenDataGrid Data="@AuditLogs?.Entries" TItem="AuditHistoryModel" AllowSorting="true"  RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))" Style="cursor: pointer;">
         <Columns>
-            <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="Id" Title="ID" Width="70px" />
-            <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="IPAddress" Title="IP Address" />
-            <RadzenDataGridColumn TItem="AuditHistoryRecord" Property="Endpoint" Title="Endpoint" />
-            <RadzenDataGridColumn TItem="AuditHistoryRecord" Title="Method" Width="90px">
+            <RadzenDataGridColumn TItem="AuditHistoryModel" Property="Id" Title="ID" Width="70px" />
+            <RadzenDataGridColumn TItem="AuditHistoryModel" Property="IPAddress" Title="IP Address" />
+            <RadzenDataGridColumn TItem="AuditHistoryModel" Property="Endpoint" Title="Endpoint" />
+            <RadzenDataGridColumn TItem="AuditHistoryModel" Title="Method" Width="90px">
                 <Template Context="record">
                     <span class="badge @GetMethodBadgeClass(record.Method)">@record.Method</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryRecord" Title="Status" Width="200px">
+            <RadzenDataGridColumn TItem="AuditHistoryModel" Title="Status" Width="200px">
                 <Template Context="record">
                     <span class="badge @GetStatusBadgeClass(record.Status)">@record.Status</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryRecord" Title="Date" Width="170px">
+            <RadzenDataGridColumn TItem="AuditHistoryModel" Title="Date" Width="170px">
                 <Template Context="record">
                     @record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")
                 </Template>
@@ -221,24 +214,25 @@ else
     <!-- Pagination -->
     <div class="d-flex justify-content-between align-items-center mt-3">
         <div class="text-muted">
-            @if (_results.TotalCount > 0)
+            @if (AuditLogs?.TotalCount > 0)
             {
-                <span>Showing @((_results.PageNumber - 1) * _results.PageSize + 1)-@((_results.PageNumber - 1) * _results.PageSize + _results.EntryCount) of @_results.TotalCount records</span>
+                <span>Showing @((AuditLogs?.PageNumber - 1) * AuditLogs?.PageSize + 1)-@((AuditLogs?.PageNumber - 1) * AuditLogs?.PageSize + AuditLogs?.EntryCount) of @AuditLogs?.TotalCount records</span>
             }
+
             else
             {
                 <span>No records found</span>
             }
         </div>
         <div class="d-flex gap-2 align-items-center">
-            <select class="form-select form-select-sm page-size-select" @bind="_pageSize" @bind:after="ApplyFilters">
+            <select class="form-select form-select-sm page-size-select" @bind="PageSize" @bind:after="ApplyFilters">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
             </select>
-            <button class="btn btn-outline-light btn-sm" disabled="@(_pageNumber <= 1)" @onclick="PreviousPage">&laquo; Prev</button>
-            <span class="text-muted">Page @_pageNumber of @_results.TotalPageCount</span>
-            <button class="btn btn-outline-light btn-sm" disabled="@(_pageNumber >= _results.TotalPageCount)" @onclick="NextPage">Next &raquo;</button>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber <= 1)" @onclick="PreviousPage">&laquo; Prev</button>
+            <span class="text-muted">Page @PageNumber of @AuditLogs?.TotalPageCount</span>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber >= AuditLogs?.TotalPageCount)" @onclick="NextPage">Next &raquo;</button>
         </div>
     </div>
 }

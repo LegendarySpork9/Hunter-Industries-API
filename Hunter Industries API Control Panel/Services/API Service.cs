@@ -147,7 +147,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Gets the audit histories from the API matching the given parameters.
         /// </summary>
-        public async Task<List<AuditHistoryModel>> GetAuditHistories(string? fromDate = null, string? toDate = null, string? ipAddress = null, string? endpoint = null, string? username = null, string? application = null, int pageSize = 25, int pageNumber = 1)
+        public async Task<List<AuditHistoryModel>> GetRecentAuditLogs()
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching audit history records from API");
 
@@ -158,47 +158,10 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             List<AuditHistoryModel> auditHistories = [];
 
-            List<KeyValuePair<string, object>> queryParameters = [];
-
-            if (!string.IsNullOrWhiteSpace(fromDate))
-            {
-                queryParameters.Add(new("fromDate", fromDate));
-            }
-
-            if (!string.IsNullOrWhiteSpace(toDate))
-            {
-                queryParameters.Add(new("toDate", toDate));
-            }
-
-            if (!string.IsNullOrWhiteSpace(ipAddress))
-            {
-                queryParameters.Add(new("ipAddress", ipAddress));
-            }
-
-            if (!string.IsNullOrWhiteSpace(endpoint))
-            {
-                queryParameters.Add(new("endpoint", endpoint));
-            }
-
-            if (!string.IsNullOrWhiteSpace(username))
-            {
-                queryParameters.Add(new("username", username));
-            }
-
-            if (!string.IsNullOrWhiteSpace(application))
-            {
-                queryParameters.Add(new("application", application));
-            }
-
-            if (pageSize != 25)
-            {
-                queryParameters.Add(new("pageSize", pageSize));
-            }
-
-            if (pageNumber != 1)
-            {
-                queryParameters.Add(new("pageNumber", pageNumber));
-            }
+            List<KeyValuePair<string, object>> queryParameters =
+            [
+                new("pageSize", 10)
+            ];
 
             try
             {
@@ -325,7 +288,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// </summary>
         public async Task<UserModel?> GetUser(int userId)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching user {userId} from API");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching user, {userId}, from API");
 
             if (ExpiryTime < _Clock.UtcNow)
             {
@@ -340,12 +303,12 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 if (user != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched user {userId} from API");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched user, {userId}, from API");
                 }
 
                 else
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user {userId} from API");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user, {userId}, from API");
                 }
             }
 
@@ -353,10 +316,184 @@ namespace HunterIndustriesAPIControlPanel.Services
             {
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user {userId} from API");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user, {userId}, from API");
             }
 
             return user;
+        }
+
+        /// <summary>
+        /// Gets the application from the API.
+        /// </summary>
+        public async Task<ApplicationModel?> GetApplication(int applicationId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching application, {applicationId}, from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ApplicationModel? application = null;
+
+            try
+            {
+                application = await _APIClient.GetApplication(applicationId);
+
+                if (application != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched application, {applicationId}, from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch application, {applicationId}, from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch application, {applicationId}, from API");
+            }
+
+            return application;
+        }
+
+        /// <summary>
+        /// Gets the logs statistics from the API.
+        /// </summary>
+        public async Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching log statistics from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            SharedStatisticsModel? sharedStatistics = null;
+
+            try
+            {
+                sharedStatistics = await _APIClient.GetLogStatistics(entity, entityId);
+
+                if (sharedStatistics != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched log statistics from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch log statistics from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch log statistics from API");
+            }
+
+            return sharedStatistics;
+        }
+
+        /// <summary>
+        /// Gets the audit histories from the API matching the given parameters.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<AuditHistoryModel>?> GetAuditHistories(string? fromDate = null, string? toDate = null, string? ipAddress = null, string? endpoint = null, string? username = null, string? application = null, int pageSize = 25, int pageNumber = 1)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching audit history records from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PagedAPIResponseModel<AuditHistoryModel>? pagedResponse = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (!string.IsNullOrWhiteSpace(fromDate))
+            {
+                queryParameters.Add(new("fromDate", fromDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(toDate))
+            {
+                queryParameters.Add(new("toDate", toDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(ipAddress))
+            {
+                queryParameters.Add(new("ipAddress", ipAddress));
+            }
+
+            if (!string.IsNullOrWhiteSpace(endpoint))
+            {
+                queryParameters.Add(new("endpoint", endpoint));
+            }
+
+            if (!string.IsNullOrWhiteSpace(username))
+            {
+                queryParameters.Add(new("username", username));
+            }
+
+            if (!string.IsNullOrWhiteSpace(application))
+            {
+                queryParameters.Add(new("application", application));
+            }
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
+
+            try
+            {
+                pagedResponse = await _APIClient.GetPagedAuditHistory(queryParameters);
+
+                if (pagedResponse != null)
+                {
+                    List<AuditHistoryModel> auditHistories = pagedResponse.Entries;
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Histories Returned: {auditHistories.Count}");
+
+                    foreach (AuditHistoryModel auditHistory in auditHistories)
+                    {
+                        _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specifying date times as UTC for audit history {auditHistory.Id}");
+
+                        auditHistory.OccuredAt = DateTime.SpecifyKind(auditHistory.OccuredAt, DateTimeKind.Utc);
+
+                        _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specified date times as UTC for audit history {auditHistory.Id}");
+                    }
+
+                    pagedResponse.Entries = auditHistories;
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched audit history records from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch audit history records from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch audit history records from API");
+            }
+
+            return pagedResponse;
         }
     }
 }
