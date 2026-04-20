@@ -109,7 +109,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.User
 
             IHttpActionResult actionResult = await controller.Post(new UserSettingsModel
             {
-                Username = "TestUser",
+                UserId = 1,
                 Application = "TestApp",
                 SettingName = "Theme",
                 SettingValue = "Dark"

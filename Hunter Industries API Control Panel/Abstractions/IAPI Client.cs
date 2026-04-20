@@ -1,6 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
+using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 
 namespace HunterIndustriesAPIControlPanel.Abstractions
 {
@@ -19,5 +20,10 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<UserModel?> GetUser(int userId);
         Task<ApplicationModel?> GetApplication(int applicationId);
         Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId);
+        Task<List<UserSettingModel>> GetUserSettings(int userId);
+        Task<PagedAPIResponseModel<ApplicationModel>?> GetPagedApplication();
+        Task<UserModel?> UpdateUser(int userId, UserRequestModel user);
+        Task<UserSettingModel?> CreateUserSetting(UserSettingRequestModel userSetting);
+        Task<SettingModel?> UpdateUserSetting(int userSettingId, string value);
     }
 }

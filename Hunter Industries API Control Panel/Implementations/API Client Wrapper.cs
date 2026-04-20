@@ -6,6 +6,7 @@ using HunterIndustriesAPIControlPanel.Converters;
 using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
+using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using Newtonsoft.Json;
 using RestSharp;
 using UserModel = HunterIndustriesAPIControlPanel.Models.Responses.UserModel;
@@ -74,7 +75,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    auth = JsonConvert.DeserializeObject<AuthenticationModel>(response.Content) ?? null;
+                    auth = JsonConvert.DeserializeObject<AuthenticationModel>(response.Content);
                 }
             }
 
@@ -120,7 +121,10 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    users = JsonConvert.DeserializeObject<List<UserModel>>(response.Content) ?? [];
+                    if (!response.Content.Contains("information"))
+                    {
+                        users = JsonConvert.DeserializeObject<List<UserModel>>(response.Content) ?? [];
+                    }
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Users Returned: {users.Count}");
                 }
@@ -168,7 +172,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    dashboardStatistics = JsonConvert.DeserializeObject<DashboardStatisticsModel>(response.Content) ?? null;
+                    dashboardStatistics = JsonConvert.DeserializeObject<DashboardStatisticsModel>(response.Content);
                 }
             }
 
@@ -214,7 +218,10 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    pagedAuditHistory = JsonConvert.DeserializeObject<PagedAPIResponseModel<AuditHistoryModel>>(response.Content) ?? null;
+                    if (!response.Content.Contains("information"))
+                    {
+                        pagedAuditHistory = JsonConvert.DeserializeObject<PagedAPIResponseModel<AuditHistoryModel>>(response.Content);
+                    }
                 }
             }
 
@@ -228,7 +235,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns whether the user was created in the API.
+        /// Returns the new user from the API.
         /// </summary>
         public async Task<UserModel?> CreateUser(UserRequestModel user)
         {
@@ -264,7 +271,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
-                    createdUser = JsonConvert.DeserializeObject<UserModel>(response.Content) ?? null;
+                    createdUser = JsonConvert.DeserializeObject<UserModel>(response.Content);
                 }
             }
 
@@ -356,7 +363,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    user = JsonConvert.DeserializeObject<UserModel>(response.Content) ?? null;
+                    user = JsonConvert.DeserializeObject<UserModel>(response.Content);
                 }
             }
 
@@ -402,7 +409,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    application = JsonConvert.DeserializeObject<ApplicationModel>(response.Content) ?? null;
+                    application = JsonConvert.DeserializeObject<ApplicationModel>(response.Content);
                 }
             }
 
@@ -448,7 +455,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    sharedStatistics = JsonConvert.DeserializeObject<SharedStatisticsModel>(response.Content) ?? null;
+                    sharedStatistics = JsonConvert.DeserializeObject<SharedStatisticsModel>(response.Content);
                 }
             }
 
@@ -459,6 +466,256 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             }
 
             return sharedStatistics;
+        }
+
+        /// <summary>
+        /// Returns a list of user settings from the API for the user.
+        /// </summary>
+        public async Task<List<UserSettingModel>> GetUserSettings(int userId)
+        {
+            List<UserSettingModel> userSettings = [];
+
+            try
+            {
+                string url = BuildURL("/usersettings", userId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    if (!response.Content.Contains("information"))
+                    {
+                        userSettings = JsonConvert.DeserializeObject<List<UserSettingModel>>(response.Content) ?? [];
+                    }
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Settings Returned: {userSettings.Select(us => us.Settings.Count).Sum()}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return userSettings;
+        }
+
+        /// <summary>
+        /// Returns the paged application from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<ApplicationModel>?> GetPagedApplication()
+        {
+            PagedAPIResponseModel<ApplicationModel>? pagedApplication = null;
+
+            try
+            {
+                string url = BuildURL("/configuration/application");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    if (!response.Content.Contains("information"))
+                    {
+                        pagedApplication = JsonConvert.DeserializeObject<PagedAPIResponseModel<ApplicationModel>>(response.Content);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return pagedApplication;
+        }
+
+        /// <summary>
+        /// Returns updated user from the API.
+        /// </summary>
+        public async Task<UserModel?> UpdateUser(int userId, UserRequestModel user)
+        {
+            UserModel? updatedUser = null;
+
+            try
+            {
+                string url = BuildURL("/user", userId, ignoreQuery: true);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(user);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Patch
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    updatedUser = JsonConvert.DeserializeObject<UserModel>(response.Content);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return updatedUser;
+        }
+
+        /// <summary>
+        /// Returns the new user setting from the API.
+        /// </summary>
+        public async Task<UserSettingModel?> CreateUserSetting(UserSettingRequestModel userSetting)
+        {
+            UserSettingModel? createdUserSetting = null;
+
+            try
+            {
+                string url = BuildURL("/usersettings");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(userSetting);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Post
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
+                {
+                    createdUserSetting = JsonConvert.DeserializeObject<UserSettingModel>(response.Content);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return createdUserSetting;
+        }
+
+        /// <summary>
+        /// Returns updated user setting from the API.
+        /// </summary>
+        public async Task<SettingModel?> UpdateUserSetting(int userSettingId, string value)
+        {
+            SettingModel? updatedUserSetting = null;
+
+            try
+            {
+                string url = BuildURL("/usersettings", userSettingId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(value);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Patch
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    updatedUserSetting = JsonConvert.DeserializeObject<SettingModel>(response.Content);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return updatedUserSetting;
         }
 
         /// <summary>

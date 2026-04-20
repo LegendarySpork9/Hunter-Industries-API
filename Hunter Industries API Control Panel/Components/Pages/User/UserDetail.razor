@@ -1,4 +1,6 @@
 @page "/users/{Id:int}"
+@using HunterIndustriesAPIControlPanel.Models.Responses
+@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>User Detail - HI Control Panel</PageTitle>
 
@@ -6,20 +8,22 @@
     <a href="/users" class="btn btn-outline-light btn-sm">&larr; Back to Users</a>
 </div>
 
-@if (_user == null)
+@if (User == null)
 {
     <div class="alert alert-warning">User not found.</div>
 }
+
 else
 {
     <!-- User Information -->
     <div class="card mb-4 card-rounded">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">User Information</h5>
-            @if (_user.IsDeleted)
+            @if (User.IsDeleted)
             {
                 <StatusBadge Text="Deleted" Type="deleted" />
             }
+
             else
             {
                 <StatusBadge Text="Active" Type="active" />
@@ -29,14 +33,14 @@ else
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Username</label>
-                    <input type="text" class="form-control" @bind="_editUsername" disabled="@_user.IsDeleted" />
+                    <input type="text" class="form-control" @bind="EditUsername" disabled="@User.IsDeleted" />
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Password</label>
                     <div class="input-group">
-                        <input type="@(_showPassword ? "text" : "password")" class="form-control" @bind="_editPassword" disabled="@_user.IsDeleted" />
-                        <button class="btn btn-outline-light" type="button" @onclick="() => _showPassword = !_showPassword">
-                            @(_showPassword ? "Hide" : "Show")
+                        <input type="@(ShowPassword ? "text" : "password")" class="form-control" @bind="EditPassword" disabled="@User.IsDeleted" />
+                        <button class="btn btn-outline-light" type="button" @onclick="() => ShowPassword = !ShowPassword">
+                            @(ShowPassword ? "Hide" : "Show")
                         </button>
                     </div>
                 </div>
@@ -44,24 +48,24 @@ else
             <div class="mt-3">
                 <label class="form-label">Scopes</label>
                 <div class="row">
-                    @foreach (var scope in _availableScopes)
+                    @foreach (string scope in AvailableScopes)
                     {
                         <div class="col-md-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" checked="@_editScopes.Contains(scope)"
-                                       @onchange="(e) => ToggleScope(scope, (bool)e.Value!)" disabled="@_user.IsDeleted" />
+                                <input class="form-check-input" type="checkbox" checked="@EditScopes.Contains(scope)"
+                                       @onchange="(e) => ToggleScope(scope, (bool)e.Value!)" disabled="@User.IsDeleted" />
                                 <label class="form-check-label">@scope</label>
                             </div>
                         </div>
                     }
                 </div>
             </div>
-            @if (!_user.IsDeleted)
+            @if (!User.IsDeleted)
             {
                 <div class="mt-3 d-flex justify-content-between">
                     <div>
                         <button class="btn btn-primary" @onclick="SaveUser">Save Changes</button>
-                        @if (_saveSuccess)
+                        @if (SaveUserSuccess)
                         {
                             <span class="text-success ms-2">Saved successfully!</span>
                         }
@@ -74,70 +78,76 @@ else
 
     <!-- Application Settings -->
     <h5 class="mb-3">Application Settings</h5>
-    @foreach (var app in _allAppSettings)
+    @foreach (ApplicationModel application in Applications)
     {
-        var userApp = _userSettings.FirstOrDefault(s => s.Application == app.Application);
-        <div class="card mb-3 card-rounded">
-            <div class="card-header">
-                <h6 class="mb-0">@app.Application</h6>
-            </div>
-            <div class="card-body">
-                <table class="table table-sm mb-2 table-fixed">
-                    <colgroup>
-                        <col class="col-setting-name" />
-                        <col class="col-setting-value" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Setting</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var setting in app.Settings)
-                        {
-                            var userSetting = userApp?.Settings.FirstOrDefault(s => s.Name == setting.Name);
+        if (application.Settings.Count > 0)
+        {
+            UserSettingModel? userSetting = UserSettings.FirstOrDefault(s => s.Application == application.Name);
+        
+            <div class="card mb-3 card-rounded">
+                <div class="card-header">
+                    <h6 class="mb-0">@application.Name</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm mb-2 table-fixed">
+                        <colgroup>
+                            <col class="col-setting-name" />
+                            <col class="col-setting-value" />
+                        </colgroup>
+                        <thead>
                             <tr>
-                                <td class="text-light-grey">@setting.Name</td>
-                                <td>
-                                    @if (userSetting != null)
-                                    {
-                                        <input type="text" class="form-control form-control-sm setting-input"
-                                               @bind="userSetting.Value" disabled="@_user.IsDeleted" />
-                                    }
-                                    else if (!_user.IsDeleted && IsAddingSetting(app.Application, setting.Name))
-                                    {
-                                        <div class="d-flex gap-2 align-items-center setting-input">
-                                            <input type="text" class="form-control form-control-sm"
-                                                   value="@GetNewSettingValue(app.Application, setting.Name)"
-                                                   @onchange="(e) => SetNewSettingValue(app.Application, setting.Name, e.Value?.ToString() ?? string.Empty)"
-                                                   placeholder="Enter value..." />
-                                            <button class="btn btn-primary btn-sm" @onclick="() => ConfirmAddSetting(app.Application, setting.Name)">Save</button>
-                                            <button class="btn btn-outline-light btn-sm" @onclick="() => CancelAddSetting(app.Application, setting.Name)">Cancel</button>
-                                        </div>
-                                    }
-                                    else if (!_user.IsDeleted)
-                                    {
-                                        <button class="btn btn-outline-light btn-sm" @onclick="() => StartAddSetting(app.Application, setting.Name)">Add</button>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">—</span>
-                                    }
-                                </td>
+                                <th>Setting</th>
+                                <th>Value</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (ApplicationSettingModel applicationSetting in application.Settings)
+                            {
+                                SettingModel? setting = userSetting?.Settings.FirstOrDefault(s => s.Name == applicationSetting.Name);
+                                
+                                <tr>
+                                    <td class="text-light-grey">@applicationSetting.Name</td>
+                                    <td>
+                                        @if (setting != null)
+                                        {
+                                            <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" disabled="@User.IsDeleted" />
+                                        }
+
+                                        else if (!User.IsDeleted && IsAddingSetting(application.Name, applicationSetting.Name))
+                                        {
+                                            <div class="d-flex gap-2 align-items-center setting-input">
+                                                <input type="text" class="form-control form-control-sm" value="@GetNewSettingValue(application.Name, applicationSetting.Name)" @onchange="(e) => SetNewSettingValue(application.Name, applicationSetting.Name, e.Value?.ToString() ?? string.Empty)" placeholder="Enter value..." />
+                                                <button class="btn btn-primary btn-sm" @onclick="() => ConfirmAddSetting(application.Name, applicationSetting.Name)">Save</button>
+                                                <button class="btn btn-outline-light btn-sm" @onclick="() => CancelAddSetting(application.Name, applicationSetting.Name)">Cancel</button>
+                                            </div>
+                                        }
+
+                                        else if (!User.IsDeleted)
+                                        {
+                                            <button class="btn btn-outline-light btn-sm" @onclick="() => StartAddSetting(application.Name, applicationSetting.Name)">Add</button>
+                                        }
+
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @if (userSetting != null && userSetting.Settings.Count > 0 && !User.IsDeleted)
+                    {
+                        <button class="btn btn-primary btn-sm" @onclick="() => SaveSettings(userSetting)">Save Settings</button>
+                        @if (SaveSettingsSuccess)
+                        {
+                            <span class="text-success ms-2">Saved successfully!</span>
                         }
-                    </tbody>
-                </table>
-                @if (userApp != null && userApp.Settings.Count > 0 && !_user.IsDeleted)
-                {
-                    <button class="btn btn-primary btn-sm" @onclick="() => SaveSettings(userApp)">Save Settings</button>
-                }
+                    }
+                </div>
             </div>
-        </div>
+        }
     }
 }
 
-<ConfirmDialog IsVisible="_showDeleteConfirm" Title="Delete User"
-               Message="@($"Are you sure you want to delete user '{_user?.Username}'?")"
-               ConfirmText="Delete" OnConfirm="DeleteUser" OnCancel="CancelDelete" />
+<ConfirmDialog IsVisible="ShowDeleteConfirm" Title="Delete User" Message="@($"Are you sure you want to delete user '{User?.Username}'?")" ConfirmText="Delete" OnConfirm="DeleteUser" OnCancel="CancelDelete" />

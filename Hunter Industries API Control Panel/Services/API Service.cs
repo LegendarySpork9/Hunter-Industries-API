@@ -4,6 +4,8 @@ using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
+using HunterIndustriesAPIControlPanel.Models.Responses.Related;
+using static System.Net.Mime.MediaTypeNames;
 namespace HunterIndustriesAPIControlPanel.Services
 {
     public class APIService
@@ -77,15 +79,7 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 if (users.Count > 0)
                 {
-                    foreach (UserModel user in users)
-                    {
-                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Id: {user.Id}");
-                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Username: {user.Username}");
-                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Password: {user.Password}");
-                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(',', user.Scopes)}");
-                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Deleted: {user.IsDeleted}");
-                    }
-
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Users Returned: {users.Count}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched users from API");
                 }
 
@@ -145,7 +139,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         }
 
         /// <summary>
-        /// Gets the audit histories from the API matching the given parameters.
+        /// Gets the recent audit histories from the API.
         /// </summary>
         public async Task<List<AuditHistoryModel>> GetRecentAuditLogs()
         {
@@ -494,6 +488,217 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return pagedResponse;
+        }
+
+        /// <summary>
+        /// Gets a list of the user settings from the API for the user.
+        /// </summary>
+        public async Task<List<UserSettingModel>> GetUserSettings(int userId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching user settings from API for user, {userId}");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            List<UserSettingModel> userSettings = [];
+
+            try
+            {
+                userSettings = await _APIClient.GetUserSettings(userId);
+
+                if (userSettings.Count > 0)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched user settings from API for user, {userId}");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user settings from API for user, {userId}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch user settings from API for user, {userId}");
+            }
+
+            return userSettings;
+        }
+
+        /// <summary>
+        /// Gets the applications from the API.
+        /// </summary>
+        public async Task<List<ApplicationModel>> GetApplications()
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching applications from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            List<ApplicationModel> applications = [];
+
+            try
+            {
+                PagedAPIResponseModel<ApplicationModel>? pagedResponse = await _APIClient.GetPagedApplication();
+
+                if (pagedResponse != null)
+                {
+                    applications = pagedResponse.Entries;
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Applications Returned: {applications.Count}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched applications from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch applications from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch applications from API");
+            }
+
+            return applications;
+        }
+
+        /// <summary>
+        /// Updates a user in the API.
+        /// </summary>
+        public async Task<UserModel?> UpdateUser(int userId, UserRequestModel user)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating user, {user.Username}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            UserModel? updatedUser = null;
+
+            try
+            {
+                updatedUser = await _APIClient.UpdateUser(userId, user);
+
+                if (updatedUser != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Id: {updatedUser.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Username: {updatedUser.Username}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Password: {updatedUser.Password}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(',', updatedUser.Scopes)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updated user, {user.Username}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update user, {user.Username}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update user, {user.Username}, in API");
+            }
+
+            return updatedUser;
+        }
+
+        /// <summary>
+        /// Creates a user in the API.
+        /// </summary>
+        public async Task<UserSettingModel?> CreateUserSetting(UserSettingRequestModel userSetting)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating user setting, {userSetting.SettingName}, in API for user, {userSetting.UserId}");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            UserSettingModel? createdUserSetting = null;
+
+            try
+            {
+                createdUserSetting = await _APIClient.CreateUserSetting(userSetting);
+
+                if (createdUserSetting != null)
+                {
+                    SettingModel newSetting = createdUserSetting.Settings[0];
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Setting Id: {newSetting.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Setting Application: {createdUserSetting.Application}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Setting Name: {newSetting.Name}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Setting Value: {newSetting.Value}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Created user setting, {userSetting.SettingName}, in API for user, {userSetting.UserId}");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create user setting, {userSetting.SettingName}, in API for user, {userSetting.UserId}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create user setting, {userSetting.SettingName}, in API for user, {userSetting.UserId}");
+            }
+
+            return createdUserSetting;
+        }
+
+        /// <summary>
+        /// Updates a user setting in the API.
+        /// </summary>
+        public async Task<SettingModel?> UpdateUserSetting(int userSettingId, string value)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating user setting, {userSettingId}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            SettingModel? updatedUserSetting = null;
+
+            try
+            {
+                updatedUserSetting = await _APIClient.UpdateUserSetting(userSettingId, value);
+
+                if (updatedUserSetting != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Setting Id: {updatedUserSetting.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Setting Name: {updatedUserSetting.Name}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Setting Value: {updatedUserSetting.Value}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updated user setting, {userSettingId}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update user setting, {userSettingId}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update user setting, {userSettingId}, in API");
+            }
+
+            return updatedUserSetting;
         }
     }
 }

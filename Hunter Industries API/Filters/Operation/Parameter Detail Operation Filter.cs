@@ -243,7 +243,7 @@ namespace HunterIndustriesAPI.Filters.Operation
                     {
                         if (param.name == "request")
                         {
-                            param.name = "user setting";
+                            param.name = "userSetting";
                         }
                     }
                 }

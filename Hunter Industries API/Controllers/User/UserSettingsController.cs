@@ -118,13 +118,10 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         ///     Content-Type: application/json
         ///     {
+        ///         "userId": 1,
         ///         "application": "test",
-        ///         "settings": [
-        ///             {
-        ///                 "name": "DarkMode",
-        ///                 "value": "True"
-        ///             }
-        ///         ]
+        ///         "settingName": "DarkMode",
+        ///         "settingValue": "True"
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the user setting information.</param>
@@ -172,7 +169,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            if (await _userSettingsService.UserSettingExists(request.Username, request.Application, request.SettingName))
+            if (await _userSettingsService.UserSettingExists(request.UserId, request.Application, request.SettingName))
             {
                 await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
@@ -189,7 +186,9 @@ namespace HunterIndustriesAPI.Controllers.User
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
-            if (!await _userSettingsService.UserSettingAdded(request))
+            (bool added, int id) = await _userSettingsService.UserSettingAdded(request);
+
+            if (!added)
             {
                 await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("usersettings"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request));
 
@@ -217,6 +216,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     {
                         new SettingRecord()
                         {
+                            Id = id,
                             Name = request.SettingName,
                             Value = request.SettingValue
                         }

@@ -169,9 +169,9 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns whether a user setting already exists with the given values.
         /// </summary>
-        public async Task<bool> UserSettingExists(string username, string application, string settingName)
+        public async Task<bool> UserSettingExists(int userId, string application, string settingName)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { username, application, settingName })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { userId.ToString(), application, settingName })}.");
 
             bool exists = false;
 
@@ -179,12 +179,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
                 sql += @"
-and UserId = (
-    select
-        UserId
-    from APIUser with (nolock)
-    where Username = @username
-)";
+and UserId = @userId";
                 sql += @"
 and ApplicationId = (
     select
@@ -197,7 +192,7 @@ and [Name] = @name";
 
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
+                    new SqlParameter("@userId", SqlDbType.Int) { Value = userId },
                     new SqlParameter("@application", SqlDbType.VarChar) { Value = application },
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = settingName }
                 };
@@ -276,24 +271,25 @@ and [Name] = @name";
         /// <summary>
         /// Adds the user setting.
         /// </summary>
-        public async Task<bool> UserSettingAdded(UserSettingsModel userSetting)
+        public async Task<(bool, int)> UserSettingAdded(UserSettingsModel userSetting)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded called with the parameters {ParameterFunction.FormatParameters(null, userSetting)}.");
 
             bool added = true;
+            int settingId = 0;
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingAdded.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@username", SqlDbType.VarChar) { Value = userSetting.Username },
+                    new SqlParameter("@userId", SqlDbType.Int) { Value = userSetting.UserId },
                     new SqlParameter("@application", SqlDbType.VarChar) { Value = userSetting.Application },
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = userSetting.SettingName },
                     new SqlParameter("@value", SqlDbType.VarChar) { Value = userSetting.SettingValue }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+                (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
 
                 if (ex != null)
                 {
@@ -304,9 +300,14 @@ and [Name] = @name";
                     added = false;
                 }
 
-                if (rowsAffected != 1)
+                if (result == null)
                 {
                     added = false;
+                }
+
+                else
+                {
+                    settingId = int.Parse(result.ToString());
                 }
             }
 
@@ -320,7 +321,7 @@ and [Name] = @name";
             }
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded returned {added}.");
-            return added;
+            return (added, settingId);
         }
 
         /// <summary>
