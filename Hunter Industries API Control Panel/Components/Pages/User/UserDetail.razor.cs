@@ -80,7 +80,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 EditScopes = [.. User.Scopes];
             }
 
-            UnchangedUserSettings = [.. UserSettings];
+            UnchangedUserSettings = [.. UserSettings.Select(us => new UserSettingModel
+            {
+                Application = us.Application,
+                Settings = [.. us.Settings.Select(s => new SettingModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Value = s.Value
+                })]
+            })];
         }
 
         /// <summary>
