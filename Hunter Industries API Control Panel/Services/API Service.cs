@@ -5,7 +5,6 @@ using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
-using static System.Net.Mime.MediaTypeNames;
 namespace HunterIndustriesAPIControlPanel.Services
 {
     public class APIService

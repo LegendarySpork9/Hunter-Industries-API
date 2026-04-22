@@ -22,6 +22,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
         private Dictionary<string, List<ChartDataItem>> ErrorsByIPGrouped = [];
         private Dictionary<string, List<ChartDataItem>> LoginAttemptsByApp = [];
+        private HashSet<string> VisibleTrafficLabels = [];
+        private const int TrafficLabelThreshold = 15;
+        private const int TrafficLabelStep = 5;
         private Dictionary<string, string> ErrorColours = [];
         private Dictionary<string, string> LoginAttemptColours = [];
         private string[] ServerHealthColours = [];
@@ -48,6 +51,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
             if (Statistics != null)
             {
+                int trafficStep = Statistics.ApiTraffic.Count > TrafficLabelThreshold ? TrafficLabelStep : 1;
+                VisibleTrafficLabels = [.. Statistics.ApiTraffic.Where((_, i) => i % trafficStep == 0).Select(t => t.Day)];
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Visible Traffic Label(s): {VisibleTrafficLabels.Count}");
+
                 ServerHealthColours = [.. Statistics.ServerHealth.Select((_, e) => DefaultPalette[e % DefaultPalette.Length])];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Health Colour(s): {ServerHealthColours.Length}");
@@ -239,6 +247,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             }
 
             return relativeTime;
+        }
+
+        /// <summary>
+        /// Returns the traffic day label or blank if the axis is being thinned out.
+        /// </summary>
+        private string FormatTrafficDay(object value)
+        {
+            string label = string.Empty;
+
+            if (value is string day && VisibleTrafficLabels.Contains(day))
+            {
+                label = day;
+            }
+
+            return label;
         }
 
         /// <summary>

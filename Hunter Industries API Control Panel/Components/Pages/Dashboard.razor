@@ -43,9 +43,29 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">API Traffic Over Time (30 Days)</h6>
                     <RadzenChart Style="height: 280px;">
-                        <RadzenAreaSeries Data="@Statistics.ApiTraffic" CategoryProperty="Day" ValueProperty="SuccessfulCalls" Title="Successful" Fill="rgba(40, 167, 69, 0.3)" Stroke="rgb(40, 167, 69)" />
-                        <RadzenAreaSeries Data="@Statistics.ApiTraffic" CategoryProperty="Day" ValueProperty="UnsuccessfulCalls" Title="Failed" Fill="rgba(220, 53, 69, 0.3)" Stroke="rgb(220, 53, 69)" />
-                        <RadzenCategoryAxis FormatString="{0:dd MMM}" />
+                        <RadzenAreaSeries Data="@Statistics.ApiTraffic" CategoryProperty="Day" ValueProperty="SuccessfulCalls" Title="Successful" Fill="rgba(40, 167, 69, 0.3)" Stroke="rgb(40, 167, 69)">
+                            <TooltipTemplate Context="data">
+                                @{ APITrafficModel traffic = (APITrafficModel)data; }
+                                <div>
+                                    <strong>@traffic.Day</strong><br />
+                                    Successful: @traffic.SuccessfulCalls<br />
+                                    Failed: @traffic.UnsuccessfulCalls
+                                </div>
+                            </TooltipTemplate>
+                        </RadzenAreaSeries>
+                        <RadzenAreaSeries Data="@Statistics.ApiTraffic" CategoryProperty="Day" ValueProperty="UnsuccessfulCalls" Title="Failed" Fill="rgba(220, 53, 69, 0.3)" Stroke="rgb(220, 53, 69)">
+                            <TooltipTemplate Context="data">
+                                @{
+                                    APITrafficModel traffic = (APITrafficModel)data;
+                                }
+                                <div>
+                                    <strong>@traffic.Day</strong><br />
+                                    Successful: @traffic.SuccessfulCalls<br />
+                                    Failed: @traffic.UnsuccessfulCalls
+                                </div>
+                            </TooltipTemplate>
+                        </RadzenAreaSeries>
+                        <RadzenCategoryAxis Formatter="@FormatTrafficDay" />
                         <RadzenValueAxis>
                             <RadzenGridLines Visible="true" Stroke="#555" />
                         </RadzenValueAxis>
@@ -61,7 +81,18 @@ else
                     <RadzenChart Style="height: 280px;">
                         @foreach (KeyValuePair<string, List<ChartDataItem>> group in ErrorsByIPGrouped)
                         {
-                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value" Title="@group.Key" StrokeWidth="0" Fill="@ErrorColours[group.Key]" />
+                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value" Title="@group.Key" StrokeWidth="0" Fill="@ErrorColours[group.Key]">
+                                <TooltipTemplate Context="data">
+                                    @{ ChartDataItem error = (ChartDataItem)data; }
+                                    <div>
+                                        <strong>@error.Label</strong>
+                                        @foreach (MultiGroupedErrorModel row in Statistics!.Errors.Where(e => e.IpAddress == error.Label))
+                                        {
+                                            <div>@ExtractClassMethod(row.Summary): @row.Errors</div>
+                                        }
+                                    </div>
+                                </TooltipTemplate>
+                            </RadzenStackedBarSeries>
                         }
                         <RadzenCategoryAxis />
                         <RadzenValueAxis>
@@ -76,7 +107,7 @@ else
 
                             <span class="text-muted">
                                 <span class="legend-dot" style="background:@colour;"></span>
-                                @item.Key (@item.Value.Sum(i => i.Value))
+                                @item.Key
                             </span>
                         }
                     </div>
@@ -94,6 +125,7 @@ else
                     @if (Statistics.EndpointCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.EndpointCalls" CategoryProperty="Endpoint" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@EndpointColours" Strokes="@EndpointColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
@@ -125,6 +157,7 @@ else
                     @if (Statistics.MethodCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.MethodCalls" CategoryProperty="Method" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@MethodColours" Strokes="@MethodColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
@@ -156,6 +189,7 @@ else
                     @if (Statistics.StatusCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.StatusCalls" CategoryProperty="Status" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@StatusColours" Strokes="@StatusColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
@@ -187,6 +221,7 @@ else
                     @if (Statistics.Changes.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.Changes" CategoryProperty="Field" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@FieldColours" Strokes="@FieldColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
@@ -222,7 +257,18 @@ else
                     <RadzenChart Style="height: 250px;">
                         @foreach (KeyValuePair<string, List<ChartDataItem>> group in LoginAttemptsByApp)
                         {
-                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value" Title="@group.Key" StrokeWidth="0" Fill="@LoginAttemptColours[group.Key]" />
+                            <RadzenStackedBarSeries Data="@group.Value" CategoryProperty="Label" ValueProperty="Value" Title="@group.Key" StrokeWidth="0" Fill="@LoginAttemptColours[group.Key]">
+                                <TooltipTemplate Context="data">
+                                    @{ ChartDataItem login = (ChartDataItem)data; }
+                                    <div>
+                                        <strong>@login.Label</strong>
+                                        @foreach (LoginAttemptStatModel row in Statistics!.LoginAttempts.Where(l => l.Username == login.Label))
+                                        {
+                                            <div>@row.Application: @row.TotalAttempts (Successful: @row.SuccessfulAttempts | Unsuccessful: @row.UnsuccessfulAttempts)</div>
+                                        }
+                                    </div>
+                                </TooltipTemplate>
+                            </RadzenStackedBarSeries>
                         }
                         <RadzenCategoryAxis />
                         <RadzenValueAxis>
@@ -237,7 +283,7 @@ else
 
                             <span class="text-muted">
                                 <span class="legend-dot" style="background:@colour;"></span>
-                                @item.Key (@item.Value.Sum(i => i.Value))
+                                @item.Key
                             </span>
                         }
                     </div>
@@ -249,9 +295,10 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Server Health Overview (Average 30 Days)</h6>
                     <RadzenChart Style="height: 250px;">
+                        <RadzenChartTooltipOptions Visible="false" />
                         <RadzenBarSeries Data="@Statistics.ServerHealth" CategoryProperty="Name" ValueProperty="Uptime"  Title="Uptime %" />
                         <RadzenCategoryAxis />
-                        <RadzenValueAxis>
+                        <RadzenValueAxis Min="0" Max="100" Step="20" >
                             <RadzenGridLines Visible="true" Stroke="#555" />
                         </RadzenValueAxis>
                         <RadzenLegend Visible="false" />

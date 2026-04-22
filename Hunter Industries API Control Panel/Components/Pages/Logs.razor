@@ -40,6 +40,7 @@ else
                     @if (Statistics.EndpointCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.EndpointCalls" CategoryProperty="Endpoint" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@EndpointColours" Strokes="@EndpointColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
@@ -71,6 +72,7 @@ else
                     @if (Statistics.MethodCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.MethodCalls" CategoryProperty="Method" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@MethodColours" Strokes="@MethodColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
@@ -102,6 +104,7 @@ else
                     @if (Statistics.StatusCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.StatusCalls" CategoryProperty="Status" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@StatusColours" Strokes="@StatusColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
@@ -133,6 +136,7 @@ else
                     @if (Statistics.Changes.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
                             <RadzenDonutSeries Data="@Statistics.Changes" CategoryProperty="Field" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@FieldColours" Strokes="@FieldColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
