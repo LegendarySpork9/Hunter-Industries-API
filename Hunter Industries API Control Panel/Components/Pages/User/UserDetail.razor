@@ -1,4 +1,5 @@
 @page "/users/{Id:int}"
+@using HunterIndustriesAPIControlPanel.Converters
 @using HunterIndustriesAPIControlPanel.Models.Responses
 @using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
@@ -122,7 +123,7 @@ else
                                 
                                     <tr>
                                         <td class="text-light-grey">@applicationSetting.Name</td>
-                                        <td class="text-light-grey">@applicationSetting.Type</td>
+                                        <td class="text-light-grey">@ApplicationSettingConverter.GetDataType(applicationSetting.Type)</td>
                                         <td class="text-light-grey">@applicationSetting.Required</td>
                                         <td>
                                             @if (setting != null)

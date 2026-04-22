@@ -1,4 +1,5 @@
 @page "/"
+@using HunterIndustriesAPIControlPanel.Converters
 @using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Dashboard - HI Control Panel</PageTitle>
@@ -330,9 +331,9 @@ else
                         @foreach (var entry in RecentActivity)
                         {
                             <a href="/audit-history/@entry.Id" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
-                                <span class="badge activity-method-badge @GetMethodBadgeClass(entry.Method)">@entry.Method</span>
+                                <span class="badge activity-method-badge @GraphConverter.GetMethodBadgeClass(entry.Method)">@entry.Method</span>
                                 <span class="flex-grow-1 activity-endpoint">@entry.Endpoint</span>
-                                <span class="badge activity-status @GetStatusBadgeClass(entry.Status)">@entry.Status</span>
+                                <span class="badge activity-status @GraphConverter.GetStatusBadgeClass(entry.Status)">@entry.Status</span>
                                 <span class="text-muted activity-ip">@entry.IpAddress</span>
                                 <span class="text-muted activity-time">@GetRelativeTime(entry.OccuredAt)</span>
                             </a>
