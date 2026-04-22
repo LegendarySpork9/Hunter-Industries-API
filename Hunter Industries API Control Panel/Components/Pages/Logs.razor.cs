@@ -155,6 +155,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task ApplyFilters()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Apply Clicked");
+
             PageNumber = 1;
             await LoadData();
         }
@@ -164,6 +166,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task ClearFilters()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Clear Clicked");
+
             FilterFromDate = null;
             FilterToDate = null;
             FilterEndpoint = string.Empty;
@@ -177,6 +181,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task PreviousPage()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "<< Prev Clicked");
+
             if (PageNumber > 1)
             {
                 PageNumber--;
@@ -189,6 +195,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task NextPage()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Next >> Clicked");
+
             if (PageNumber < TotalPageCount)
             {
                 PageNumber++;

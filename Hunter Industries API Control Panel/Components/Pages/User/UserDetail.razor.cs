@@ -1,7 +1,7 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
-using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Functions;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
@@ -24,6 +24,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private List<UserSettingModel> UserSettings = [];
         private List<ApplicationModel> Applications = [];
 
+        private bool LoadingData = true;
         private List<string> AvailableScopes = [];
         private string EditUsername = string.Empty;
         private string EditPassword = string.Empty;
@@ -33,24 +34,12 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private bool SaveUserSuccess;
         private bool ShowDeleteConfirm;
         private List<UserSettingRequestModel> NewSettings = [];
-        private bool SaveSettingsSuccess;
-
-
-        [Inject] private ExampleAPIService ExampleAPIService { get; set; } = default!;
-        [Inject] private NavigationManager Navigation { get; set; } = default!;
-
-        private UserRecord? _user;
-        private List<string> _availableScopes = new();
-        private List<string> _editScopes = new();
-        private List<UserSettingRecord> _userSettings = new();
-        private List<UserSettingRecord> _allAppSettings = new();
-        private HashSet<string> _addingSettings = new();
-        private Dictionary<string, string> _newSettingValues = new();
-        private string _editUsername = string.Empty;
-        private string _editPassword = string.Empty;
-        private bool _showPassword;
-        private bool _saveSuccess;
-        private bool _showDeleteConfirm;
+        private string? SavedSettingsApplication;
+        private bool ShowValidationErrors;
+        private List<string> ValidationErrors = [];
+        private bool ShowSaveSettingErrors;
+        private List<string> SaveSettingErrors = [];
+        private string SavedSettingsMessage = "Saved changes successfully!";
 
         /// <summary>
         /// Loads and transforms the data.
@@ -62,6 +51,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             User = await APIService.GetUser(Id);
             UserSettings = await APIService.GetUserSettings(Id);
             Applications = await APIService.GetApplications();
+            Applications.RemoveAll(a => a.IsDeleted == true);
 
             List<UserModel> users = await APIService.GetUsers(true);
 
@@ -90,6 +80,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                     Value = s.Value
                 })]
             })];
+
+            LoadingData = false;
         }
 
         /// <summary>
@@ -100,11 +92,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             if (isChecked && !EditScopes.Contains(scope))
             {
                 EditScopes.Add(scope);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Added Scope: {scope}");
             }
 
             else if (!isChecked)
             {
                 EditScopes.Remove(scope);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Removed Scope: {scope}");
             }
         }
 
@@ -113,6 +109,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task SaveUser()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Changes Clicked");
+
             if (User != null)
             {
                 UserRequestModel userUpdate = new();
@@ -176,7 +174,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             ShowDeleteConfirm = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Delete Confirmation Modal");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Delete Confirmation Modal");
         }
 
         /// <summary>
@@ -184,6 +182,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task DeleteUser()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Delete Clicked");
+
             if (User != null)
             {
                 bool deleted = await APIService.DeleteUser(User.Id);
@@ -200,7 +200,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             ShowDeleteConfirm = false;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Closed Delete Confirmation Model");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Delete Confirmation Model");
         }
 
         /// <summary>
@@ -230,16 +230,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private string GetNewSettingValue(string application, string settingName)
         {
-            string value = string.Empty;
+            UserSettingRequestModel? newSetting = NewSettings.FirstOrDefault(ns => ns.Application == application && ns.SettingName == settingName);
 
-            UserSettingRequestModel newSetting = NewSettings.First(ns => ns.Application == application && ns.SettingName == settingName);
-
-            if (newSetting.SettingValue != string.Empty)
-            {
-                value = newSetting.SettingValue;
-            }
-
-            return value;
+            return newSetting?.SettingValue ?? string.Empty;
         }
 
         /// <summary>
@@ -252,27 +245,12 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         }
 
         /// <summary>
-        /// Performs the user setting creation steps.
-        /// </summary>
-        private async Task ConfirmAddSetting(string application, string settingName)
-        {
-            UserSettingModel? newSetting = await APIService.CreateUserSetting(NewSettings.First(us => us.Application == application && us.SettingName == settingName));
-
-            if (newSetting != null)
-            {
-                int index = UserSettings.FindIndex(us => us.Application == newSetting.Application);
-                UserSettings[index].Settings.Add(newSetting.Settings[0]);
-
-                index = NewSettings.FindIndex(us => us.Application == application && us.SettingName == settingName);
-                NewSettings.RemoveAt(index);
-            }
-        }
-
-        /// <summary>
         /// Starts adding the new setting.
         /// </summary>
         private void StartAddSetting(string application, string settingName)
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Add Clicked");
+
             if (User != null)
             {
                 NewSettings.Add(new()
@@ -290,6 +268,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private void CancelAddSetting(string application, string settingName)
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Cancel Clicked");
+
             int index = NewSettings.FindIndex(us => us.Application == application && us.SettingName == settingName);
             NewSettings.RemoveAt(index);
         }
@@ -297,57 +277,210 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Updates the settings.
         /// </summary>
-        private async Task SaveSettings(UserSettingModel userSettings)
+        private async Task SaveSettings(string application, UserSettingModel? userSettings)
         {
-            List<bool> settingResults = [];
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Settings Clicked");
 
-            UserSettingModel unchangedUserSettings = UnchangedUserSettings.First(us => us.Application == userSettings.Application);
+            int settingsAddedOrUpdated = 0;
 
-            foreach (SettingModel setting in userSettings.Settings)
+            ApplicationModel app = Applications.First(a => a.Name == application);
+            List<UserSettingRequestModel> newSettings = [.. NewSettings.Where(ns => ns.Application == application)];
+
+            ValidationErrors.AddRange(SettingValidatorFunction.ValidateApplicationSettings(app, userSettings, newSettings));
+
+            List<SettingModel> settingsToUpdate = [];
+
+            if (userSettings != null)
             {
-                SettingModel unchangedSetting = unchangedUserSettings.Settings.First(s => s.Id == setting.Id);
+                UserSettingModel unchangedUserSettings = UnchangedUserSettings.First(us => us.Application == application);
 
-                if (setting.Value != unchangedSetting.Value)
+                foreach (SettingModel setting in userSettings.Settings)
                 {
-                    SettingModel? updatedSetting = await APIService.UpdateUserSetting(setting.Id, setting.Value);
+                    SettingModel unchangedSetting = unchangedUserSettings.Settings.First(s => s.Id == setting.Id);
 
-                    if (updatedSetting != null)
+                    if (setting.Value != unchangedSetting.Value)
                     {
-                        settingResults.Add(true);
-                    }
-
-                    else
-                    {
-                        settingResults.Add(false);
+                        settingsToUpdate.Add(setting);
                     }
                 }
             }
 
-            List<bool> failedUpates = settingResults.FindAll(sr => sr == false);
-
-            if (settingResults.Count> 0 && failedUpates.Count == 0)
+            if (ValidationErrors.Count > 0)
             {
-                SaveSettingsSuccess = true;
+                ShowValidationErrors = true;
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Validation Error Modal");
 
                 await InvokeAsync(StateHasChanged);
             }
 
             else
             {
-                SaveSettingsSuccess = false;
-            }
+                List<UserSettingRequestModel> addedSettings = [];
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSettingsSuccess}");
-
-            if (SaveSettingsSuccess)
-            {
-                await Task.Delay(2000).ContinueWith(_ =>
+                foreach (UserSettingRequestModel newSetting in newSettings)
                 {
-                    SaveSettingsSuccess = false;
+                    UserSettingModel? newAPISetting = await APIService.CreateUserSetting(newSetting);
 
-                    InvokeAsync(StateHasChanged);
-                });
+                    if (newAPISetting != null)
+                    {
+                        int index = UserSettings.FindIndex(us => us.Application == newAPISetting.Application);
+                        SettingModel createdSetting = newAPISetting.Settings[0];
+                        SettingModel baselineSetting = new()
+                        {
+                            Id = createdSetting.Id,
+                            Name = createdSetting.Name,
+                            Value = createdSetting.Value
+                        };
+
+                        if (index == -1)
+                        {
+                            UserSettings.Add(newAPISetting);
+                            UnchangedUserSettings.Add(new()
+                            {
+                                Application = newAPISetting.Application,
+                                Settings = [baselineSetting]
+                            });
+                            addedSettings.Add(newSetting);
+                        }
+
+                        else
+                        {
+                            UserSettings[index].Settings.Add(createdSetting);
+                            UnchangedUserSettings.First(us => us.Application == newAPISetting.Application).Settings.Add(baselineSetting);
+                            addedSettings.Add(newSetting);
+                        }
+                    }
+
+                    else
+                    {
+                        SaveSettingErrors.Add($"Something went wrong when adding {newSetting.SettingName} ({newSetting.SettingValue}) to {application}. Check logs for details.");
+                    }
+                }
+
+                settingsAddedOrUpdated += addedSettings.Count;
+
+                foreach (UserSettingRequestModel addedSetting in addedSettings)
+                {
+                    NewSettings.Remove(addedSetting);
+                }
+
+                List<SettingModel> updatedSettings = [];
+
+                foreach (SettingModel setting in settingsToUpdate)
+                {
+                    SettingModel? updatedSetting = await APIService.UpdateUserSetting(setting.Id, setting.Value);
+
+                    if (updatedSetting != null)
+                    {
+                        updatedSettings.Add(updatedSetting);
+                    }
+
+                    else
+                    {
+                        SaveSettingErrors.Add($"Something went wrong when updating {setting.Name} ({setting.Value}) for {application}. Check logs for details.");
+                    }
+                }
+
+                settingsAddedOrUpdated += updatedSettings.Count;
+
+                if (settingsToUpdate.Count > 0)
+                {
+                    UserSettingModel unchangedSettings = UnchangedUserSettings.First(us => us.Application == application);
+
+                    foreach (SettingModel updatedSetting in updatedSettings)
+                    {
+                        int index = unchangedSettings.Settings.FindIndex(s => s.Id == updatedSetting.Id);
+                        unchangedSettings.Settings[index].Value = updatedSetting.Value;
+                    }
+                }
+
+                if (SaveSettingErrors.Count > 0)
+                {
+                    SavedSettingsApplication = null;
+                    ShowSaveSettingErrors = true;
+
+                    if (settingsAddedOrUpdated > 0)
+                    {
+                        SavedSettingsApplication = application;
+                        SavedSettingsMessage = $"Saved {settingsAddedOrUpdated} changes successfully!";
+                    }
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Save Setting Error Modal");
+
+                    await InvokeAsync(StateHasChanged);
+                }
+
+                else if (settingsAddedOrUpdated > 0 && SaveSettingErrors.Count == 0)
+                {
+                    SavedSettingsApplication = application;
+                    SavedSettingsMessage = $"Saved {settingsAddedOrUpdated} changes successfully!";
+
+                    await InvokeAsync(StateHasChanged);
+                }
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SavedSettingsApplication != null}");
+
+                if (SavedSettingsApplication != null)
+                {
+                    await Task.Delay(2000).ContinueWith(_ =>
+                    {
+                        SavedSettingsApplication = null;
+
+                        InvokeAsync(StateHasChanged);
+                    });
+                }
             }
+        }
+
+        /// <summary>
+        /// Hides the validation errors modal.
+        /// </summary>
+        private void CloseValidationErrors()
+        {
+            ShowValidationErrors = false;
+            ValidationErrors = [];
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Validation Errors Modal");
+        }
+
+        /// <summary>
+        /// Hides the save setting errors modal.
+        /// </summary>
+        private void CloseSaveSettingErrors()
+        {
+            ShowSaveSettingErrors = false;
+            SaveSettingErrors = [];
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Save Setting Errors Modal");
+        }
+
+        /// <summary>
+        /// Returns the text for the save button.
+        /// </summary>
+        private string GetSaveButtonText(string application, UserSettingModel? userSettings)
+        {
+            int unsavedCount = NewSettings.Count(ns => ns.Application == application && !string.IsNullOrWhiteSpace(ns.SettingValue));
+
+            if (userSettings != null)
+            {
+                UserSettingModel unchangedUserSettings = UnchangedUserSettings.First(us => us.Application == application);
+                unsavedCount += userSettings.Settings.Count(s => s.Value != unchangedUserSettings.Settings.First(us => us.Id == s.Id).Value);
+            }
+
+            string buttonTextstring;
+
+            if (unsavedCount > 0)
+            {
+                buttonTextstring = $"Save {unsavedCount} Setting(s)";
+            }
+
+            else
+            {
+                buttonTextstring = "Save Settings";
+            }
+
+            return buttonTextstring;
         }
     }
 }

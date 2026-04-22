@@ -86,7 +86,10 @@ namespace HunterIndustriesAPI.Services.User
                         {
                             userSettings.Add(tempRecord);
 
-                            tempRecord.Application = result.Item1;
+                            tempRecord = new UserSettingRecord
+                            {
+                                Application = result.Item1
+                            };
                             tempRecord.Settings.Clear();
                         }
 

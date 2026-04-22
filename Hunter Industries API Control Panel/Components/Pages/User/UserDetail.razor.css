@@ -7,7 +7,15 @@
 }
 
 .col-setting-name {
-    width: 40%;
+    width: 20%;
+}
+
+.col-setting-type {
+    width: 10%;
+}
+
+.col-setting-required {
+    width: 10%;
 }
 
 .col-setting-value {

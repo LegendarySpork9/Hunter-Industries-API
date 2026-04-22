@@ -1,0 +1,32 @@
+@if (IsVisible)
+{
+    <div class="modal fade show d-block modal-overlay" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <button type="button" class="btn-close" @onclick="OnClose"></button>
+                </div>
+                <div class="modal-body">
+                    @if (Messages.Count == 1)
+                    {
+                        <p class="mb-0">@Messages[0]</p>
+                    }
+
+                    else
+                    {
+                        <ul class="mb-0">
+                            @foreach (string message in Messages)
+                            {
+                                <li>@message</li>
+                            }
+                        </ul>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="OnClose">@CloseText</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

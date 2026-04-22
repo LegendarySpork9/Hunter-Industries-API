@@ -57,7 +57,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ErrorMessage = string.Empty;
             ShowCreateModel = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened New User Modal");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened New User Modal");
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             ShowCreateModel = false;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Closed New User Modal");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed New User Modal");
         }
 
         /// <summary>
@@ -98,6 +98,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task CreateUser()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Create User Clicked");
+
             if (UserToCreate != null)
             {
                 if (string.IsNullOrWhiteSpace(UserToCreate.Username) || string.IsNullOrWhiteSpace(UserToCreate.Password))
@@ -168,7 +170,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             UserToDelete = user;
             ShowDeleteConfirm = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Delete Confirmation Modal");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Delete Confirmation Modal");
         }
 
         /// <summary>
@@ -176,6 +178,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task DeleteUser()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Delete User Clicked");
+
             if (UserToDelete != null)
             {
                 bool deleted = await APIService.DeleteUser(UserToDelete.Id);
@@ -199,7 +203,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ShowDeleteConfirm = false;
             UserToDelete = null;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Closed Delete Confirmation Model");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Delete Confirmation Model");
         }
     }
 }

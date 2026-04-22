@@ -47,6 +47,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task HandleLogin()
         {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Login Clicked");
+
             IsLoading = true;
             ErrorMessage = string.Empty;
             StateHasChanged();
@@ -60,7 +62,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 if (user != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Login Successful.");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Login Successful");
                     _Logger.ChangeIdentifier($"{user.Username} ({IPAddressFunction.FetchIpAddress(HttpContextAccessor)})");
 
                     User.Id = user.Id;
