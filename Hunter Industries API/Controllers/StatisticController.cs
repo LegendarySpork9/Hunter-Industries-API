@@ -68,8 +68,15 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetDashboard()
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            StatisticService _statisticService = new StatisticService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -77,8 +84,13 @@ namespace HunterIndustriesAPI.Controllers
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("statistic"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName);
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName);
 
             List<object> records = await _statisticService.GetDashboardStatistic("topBarStats");
             TopBarStatRecord topBarStatsRecord = records[0] as TopBarStatRecord;
@@ -107,7 +119,8 @@ namespace HunterIndustriesAPI.Controllers
             records = await _statisticService.GetDashboardStatistic("serverHealth");
             List<ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<ServerHealthOverviewRecord>().ToList();
 
-            List<ServerHealthOverviewRecord> serverHealthRecords = serverHealthUptimeRecords.GroupBy(u => u.ServerId).Select(g => new ServerHealthOverviewRecord
+            List<ServerHealthOverviewRecord> serverHealthRecords = serverHealthUptimeRecords.GroupBy(u => u.ServerId)
+                .Select(g => new ServerHealthOverviewRecord
             {
                 ServerId = g.Key,
                 Name = g.First().Name,
@@ -144,6 +157,7 @@ namespace HunterIndustriesAPI.Controllers
         ///     GET /statistic/server/1
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
+        /// <param name="id">The id number of the server.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Statistic.Read")]
         [VersionedRoute("statistic/server/{id:int}", "2.0")]
         [SwaggerOperation("GetStatisticServer")]
@@ -152,8 +166,15 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetServer(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            StatisticService _statisticService = new StatisticService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -161,22 +182,33 @@ namespace HunterIndustriesAPI.Controllers
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("statistic"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, new string[] { id.ToString() });
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[] { id.ToString() });
 
-            List<object> records = await _statisticService.GetServerStatistic("componentAlerts", id);
+            List<object> records = await _statisticService.GetServerStatistic("componentAlerts",
+                id);
             List<AlertComponentRecord> alertComponentRecords = records.Cast<AlertComponentRecord>().ToList();
 
-            records = await _statisticService.GetServerStatistic("statusAlerts", id);
+            records = await _statisticService.GetServerStatistic("statusAlerts",
+                id);
             List<AlertStatusRecord> alertStatusRecords = records.Cast<AlertStatusRecord>().ToList();
 
-            records = await _statisticService.GetServerStatistic("lastComponentEvents", id);
+            records = await _statisticService.GetServerStatistic("lastComponentEvents",
+                id);
             List<EventComponentRecord> latestEventComponentRecords = records.Cast<EventComponentRecord>().ToList();
 
-            records = await _statisticService.GetServerStatistic("recentAlerts", id);
+            records = await _statisticService.GetServerStatistic("recentAlerts",
+                id);
             List<RecentAlertRecord> recentAlertRecords = records.Cast<RecentAlertRecord>().ToList();
 
-            records = await _statisticService.GetServerStatistic("recentEvents", id);
+            records = await _statisticService.GetServerStatistic("recentEvents",
+                id);
             List<EventComponentRecord> recentEventRecords = records.Cast<EventComponentRecord>().ToList();
 
             ResponseModel response = new ResponseModel()
@@ -213,8 +245,15 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetError()
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            StatisticService _statisticService = new StatisticService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -222,8 +261,13 @@ namespace HunterIndustriesAPI.Controllers
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("statistic"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName);
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName);
 
             List<object> records = await _statisticService.GetErrorStatistic("errorsOverTime");
             List<ErrorOverTimeRecord> errorOverTimeRecords = records.Cast<ErrorOverTimeRecord>().ToList();
@@ -258,6 +302,7 @@ namespace HunterIndustriesAPI.Controllers
         ///     GET /statistic/application/1
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
+        /// <param name="id">The id number of the application.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Statistic.Read")]
         [VersionedRoute("statistic/application/{id:int}", "2.0")]
         [SwaggerOperation("GetStatisticDashboard")]
@@ -266,8 +311,15 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetApplication(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            StatisticService _statisticService = new StatisticService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -275,19 +327,33 @@ namespace HunterIndustriesAPI.Controllers
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("statistic"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, new string[] { id.ToString() });
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[] { id.ToString() });
 
-            List<object> records = await _statisticService.GetSharedStatistic("endpointCalls", "application", id);
+            List<object> records = await _statisticService.GetSharedStatistic("endpointCalls",
+                "application",
+                id);
             List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>().ToList();
 
-            records = await _statisticService.GetSharedStatistic("methodCalls", "application", id);
+            records = await _statisticService.GetSharedStatistic("methodCalls",
+                "application",
+                id);
             List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>().ToList();
 
-            records = await _statisticService.GetSharedStatistic("statusCalls", "application", id);
+            records = await _statisticService.GetSharedStatistic("statusCalls",
+                "application",
+                id);
             List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>().ToList();
 
-            records = await _statisticService.GetSharedStatistic("changeCalls", "application", id);
+            records = await _statisticService.GetSharedStatistic("changeCalls",
+                "application",
+                id);
             List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>().ToList();
 
             ResponseModel response = new ResponseModel()
@@ -315,6 +381,7 @@ namespace HunterIndustriesAPI.Controllers
         ///     GET /statistic/user/1
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
+        /// <param name="id">The id number of the user.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Statistic.Read")]
         [VersionedRoute("statistic/user/{id:int}", "2.0")]
         [SwaggerOperation("GetStatisticDashboard")]
@@ -323,8 +390,15 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetUser(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            StatisticService _statisticService = new StatisticService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -332,19 +406,33 @@ namespace HunterIndustriesAPI.Controllers
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("statistic"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, new string[] { id.ToString() });
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[] { id.ToString() });
 
-            List<object> records = await _statisticService.GetSharedStatistic("endpointCalls", "user", id);
+            List<object> records = await _statisticService.GetSharedStatistic("endpointCalls",
+                "user",
+                id);
             List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>().ToList();
 
-            records = await _statisticService.GetSharedStatistic("methodCalls", "user", id);
+            records = await _statisticService.GetSharedStatistic("methodCalls",
+                "user",
+                id);
             List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>().ToList();
 
-            records = await _statisticService.GetSharedStatistic("statusCalls", "user", id);
+            records = await _statisticService.GetSharedStatistic("statusCalls",
+                "user",
+                id);
             List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>().ToList();
 
-            records = await _statisticService.GetSharedStatistic("changeCalls", "user", id);
+            records = await _statisticService.GetSharedStatistic("changeCalls",
+                "user",
+                id);
             List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>().ToList();
 
             ResponseModel response = new ResponseModel()

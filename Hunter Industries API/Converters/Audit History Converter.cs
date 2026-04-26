@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Returns the endpoint id number.
         /// </summary>
-        public static int GetEndpointID(string endpoint)
+        public static int GetEndpointId(string endpoint)
         {
             switch (endpoint)
             {
@@ -33,7 +33,7 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Returns the endpoint version id number.
         /// </summary>
-        public static int GetEndpointVersionID(string version)
+        public static int GetEndpointVersionId(string version)
         {
             switch (version)
             {
@@ -47,7 +47,7 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Returns the method id number.
         /// </summary>
-        public static int GetMethodID(string method)
+        public static int GetMethodId(string method)
         {
             switch (method)
             {
@@ -62,17 +62,18 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Returns the status id number.
         /// </summary>
-        public static int GetStatusID(string status)
+        public static int GetStatusId(string status)
         {
             switch (status)
             {
                 case "OK": return 1;
                 case "Created": return 2;
-                case "BadRequest": return 3;
-                case "Unauthorized": return 4;
-                case "Forbidden": return 5;
-                case "NotFound": return 6;
-                case "InternalServerError": return 7;
+                case "NoContent": return 3;
+                case "BadRequest": return 4;
+                case "Unauthorized": return 5;
+                case "Forbidden": return 6;
+                case "NotFound": return 7;
+                case "InternalServerError": return 8;
                 default: return 0;
             }
         }

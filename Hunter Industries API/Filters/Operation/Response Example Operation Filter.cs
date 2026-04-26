@@ -16,7 +16,9 @@ namespace HunterIndustriesAPI.Filters.Operation
         /// <summary>
         /// Adds the response examples to the Swagger UI.
         /// </summary>
-        public void Apply(Swashbuckle.Swagger.Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+        public void Apply(Swashbuckle.Swagger.Operation operation,
+            SchemaRegistry schemaRegistry,
+            ApiDescription apiDescription)
         {
             Response existingResponse;
 
@@ -122,6 +124,22 @@ namespace HunterIndustriesAPI.Filters.Operation
                 }
             }
 
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerEventController))
+            {
+                if (operation.operationId == "ServerEvent_Post")
+                {
+                    operation.responses.Remove("200");
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerAlertController))
+            {
+                if (operation.operationId == "ServerAlert_Post")
+                {
+                    operation.responses.Remove("200");
+                }
+            }
+
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ConfigurationController))
             {
                 if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "GetConfiguration")
@@ -132,7 +150,7 @@ namespace HunterIndustriesAPI.Filters.Operation
                         properties = new Dictionary<string, Schema>
                         {
                             {
-                                "ConfigurationObjects", new Schema
+                                "configurationObjects", new Schema
                                 {
                                     type = "array",
                                     example = new string[]
@@ -193,20 +211,22 @@ namespace HunterIndustriesAPI.Filters.Operation
                 }
             }
 
-            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerEventController))
+            if (operation.responses.TryGetValue("204", out existingResponse))
             {
-                if (operation.operationId == "ServerEvent_Post")
+                existingResponse.schema = new Schema
                 {
-                    operation.responses.Remove("200");
-                }
-            }
-
-            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ServerAlertController))
-            {
-                if (operation.operationId == "ServerAlert_Post")
-                {
-                    operation.responses.Remove("200");
-                }
+                    type = "object",
+                    properties = new Dictionary<string, Schema>
+                    {
+                        {
+                            "Information", new Schema
+                            {
+                                type = "string",
+                                example = "No data returned by given parameters."
+                            }
+                        }
+                    }
+                };
             }
 
             if (operation.responses.TryGetValue("400", out existingResponse))

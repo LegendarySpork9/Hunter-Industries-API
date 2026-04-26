@@ -219,6 +219,44 @@ EXEC sp_rename 'ServerAlert.UserSettingsId', 'UserSettingId', 'COLUMN'
 
 PRINT('Renamed ServerAlert.UserSettingsId to ServerAlert.UserSettingId')
 
+BEGIN TRANSACTION;
+
+BEGIN TRY
+
+    ALTER TABLE [dbo].[AuditHistory] NOCHECK CONSTRAINT [FK_AuditHistory_StatusCode];
+
+    DELETE FROM [dbo].[StatusCode]
+    WHERE  [StatusId] >= 3;
+
+    SET IDENTITY_INSERT [dbo].[StatusCode] ON;
+
+    INSERT INTO [dbo].[StatusCode] ([StatusId], [Value]) VALUES (3, '204 No Content');
+    INSERT INTO [dbo].[StatusCode] ([StatusId], [Value]) VALUES (4, '400 Bad Request');
+    INSERT INTO [dbo].[StatusCode] ([StatusId], [Value]) VALUES (5, '401 Unauthorized');
+    INSERT INTO [dbo].[StatusCode] ([StatusId], [Value]) VALUES (6, '403 Forbidden');
+    INSERT INTO [dbo].[StatusCode] ([StatusId], [Value]) VALUES (7, '404 Not Found');
+    INSERT INTO [dbo].[StatusCode] ([StatusId], [Value]) VALUES (8, '500 Internal Server Error');
+
+    SET IDENTITY_INSERT [dbo].[StatusCode] OFF;
+
+    DBCC CHECKIDENT ('[dbo].[StatusCode]', RESEED, 8);
+
+    ALTER TABLE [dbo].[AuditHistory] WITH CHECK CHECK CONSTRAINT [FK_AuditHistory_StatusCode];
+
+    COMMIT TRANSACTION;
+
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+
+    IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_AuditHistory_StatusCode' AND is_disabled = 1)
+        ALTER TABLE [dbo].[AuditHistory] WITH CHECK CHECK CONSTRAINT [FK_AuditHistory_StatusCode];
+
+    THROW;
+END CATCH;
+
+PRINT("Added 204 No Content to StatusCode Table")
+
 INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
 VALUES ('2.0.0', 'Database Upgrade 2.0.0', GETUTCDATE())
 

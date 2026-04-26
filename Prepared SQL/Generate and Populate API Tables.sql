@@ -790,6 +790,8 @@ INSERT [dbo].[StatusCode] ([Value]) VALUES ('200 OK')
 GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('201 Created')
 GO
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('204 No Content')
+GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('400 Bad Request')
 GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('401 Unauthorized')

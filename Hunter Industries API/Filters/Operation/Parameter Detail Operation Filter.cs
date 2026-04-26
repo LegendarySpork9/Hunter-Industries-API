@@ -16,7 +16,9 @@ namespace HunterIndustriesAPI.Filters.Operation
         /// <summary>
         /// Alters the details of the parameters on the Swagger UI depending on the controller.
         /// </summary>
-        public void Apply(Swashbuckle.Swagger.Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+        public void Apply(Swashbuckle.Swagger.Operation operation,
+            SchemaRegistry schemaRegistry,
+            ApiDescription apiDescription)
         {
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(TokenController))
             {
@@ -74,37 +76,6 @@ namespace HunterIndustriesAPI.Filters.Operation
                     if (param.name == "filters.application")
                     {
                         param.name = "application";
-                    }
-
-                    if (param.name == "filters.pageSize")
-                    {
-                        param.name = "pageSize";
-                    }
-
-                    if (param.name == "filters.pageNumber")
-                    {
-                        param.name = "pageNumber";
-                    }
-                }
-            }
-
-            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ErrorController))
-            {
-                foreach (Parameter param in operation.parameters)
-                {
-                    if (param.name == "filters.fromDate")
-                    {
-                        param.name = "fromDate";
-                    }
-
-                    if (param.name == "filters.ipAddress")
-                    {
-                        param.name = "ipAddress";
-                    }
-
-                    if (param.name == "filters.summary")
-                    {
-                        param.name = "summary";
                     }
 
                     if (param.name == "filters.pageSize")
@@ -303,6 +274,37 @@ namespace HunterIndustriesAPI.Filters.Operation
                         {
                             param.name = "status";
                         }
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ErrorController))
+            {
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "filters.fromDate")
+                    {
+                        param.name = "fromDate";
+                    }
+
+                    if (param.name == "filters.ipAddress")
+                    {
+                        param.name = "ipAddress";
+                    }
+
+                    if (param.name == "filters.summary")
+                    {
+                        param.name = "summary";
+                    }
+
+                    if (param.name == "filters.pageSize")
+                    {
+                        param.name = "pageSize";
+                    }
+
+                    if (param.name == "filters.pageNumber")
+                    {
+                        param.name = "pageNumber";
                     }
                 }
             }

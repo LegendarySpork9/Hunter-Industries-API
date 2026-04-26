@@ -62,12 +62,20 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         /// <param name="isActive">Whether the servers are active or not.</param>
         [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Information.Read")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ServerInformationRecord>), Description = "Returns the item(s) matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get([FromUri] bool isActive = false)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            ServerInformationService _serverInformationService = new ServerInformationService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -77,16 +85,22 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Get) endpoint called with the following parameters \"{isActive}\".");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, new string[] { isActive.ToString() });
-
             List<ServerInformationRecord> servers = await _serverInformationService.GetServers(isActive);
 
             if (servers.Count == 0)
             {
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("NoContent"),
+                    username,
+                    applicationName,
+                    new string[] { isActive.ToString() });
+
                 response = new ResponseModel()
                 {
-                    StatusCode = 200,
+                    StatusCode = 204,
                     Data = new
                     {
                         information = "No data returned by given parameters."
@@ -96,6 +110,15 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
+
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[] { isActive.ToString() });
 
             response = new ResponseModel()
             {
@@ -135,12 +158,20 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Post([FromBody, Required] ServerInformationModel request)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            ModelValidationService _modelValidator = new ModelValidationService();
+            ServerInformationService _serverInformationService = new ServerInformationService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database);
+
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
-            ModelValidationService _modelValidator = new ModelValidationService();
-            ServerInformationService _serverInformationService = new ServerInformationService(_Logger, _FileSystem, _Options, _Database);
 
             ResponseModel response;
 
@@ -151,10 +182,20 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}.");
 
-            if (!_modelValidator.IsValid(request, true, null, new string[] { "Time" }))
+            if (!_modelValidator.IsValid(request,
+                true,
+                null,
+                new string[] { "Time", "Duration" }))
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
-                    username, applicationName, null);
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        request));
 
                 response = new ResponseModel()
                 {
@@ -171,7 +212,15 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             if (await _serverInformationService.ServerExists(request.Name))
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName, ParameterFunction.FormatParameters(null, request));
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("OK"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        request));
 
                 response = new ResponseModel()
                 {
@@ -190,7 +239,15 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             if (!added)
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, ParameterFunction.FormatParameters(null, request));
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        request));
 
                 response = new ResponseModel()
                 {
@@ -204,7 +261,15 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 return Content(HttpStatusCode.InternalServerError, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"), username, applicationName, ParameterFunction.FormatParameters(null, request));
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("POST"),
+                AuditHistoryConverter.GetStatusId("Created"),
+                username,
+                applicationName,
+                ParameterFunction.FormatParameters(null,
+                    request));
 
             DowntimeRecord downtime = null;
 

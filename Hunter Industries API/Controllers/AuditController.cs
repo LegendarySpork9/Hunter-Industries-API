@@ -61,12 +61,17 @@ namespace HunterIndustriesAPI.Controllers
         [VersionedRoute("audithistory", "1.0")]
         [SwaggerOperation("GetAuditList")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryResponseModel), Description = "Returns the item(s) matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get([FromUri] AuditHistoryFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
@@ -89,7 +94,15 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(filters))
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("BadRequest"), username, applicationName, ParameterFunction.FormatParameters(null, filters));
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("audithistory"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        filters));
 
                 response = new ResponseModel()
                 {
@@ -104,17 +117,31 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
-                    new string[] { filters.IPAddress, filters.Endpoint, filters.FromDate, filters.ToDate, filters.PageSize.ToString(), filters.PageNumber.ToString() });
-
-            var result = await _auditHistoryService.GetAuditHistory(0, filters.IPAddress, filters.Endpoint, filters.Username, filters.Application, DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), DateTime.SpecifyKind(DateTime.ParseExact(filters.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc), filters.PageSize, filters.PageNumber);
-            List<AuditHistoryRecord> auditHistories = result.Item1;
+            (List<AuditHistoryRecord> auditHistories, int totalRecords) = await _auditHistoryService.GetAuditHistory(0,
+                filters.IPAddress,
+                filters.Endpoint,
+                filters.Username,
+                filters.Application,
+                DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc),
+                DateTime.SpecifyKind(DateTime.ParseExact(filters.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc),
+                filters.PageSize,
+                filters.PageNumber);
 
             if (auditHistories.Count == 0)
             {
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("audithistory"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("NoContent"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        filters));
+
                 response = new ResponseModel()
                 {
-                    StatusCode = 200,
+                    StatusCode = 204,
                     Data = new
                     {
                         information = "No data returned by given parameters."
@@ -125,7 +152,16 @@ namespace HunterIndustriesAPI.Controllers
                 return Content(HttpStatusCode.OK, response.Data);
             }
 
-            int totalRecords = result.Item2;
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("audithistory"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                ParameterFunction.FormatParameters(null,
+                    filters));
+
             int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
 
             response = new ResponseModel()
@@ -160,10 +196,15 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerOperation("GetAuditById")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(AuditHistoryRecord), Description = "Returns the item matching the given id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no audit history was found matching the given id.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -171,28 +212,50 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameter \"{id}\".");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("audithistory"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"), username, applicationName,
-                    new string[] { id.ToString() });
-
-            var result = await _auditHistoryService.GetAuditHistory(id, null, null, null, null, _Clock.DefaultDate, _Clock.DefaultDate, 25, 1);
-            List<AuditHistoryRecord> auditHistories = result.Item1;
+            List<AuditHistoryRecord> auditHistories = (await _auditHistoryService.GetAuditHistory(id,
+                null,
+                null,
+                null,
+                null,
+                _Clock.DefaultDate,
+                _Clock.DefaultDate,
+                25,
+                1)).Item1;
 
             if (auditHistories.Count == 0)
             {
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("audithistory"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("NotFound"),
+                    username,
+                    applicationName,
+                    new string[] { id.ToString() });
+
                 response = new ResponseModel()
                 {
-                    StatusCode = 200,
+                    StatusCode = 404,
                     Data = new
                     {
-                        information = "No data returned by given parameters."
+                        error = "No audit history exists with the given id."
                     }
                 };
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.OK, response.Data);
             }
+
+            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("audithistory"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[] { id.ToString() });
 
             response = new ResponseModel()
             {

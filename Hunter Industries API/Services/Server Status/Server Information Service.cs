@@ -41,7 +41,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<List<ServerInformationRecord>> GetServers(bool isActive)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameters {ParameterFunction.FormatParameters(new string[] { isActive.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameter \"{isActive}\".");
 
             List<ServerInformationRecord> servers = new List<ServerInformationRecord>();
 
@@ -113,7 +113,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<bool> ServerExists(string name)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameters {ParameterFunction.FormatParameters(new string[] { name })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameter \"{name}\".");
 
             bool exists = false;
 
@@ -125,7 +125,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = name }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0),
+                    parameters);
 
                 if (ex != null)
                 {
@@ -156,7 +157,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(bool, int)> ServerAdded(ServerInformationModel server)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded called with the parameters {ParameterFunction.FormatParameters(null, server)}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded called with the parameters {ParameterFunction.FormatParameters(server)}.");
 
             bool added = true;
             int serverId = 0;
@@ -177,7 +178,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@duration", SqlDbType.Int) { Value = (object)server.Duration ?? DBNull.Value }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
+                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                    parameters);
 
                 if (ex != null)
                 {

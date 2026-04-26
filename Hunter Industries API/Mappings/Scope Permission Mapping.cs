@@ -74,7 +74,8 @@ namespace HunterIndustriesAPI.Mappings
         /// <summary>
         /// Checks if the given permissions contain any that match the required permission.
         /// </summary>
-        public static bool HasPermission(List<string> grantedPermissions, string requiredPermission)
+        public static bool HasPermission(List<string> grantedPermissions,
+            string requiredPermission)
         {
             return grantedPermissions.Any(p => p == requiredPermission || p.StartsWith(requiredPermission + ".") || requiredPermission.StartsWith(p + "."));
         }
