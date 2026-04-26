@@ -1,4 +1,5 @@
 @page "/servers"
+@using HunterIndustriesAPIControlPanel.Models.Responses
 
 <PageTitle>Servers - HI Control Panel</PageTitle>
 
@@ -7,27 +8,24 @@
     <button class="btn btn-primary" @onclick="ShowCreateModal">Add Server</button>
 </div>
 
-<RadzenDataGrid Data="@_servers" TItem="ServerInformationRecord" AllowSorting="true" AllowFiltering="true"
-                FilterMode="FilterMode.Simple" PageSize="25" AllowPaging="true"
-                RowClick="@(args => Navigation.NavigateTo($"/servers/{args.Data.Id}"))"
-                Style="cursor: pointer;">
+<RadzenDataGrid @ref="ServerGrid" Data="@ServerRecords" TItem="ServerInformationModel" AllowSorting="true" AllowFiltering="true" FilterMode="FilterMode.Simple" PageSize="25" AllowPaging="true" RowClick="@(args => Navigation.NavigateTo($"/servers/{args.Data.Id}"))" Style="cursor: pointer;">
     <Columns>
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Property="Id" Title="ID" Width="70px" />
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Property="Name" Title="Name" />
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Property="HostName" Title="Host Name" />
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Property="Game" Title="Game" />
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Property="GameVersion" Title="Version" Width="100px" />
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Title="Address" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel" Property="Id" Title="ID" Width="70px" />
+        <RadzenDataGridColumn TItem="ServerInformationModel" Property="Name" Title="Name" />
+        <RadzenDataGridColumn TItem="ServerInformationModel" Property="HostName" Title="Host Name" />
+        <RadzenDataGridColumn TItem="ServerInformationModel" Property="Game" Title="Game" />
+        <RadzenDataGridColumn TItem="ServerInformationModel" Property="GameVersion" Title="Version" Width="100px" />
+        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Address" Sortable="false" Filterable="false">
             <Template Context="server">
-                @server.Connection.IPAddress:@server.Connection.Port
+                @server.Connection.IpAddress:@server.Connection.Port
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Title="Downtime" Width="100px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Downtime" Width="100px" Sortable="false" Filterable="false">
             <Template Context="server">
                 @(server.Downtime?.Time ?? "N/A")
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Title="Status" Width="100px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Status" Width="100px" Sortable="false" Filterable="false">
             <Template Context="server">
                 @if (server.IsActive)
                 {
@@ -39,7 +37,7 @@
                 }
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ServerInformationRecord" Title="Actions" Width="80px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Actions" Width="80px" Sortable="false" Filterable="false">
             <Template Context="server">
                 <button class="btn btn-sm btn-outline-light" @onclick="() => ShowEditModal(server)" @onclick:stopPropagation="true" title="Edit">
                     &#9998;
@@ -50,7 +48,7 @@
 </RadzenDataGrid>
 
 <!-- Create/Edit Server Modal -->
-@if (_showModal)
+@if (ShowModal)
 {
     <div class="modal fade show d-block modal-overlay" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">

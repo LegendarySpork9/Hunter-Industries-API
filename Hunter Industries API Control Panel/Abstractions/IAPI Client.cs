@@ -25,5 +25,6 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<UserModel?> UpdateUser(int userId, UserRequestModel user);
         Task<UserSettingModel?> CreateUserSetting(UserSettingRequestModel userSetting);
         Task<SettingModel?> UpdateUserSetting(int userSettingId, string value);
+        Task<List<ServerInformationModel>> GetServers();
     }
 }

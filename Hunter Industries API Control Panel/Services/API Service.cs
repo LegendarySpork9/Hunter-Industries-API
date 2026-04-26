@@ -78,7 +78,6 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 if (users.Count > 0)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Users Returned: {users.Count}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched users from API");
                 }
 
@@ -698,6 +697,45 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return updatedUserSetting;
+        }
+
+        /// <summary>
+        /// Gets a list of the servers from the API.
+        /// </summary>
+        public async Task<List<ServerInformationModel>> GetServers()
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching servers from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            List<ServerInformationModel> servers = [];
+
+            try
+            {
+                servers = await _APIClient.GetServers();
+
+                if (servers.Count > 0)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched users from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch servers from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch servers from API");
+            }
+
+            return servers;
         }
     }
 }

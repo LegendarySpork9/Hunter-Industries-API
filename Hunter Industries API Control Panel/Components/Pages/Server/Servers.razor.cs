@@ -1,13 +1,33 @@
-using Microsoft.AspNetCore.Components;
+// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
+using Microsoft.AspNetCore.Components;
+using Radzen.Blazor;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 {
     public partial class Servers
     {
-        [Inject] private ExampleAPIService APIService { get; set; } = default!;
-        [Inject] private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private IConfigurableLoggerService _Logger { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
+        [Inject]
+        private NavigationManager Navigation { get; set; } = default!;
+
+        private RadzenDataGrid<ServerInformationModel> ServerGrid = new();
+        private List<ServerInformationModel> ServerRecords = [];
+
+        private bool ShowModal;
+
+
+
+
+
+        [Inject] private ExampleAPIService ExampleAPIService { get; set; } = default!;
 
         private List<ServerInformationRecord> _servers = new();
         private bool _showModal;
@@ -23,9 +43,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private int _modalEventInterval;
         private bool _modalIsActive = true;
 
-        protected override void OnInitialized()
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
+        protected override async Task OnInitializedAsync()
         {
-            _servers = APIService.GetServers();
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Servers Page");
+
+            ServerRecords = await APIService.GetServers();
         }
 
         private void ShowCreateModal()
@@ -43,7 +68,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             _showModal = true;
         }
 
-        private void ShowEditModal(ServerInformationRecord server)
+        private void ShowEditModal(ServerInformationModel server)
         {
             _isEditing = true;
             _editingServerId = server.Id;
@@ -51,7 +76,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             _modalHostName = server.HostName;
             _modalGame = server.Game;
             _modalGameVersion = server.GameVersion;
-            _modalIPAddress = server.Connection.IPAddress;
+            _modalIPAddress = server.Connection.IpAddress;
             _modalPort = server.Connection.Port;
             _modalDowntime = server.Downtime?.Time ?? string.Empty;
             _modalEventInterval = server.EventInterval;
@@ -59,22 +84,30 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             _showModal = true;
         }
 
-        private void CloseModal() => _showModal = false;
+        /// <summary>
+        /// Hides the create server model.
+        /// </summary>
+        private void CloseModal()
+        {
+            ShowModal = false;
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed New Server Modal");
+        }
 
         private void SaveServer()
         {
             if (_isEditing)
             {
-                APIService.UpdateServer(_editingServerId, _modalName, _modalHostName, _modalGame, _modalGameVersion,
+                ExampleAPIService.UpdateServer(_editingServerId, _modalName, _modalHostName, _modalGame, _modalGameVersion,
                     _modalIPAddress, _modalPort, string.IsNullOrEmpty(_modalDowntime) ? null : _modalDowntime, _modalEventInterval, _modalIsActive);
             }
             else
             {
-                APIService.CreateServer(_modalName, _modalHostName, _modalGame, _modalGameVersion,
+                ExampleAPIService.CreateServer(_modalName, _modalHostName, _modalGame, _modalGameVersion,
                     _modalIPAddress, _modalPort, string.IsNullOrEmpty(_modalDowntime) ? null : _modalDowntime, _modalEventInterval, _modalIsActive);
             }
 
-            _servers = APIService.GetServers();
+            _servers = ExampleAPIService.GetServers();
             _showModal = false;
         }
     }
