@@ -372,39 +372,64 @@ namespace HunterIndustriesAPI.Services.User
 
             bool updated = true;
 
-            try
+            if (!string.IsNullOrWhiteSpace(username) || !string.IsNullOrWhiteSpace(password))
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserUpdated.sql");
-
-                if (string.IsNullOrEmpty(username))
+                try
                 {
-                    sql = sql.Replace("Username = @username,", "");
+                    string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserUpdated.sql");
+
+                    if (string.IsNullOrEmpty(username))
+                    {
+                        sql = sql.Replace("Username = @username,", "");
+                    }
+
+                    if (string.IsNullOrEmpty(password))
+                    {
+                        if (sql.Contains(','))
+                        {
+                            sql = sql.Replace(", [Password] = @password", "");
+                        }
+
+                        else
+                        {
+                            sql = sql.Replace(" [Password] = @password", "");
+                        }
+                    }
+
+                    List<SqlParameter> parameterList = new List<SqlParameter>
+                    {
+                        new SqlParameter("@userId", SqlDbType.Int) { Value = id }
+                    };
+
+                    if (!string.IsNullOrEmpty(username))
+                    {
+                        parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
+                    }
+
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        parameterList.Add(new SqlParameter("@password", SqlDbType.VarChar) { Value = password });
+                    }
+
+                    (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                        parameterList.ToArray());
+
+                    if (ex != null)
+                    {
+                        string message = "An error occured when trying to run UserService.UserUpdated.";
+                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
+                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+
+                        updated = false;
+                    }
+
+                    if (rowsAffected != 1)
+                    {
+                        updated = false;
+                    }
                 }
 
-                if (string.IsNullOrEmpty(password))
-                {
-                    sql = sql.Replace(", [Password] = @password", "");
-                }
-
-                List<SqlParameter> parameterList = new List<SqlParameter>
-                {
-                    new SqlParameter("@userId", SqlDbType.Int) { Value = id }
-                };
-
-                if (!string.IsNullOrEmpty(username))
-                {
-                    parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
-                }
-
-                if (!string.IsNullOrEmpty(password))
-                {
-                    parameterList.Add(new SqlParameter("@password", SqlDbType.VarChar) { Value = password });
-                }
-
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
-                    parameterList.ToArray());
-
-                if (ex != null)
+                catch (Exception ex)
                 {
                     string message = "An error occured when trying to run UserService.UserUpdated.";
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
@@ -412,20 +437,6 @@ namespace HunterIndustriesAPI.Services.User
 
                     updated = false;
                 }
-
-                if (rowsAffected != 1)
-                {
-                    updated = false;
-                }
-            }
-
-            catch (Exception ex)
-            {
-                string message = "An error occured when trying to run UserService.UserUpdated.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-
-                updated = false;
             }
 
             updated = await UserScopeCreated(id,
