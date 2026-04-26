@@ -41,7 +41,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<List<ServerEventRecord>> GetServerEvents(string component)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents called with the parameters {ParameterFunction.FormatParameters(new string[] { component })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents called with the parameter \"{component}\".");
 
             List<ServerEventRecord> serverEvents = new List<ServerEventRecord>();
 
@@ -110,7 +110,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@status", SqlDbType.VarChar) { Value = serverEvent.Status }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
+                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                    parameters);
 
                 if (ex != null)
                 {

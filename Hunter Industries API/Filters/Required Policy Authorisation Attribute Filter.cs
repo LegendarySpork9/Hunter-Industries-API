@@ -58,7 +58,8 @@ namespace HunterIndustriesAPI.Filters
 
             List<string> grantedPermissions = ScopePermissionMapping.GetPermissions(scopes);
 
-            if (!ScopePermissionMapping.HasPermission(grantedPermissions, permissionToCheck))
+            if (!ScopePermissionMapping.HasPermission(grantedPermissions,
+                permissionToCheck))
             {
                 actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
             }

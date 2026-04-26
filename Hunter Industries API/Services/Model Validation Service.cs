@@ -16,7 +16,10 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns whether the model meets given requirements.
         /// </summary>
-        public bool IsValid(object model, bool allRequired = false, string[] ignoreProperties = null, string[] propertiesAllowedNulls = null)
+        public bool IsValid(object model,
+            bool allRequired = false,
+            string[] ignoreProperties = null,
+            string[] propertiesAllowedNulls = null)
         {
             bool validModel = false;
 
@@ -62,7 +65,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns whether the property has a value.
         /// </summary>
-        private bool HasValue(object value = null, bool allowedNull = false)
+        private bool HasValue(object value = null,
+            bool allowedNull = false)
         {
             bool propertyHasValue = false;
 
@@ -133,7 +137,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Decides if the model is valid.
         /// </summary>
-        private bool ModelValidity(bool[] validProperties, bool allRequired)
+        private bool ModelValidity(bool[] validProperties,
+            bool allRequired)
         {
             bool valid = false;
 

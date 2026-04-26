@@ -40,7 +40,7 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<List<object>> GetDashboardStatistic(string part)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetDashboardStatistic called with the parameters \"{part}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetDashboardStatistic called with the parameter \"{part}\".");
 
             List<object> records = new List<object>();
 
@@ -51,7 +51,8 @@ namespace HunterIndustriesAPI.Services
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings);
+                    (List<object> results, Exception ex) = await _Database.Query(sql,
+                        dataReaderMappings);
 
                     if (ex != null)
                     {
@@ -78,9 +79,11 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all statistic records that match the parameters.
         /// </summary>
-        public async Task<List<object>> GetSharedStatistic(string part, string type = null, int id = 0)
+        public async Task<List<object>> GetSharedStatistic(string part,
+            string type = null,
+            int id = 0)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetSharedStatistic called with the parameters {ParameterFunction.FormatParameters(new string[] { part, type, id.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetSharedStatistic called with the parameters \"{part}\", \"{type}\", \"{id}\".");
 
             List<object> records = new List<object>();
 
@@ -118,7 +121,9 @@ and UserId = @userId";
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings, parameters);
+                    (List<object> results, Exception ex) = await _Database.Query(sql,
+                        dataReaderMappings,
+                        parameters);
 
                     if (ex != null)
                     {
@@ -145,7 +150,8 @@ and UserId = @userId";
         /// <summary>
         /// Returns all statistic records that match the parameters.
         /// </summary>
-        public async Task<List<object>> GetServerStatistic(string part, int server)
+        public async Task<List<object>> GetServerStatistic(string part,
+            int server)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetServerStatistic called with the parameters \"{part}\", \"{server}\".");
 
@@ -162,7 +168,9 @@ and UserId = @userId";
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings, parameters);
+                    (List<object> results, Exception ex) = await _Database.Query(sql,
+                        dataReaderMappings,
+                        parameters);
 
                     if (ex != null)
                     {
@@ -191,7 +199,7 @@ and UserId = @userId";
         /// </summary>
         public async Task<List<object>> GetErrorStatistic(string part)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetErrorStatistic called with the parameters \"{part}\".");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetErrorStatistic called with the parameter \"{part}\".");
 
             List<object> records = new List<object>();
 
@@ -202,7 +210,8 @@ and UserId = @userId";
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings);
+                    (List<object> results, Exception ex) = await _Database.Query(sql,
+                        dataReaderMappings);
 
                     if (ex != null)
                     {

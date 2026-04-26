@@ -41,13 +41,21 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Logs the call made to the database.
         /// </summary>
-        public async Task<(bool, int)> LogRequest(string ipAddress, int endpointId, int endpointVersionId, int methodId, int statusId, string username = null, string applicationName = null, string[] parameters = null)
+        public async Task<(bool, int)> LogRequest(string ipAddress,
+            int endpointId,
+            int endpointVersionId,
+            int methodId,
+            int statusId,
+            string username = null,
+            string applicationName = null,
+            string[] parameters = null)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), endpointVersionId.ToString(), methodId.ToString(), statusId.ToString(), username, applicationName, ParameterFunction.FormatParameters(parameters) })}.");
 
             bool logged = false;
             int auditId = 0;
-            string formattedParameters = ParameterFunction.FormatParameters(parameters, true);
+            string formattedParameters = ParameterFunction.FormatParameters(parameters,
+                true);
 
             try
             {
@@ -64,7 +72,8 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@applicationName", SqlDbType.VarChar) { Value = (object)applicationName ?? DBNull.Value }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql, sqlParameters);
+                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                    sqlParameters);
 
                 if (ex != null)
                 {
@@ -94,7 +103,11 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Logs any authorisation calls made to the database.
         /// </summary>
-        public async Task LogLoginAttempt(int auditId, bool isSuccessful, string username = null, string password = null, string phrase = null)
+        public async Task LogLoginAttempt(int auditId,
+            bool isSuccessful,
+            string username = null,
+            string password = null,
+            string phrase = null)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
 
@@ -110,7 +123,8 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@isSuccessful", SqlDbType.Bit) { Value = isSuccessful }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, sqlParameters);
+                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                    sqlParameters);
 
                 if (ex != null)
                 {
@@ -131,7 +145,15 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all audit history records that match the parameters.
         /// </summary>
-        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId, string ipAddress, string endpoint, string username, string application, DateTime fromDate, DateTime toDate, int pageSize, int pageNumber)
+        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId,
+            string ipAddress,
+            string endpoint,
+            string username,
+            string application,
+            DateTime fromDate,
+            DateTime toDate,
+            int pageSize,
+            int pageNumber)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
@@ -298,7 +320,12 @@ fetch next @pageSize rows only";
                     auditHistories.Add(current);
                 }
 
-                totalRecords = await GetTotalAuditHistory(ipAddress, endpoint, username, application, fromDate, toDate);
+                totalRecords = await GetTotalAuditHistory(ipAddress,
+                    endpoint,
+                    username,
+                    application,
+                    fromDate,
+                    toDate);
             }
 
             catch (Exception ex)
@@ -315,7 +342,12 @@ fetch next @pageSize rows only";
         /// <summary>
         /// Returns the number of audit history records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalAuditHistory(string ipAddress, string endpoint, string username, string application, DateTime fromDate, DateTime toDate)
+        private async Task<int> GetTotalAuditHistory(string ipAddress,
+            string endpoint,
+            string username,
+            string application,
+            DateTime fromDate,
+            DateTime toDate)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, username, application, fromDate.ToString(), toDate.ToString() })}.");
 
@@ -362,7 +394,8 @@ fetch next @pageSize rows only";
                     parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
                 }
 
-                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());
+                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0),
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {

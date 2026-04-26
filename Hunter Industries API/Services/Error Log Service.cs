@@ -41,7 +41,12 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all error log records that match the parameters.
         /// </summary>
-        public async Task<(List<ErrorLogRecord>, int)> GetErrorLog(int errorId, string ipAddress, string summary, DateTime fromDate, int pageSize, int pageNumber)
+        public async Task<(List<ErrorLogRecord>, int)> GetErrorLog(int errorId,
+            string ipAddress,
+            string summary,
+            DateTime fromDate,
+            int pageSize,
+            int pageNumber)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { errorId.ToString(), ipAddress, summary, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
@@ -126,7 +131,9 @@ fetch next @pageSize rows only";
         /// <summary>
         /// Returns the number of error log records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalErrorLog(string ipAddress, string summary, DateTime fromDate)
+        private async Task<int> GetTotalErrorLog(string ipAddress,
+            string summary,
+            DateTime fromDate)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetTotalErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, summary, fromDate.ToString() })}.");
 
@@ -155,7 +162,8 @@ fetch next @pageSize rows only";
                     parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
-                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());
+                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0),
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {

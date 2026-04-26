@@ -13,7 +13,9 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Converts the scope into a claim.
         /// </summary>
-        public static Claim[] GetClaims(string username, string applicationName, List<string> scopes)
+        public static Claim[] GetClaims(string username,
+            string applicationName,
+            List<string> scopes)
         {
             Claim[] claims = new Claim[]
             {

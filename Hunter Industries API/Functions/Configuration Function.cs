@@ -14,7 +14,8 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Removes any null properties from the SQL parameter list.
         /// </summary>
-        public static SqlParameter[] CleanParameterArray(object model, SqlParameter[] parameters)
+        public static SqlParameter[] CleanParameterArray(object model,
+            SqlParameter[] parameters)
         {
             List<SqlParameter> parameterList = parameters.ToList();
             PropertyInfo[] properties = GetProperties(model);
@@ -40,7 +41,8 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Removes any null properties from the SQL.
         /// </summary>
-        public static string CleanSQL(object model, string sql)
+        public static string CleanSQL(object model,
+            string sql)
         {
             List<string> sqlLines = sql.Split(new[] { Environment.NewLine, "\n", "\r\n" }, StringSplitOptions.None).ToList();
             PropertyInfo[] properties = GetProperties(model);

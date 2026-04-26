@@ -31,7 +31,9 @@ namespace HunterIndustriesAPI.Filters
 
         /// <summary>
         /// </summary>
-        public VersionedRouteAttribute(string path, string minVersion, string maxVersion = null)
+        public VersionedRouteAttribute(string path,
+            string minVersion,
+            string maxVersion = null)
         {
             Path = path;
             MinVersion = minVersion;

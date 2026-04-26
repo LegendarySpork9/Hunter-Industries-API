@@ -8,388 +8,388 @@ namespace HunterIndustriesAPI.Tests.API.Converters
     [TestClass]
     public class AuditHistoryConverterTest
     {
-        #region GetEndpointID
+        #region GetEndpointId
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 0 when given any value.
+        /// Tests whether the GetEndpointId method returns 0 when given any value.
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointID()
+        public void TestGetEndpointId()
         {
             int expected = 0;
-            int actual = AuditHistoryConverter.GetEndpointID("Trombone");
+            int actual = AuditHistoryConverter.GetEndpointId("Trombone");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 1 when given "token".
+        /// Tests whether the GetEndpointId method returns 1 when given "token".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDToken()
+        public void TestGetEndpointIdToken()
         {
             int expected = 1;
-            int actual = AuditHistoryConverter.GetEndpointID("token");
+            int actual = AuditHistoryConverter.GetEndpointId("token");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 2 when given "audithistory".
+        /// Tests whether the GetEndpointId method returns 2 when given "audithistory".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDAuditHistory()
+        public void TestGetEndpointIdAuditHistory()
         {
             int expected = 2;
-            int actual = AuditHistoryConverter.GetEndpointID("audithistory");
+            int actual = AuditHistoryConverter.GetEndpointId("audithistory");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 3 when given "assistant/config".
+        /// Tests whether the GetEndpointId method returns 3 when given "assistant/config".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDAssistantConfig()
+        public void TestGetEndpointIdAssistantConfig()
         {
             int expected = 3;
-            int actual = AuditHistoryConverter.GetEndpointID("assistant/config");
+            int actual = AuditHistoryConverter.GetEndpointId("assistant/config");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 4 when given "assistant/version".
+        /// Tests whether the GetEndpointId method returns 4 when given "assistant/version".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDAssistantVersion()
+        public void TestGetEndpointIdAssistantVersion()
         {
             int expected = 4;
-            int actual = AuditHistoryConverter.GetEndpointID("assistant/version");
+            int actual = AuditHistoryConverter.GetEndpointId("assistant/version");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 5 when given "assistant/deletion".
+        /// Tests whether the GetEndpointId method returns 5 when given "assistant/deletion".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDAssistantDeletion()
+        public void TestGetEndpointIdAssistantDeletion()
         {
             int expected = 5;
-            int actual = AuditHistoryConverter.GetEndpointID("assistant/deletion");
+            int actual = AuditHistoryConverter.GetEndpointId("assistant/deletion");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 6 when given "assistant/location".
+        /// Tests whether the GetEndpointId method returns 6 when given "assistant/location".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDAssistantLocation()
+        public void TestGetEndpointIdAssistantLocation()
         {
             int expected = 6;
-            int actual = AuditHistoryConverter.GetEndpointID("assistant/location");
+            int actual = AuditHistoryConverter.GetEndpointId("assistant/location");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 7 when given "user".
+        /// Tests whether the GetEndpointId method returns 7 when given "user".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDUser()
+        public void TestGetEndpointIdUser()
         {
             int expected = 7;
-            int actual = AuditHistoryConverter.GetEndpointID("user");
+            int actual = AuditHistoryConverter.GetEndpointId("user");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 8 when given "usersettings".
+        /// Tests whether the GetEndpointId method returns 8 when given "usersettings".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDUserSettings()
+        public void TestGetEndpointIdUserSettings()
         {
             int expected = 8;
-            int actual = AuditHistoryConverter.GetEndpointID("usersettings");
+            int actual = AuditHistoryConverter.GetEndpointId("usersettings");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 9 when given "serverstatus/serverinformation".
+        /// Tests whether the GetEndpointId method returns 9 when given "serverstatus/serverinformation".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDServerInformation()
+        public void TestGetEndpointIdServerInformation()
         {
             int expected = 9;
-            int actual = AuditHistoryConverter.GetEndpointID("serverstatus/serverinformation");
+            int actual = AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 10 when given "serverstatus/serverevent".
+        /// Tests whether the GetEndpointId method returns 10 when given "serverstatus/serverevent".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDServerEvent()
+        public void TestGetEndpointIdServerEvent()
         {
             int expected = 10;
-            int actual = AuditHistoryConverter.GetEndpointID("serverstatus/serverevent");
+            int actual = AuditHistoryConverter.GetEndpointId("serverstatus/serverevent");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 11 when given "serverstatus/serveralert".
+        /// Tests whether the GetEndpointId method returns 11 when given "serverstatus/serveralert".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDServerAlert()
+        public void TestGetEndpointIdServerAlert()
         {
             int expected = 11;
-            int actual = AuditHistoryConverter.GetEndpointID("serverstatus/serveralert");
+            int actual = AuditHistoryConverter.GetEndpointId("serverstatus/serveralert");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 12 when given "errorlog".
+        /// Tests whether the GetEndpointId method returns 12 when given "errorlog".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDErrorLog()
+        public void TestGetEndpointIdErrorLog()
         {
             int expected = 12;
-            int actual = AuditHistoryConverter.GetEndpointID("errorlog");
+            int actual = AuditHistoryConverter.GetEndpointId("errorlog");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointID method returns 13 when given "configuration".
+        /// Tests whether the GetEndpointId method returns 13 when given "configuration".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointIDConfiguration()
+        public void TestGetEndpointIdConfiguration()
         {
             int expected = 13;
-            int actual = AuditHistoryConverter.GetEndpointID("configuration");
+            int actual = AuditHistoryConverter.GetEndpointId("configuration");
 
             Assert.AreEqual(expected, actual);
         }
 
         #endregion
 
-        #region GetEndpointVersionID
+        #region GetEndpointVersionId
 
         /// <summary>
-        /// Tests whether the GetEndpointVersionID method returns 1 when given any value.
+        /// Tests whether the GetEndpointVersionId method returns 1 when given any value.
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointVersionID()
+        public void TestGetEndpointVersionId()
         {
             int expected = 1;
-            int actual = AuditHistoryConverter.GetEndpointVersionID("Trombone");
+            int actual = AuditHistoryConverter.GetEndpointVersionId("Trombone");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointVersionID method returns 1 when given "1.0".
+        /// Tests whether the GetEndpointVersionId method returns 1 when given "1.0".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointVersionIDV10()
+        public void TestGetEndpointVersionIdV10()
         {
             int expected = 1;
-            int actual = AuditHistoryConverter.GetEndpointVersionID("1.0");
+            int actual = AuditHistoryConverter.GetEndpointVersionId("1.0");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointVersionID method returns 2 when given "1.1".
+        /// Tests whether the GetEndpointVersionId method returns 2 when given "1.1".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointVersionIDV11()
+        public void TestGetEndpointVersionIdV11()
         {
             int expected = 2;
-            int actual = AuditHistoryConverter.GetEndpointVersionID("1.1");
+            int actual = AuditHistoryConverter.GetEndpointVersionId("1.1");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetEndpointVersionID method returns 3 when given "2.0".
+        /// Tests whether the GetEndpointVersionId method returns 3 when given "2.0".
         /// </summary>
         [TestMethod]
-        public void TestGetEndpointVersionIDV20()
+        public void TestGetEndpointVersionIdV20()
         {
             int expected = 3;
-            int actual = AuditHistoryConverter.GetEndpointVersionID("2.0");
+            int actual = AuditHistoryConverter.GetEndpointVersionId("2.0");
 
             Assert.AreEqual(expected, actual);
         }
 
         #endregion
 
-        #region GetMethodID
+        #region GetMethodId
 
         /// <summary>
-        /// Tests whether the GetMethodID method returns 0 when given any value.
+        /// Tests whether the GetMethodId method returns 0 when given any value.
         /// </summary>
         [TestMethod]
-        public void TestGetMethodID()
+        public void TestGetMethodId()
         {
             int expected = 0;
-            int actual = AuditHistoryConverter.GetMethodID("Trombone");
+            int actual = AuditHistoryConverter.GetMethodId("Trombone");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetMethodID method returns 1 when given "GET".
+        /// Tests whether the GetMethodId method returns 1 when given "GET".
         /// </summary>
         [TestMethod]
-        public void TestGetMethodIDGet()
+        public void TestGetMethodIdGet()
         {
             int expected = 1;
-            int actual = AuditHistoryConverter.GetMethodID("GET");
+            int actual = AuditHistoryConverter.GetMethodId("GET");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetMethodID method returns 2 when given "POST".
+        /// Tests whether the GetMethodId method returns 2 when given "POST".
         /// </summary>
         [TestMethod]
-        public void TestGetMethodIDPost()
+        public void TestGetMethodIdPost()
         {
             int expected = 2;
-            int actual = AuditHistoryConverter.GetMethodID("POST");
+            int actual = AuditHistoryConverter.GetMethodId("POST");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetMethodID method returns 3 when given "PATCH".
+        /// Tests whether the GetMethodId method returns 3 when given "PATCH".
         /// </summary>
         [TestMethod]
-        public void TestGetMethodIDPatch()
+        public void TestGetMethodIdPatch()
         {
             int expected = 3;
-            int actual = AuditHistoryConverter.GetMethodID("PATCH");
+            int actual = AuditHistoryConverter.GetMethodId("PATCH");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetMethodID method returns 4 when given "DELETE".
+        /// Tests whether the GetMethodId method returns 4 when given "DELETE".
         /// </summary>
         [TestMethod]
-        public void TestGetMethodIDDelete()
+        public void TestGetMethodIdDelete()
         {
             int expected = 4;
-            int actual = AuditHistoryConverter.GetMethodID("DELETE");
+            int actual = AuditHistoryConverter.GetMethodId("DELETE");
 
             Assert.AreEqual(expected, actual);
         }
 
         #endregion
 
-        #region GetStatusID
+        #region GetStatusId
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 0 when given any value.
+        /// Tests whether the GetStatusId method returns 0 when given any value.
         /// </summary>
         [TestMethod]
-        public void TestGetStatusID()
+        public void TestGetStatusId()
         {
             int expected = 0;
-            int actual = AuditHistoryConverter.GetStatusID("Trombone");
+            int actual = AuditHistoryConverter.GetStatusId("Trombone");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 1 when given "OK".
+        /// Tests whether the GetStatusId method returns 1 when given "OK".
         /// </summary>
         [TestMethod]
-        public void TestGetStatusIDOK()
+        public void TestGetStatusIdOK()
         {
             int expected = 1;
-            int actual = AuditHistoryConverter.GetStatusID("OK");
+            int actual = AuditHistoryConverter.GetStatusId("OK");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 2 when given "Created".
+        /// Tests whether the GetStatusId method returns 2 when given "Created".
         /// </summary>
         [TestMethod]
-        public void TestGetStatusIDCreated()
+        public void TestGetStatusIdCreated()
         {
             int expected = 2;
-            int actual = AuditHistoryConverter.GetStatusID("Created");
+            int actual = AuditHistoryConverter.GetStatusId("Created");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 3 when given "BadRequest".
+        /// Tests whether the GetStatusId method returns 3 when given "BadRequest".
         /// </summary>
         [TestMethod]
-        public void TestGetStatusIDBadRequest()
+        public void TestGetStatusIdBadRequest()
         {
             int expected = 3;
-            int actual = AuditHistoryConverter.GetStatusID("BadRequest");
+            int actual = AuditHistoryConverter.GetStatusId("BadRequest");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 4 when given "Unauthorized".
+        /// Tests whether the GetStatusId method returns 4 when given "Unauthorized".
         /// </summary>
         [TestMethod]
-        public void TestGetStatusIDUnauthorized()
+        public void TestGetStatusIdUnauthorized()
         {
             int expected = 4;
-            int actual = AuditHistoryConverter.GetStatusID("Unauthorized");
+            int actual = AuditHistoryConverter.GetStatusId("Unauthorized");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 5 when given "Forbidden".
+        /// Tests whether the GetStatusId method returns 5 when given "Forbidden".
         /// </summary>
         [TestMethod]
-        public void TestGetStatusIDForbidden()
+        public void TestGetStatusIdForbidden()
         {
             int expected = 5;
-            int actual = AuditHistoryConverter.GetStatusID("Forbidden");
+            int actual = AuditHistoryConverter.GetStatusId("Forbidden");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 6 when given "NotFound".
+        /// Tests whether the GetStatusId method returns 6 when given "NotFound".
         /// </summary>
         [TestMethod]
-        public void TestGetStatusIDNotFound()
+        public void TestGetStatusIdNotFound()
         {
             int expected = 6;
-            int actual = AuditHistoryConverter.GetStatusID("NotFound");
+            int actual = AuditHistoryConverter.GetStatusId("NotFound");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusID method returns 7 when given "InternalServerError".
+        /// Tests whether the GetStatusId method returns 7 when given "InternalServerError".
         /// </summary>
         [TestMethod]
-        public void TestGetStatusIDInternalServerError()
+        public void TestGetStatusIdInternalServerError()
         {
             int expected = 7;
-            int actual = AuditHistoryConverter.GetStatusID("InternalServerError");
+            int actual = AuditHistoryConverter.GetStatusId("InternalServerError");
 
             Assert.AreEqual(expected, actual);
         }

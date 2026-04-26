@@ -36,7 +36,10 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Creates a record in the Change table.
         /// </summary>
-        public async Task<bool> LogChange(int auditId, string field, string oldValue, string newValue)
+        public async Task<bool> LogChange(int auditId,
+            string field,
+            string oldValue,
+            string newValue)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), field, oldValue, newValue })}.");
 
@@ -53,7 +56,8 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@newValue", SqlDbType.VarChar) { Value = newValue }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                    parameters);
 
                 if (ex != null)
                 {

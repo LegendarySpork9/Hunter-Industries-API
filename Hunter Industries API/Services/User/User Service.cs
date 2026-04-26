@@ -40,9 +40,11 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns all user records that match the parameters.
         /// </summary>
-        public async Task<List<UserRecord>> GetUsers(int id, string username, bool includeDeleted = false)
+        public async Task<List<UserRecord>> GetUsers(int id,
+            string username,
+            bool includeDeleted = false)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUsers called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUsers called with the parameters \"{id}\", \"{username}\", \"{includeDeleted}\".");
 
             List<UserRecord> users = new List<UserRecord>();
 
@@ -68,7 +70,11 @@ namespace HunterIndustriesAPI.Services.User
                     sql += "\nand IsDeleted = 0";
                 }
 
-                (List<(int, string, string, bool)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetBoolean(3)), parameterList.ToArray());
+                (List<(int, string, string, bool)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetInt32(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetBoolean(3)),
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
@@ -108,7 +114,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserExists(string username)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameters {ParameterFunction.FormatParameters(new string[] { username })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameter \"{username}\".");
 
             bool exists = false;
 
@@ -122,7 +128,8 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@username", SqlDbType.VarChar) { Value = username }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0),
+                    parameters);
 
                 if (ex != null)
                 {
@@ -153,7 +160,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserExists(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameter \"{id}\".");
 
             bool exists = false;
 
@@ -167,7 +174,8 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0),
+                    parameters);
 
                 if (ex != null)
                 {
@@ -196,9 +204,10 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Creates the user.
         /// </summary>
-        public async Task<(bool, int)> UserCreated(string username, string password)
+        public async Task<(bool, int)> UserCreated(string username,
+            string password)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserCreated called with the parameters {ParameterFunction.FormatParameters(new string[] { username, HashFunction.HashString(password) })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserCreated called with the parameters \"{username}\", \"{HashFunction.HashString(password)}\".");
 
             bool created = true;
             int userId = 0;
@@ -212,7 +221,8 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@password", SqlDbType.VarChar) { Value = HashFunction.HashString(password) }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
+                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                    parameters);
 
                 if (ex != null)
                 {
@@ -250,9 +260,10 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Creates the user scopes.
         /// </summary>
-        public async Task<bool> UserScopeCreated(int id, List<string> scopes)
+        public async Task<bool> UserScopeCreated(int id,
+            List<string> scopes)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), ParameterFunction.FormatListParameters(scopes, false) })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated called with the parameters \"{id}\", {ParameterFunction.FormatListParameters(scopes, false) }.");
 
             bool created = true;
 
@@ -268,7 +279,8 @@ namespace HunterIndustriesAPI.Services.User
                         new SqlParameter("@scope", SqlDbType.VarChar) { Value = scope }
                     };
 
-                    (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
+                    (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                        parameters);
 
                     if (ex != null)
                     {
@@ -300,7 +312,8 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Gets the scopes assigned to the user.
         /// </summary>
-        public async Task<List<string>> GetUserScopes(int id = 0, string username = null)
+        public async Task<List<string>> GetUserScopes(int id = 0,
+            string username = null)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUserScopes called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
 
@@ -323,7 +336,8 @@ namespace HunterIndustriesAPI.Services.User
                     parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
-                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(0), parameterList.ToArray());
+                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(0),
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
@@ -349,7 +363,10 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Updates the details of the given user.
         /// </summary>
-        public async Task<bool> UserUpdated(int id, string username, string password, List<KeyValuePair<string, string>> scopes)
+        public async Task<bool> UserUpdated(int id,
+            string username,
+            string password,
+            List<KeyValuePair<string, string>> scopes)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username, password, ParameterFunction.FormatListParameters(scopes, true) })}.");
 
@@ -384,7 +401,8 @@ namespace HunterIndustriesAPI.Services.User
                     parameterList.Add(new SqlParameter("@password", SqlDbType.VarChar) { Value = password });
                 }
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameterList.ToArray());
+                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
@@ -410,8 +428,14 @@ namespace HunterIndustriesAPI.Services.User
                 updated = false;
             }
 
-            updated = await UserScopeCreated(id, scopes.Where(c => c.Key == "Add").Select(c => c.Value).ToList());
-            updated = await UserScopeDeleted(id, scopes.Where(c => c.Key == "Remove").Select(c => c.Value).ToList());
+            updated = await UserScopeCreated(id,
+                scopes.Where(c => c.Key == "Add")
+                .Select(c => c.Value)
+                .ToList());
+            updated = await UserScopeDeleted(id,
+                scopes.Where(c => c.Key == "Remove")
+                .Select(c => c.Value)
+                .ToList());
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated returned {updated}.");
             return updated;
@@ -420,9 +444,10 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Deletes the user scopes.
         /// </summary>
-        private async Task<bool> UserScopeDeleted(int id, List<string> scopes)
+        private async Task<bool> UserScopeDeleted(int id,
+            List<string> scopes)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeDeleted called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), ParameterFunction.FormatListParameters(scopes, false) })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeDeleted called with the parameters \"{id}\", {ParameterFunction.FormatListParameters(scopes, false)}.");
 
             bool deleted = true;
 
@@ -438,7 +463,8 @@ namespace HunterIndustriesAPI.Services.User
                         new SqlParameter("@scope", SqlDbType.VarChar) { Value = scope }
                     };
 
-                    (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+                    (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                        parameters);
 
                     if (ex != null)
                     {
@@ -472,7 +498,7 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserDeleted(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserDeleted called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserDeleted called with the parameter \"{id}\".");
 
             bool deleted = true;
 
@@ -484,7 +510,8 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@userID", SqlDbType.Int) { Value = id }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                    parameters);
 
                 if (ex != null)
                 {
