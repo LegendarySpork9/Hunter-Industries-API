@@ -380,19 +380,22 @@ namespace HunterIndustriesAPI.Services.User
 
                     if (string.IsNullOrEmpty(username))
                     {
-                        sql = sql.Replace("Username = @username,", "");
+                        sql = sql.Replace(@"
+    Username = @username,", "");
                     }
 
                     if (string.IsNullOrEmpty(password))
                     {
                         if (sql.Contains(','))
                         {
-                            sql = sql.Replace(", [Password] = @password", "");
+                            sql = sql.Replace(@",
+    [Password] = @password", "");
                         }
 
                         else
                         {
-                            sql = sql.Replace(" [Password] = @password", "");
+                            sql = sql.Replace(@"
+    [Password] = @password", "");
                         }
                     }
 

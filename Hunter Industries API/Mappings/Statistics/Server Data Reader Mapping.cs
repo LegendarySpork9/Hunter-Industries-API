@@ -1,5 +1,4 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPI.Objects.Statistics.Error;
 using HunterIndustriesAPI.Objects.Statistics.Server;
 using System;
 using System.Data;
@@ -51,6 +50,20 @@ namespace HunterIndustriesAPI.Mappings
             };
 
             return eventComponent;
+        };
+
+        /// <summary>
+        /// The SQL row to model mappings for the uptime stat in the server health overview record.
+        /// </summary>
+        public static readonly Func<IDataReader, ServerHealthOverviewRecord> ServerHealthUptimeMapper = reader =>
+        {
+            ServerHealthOverviewRecord serverHealthUptime = new ServerHealthOverviewRecord()
+            {
+                Day = reader.GetString(0),
+                Uptime = reader.GetDecimal(1)
+            };
+
+            return serverHealthUptime;
         };
 
         /// <summary>

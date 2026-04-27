@@ -1,3 +1,2 @@
-update [Application] set
-	[Name] = @name
+update [Application] set [Name] = @name
 where ApplicationId = @applicationId

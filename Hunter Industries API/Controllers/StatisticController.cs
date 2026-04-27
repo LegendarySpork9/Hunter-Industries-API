@@ -117,10 +117,10 @@ namespace HunterIndustriesAPI.Controllers
             List<LoginAttemptStatisticRecord> loginAttemptRecords = records.Cast<LoginAttemptStatisticRecord>().ToList();
 
             records = await _statisticService.GetDashboardStatistic("serverHealth");
-            List<ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<ServerHealthOverviewRecord>().ToList();
+            List<Objects.Statistics.Dashboard.ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<Objects.Statistics.Dashboard.ServerHealthOverviewRecord>().ToList();
 
-            List<ServerHealthOverviewRecord> serverHealthRecords = serverHealthUptimeRecords.GroupBy(u => u.ServerId)
-                .Select(g => new ServerHealthOverviewRecord
+            List<Objects.Statistics.Dashboard.ServerHealthOverviewRecord> serverHealthRecords = serverHealthUptimeRecords.GroupBy(u => u.ServerId)
+                .Select(g => new Objects.Statistics.Dashboard.ServerHealthOverviewRecord
             {
                 ServerId = g.Key,
                 Name = g.First().Name,
@@ -203,6 +203,10 @@ namespace HunterIndustriesAPI.Controllers
                 id);
             List<EventComponentRecord> latestEventComponentRecords = records.Cast<EventComponentRecord>().ToList();
 
+            records = await _statisticService.GetServerStatistic("serverHealth",
+                id);
+            List<Objects.Statistics.Server.ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<Objects.Statistics.Server.ServerHealthOverviewRecord>().ToList();
+
             records = await _statisticService.GetServerStatistic("recentAlerts",
                 id);
             List<RecentAlertRecord> recentAlertRecords = records.Cast<RecentAlertRecord>().ToList();
@@ -219,6 +223,7 @@ namespace HunterIndustriesAPI.Controllers
                     ComponentAlerts = alertComponentRecords,
                     StatusAlerts = alertStatusRecords,
                     LatestEvents = latestEventComponentRecords,
+                    ServerHealth = serverHealthUptimeRecords,
                     RecentAlerts = recentAlertRecords,
                     RecentEvents = recentEventRecords
                 }

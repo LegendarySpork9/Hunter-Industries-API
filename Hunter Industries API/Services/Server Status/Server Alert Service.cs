@@ -151,7 +151,14 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert returned {serverAlert.AlertId.ToString() ?? "0"}.");
+            int alertId = 0;
+
+            if (serverAlert != null)
+            {
+                alertId = serverAlert.AlertId;
+            }
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert returned {alertId}.");
             return serverAlert;
         }
 
