@@ -514,7 +514,8 @@
                      "gameVersion": "1.7.10",
                      "ipAddress": "127.0.0.1",
                      "port": 25565,
-                     "time": "02:00:00"
+                     "time": "02:00:00",
+                     "duration": 600
                  }
              </remarks>
              <param name="request">An object containing the server information.</param>
@@ -1364,6 +1365,11 @@
         <member name="F:HunterIndustriesAPI.Mappings.ServerDataReaderMapping.EventComponentMapper">
             <summary>
             The SQL row to model mappings for the event component record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ServerDataReaderMapping.ServerHealthUptimeMapper">
+            <summary>
+            The SQL row to model mappings for the uptime stat in the server health overview record.
             </summary>
         </member>
         <member name="F:HunterIndustriesAPI.Mappings.ServerDataReaderMapping.RecentAlertMapper">
@@ -2328,6 +2334,11 @@
             The most recent events per component.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.ServerHealth">
+            <summary>
+            The server health records.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.RecentAlerts">
             <summary>
             The recent alert records.
@@ -3196,6 +3207,20 @@
         <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.RecentAlertRecord.AlertDate">
             <summary>
             The date and time the alert occured.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Server.ServerHealthOverviewRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.ServerHealthOverviewRecord.Day">
+            <summary>
+            The day of the uptime.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Server.ServerHealthOverviewRecord.Uptime">
+            <summary>
+            The percentage of time the server was online.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.Statistics.Shared.ChangeCallRecord">

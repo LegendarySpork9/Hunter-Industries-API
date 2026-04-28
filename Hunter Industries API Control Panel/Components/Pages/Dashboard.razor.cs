@@ -52,7 +52,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             if (Statistics != null)
             {
                 int trafficStep = Statistics.ApiTraffic.Count > TrafficLabelThreshold ? TrafficLabelStep : 1;
-                VisibleTrafficLabels = [.. Statistics.ApiTraffic.Where((_, i) => i % trafficStep == 0).Select(t => t.Day)];
+                VisibleTrafficLabels = [.. Statistics.ApiTraffic.Where((_, i) => i % trafficStep == 0)
+                    .Select(t => t.Day)];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Visible Traffic Label(s): {VisibleTrafficLabels.Count}");
 
@@ -60,10 +61,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Health Colour(s): {ServerHealthColours.Length}");
 
-                List<string> ipAddresses = [.. Statistics.Errors.GroupBy(e => e.IpAddress).OrderByDescending(e => e.Sum(err => err.Errors)).Select(e => e.Key)];
-                ErrorsByIPGrouped = Statistics.Errors.GroupBy(e => ExtractClassMethod(e.Summary)).ToDictionary(e => e.Key, e =>
+                List<string> ipAddresses = [.. Statistics.Errors.GroupBy(e => e.IpAddress)
+                    .OrderByDescending(e => e.Sum(err => err.Errors))
+                    .Select(e => e.Key)];
+                ErrorsByIPGrouped = Statistics.Errors.GroupBy(e => ExtractClassMethod(e.Summary))
+                    .ToDictionary(e => e.Key, e =>
                 {
-                    Dictionary<string, int>? existing = e.GroupBy(err => err.IpAddress).ToDictionary(err => err.Key, err => err.Sum(ev => ev.Errors));
+                    Dictionary<string, int>? existing = e.GroupBy(err => err.IpAddress)
+                    .ToDictionary(err => err.Key, err => err.Sum(ev => ev.Errors));
 
                     return ipAddresses.Select(ip => new ChartDataItem
                     {
@@ -74,7 +79,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Errors By IP: {ErrorsByIPGrouped.Count}");
 
-                ErrorColours = ErrorsByIPGrouped.Keys.Select((key, e) => (key, colour: DefaultPalette[e % DefaultPalette.Length])).ToDictionary(err => err.key, err => err.colour);
+                ErrorColours = ErrorsByIPGrouped.Keys.Select((key, e) => (key, colour: DefaultPalette[e % DefaultPalette.Length]))
+                    .ToDictionary(err => err.key, err => err.colour);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Error Colour(s): {ErrorColours.Count}");
 
@@ -110,9 +116,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Field Colour(s): {FieldColours.Length}");
 
-                string[] users = [.. Statistics.LoginAttempts.Select(u => u.Username).Distinct().OrderBy(u => u)];
-                string[] applications = [.. Statistics.LoginAttempts.Select(a => a.Application).Distinct().OrderBy(a => a)];
-                Dictionary<(string, string), int> loginLookup = Statistics.LoginAttempts.GroupBy(l => new { l.Application, l.Username }).ToDictionary(ll => (ll.Key.Application, ll.Key.Username), ll => ll.Sum(login => login.TotalAttempts));
+                string[] users = [.. Statistics.LoginAttempts.Select(u => u.Username)
+                    .Distinct()
+                    .OrderBy(u => u)];
+                string[] applications = [.. Statistics.LoginAttempts.Select(a => a.Application)
+                    .Distinct()
+                    .OrderBy(a => a)];
+                Dictionary<(string, string), int> loginLookup = Statistics.LoginAttempts.GroupBy(l => new { l.Application, l.Username })
+                    .ToDictionary(ll => (ll.Key.Application, ll.Key.Username), ll => ll.Sum(login => login.TotalAttempts));
                 LoginAttemptsByApp = applications.ToDictionary(app => app, app => users.Select(user => new ChartDataItem
                 {
                     Label = user,
@@ -121,7 +132,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Login Attempts By App: {LoginAttemptsByApp.Count}");
 
-                LoginAttemptColours = LoginAttemptsByApp.Keys.Select((key, l) => (key, colour: DefaultPalette[l % DefaultPalette.Length])).ToDictionary(la => la.key, la => la.colour);
+                LoginAttemptColours = LoginAttemptsByApp.Keys.Select((key, l) => (key, colour: DefaultPalette[l % DefaultPalette.Length]))
+                    .ToDictionary(la => la.key, la => la.colour);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Login Attempt Colour(s): {LoginAttemptColours.Count}");
             }
@@ -130,7 +142,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// <summary>
         /// Returns the trend based on two numbers.
         /// </summary>
-        private static string GetTrend(int current, int previous)
+        private static string GetTrend(int current,
+            int previous)
         {
             string trend = string.Empty;
 

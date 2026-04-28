@@ -60,7 +60,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                 List<UserModel> users = await APIService.GetUsers(false);
                 UserModel? user = users.Find(u => u.Username == LoginInformation.Username && u.Password == HashFunction.HashString(LoginInformation.Password));
 
-                if (user != null)
+                if (user != null && user.Scopes.Contains("Control Panel API"))
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, "Login Successful");
                     _Logger.ChangeIdentifier($"{user.Username} ({IPAddressFunction.FetchIpAddress(HttpContextAccessor)})");
@@ -71,14 +71,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     User.Scopes = user.Scopes;
                     User.IsLoggedIn = true;
 
-                    await SessionStorage.SetAsync("loggedInUser", User);
+                    await SessionStorage.SetAsync("loggedInUser",
+                        User);
 
                     Navigation.NavigateTo("/");
                 }
 
                 else
                 {
-                    ErrorMessage = "Invalid credentials. Please check your username and password.";
+                    ErrorMessage = "Invalid credentials. Please check your username, password and ensure you have the \"Control Panel API\" scope.";
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
                 }
             }

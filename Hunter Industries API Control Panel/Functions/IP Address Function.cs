@@ -19,7 +19,9 @@ namespace HunterIndustriesAPIControlPanel.Functions
 
             else if (contextAccessor?.HttpContext?.Request.Headers.ContainsKey("X-Forwarded-For") == true)
             {
-                ipAddress = contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].ToString().Split(',')[0].Trim();
+                ipAddress = contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].ToString()
+                    .Split(',')[0]
+                    .Trim();
             }
 
             else if (contextAccessor?.HttpContext?.Connection?.RemoteIpAddress != null)

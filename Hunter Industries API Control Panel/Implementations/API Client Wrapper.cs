@@ -71,11 +71,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     auth = JsonConvert.DeserializeObject<AuthenticationModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -97,7 +103,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user", ignoreQuery: !includeDeleted);
+                string url = BuildURL("/user",
+                    ignoreQuery: !includeDeleted);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -117,16 +124,19 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    if (!response.Content.Contains("information"))
-                    {
-                        users = JsonConvert.DeserializeObject<List<UserModel>>(response.Content) ?? [];
-                    }
+                    users = JsonConvert.DeserializeObject<List<UserModel>>(response.Content) ?? [];
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Users Returned: {users.Count}");
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -168,11 +178,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     dashboardStatistics = JsonConvert.DeserializeObject<DashboardStatisticsModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -194,7 +210,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/auditHistory", queryParameters: queryParameters);
+                string url = BuildURL("/auditHistory",
+                    queryParameters: queryParameters);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -214,14 +231,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    if (!response.Content.Contains("information"))
-                    {
-                        pagedAuditHistory = JsonConvert.DeserializeObject<PagedAPIResponseModel<AuditHistoryModel>>(response.Content);
-                    }
+                    pagedAuditHistory = JsonConvert.DeserializeObject<PagedAPIResponseModel<AuditHistoryModel>>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -243,7 +263,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user", ignoreQuery: true);
+                string url = BuildURL("/user",
+                    ignoreQuery: true);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -267,11 +288,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
                     createdUser = JsonConvert.DeserializeObject<UserModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -293,7 +320,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user", userId, ignoreQuery: true);
+                string url = BuildURL("/user",
+                    userId,
+                    ignoreQuery: true);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -313,11 +342,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     deleted = true;
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -339,7 +374,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user", userId, ignoreQuery: true);
+                string url = BuildURL("/user",
+                    userId,
+                    ignoreQuery: true);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -359,11 +396,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     user = JsonConvert.DeserializeObject<UserModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -385,7 +428,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/configuration/application", applicationId);
+                string url = BuildURL("/configuration/application",
+                    applicationId);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -405,11 +449,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     application = JsonConvert.DeserializeObject<ApplicationModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -425,13 +475,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the statistics for the logs from the API.
         /// </summary>
-        public async Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId)
+        public async Task<SharedStatisticsModel?> GetLogStatistics(string entity,
+            int entityId)
         {
             SharedStatisticsModel? sharedStatistics = null;
 
             try
             {
-                string url = BuildURL($"/statistic/{entity}", entityId);
+                string url = BuildURL($"/statistic/{entity}",
+                    entityId);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -451,11 +503,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     sharedStatistics = JsonConvert.DeserializeObject<SharedStatisticsModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -477,7 +535,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/usersettings", userId);
+                string url = BuildURL("/usersettings",
+                    userId);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -497,16 +556,19 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    if (!response.Content.Contains("information"))
-                    {
-                        userSettings = JsonConvert.DeserializeObject<List<UserSettingModel>>(response.Content) ?? [];
-                    }
+                    userSettings = JsonConvert.DeserializeObject<List<UserSettingModel>>(response.Content) ?? [];
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Settings Returned: {userSettings.Select(us => us.Settings.Count).Sum()}");
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -522,13 +584,14 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the paged application from the API.
         /// </summary>
-        public async Task<PagedAPIResponseModel<ApplicationModel>?> GetPagedApplication()
+        public async Task<PagedAPIResponseModel<ApplicationModel>?> GetPagedApplication(List<KeyValuePair<string, object>>? queryParameters = null)
         {
             PagedAPIResponseModel<ApplicationModel>? pagedApplication = null;
 
             try
             {
-                string url = BuildURL("/configuration/application");
+                string url = BuildURL("/configuration/application",
+                    queryParameters: queryParameters);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -548,14 +611,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    if (!response.Content.Contains("information"))
-                    {
-                        pagedApplication = JsonConvert.DeserializeObject<PagedAPIResponseModel<ApplicationModel>>(response.Content);
-                    }
+                    pagedApplication = JsonConvert.DeserializeObject<PagedAPIResponseModel<ApplicationModel>>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -571,13 +637,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns updated user from the API.
         /// </summary>
-        public async Task<UserModel?> UpdateUser(int userId, UserRequestModel user)
+        public async Task<UserModel?> UpdateUser(int userId,
+            UserRequestModel user)
         {
             UserModel? updatedUser = null;
 
             try
             {
-                string url = BuildURL("/user", userId, ignoreQuery: true);
+                string url = BuildURL("/user",
+                    userId,
+                    ignoreQuery: true);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -601,11 +670,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     updatedUser = JsonConvert.DeserializeObject<UserModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -651,11 +726,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
                     createdUserSetting = JsonConvert.DeserializeObject<UserSettingModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -671,13 +752,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns updated user setting from the API.
         /// </summary>
-        public async Task<SettingModel?> UpdateUserSetting(int userSettingId, string value)
+        public async Task<SettingModel?> UpdateUserSetting(int userSettingId,
+            string value)
         {
             SettingModel? updatedUserSetting = null;
 
             try
             {
-                string url = BuildURL("/usersettings", userSettingId);
+                string url = BuildURL("/usersettings",
+                    userSettingId);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -701,11 +784,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     updatedUserSetting = JsonConvert.DeserializeObject<SettingModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -747,16 +836,19 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 RestResponse response = await client.ExecuteAsync(request);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.ErrorException?.Message ?? response.Content}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    if (!response.Content.Contains("information"))
-                    {
-                        servers = JsonConvert.DeserializeObject<List<ServerInformationModel>>(response.Content) ?? [];
-                    }
+                    servers = JsonConvert.DeserializeObject<List<ServerInformationModel>>(response.Content) ?? [];
 
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Servers Returned: {servers.Count}");
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
@@ -770,9 +862,338 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
+        /// Returns the paged machine from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<MachineModel>?> GetPagedMachine(List<KeyValuePair<string, object>>? queryParameters = null)
+        {
+            PagedAPIResponseModel<MachineModel>? pagedMachine = null;
+
+            try
+            {
+                string url = BuildURL("/configuration/machine",
+                    queryParameters: queryParameters);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    pagedMachine = JsonConvert.DeserializeObject<PagedAPIResponseModel<MachineModel>>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return pagedMachine;
+        }
+
+        /// <summary>
+        /// Returns the paged game from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<GameModel>?> GetPagedGame(List<KeyValuePair<string, object>>? queryParameters = null)
+        {
+            PagedAPIResponseModel<GameModel>? pagedGame = null;
+
+            try
+            {
+                string url = BuildURL("/configuration/game",
+                    queryParameters: queryParameters);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    pagedGame = JsonConvert.DeserializeObject<PagedAPIResponseModel<GameModel>>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return pagedGame;
+        }
+
+        /// <summary>
+        /// Returns the paged connection from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<ConnectionModel>?> GetPagedConnection(List<KeyValuePair<string, object>>? queryParameters = null)
+        {
+            PagedAPIResponseModel<ConnectionModel>? pagedConnection = null;
+
+            try
+            {
+                string url = BuildURL("/configuration/connection",
+                    queryParameters: queryParameters);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    pagedConnection = JsonConvert.DeserializeObject<PagedAPIResponseModel<ConnectionModel>>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return pagedConnection;
+        }
+
+        /// <summary>
+        /// Returns the paged downtime from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<DowntimeModel>?> GetPagedDowntime(List<KeyValuePair<string, object>>? queryParameters = null)
+        {
+            PagedAPIResponseModel<DowntimeModel>? pagedDowntime = null;
+
+            try
+            {
+                string url = BuildURL("/configuration/downtime",
+                    queryParameters: queryParameters);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    pagedDowntime = JsonConvert.DeserializeObject<PagedAPIResponseModel<DowntimeModel>>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return pagedDowntime;
+        }
+
+        /// <summary>
+        /// Returns the new server from the API.
+        /// </summary>
+        public async Task<ServerInformationModel?> CreateServer(ServerRequestModel server)
+        {
+            ServerInformationModel? createdServer = null;
+
+            try
+            {
+                string url = BuildURL("/serverstatus/serverinformation");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(server);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Post
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
+                {
+                    createdServer = JsonConvert.DeserializeObject<ServerInformationModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return createdServer;
+        }
+
+        /// <summary>
+        /// Returns the updated server from the API.
+        /// </summary>
+        public async Task<ServerInformationModel?> UpdateServer(int serverId,
+            ServerUpdateRequestModel server)
+        {
+            ServerInformationModel? updatedServer = null;
+
+            try
+            {
+                string url = BuildURL("/serverstatus/serverinformation",
+                    serverId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(server);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Patch
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    updatedServer = JsonConvert.DeserializeObject<ServerInformationModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return updatedServer;
+        }
+
+        /// <summary>
         /// Returns the API url.
         /// </summary>
-        private string BuildURL(string endpoint, object? entityId = null, List<KeyValuePair<string, object>>? queryParameters = null, bool ignoreQuery = false)
+        private string BuildURL(string endpoint,
+            object? entityId = null,
+            List<KeyValuePair<string, object>>? queryParameters = null,
+            bool ignoreQuery = false)
         {
             string url = $"{APISettings.BaseURL}/{APISettings.Version}{endpoint}";
             string query = APIConverter.GetQuery(endpoint);

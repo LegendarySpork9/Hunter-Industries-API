@@ -229,7 +229,8 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///         "gameVersion": "1.7.10",
         ///         "ipAddress": "127.0.0.1",
         ///         "port": 25565,
-        ///         "time": "02:00:00"
+        ///         "time": "02:00:00",
+        ///         "duration": 600
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the server information.</param>

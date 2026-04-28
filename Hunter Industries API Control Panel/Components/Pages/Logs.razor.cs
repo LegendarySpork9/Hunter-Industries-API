@@ -145,7 +145,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             string? username = User?.Username ?? null;
             string? application = Application?.Name ?? null;
 
-            AuditLogs = await APIService.GetAuditHistories(fromDate, toDate, FilterIPAddress, FilterEndpoint, username, application, PageSize, PageNumber);
+            AuditLogs = await APIService.GetAuditHistories(fromDate,
+                toDate,
+                FilterIPAddress,
+                FilterEndpoint,
+                username,
+                application,
+                PageSize,
+                PageNumber);
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Entries: {AuditLogs?.EntryCount ?? 0}");
         }

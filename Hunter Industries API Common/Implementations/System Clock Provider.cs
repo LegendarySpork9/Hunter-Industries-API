@@ -5,7 +5,7 @@ namespace HunterIndustriesAPICommon.Implementations
 {
     /// <summary>
     /// </summary>
-    public class SystemClockProvider :IClock
+    public class SystemClockProvider : IClock
     {
         /// <summary>
         /// Returns the current UTC Date and time.

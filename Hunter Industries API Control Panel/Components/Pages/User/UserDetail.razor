@@ -131,17 +131,22 @@ else
                                                 <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" disabled="@User.IsDeleted" />
                                             }
 
-                                            else if (!User.IsDeleted && IsAddingSetting(application.Name, applicationSetting.Name))
+                                            else if (!User.IsDeleted && IsAddingSetting(application.Name,
+                                            applicationSetting.Name))
                                             {
                                                 <div class="d-flex gap-2 align-items-center setting-input">
-                                                    <input type="text" class="form-control form-control-sm" value="@GetNewSettingValue(application.Name, applicationSetting.Name)" @onchange="(e) => SetNewSettingValue(application.Name, applicationSetting.Name, e.Value?.ToString() ?? string.Empty)" placeholder="Enter value..." />
-                                                    <button class="btn btn-outline-light btn-sm" @onclick="() => CancelAddSetting(application.Name, applicationSetting.Name)">Cancel</button>
+                                                    <input type="text" class="form-control form-control-sm" value="@GetNewSettingValue(application.Name,
+                                                        applicationSetting.Name)" @onchange="(e) => SetNewSettingValue(application.Name,
+                                                            applicationSetting.Name, e.Value?.ToString() ?? string.Empty)" placeholder="Enter value..." />
+                                                    <button class="btn btn-outline-light btn-sm" @onclick="() => CancelAddSetting(application.Name,
+                                                        applicationSetting.Name)">Cancel</button>
                                                 </div>
                                             }
 
                                             else if (!User.IsDeleted)
                                             {
-                                                <button class="btn btn-outline-light btn-sm" @onclick="() => StartAddSetting(application.Name, applicationSetting.Name)">Add</button>
+                                                <button class="btn btn-outline-light btn-sm" @onclick="() => StartAddSetting(application.Name,
+                                                    applicationSetting.Name)">Add</button>
                                             }
 
                                             else
@@ -155,7 +160,9 @@ else
                         </table>
                         @if (!User.IsDeleted)
                         {
-                            <button class="btn btn-primary btn-sm" @onclick="() => SaveSettings(application.Name, userSetting)">@GetSaveButtonText(application.Name, userSetting)</button>
+                            <button class="btn btn-primary btn-sm" @onclick="() => SaveSettings(application.Name,
+                                userSetting)">@GetSaveButtonText(application.Name,
+                                    userSetting)</button>
                             @if (SavedSettingsApplication == application.Name)
                             {
                                 <span class="text-success ms-2">@SavedSettingsMessage</span>
@@ -168,6 +175,17 @@ else
     }
 }
 
-<ConfirmDialog IsVisible="ShowDeleteConfirm" Title="Delete User" Message="@($"Are you sure you want to delete user '{User?.Username}'?")" ConfirmText="Delete" OnConfirm="DeleteUser" OnCancel="CancelDelete" />
-<AlertDialog IsVisible="ShowValidationErrors" Title="Validation Errors" Messages="ValidationErrors" OnClose="CloseValidationErrors" />
-<AlertDialog IsVisible="ShowSaveSettingErrors" Title="Save Setting Errors" Messages="SaveSettingErrors" OnClose="CloseSaveSettingErrors" />
+<ConfirmDialog IsVisible="ShowDeleteConfirm"
+    Title="Delete User"
+    Message="@($"Are you sure you want to delete user '{User?.Username}'?")"
+    ConfirmText="Delete"
+    OnConfirm="DeleteUser"
+    OnCancel="CancelDelete" />
+<AlertDialog IsVisible="ShowValidationErrors"
+    Title="Validation Errors"
+    Messages="ValidationErrors"
+    OnClose="CloseValidationErrors" />
+<AlertDialog IsVisible="ShowSaveSettingErrors"
+    Title="Save Setting Errors"
+    Messages="SaveSettingErrors"
+    OnClose="CloseSaveSettingErrors" />

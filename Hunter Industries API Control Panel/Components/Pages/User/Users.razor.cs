@@ -21,8 +21,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private List<UserModel> UserRecords = [];
 
         private List<string> AvailableScopes = [];
-        private bool ShowCreateModel;
+        private bool ShowCreateModal;
         private bool ShowDeleteConfirm;
+        private bool IsLoading;
         private string ErrorMessage = string.Empty;
         private UserRequestModel? UserToCreate;
         private UserModel? UserToDelete;
@@ -55,7 +56,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 Scopes = []
             };
             ErrorMessage = string.Empty;
-            ShowCreateModel = true;
+            ShowCreateModal = true;
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened New User Modal");
         }
@@ -65,7 +66,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private void CloseCreateModal()
         {
-            ShowCreateModel = false;
+            ShowCreateModal = false;
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed New User Modal");
         }
@@ -73,7 +74,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Changes whether the scope is enabled.
         /// </summary>
-        private void ToggleScope(string scope, bool isChecked)
+        private void ToggleScope(string scope,
+            bool isChecked)
         {
             if (UserToCreate != null && UserToCreate.Scopes != null)
             {
@@ -100,6 +102,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Create User Clicked");
 
+            IsLoading = true;
+            bool success = false;
+
             if (UserToCreate != null)
             {
                 if (string.IsNullOrWhiteSpace(UserToCreate.Username) || string.IsNullOrWhiteSpace(UserToCreate.Password))
@@ -125,10 +130,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                     if (newUser != null)
                     {
                         UserRecords.Add(newUser);
-                        ShowCreateModel = false;
-
-                        await UserGrid.Reload();
-                        await InvokeAsync(StateHasChanged);
+                        success = true;
                     }
 
                     else
@@ -150,6 +152,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 ErrorMessage = "The UserToCreate model is null.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
             }
+
+            await Task.Delay(2000).ContinueWith(_ =>
+            {
+                if (success)
+                {
+                    ShowCreateModal = false;
+                }
+
+                ErrorMessage = string.Empty;
+
+                UserGrid.Reload();
+                InvokeAsync(StateHasChanged);
+            });
+
+            IsLoading = false;
         }
 
         /// <summary>

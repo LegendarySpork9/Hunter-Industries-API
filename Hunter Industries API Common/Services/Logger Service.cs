@@ -11,7 +11,8 @@ namespace HunterIndustriesAPICommon.Services
         private readonly ILog Logger;
 
         // Sets the class's global variables.
-        public LoggerService(string id, string logAppender)
+        public LoggerService(string id,
+            string logAppender)
         {
             Identifier = id;
             Logger = LogManager.GetLogger(logAppender);
@@ -20,7 +21,9 @@ namespace HunterIndustriesAPICommon.Services
         /// <summary>
         /// Adds the message to the log file and SQL table.
         /// </summary>
-        public void LogMessage(string level, string message, string summary = null)
+        public void LogMessage(string level,
+            string message,
+            string summary = null)
         {
             switch (level)
             {

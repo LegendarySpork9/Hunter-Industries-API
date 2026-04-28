@@ -50,8 +50,36 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
             User = await APIService.GetUser(Id);
             UserSettings = await APIService.GetUserSettings(Id);
-            Applications = await APIService.GetApplications();
-            Applications.RemoveAll(a => a.IsDeleted == true);
+
+            bool nextPage = true;
+            int pageNumber = 1;
+
+            while (nextPage)
+            {
+                PagedAPIResponseModel<ApplicationModel>? pagedApplications = await APIService.GetApplications(200, pageNumber);
+
+                if (pagedApplications != null && pagedApplications.EntryCount > 0)
+                {
+                    Applications.AddRange(pagedApplications.Entries);
+
+                    if (pageNumber < pagedApplications.TotalPageCount)
+                    {
+                        pageNumber++;
+                    }
+
+                    else
+                    {
+                        nextPage = false;
+                    }
+                }
+
+                else
+                {
+                    nextPage = false;
+                }
+            }
+
+            Applications.RemoveAll(a => a.IsDeleted);
 
             List<UserModel> users = await APIService.GetUsers(true);
 
@@ -87,7 +115,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Changes whether the scope is enabled.
         /// </summary>
-        private void ToggleScope(string scope, bool isChecked)
+        private void ToggleScope(string scope,
+            bool isChecked)
         {
             if (isChecked && !EditScopes.Contains(scope))
             {
@@ -136,7 +165,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Scopes: {string.Join(',', User.Scopes)} -> {string.Join(',', EditScopes)}");
                 }
 
-                User = await APIService.UpdateUser(User.Id, userUpdate);
+                User = await APIService.UpdateUser(User.Id,
+                    userUpdate);
                 
                 if (User != null)
                 {
@@ -206,7 +236,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Checks if the setting is being added.
         /// </summary>
-        private bool IsAddingSetting(string application, string settingName)
+        private bool IsAddingSetting(string application,
+            string settingName)
         {
             bool addingSetting;
 
@@ -228,7 +259,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Gets the new setting's value.
         /// </summary>
-        private string GetNewSettingValue(string application, string settingName)
+        private string GetNewSettingValue(string application,
+            string settingName)
         {
             UserSettingRequestModel? newSetting = NewSettings.FirstOrDefault(ns => ns.Application == application && ns.SettingName == settingName);
 
@@ -238,7 +270,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Adds the new setting to the list.
         /// </summary>
-        private void SetNewSettingValue(string application, string settingName, string value)
+        private void SetNewSettingValue(string application,
+            string settingName,
+            string value)
         {
             int index = NewSettings.FindIndex(us => us.Application == application && us.SettingName == settingName);
             NewSettings[index].SettingValue = value;
@@ -247,7 +281,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Starts adding the new setting.
         /// </summary>
-        private void StartAddSetting(string application, string settingName)
+        private void StartAddSetting(string application,
+            string settingName)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Add Clicked");
 
@@ -266,7 +301,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Removes the setting from the new setting list.
         /// </summary>
-        private void CancelAddSetting(string application, string settingName)
+        private void CancelAddSetting(string application,
+            string settingName)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Cancel Clicked");
 
@@ -277,7 +313,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Updates the settings.
         /// </summary>
-        private async Task SaveSettings(string application, UserSettingModel? userSettings)
+        private async Task SaveSettings(string application,
+            UserSettingModel? userSettings)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Settings Clicked");
 
@@ -286,7 +323,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ApplicationModel app = Applications.First(a => a.Name == application);
             List<UserSettingRequestModel> newSettings = [.. NewSettings.Where(ns => ns.Application == application)];
 
-            ValidationErrors.AddRange(SettingValidatorFunction.ValidateApplicationSettings(app, userSettings, newSettings));
+            ValidationErrors.AddRange(SettingValidatorFunction.ValidateApplicationSettings(app,
+                userSettings,
+                newSettings));
 
             List<SettingModel> settingsToUpdate = [];
 
@@ -369,7 +408,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                 foreach (SettingModel setting in settingsToUpdate)
                 {
-                    SettingModel? updatedSetting = await APIService.UpdateUserSetting(setting.Id, setting.Value);
+                    SettingModel? updatedSetting = await APIService.UpdateUserSetting(setting.Id,
+                        setting.Value);
 
                     if (updatedSetting != null)
                     {
@@ -458,7 +498,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Returns the text for the save button.
         /// </summary>
-        private string GetSaveButtonText(string application, UserSettingModel? userSettings)
+        private string GetSaveButtonText(string application,
+            UserSettingModel? userSettings)
         {
             int unsavedCount = NewSettings.Count(ns => ns.Application == application && !string.IsNullOrWhiteSpace(ns.SettingValue));
 

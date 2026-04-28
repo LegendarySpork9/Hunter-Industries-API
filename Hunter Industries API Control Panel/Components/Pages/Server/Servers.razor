@@ -5,39 +5,94 @@
 
 <div class="page-header">
     <h1>Servers</h1>
-    <button class="btn btn-primary" @onclick="ShowCreateModal">Add Server</button>
+    <button class="btn btn-primary" @onclick="OpenCreateModal">Add Server</button>
 </div>
 
-<RadzenDataGrid @ref="ServerGrid" Data="@ServerRecords" TItem="ServerInformationModel" AllowSorting="true" AllowFiltering="true" FilterMode="FilterMode.Simple" PageSize="25" AllowPaging="true" RowClick="@(args => Navigation.NavigateTo($"/servers/{args.Data.Id}"))" Style="cursor: pointer;">
+<RadzenDataGrid @ref="ServerGrid"
+    Data="@ServerRecords"
+    TItem="ServerInformationModel"
+    AllowSorting="true"
+    AllowFiltering="true"
+    FilterMode="FilterMode.Simple"
+    PageSize="25"
+    AllowPaging="true"
+    RowClick="@(args => Navigation.NavigateTo($"/servers/{args.Data.Id}"))"
+    Style="cursor: pointer;">
     <Columns>
-        <RadzenDataGridColumn TItem="ServerInformationModel" Property="Id" Title="ID" Width="70px" />
-        <RadzenDataGridColumn TItem="ServerInformationModel" Property="Name" Title="Name" />
-        <RadzenDataGridColumn TItem="ServerInformationModel" Property="HostName" Title="Host Name" />
-        <RadzenDataGridColumn TItem="ServerInformationModel" Property="Game" Title="Game" />
-        <RadzenDataGridColumn TItem="ServerInformationModel" Property="GameVersion" Title="Version" Width="100px" />
-        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Address" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Property="Id"
+            Title="ID"
+            Width="70px"
+            Sortable="false"
+            Filterable="false" />
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Property="Name"
+            Title="Name" />
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Property="EventInterval"
+            Title="Event Interval"
+            Width="120px"
+            Sortable="false"
+            Filterable="false" />
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Property="HostName"
+            Title="Host Name" />
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Property="Game"
+            Title="Game" />
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Property="GameVersion"
+            Title="Version"
+            Width="100px" />
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Title="Address"
+            Sortable="false"
+            Filterable="false">
             <Template Context="server">
                 @server.Connection.IpAddress:@server.Connection.Port
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Downtime" Width="100px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Title="Downtime"
+            Width="100px"
+            Sortable="false"
+            Filterable="false">
             <Template Context="server">
                 @(server.Downtime?.Time ?? "N/A")
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Status" Width="100px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Title="Duration"
+            Width="100px"
+            Sortable="false"
+            Filterable="false">
+            <Template Context="server">
+                @(server.Downtime?.Duration.ToString() ?? "N/A")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Title="Status"
+            Width="100px"
+            Sortable="false"
+            Filterable="false">
             <Template Context="server">
                 @if (server.IsActive)
                 {
-                    <StatusBadge Text="Active" Type="active" />
+                    <StatusBadge Text="Active"
+                        Type="active" />
                 }
                 else
                 {
-                    <StatusBadge Text="Inactive" Type="inactive" />
+                    <StatusBadge Text="Inactive"
+                        Type="inactive" />
                 }
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ServerInformationModel" Title="Actions" Width="80px" Sortable="false" Filterable="false">
+        <RadzenDataGridColumn TItem="ServerInformationModel"
+            Title="Actions"
+            Width="80px"
+            Sortable="false"
+            Filterable="false">
             <Template Context="server">
                 <button class="btn btn-sm btn-outline-light" @onclick="() => ShowEditModal(server)" @onclick:stopPropagation="true" title="Edit">
                     &#9998;
@@ -54,61 +109,94 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@(_isEditing ? "Edit Server" : "Add Server")</h5>
+                    <h5 class="modal-title">@(IsEditing ? "Edit Server" : "Add Server")</h5>
                     <button type="button" class="btn-close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Name</label>
-                            <input type="text" class="form-control" @bind="_modalName" />
+                            <input type="text" class="form-control" @bind="ModalServerName" />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Host Name</label>
-                            <input type="text" class="form-control" @bind="_modalHostName" />
-                        </div>
-                    </div>
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Game</label>
-                            <input type="text" class="form-control" @bind="_modalGame" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Game Version</label>
-                            <input type="text" class="form-control" @bind="_modalGameVersion" />
+                            <select class="form-control" @bind="ModalHostName">
+                                <option value="" disabled selected>Select an option</option>
+                                @foreach (string hostName in HostNames)
+                                {
+                                    <option value="@hostName">@hostName</option>
+                                }
+                            </select>
                         </div>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-md-8">
-                            <label class="form-label">IP Address</label>
-                            <input type="text" class="form-control" @bind="_modalIPAddress" />
+                            <label class="form-label">Game</label>
+                            <select class="form-control" @bind="ModalGame">
+                                <option value="" disabled selected>Select an option</option>
+                                @foreach (string game in Games)
+                                {
+                                    <option value="@game">@game</option>
+                                }
+                            </select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Port</label>
-                            <input type="number" class="form-control" @bind="_modalPort" />
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Connection</label>
+                            <select class="form-control" @bind="ModalConnection">
+                                <option value="" disabled selected>Select an option</option>
+                                @foreach (string connection in Connections)
+                                {
+                                    <option value="@connection">@connection</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Downtime</label>
+                            <select class="form-control" @bind="ModalDowntime">
+                                <option value="" disabled selected>Select an option</option>
+                                @foreach (string downtime in Downtimes)
+                                {
+                                    <option value="@downtime">@downtime</option>
+                                }
+                            </select>
                         </div>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-md-4">
-                            <label class="form-label">Downtime (HH:MM:SS)</label>
-                            <input type="text" class="form-control" @bind="_modalDowntime" placeholder="03:00:00" />
-                        </div>
-                        <div class="col-md-4">
                             <label class="form-label">Event Interval (s)</label>
-                            <input type="number" class="form-control" @bind="_modalEventInterval" />
+                            <input type="number" class="form-control" @bind="ModalEventInterval" />
                         </div>
-                        <div class="col-md-4 d-flex align-items-end">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" @bind="_modalIsActive" />
-                                <label class="form-check-label">Active</label>
+                        @if (IsEditing)
+                        {
+                            <div class="col-md-4 d-flex align-items-end">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" @bind="EditIsActive" />
+                                    <label class="form-check-label">Active</label>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger py-2">@ErrorMessage</div>
+                    }
+                    @if (!string.IsNullOrEmpty(SuccessMessage))
+                    {
+                        <div class="text-success ms-2">@SuccessMessage</div>
+                    }
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-light btn-sm" @onclick="CloseModal">Cancel</button>
-                    <button type="button" class="btn btn-primary btn-sm" @onclick="SaveServer">
-                        @(_isEditing ? "Save Changes" : "Create")
+                    <button type="submit" class="btn btn-primary btn-sm" disabled="@IsLoading" @onclick="SaveServer">
+                        @if (IsLoading)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        }
+                        @(IsEditing ? "Save Changes" : "Create")
                     </button>
                 </div>
             </div>

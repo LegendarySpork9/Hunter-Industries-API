@@ -47,6 +47,8 @@ namespace HunterIndustriesAPI
 
                         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{thisAssembly.GetName().Name}.xml"));
 
+                        c.SchemaId(t => t.FullName);
+
                         c.ApiKey("Bearer").Description("JWT authorization header using the Bearer scheme.").Name("Authorization").In("header");
 
                         c.OperationFilter<RequiredParameterOperationFilter>();

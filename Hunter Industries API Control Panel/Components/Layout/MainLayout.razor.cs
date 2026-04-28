@@ -40,13 +40,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
 
                     else
                     {
-                        Navigation.NavigateTo("/login", forceLoad: true);
+                        Navigation.NavigateTo("/login",
+                            forceLoad: true);
                     }
                 }
 
                 catch
                 {
-                    Navigation.NavigateTo("/login", forceLoad: true);
+                    Navigation.NavigateTo("/login",
+                        forceLoad: true);
                 }
             }
         }
@@ -60,7 +62,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Layout
 
             User.IsLoggedIn = false;
 
-            Navigation.NavigateTo("/login", forceLoad: true);
+            Navigation.NavigateTo("/login",
+                forceLoad: true);
         }
     }
 }

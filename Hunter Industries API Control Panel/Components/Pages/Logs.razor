@@ -42,7 +42,13 @@ else
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.EndpointCalls" CategoryProperty="Endpoint" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@EndpointColours" Strokes="@EndpointColours" />
+                            <RadzenDonutSeries Data="@Statistics.EndpointCalls"
+                                CategoryProperty="Endpoint"
+                                ValueProperty="Calls"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@EndpointColours"
+                                Strokes="@EndpointColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
@@ -74,7 +80,13 @@ else
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.MethodCalls" CategoryProperty="Method" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@MethodColours" Strokes="@MethodColours" />
+                            <RadzenDonutSeries Data="@Statistics.MethodCalls"
+                                CategoryProperty="Method"
+                                ValueProperty="Calls"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@MethodColours"
+                                Strokes="@MethodColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
@@ -106,7 +118,13 @@ else
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.StatusCalls" CategoryProperty="Status" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@StatusColours" Strokes="@StatusColours" />
+                            <RadzenDonutSeries Data="@Statistics.StatusCalls"
+                                CategoryProperty="Status"
+                                ValueProperty="Calls"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@StatusColours"
+                                Strokes="@StatusColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
@@ -138,7 +156,13 @@ else
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.Changes" CategoryProperty="Field" ValueProperty="Calls" InnerRadius="40" Radius="70" Fills="@FieldColours" Strokes="@FieldColours" />
+                            <RadzenDonutSeries Data="@Statistics.Changes"
+                                CategoryProperty="Field"
+                                ValueProperty="Calls"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@FieldColours"
+                                Strokes="@FieldColours" />
                             <RadzenLegend Visible="false" />
                         </RadzenChart>
                         <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
@@ -193,22 +217,39 @@ else
     </div>
 
     <!-- Results -->
-    <RadzenDataGrid Data="@AuditLogs?.Entries" TItem="AuditHistoryModel" AllowSorting="true"  RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))" Style="cursor: pointer;">
+    <RadzenDataGrid Data="@AuditLogs?.Entries"
+        TItem="AuditHistoryModel"
+        AllowSorting="true"
+        RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))"
+        Style="cursor: pointer;">
         <Columns>
-            <RadzenDataGridColumn TItem="AuditHistoryModel" Property="Id" Title="ID" Width="70px" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel" Property="IPAddress" Title="IP Address" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel" Property="Endpoint" Title="Endpoint" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel" Title="Method" Width="90px">
+            <RadzenDataGridColumn TItem="AuditHistoryModel"
+                Property="Id"
+                Title="ID"
+                Width="70px" />
+            <RadzenDataGridColumn TItem="AuditHistoryModel"
+                Property="IPAddress"
+                Title="IP Address" />
+            <RadzenDataGridColumn TItem="AuditHistoryModel"
+                Property="Endpoint"
+                Title="Endpoint" />
+            <RadzenDataGridColumn TItem="AuditHistoryModel"
+                Title="Method"
+                Width="90px">
                 <Template Context="record">
                     <span class="badge @GraphConverter.GetMethodBadgeClass(record.Method)">@record.Method</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryModel" Title="Status" Width="200px">
+            <RadzenDataGridColumn TItem="AuditHistoryModel"
+                Title="Status"
+                Width="200px">
                 <Template Context="record">
                     <span class="badge @GraphConverter.GetStatusBadgeClass(record.Status)">@record.Status</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryModel" Title="Date" Width="170px">
+            <RadzenDataGridColumn TItem="AuditHistoryModel"
+                Title="Date"
+                Width="170px">
                 <Template Context="record">
                     @record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")
                 </Template>

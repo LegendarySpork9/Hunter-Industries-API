@@ -356,7 +356,8 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Gets the logs statistics from the API.
         /// </summary>
-        public async Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId)
+        public async Task<SharedStatisticsModel?> GetLogStatistics(string entity,
+            int entityId)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching log statistics from API");
 
@@ -369,7 +370,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             try
             {
-                sharedStatistics = await _APIClient.GetLogStatistics(entity, entityId);
+                sharedStatistics = await _APIClient.GetLogStatistics(entity,
+                    entityId);
 
                 if (sharedStatistics != null)
                 {
@@ -395,7 +397,14 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Gets the audit histories from the API matching the given parameters.
         /// </summary>
-        public async Task<PagedAPIResponseModel<AuditHistoryModel>?> GetAuditHistories(string? fromDate = null, string? toDate = null, string? ipAddress = null, string? endpoint = null, string? username = null, string? application = null, int pageSize = 25, int pageNumber = 1)
+        public async Task<PagedAPIResponseModel<AuditHistoryModel>?> GetAuditHistories(string? fromDate = null,
+            string? toDate = null,
+            string? ipAddress = null,
+            string? endpoint = null,
+            string? username = null,
+            string? application = null,
+            int pageSize = 25,
+            int pageNumber = 1)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching audit history records from API");
 
@@ -530,7 +539,8 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Gets the applications from the API.
         /// </summary>
-        public async Task<List<ApplicationModel>> GetApplications()
+        public async Task<PagedAPIResponseModel<ApplicationModel>?> GetApplications(int pageSize = 25,
+            int pageNumber = 1)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching applications from API");
 
@@ -539,17 +549,27 @@ namespace HunterIndustriesAPIControlPanel.Services
                 await Authorise();
             }
 
-            List<ApplicationModel> applications = [];
+            PagedAPIResponseModel<ApplicationModel>? applications = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
 
             try
             {
-                PagedAPIResponseModel<ApplicationModel>? pagedResponse = await _APIClient.GetPagedApplication();
+                applications = await _APIClient.GetPagedApplication(queryParameters);
 
-                if (pagedResponse != null)
+                if (applications != null)
                 {
-                    applications = pagedResponse.Entries;
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Applications Returned: {applications.Count}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Applications Returned: {applications.EntryCount}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched applications from API");
                 }
 
@@ -572,7 +592,8 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Updates a user in the API.
         /// </summary>
-        public async Task<UserModel?> UpdateUser(int userId, UserRequestModel user)
+        public async Task<UserModel?> UpdateUser(int userId,
+            UserRequestModel user)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating user, {user.Username}, in API");
 
@@ -585,7 +606,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             try
             {
-                updatedUser = await _APIClient.UpdateUser(userId, user);
+                updatedUser = await _APIClient.UpdateUser(userId,
+                    user);
 
                 if (updatedUser != null)
                 {
@@ -660,7 +682,8 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Updates a user setting in the API.
         /// </summary>
-        public async Task<SettingModel?> UpdateUserSetting(int userSettingId, string value)
+        public async Task<SettingModel?> UpdateUserSetting(int userSettingId,
+            string value)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating user setting, {userSettingId}, in API");
 
@@ -673,7 +696,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             try
             {
-                updatedUserSetting = await _APIClient.UpdateUserSetting(userSettingId, value);
+                updatedUserSetting = await _APIClient.UpdateUserSetting(userSettingId,
+                    value);
 
                 if (updatedUserSetting != null)
                 {
@@ -736,6 +760,329 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return servers;
+        }
+
+        /// <summary>
+        /// Gets the machines from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<MachineModel>?> GetMachines(int pageSize = 25,
+            int pageNumber = 1)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching machines from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PagedAPIResponseModel<MachineModel>? machines = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
+
+            try
+            {
+                machines = await _APIClient.GetPagedMachine(queryParameters);
+
+                if (machines != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Machines Returned: {machines.EntryCount}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched machines from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch machines from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch machines from API");
+            }
+
+            return machines;
+        }
+
+        /// <summary>
+        /// Gets the games from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<GameModel>?> GetGames(int pageSize = 25,
+            int pageNumber = 1)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching games from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PagedAPIResponseModel<GameModel>? games = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
+
+            try
+            {
+                games = await _APIClient.GetPagedGame(queryParameters);
+
+                if (games != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Games Returned: {games.EntryCount}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched connections from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch games from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch games from API");
+            }
+
+            return games;
+        }
+
+        /// <summary>
+        /// Gets the connections from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<ConnectionModel>?> GetConnections(int pageSize = 25,
+            int pageNumber = 1)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching connections from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PagedAPIResponseModel<ConnectionModel>? connections = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
+
+            try
+            {
+                connections = await _APIClient.GetPagedConnection(queryParameters);
+
+                if (connections != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Connections Returned: {connections.EntryCount}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched connections from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch connections from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch connections from API");
+            }
+
+            return connections;
+        }
+
+        /// <summary>
+        /// Gets the downtimes from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<DowntimeModel>?> GetDowntimes(int pageSize = 25,
+            int pageNumber = 1)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching downtimes from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PagedAPIResponseModel<DowntimeModel>? downtimes = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
+
+            try
+            {
+                downtimes = await _APIClient.GetPagedDowntime(queryParameters);
+
+                if (downtimes != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Downtimes Returned: {downtimes.EntryCount}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched downtimes from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch downtimes from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch downtimes from API");
+            }
+
+            return downtimes;
+        }
+
+        /// <summary>
+        /// Creates a server in the API.
+        /// </summary>
+        public async Task<ServerInformationModel?> CreateServer(ServerRequestModel server)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating server, {server.Name}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ServerInformationModel? createdServer = null;
+
+            try
+            {
+                createdServer = await _APIClient.CreateServer(server);
+
+                if (createdServer != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Id: {createdServer.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Name: {createdServer.Name}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Event Interval: {createdServer.EventInterval}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Host Name: {createdServer.HostName}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game: {createdServer.Game}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game Version: {createdServer.GameVersion}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Ip Address: {createdServer.Connection.IpAddress}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Port: {createdServer.Connection.Port}");
+
+                    if (createdServer.Downtime != null)
+                    {
+                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime: {createdServer.Downtime.Time}");
+                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime Duration: {createdServer.Downtime.Duration}");
+                    }
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Created server, {server.Name}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create server, {server.Name}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create server, {server.Name}, in API");
+            }
+
+            return createdServer;
+        }
+
+        /// <summary>
+        /// Updates a server in the API.
+        /// </summary>
+        public async Task<ServerInformationModel?> UpdateServer(int serverId,
+            ServerUpdateRequestModel server)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating server, {server.Name}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ServerInformationModel? updatedServer = null;
+
+            try
+            {
+                updatedServer = await _APIClient.UpdateServer(serverId,
+                    server);
+
+                if (updatedServer != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Id: {updatedServer.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Name: {updatedServer.Name}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Event Interval: {updatedServer.EventInterval}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Host Name: {updatedServer.HostName}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game: {updatedServer.Game}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game Version: {updatedServer.GameVersion}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Ip Address: {updatedServer.Connection.IpAddress}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Port: {updatedServer.Connection.Port}");
+
+                    if (updatedServer.Downtime != null)
+                    {
+                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime: {updatedServer.Downtime.Time}");
+                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime Duration: {updatedServer.Downtime.Duration}");
+                    }
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Active: {updatedServer.IsActive}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updated server, {server.Name}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update server, {server.Name}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update server, {server.Name}, in API");
+            }
+
+            return updatedServer;
         }
     }
 }

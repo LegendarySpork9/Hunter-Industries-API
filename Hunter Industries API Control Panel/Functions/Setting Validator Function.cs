@@ -11,7 +11,9 @@ namespace HunterIndustriesAPIControlPanel.Functions
         /// Returns a list of validation errors for the supplied application's settings,
         /// resolving each setting's effective post-save value from pending-new → current → null.
         /// </summary>
-        public static List<string> ValidateApplicationSettings(ApplicationModel application, UserSettingModel? currentUserSettings, List<UserSettingRequestModel> pendingNewSettings)
+        public static List<string> ValidateApplicationSettings(ApplicationModel application,
+            UserSettingModel? currentUserSettings,
+            List<UserSettingRequestModel> pendingNewSettings)
         {
             List<string> errors = [];
 
@@ -37,7 +39,8 @@ namespace HunterIndustriesAPIControlPanel.Functions
         /// <summary>
         /// Returns whether the value can be converted to the specified type.
         /// </summary>
-        public static bool TryConvert(string typeName, string value)
+        public static bool TryConvert(string typeName,
+            string value)
         {
             Type? resolvedType = Type.GetType($"System.{typeName}", false, true);
 

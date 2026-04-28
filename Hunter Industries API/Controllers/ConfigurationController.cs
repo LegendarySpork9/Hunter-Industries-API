@@ -152,6 +152,11 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
+            if (pageSize > 200)
+            {
+                pageSize = 200;
+            }
+
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             int? parentEntityId = null;
