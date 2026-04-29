@@ -34,5 +34,6 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<(ServerInformationModel?, ResponseModel?)> UpdateServer(int serverId, ServerUpdateRequestModel server);
         Task<ServerInformationModel?> GetServer(int serverId);
         Task<ServerStatisticsModel?> GetServerStatistics(int serverId);
+        Task<ConfigurationModel?> GetConfiguration();
     }
 }

@@ -1,36 +1,56 @@
-using Microsoft.AspNetCore.Components;
+// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 {
     public partial class Configuration
     {
         [Inject]
-        private ExampleAPIService APIService { get; set; } = default!;
+        private IConfigurableLoggerService _Logger { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
 
+        private ConfigurationModel? ConfigurationObjects { get; set; }
+
+        private bool LoadingData = true;
         private readonly Dictionary<string, (string DisplayName, string Icon)> ConfigTypes = [];
 
-        protected override void OnInitialized()
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
+        protected override async Task OnInitializedAsync()
         {
-            List<string> types = APIService.GetConfigurationTypes();
-            Dictionary<string, (string, string)> iconMap = new()
-            {
-                ["application"] = ("Application", "&#x1F4E6;"),
-                ["authorisation"] = ("Authorisation", "&#x1F512;"),
-                ["component"] = ("Component", "&#x1F9E9;"),
-                ["connection"] = ("Connection", "&#x1F310;"),
-                ["downtime"] = ("Downtime", "&#x23F0;"),
-                ["game"] = ("Game", "&#x1F3AE;"),
-                ["machine"] = ("Machine", "&#x1F5A5;")
-            };
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Configuration Page");
 
-            foreach (string type in types)
+            ConfigurationObjects = await APIService.GetConfiguration();
+
+            if (ConfigurationObjects != null)
             {
-                if (iconMap.TryGetValue(type, out (string, string) info))
+                Dictionary<string, (string, string)> iconMap = new()
                 {
-                    ConfigTypes[type] = info;
+                    ["application"] = ("Application", "&#x1F4E6;"),
+                    ["authorisation"] = ("Authorisation", "&#x1F512;"),
+                    ["component"] = ("Component", "&#x1F9E9;"),
+                    ["connection"] = ("Connection", "&#x1F310;"),
+                    ["downtime"] = ("Downtime", "&#x23F0;"),
+                    ["game"] = ("Game", "&#x1F3AE;"),
+                    ["machine"] = ("Machine", "&#x1F5A5;")
+                };
+
+                foreach (string type in ConfigurationObjects.ConfigurationObjects)
+                {
+                    if (iconMap.TryGetValue(type, out (string, string) info))
+                    {
+                        ConfigTypes[type] = info;
+                    }
                 }
             }
+
+            LoadingData = false;
         }
     }
 }

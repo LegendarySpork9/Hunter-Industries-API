@@ -1193,5 +1193,44 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             return serverStatistics;
         }
+
+        /// <summary>
+        /// Gets the configuration from the API.
+        /// </summary>
+        public async Task<ConfigurationModel?> GetConfiguration()
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching configuration from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ConfigurationModel? configuration = null;
+
+            try
+            {
+                configuration = await _APIClient.GetConfiguration();
+
+                if (configuration != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched configuration from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch configuration from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch configuration from API");
+            }
+
+            return configuration;
+        }
     }
 }
