@@ -45,5 +45,9 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// Whether the server is active.
         /// </summary>
         public bool? IsActive { get; set; }
+        /// <summary>
+        /// Whether the downtime should be cleared.
+        /// </summary>
+        public bool? ClearDowntime { get; set; }
     }
 }

@@ -1,5 +1,8 @@
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Functions;
+using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
@@ -16,11 +19,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private APIService APIService { get; set; } = default!;
         [Inject]
         private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private APISettingsModel APISettings { get; set; } = default!;
 
         private RadzenDataGrid<UserModel> UserGrid = new();
         private List<UserModel> UserRecords = [];
 
         private List<string> AvailableScopes = [];
+        private string ControlPanelUsername = string.Empty;
         private bool ShowCreateModal;
         private bool ShowDeleteConfirm;
         private bool IsLoading;
@@ -44,6 +50,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Available Scope(s): {AvailableScopes.Count}");
             }
+
+            ControlPanelUsername = CredentialsFunction.GetCredentialsUsername(APISettings);
         }
 
         /// <summary>
@@ -104,6 +112,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
             IsLoading = true;
             bool success = false;
+            ErrorMessage = string.Empty;
 
             if (UserToCreate != null)
             {
@@ -111,6 +120,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 {
                     ErrorMessage = "Username and password are required.";
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
                     return;
                 }
 
@@ -118,6 +128,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 {
                     ErrorMessage = "At least one valid scope is required.";
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
                     return;
                 }
 
@@ -125,7 +136,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                 if (existingUser == null)
                 {
-                    UserModel? newUser = await APIService.CreateUser(UserToCreate);
+                    (UserModel? newUser, ResponseModel? apiResponse) = await APIService.CreateUser(UserToCreate);
 
                     if (newUser != null)
                     {
@@ -135,7 +146,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                     else
                     {
-                        ErrorMessage = "Something went wrong. Please check logs for details.";
+                        ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
                         _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
                     }
                 }
@@ -144,6 +155,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 {
                     ErrorMessage = "A user with that username already exists.";
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
                 }
             }
 
@@ -151,7 +164,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             {
                 ErrorMessage = "The UserToCreate model is null.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                IsLoading = false;
+                return;
             }
+
+            await InvokeAsync(StateHasChanged);
 
             await Task.Delay(2000).ContinueWith(_ =>
             {

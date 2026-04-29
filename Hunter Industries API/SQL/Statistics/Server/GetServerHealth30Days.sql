@@ -6,7 +6,7 @@ with Dates as (
     where DateOccured < cast(getutcdate() as date)
 )
 select
-    Dates.DateOccured as [Date],
+    format(Dates.DateOccured, 'MMM dd') as [Date],
     cast(
         (min(isnull(OnlineEvents.EventCount, 0)) * SI.EventInterval)
         / (86400.0 - isnull(D.Duration, 0))

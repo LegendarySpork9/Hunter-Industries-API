@@ -4,9 +4,10 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses.Related
     /// <summary>
     /// Stores the server health data.
     /// </summary>
-    public class ServerHealthModel
+    public class DashboardServerHealthModel
     {
-        public required string Day { get; set; }
+        public required int ServerId { get; set; }
+        public required string Name { get; set; }
         public required decimal Uptime { get; set; }
     }
 }

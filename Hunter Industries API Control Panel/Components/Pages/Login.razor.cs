@@ -51,7 +51,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
             IsLoading = true;
             ErrorMessage = string.Empty;
-            StateHasChanged();
 
             try
             {
@@ -94,7 +93,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             finally
             {
                 IsLoading = false;
-                StateHasChanged();
             }
         }
 

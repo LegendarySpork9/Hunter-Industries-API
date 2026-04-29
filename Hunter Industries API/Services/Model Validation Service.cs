@@ -149,7 +149,7 @@ namespace HunterIndustriesAPI.Services
 
             else
             {
-                valid = Array.Find(validProperties, isValid => isValid);
+                valid = validProperties.Length > 0 && validProperties.Any(isValid => isValid);
             }
 
             return valid;

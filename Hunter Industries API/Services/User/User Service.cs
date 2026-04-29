@@ -389,13 +389,13 @@ namespace HunterIndustriesAPI.Services.User
                         if (sql.Contains(','))
                         {
                             sql = sql.Replace(@",
-    [Password] = @password", "");
+	[Password] = @password", "");
                         }
 
                         else
                         {
                             sql = sql.Replace(@"
-    [Password] = @password", "");
+	[Password] = @password", "");
                         }
                     }
 

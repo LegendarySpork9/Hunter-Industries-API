@@ -40,7 +40,7 @@ else
                     Statistics.Metrics.Calls.LastMonth)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Login Attempts"
+            <KPICard Title="Login Attempts This Month"
                 Value="@Statistics.Metrics.LoginAttempts.ThisMonth.ToString()"
                 Icon="&#9919;"
                 IconColour="#ffc107"
@@ -48,7 +48,7 @@ else
                     Statistics.Metrics.LoginAttempts.LastMonth)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Changes"
+            <KPICard Title="Changes This Month"
                 Value="@Statistics.Metrics.Changes.ThisMonth.ToString()"
                 Icon="&#9998;"
                 IconColour="#6f42c1"
@@ -130,10 +130,14 @@ else
                                 StrokeWidth="0"
                                 Fill="@ErrorColours[group.Key]">
                                 <TooltipTemplate Context="data">
-                                    @{ ChartDataItem error = (ChartDataItem)data; }
+                                    @{
+                                        ChartDataItem error = (ChartDataItem)data;
+                                        IEnumerable<MultiGroupedErrorModel> groupedErrors = Statistics!.Errors.Where(e => e.IpAddress == error.Label);
+                                        int totalErrors = groupedErrors.Sum(e => e.Errors);
+                                    }
                                     <div>
-                                        <strong>@error.Label</strong>
-                                        @foreach (MultiGroupedErrorModel row in Statistics!.Errors.Where(e => e.IpAddress == error.Label))
+                                        <strong>@error.Label (@totalErrors)</strong>
+                                        @foreach (MultiGroupedErrorModel row in groupedErrors)
                                         {
                                             <div>@ExtractClassMethod(row.Summary): @row.Errors</div>
                                         }
@@ -379,7 +383,8 @@ else
                             ValueProperty="Uptime"
                             Title="Uptime %" />
                         <RadzenCategoryAxis />
-                        <RadzenValueAxis Min="0" Max="100"
+                        <RadzenValueAxis Min="0"
+                            Max="100"
                             Step="20" >
                             <RadzenGridLines Visible="true"
                                 Stroke="#555" />
@@ -389,7 +394,7 @@ else
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
                         @for (int x = 0; x < Statistics.ServerHealth.Count; x++)
                         {
-                            ServerHealthModel item = Statistics.ServerHealth[x];
+                            DashboardServerHealthModel item = Statistics.ServerHealth[x];
                             string colour = ServerHealthColours[x % ServerHealthColours.Length];
 
                             <span class="text-muted">

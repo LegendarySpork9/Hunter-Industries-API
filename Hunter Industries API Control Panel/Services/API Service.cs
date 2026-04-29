@@ -5,6 +5,7 @@ using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
+using RestSharp;
 namespace HunterIndustriesAPIControlPanel.Services
 {
     public class APIService
@@ -196,7 +197,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Creates a user in the API.
         /// </summary>
-        public async Task<UserModel?> CreateUser(UserRequestModel user)
+        public async Task<(UserModel?, ResponseModel?)> CreateUser(UserRequestModel user)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating user, {user.Username}, in API");
 
@@ -206,17 +207,18 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             UserModel? createdUser = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
-                createdUser = await _APIClient.CreateUser(user);
+                (createdUser, apiResponse) = await _APIClient.CreateUser(user);
 
                 if (createdUser != null)
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Id: {createdUser.Id}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Username: {createdUser.Username}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Password: {createdUser.Password}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(',', createdUser.Scopes)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(", ", createdUser.Scopes)}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Created user, {user.Username}, in API");
                 }
 
@@ -233,7 +235,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create user, {user.Username}, in API");
             }
 
-            return createdUser;
+            return (createdUser, apiResponse);
         }
 
         /// <summary>
@@ -592,7 +594,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Updates a user in the API.
         /// </summary>
-        public async Task<UserModel?> UpdateUser(int userId,
+        public async Task<(UserModel?, ResponseModel?)> UpdateUser(int userId,
             UserRequestModel user)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating user, {user.Username}, in API");
@@ -603,10 +605,11 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             UserModel? updatedUser = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
-                updatedUser = await _APIClient.UpdateUser(userId,
+                (updatedUser, apiResponse) = await _APIClient.UpdateUser(userId,
                     user);
 
                 if (updatedUser != null)
@@ -614,7 +617,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Id: {updatedUser.Id}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Username: {updatedUser.Username}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Password: {updatedUser.Password}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(',', updatedUser.Scopes)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Scopes: {string.Join(", ", updatedUser.Scopes)}");
                     _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updated user, {user.Username}, in API");
                 }
 
@@ -631,13 +634,13 @@ namespace HunterIndustriesAPIControlPanel.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update user, {user.Username}, in API");
             }
 
-            return updatedUser;
+            return (updatedUser, apiResponse);
         }
 
         /// <summary>
         /// Creates a user in the API.
         /// </summary>
-        public async Task<UserSettingModel?> CreateUserSetting(UserSettingRequestModel userSetting)
+        public async Task<(UserSettingModel?, ResponseModel?)> CreateUserSetting(UserSettingRequestModel userSetting)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating user setting, {userSetting.SettingName}, in API for user, {userSetting.UserId}");
 
@@ -647,10 +650,11 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             UserSettingModel? createdUserSetting = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
-                createdUserSetting = await _APIClient.CreateUserSetting(userSetting);
+                (createdUserSetting, apiResponse) = await _APIClient.CreateUserSetting(userSetting);
 
                 if (createdUserSetting != null)
                 {
@@ -676,14 +680,14 @@ namespace HunterIndustriesAPIControlPanel.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create user setting, {userSetting.SettingName}, in API for user, {userSetting.UserId}");
             }
 
-            return createdUserSetting;
+            return (createdUserSetting, apiResponse);
         }
 
         /// <summary>
         /// Updates a user setting in the API.
         /// </summary>
-        public async Task<SettingModel?> UpdateUserSetting(int userSettingId,
-            string value)
+        public async Task<(SettingModel?, ResponseModel?)> UpdateUserSetting(int userSettingId,
+            UserSettingUpdateRequestModel updateUserSetting)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating user setting, {userSettingId}, in API");
 
@@ -693,11 +697,12 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             SettingModel? updatedUserSetting = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
-                updatedUserSetting = await _APIClient.UpdateUserSetting(userSettingId,
-                    value);
+                (updatedUserSetting, apiResponse) = await _APIClient.UpdateUserSetting(userSettingId,
+                    updateUserSetting);
 
                 if (updatedUserSetting != null)
                 {
@@ -720,7 +725,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update user setting, {userSettingId}, in API");
             }
 
-            return updatedUserSetting;
+            return (updatedUserSetting, apiResponse);
         }
 
         /// <summary>
@@ -977,7 +982,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Creates a server in the API.
         /// </summary>
-        public async Task<ServerInformationModel?> CreateServer(ServerRequestModel server)
+        public async Task<(ServerInformationModel?, ResponseModel?)> CreateServer(ServerRequestModel server)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating server, {server.Name}, in API");
 
@@ -987,10 +992,11 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             ServerInformationModel? createdServer = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
-                createdServer = await _APIClient.CreateServer(server);
+                (createdServer, apiResponse) = await _APIClient.CreateServer(server);
 
                 if (createdServer != null)
                 {
@@ -1025,13 +1031,13 @@ namespace HunterIndustriesAPIControlPanel.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create server, {server.Name}, in API");
             }
 
-            return createdServer;
+            return (createdServer, apiResponse);
         }
 
         /// <summary>
         /// Updates a server in the API.
         /// </summary>
-        public async Task<ServerInformationModel?> UpdateServer(int serverId,
+        public async Task<(ServerInformationModel?, ResponseModel?)> UpdateServer(int serverId,
             ServerUpdateRequestModel server)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating server, {server.Name}, in API");
@@ -1042,10 +1048,11 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             ServerInformationModel? updatedServer = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
-                updatedServer = await _APIClient.UpdateServer(serverId,
+                (updatedServer, apiResponse) = await _APIClient.UpdateServer(serverId,
                     server);
 
                 if (updatedServer != null)
@@ -1082,7 +1089,109 @@ namespace HunterIndustriesAPIControlPanel.Services
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update server, {server.Name}, in API");
             }
 
-            return updatedServer;
+            return (updatedServer, apiResponse);
+        }
+
+        /// <summary>
+        /// Gets the server from the API.
+        /// </summary>
+        public async Task<ServerInformationModel?> GetServer(int serverId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching server, {serverId}, from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ServerInformationModel? server = null;
+
+            try
+            {
+                server = await _APIClient.GetServer(serverId);
+
+                if (server != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched server, {serverId}, from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch server, {serverId}, from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch server, {serverId}, from API");
+            }
+
+            return server;
+        }
+
+        /// <summary>
+        /// Gets the server statistics from the API.
+        /// </summary>
+        public async Task<ServerStatisticsModel?> GetServerStatistics(int serverId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching server statistics from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ServerStatisticsModel? serverStatistics = null;
+
+            try
+            {
+                serverStatistics = await _APIClient.GetServerStatistics(serverId);
+
+                if (serverStatistics != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Specifying date times as UTC for latest events");
+
+                    foreach (ServerEventModel latestEvent in serverStatistics.LatestEvents)
+                    {
+                        latestEvent.DateOccured = DateTime.SpecifyKind(latestEvent.DateOccured, DateTimeKind.Utc);
+                    }
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Specified date times as UTC for latest events");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Specifying date times as UTC for recent alerts");
+
+                    foreach (RecentAlertModel recentAlert in serverStatistics.RecentAlerts)
+                    {
+                        recentAlert.AlertDate = DateTime.SpecifyKind(recentAlert.AlertDate, DateTimeKind.Utc);
+                    }
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Specified date times as UTC for recent alerts");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Specifying date times as UTC for recent events");
+
+                    foreach (ServerEventModel recentEvent in serverStatistics.RecentEvents)
+                    {
+                        recentEvent.DateOccured = DateTime.SpecifyKind(recentEvent.DateOccured, DateTimeKind.Utc);
+                    }
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Specified date times as UTC for recent events");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched server statistics from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch server statistics from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch server statistics from API");
+            }
+
+            return serverStatistics;
         }
     }
 }

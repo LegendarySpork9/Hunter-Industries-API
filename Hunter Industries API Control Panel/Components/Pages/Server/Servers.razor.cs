@@ -26,18 +26,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private List<string> Connections = [];
         private List<string> Downtimes = [];
         private bool ShowModal;
-        private bool IsEditing;
-        private string ModalServerName = string.Empty;
-        private string ModalHostName = string.Empty;
-        private string ModalGame = string.Empty;
-        private string ModalConnection = string.Empty;
-        private string ModalDowntime = string.Empty;
-        private int ModalEventInterval;
-        private int EditServerId;
-        private bool? EditIsActive;
+        private string NewServerName = string.Empty;
+        private string NewHostName = string.Empty;
+        private string NewGame = string.Empty;
+        private string NewConnection = string.Empty;
+        private string NewDowntime = string.Empty;
+        private int NewEventInterval;
         private bool IsLoading;
         private string ErrorMessage = string.Empty;
-        private string SuccessMessage = string.Empty;
 
         /// <summary>
         /// Loads and transforms the data.
@@ -224,42 +220,18 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         /// <summary>
         /// Shows the create server modal.
         /// </summary>
-        private void OpenCreateModal()
+        private void OpenModal()
         {
-            IsEditing = false;
-            ModalServerName = string.Empty;
-            ModalHostName = string.Empty;
-            ModalGame = string.Empty;
-            ModalConnection = string.Empty;
-            ModalDowntime = string.Empty;
-            ModalEventInterval = 0;
-            EditIsActive = null;
+            NewServerName = string.Empty;
+            NewHostName = string.Empty;
+            NewGame = string.Empty;
+            NewConnection = string.Empty;
+            NewDowntime = string.Empty;
+            NewEventInterval = 0;
             ErrorMessage = string.Empty;
-            SuccessMessage = string.Empty;
             ShowModal = true;
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Create Server Modal");
-        }
-
-        /// <summary>
-        /// Shows the edit server modal.
-        /// </summary>
-        private void ShowEditModal(ServerInformationModel server)
-        {
-            IsEditing = true;
-            EditServerId = server.Id;
-            ModalServerName = server.Name;
-            ModalHostName = server.HostName;
-            ModalGame = $"{server.Game} ({server.GameVersion})";
-            ModalConnection = $"{server.Connection.IpAddress}:{server.Connection.Port}";
-            ModalDowntime = server.Downtime == null ? string.Empty : $"{server.Downtime.Time} ({server.Downtime.Duration})";
-            ModalEventInterval = server.EventInterval;
-            EditIsActive = server.IsActive;
-            ErrorMessage = string.Empty;
-            SuccessMessage = string.Empty;
-            ShowModal = true;
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Edit Server Modal");
         }
 
         /// <summary>
@@ -268,272 +240,109 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private void CloseModal()
         {
             ErrorMessage = string.Empty;
-            SuccessMessage = string.Empty;
             ShowModal = false;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Server Modal");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Create Server Modal");
         }
 
         /// <summary>
-        /// Performs the server creation/update steps.
+        /// Directs the user to the edit page.
         /// </summary>
-        private async Task SaveServer()
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Server Clicked");
-
-            IsLoading = true;
-            bool success = false;
-
-            if (IsEditing)
-            {
-                success = await UpdateServer();
-
-                await InvokeAsync(StateHasChanged);
-            }
-
-            else
-            {
-                success = await CreateServer();
-
-                await InvokeAsync(StateHasChanged);
-            }
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {success}");
-
-            if (!string.IsNullOrWhiteSpace(SuccessMessage) || !string.IsNullOrWhiteSpace(ErrorMessage))
-            {
-                await Task.Delay(2000).ContinueWith(_ =>
-                {
-                    if (success)
-                    {
-                        ShowModal = false;
-                    }
-
-                    SuccessMessage = string.Empty;
-                    ErrorMessage = string.Empty;
-
-                    ServerGrid.Reload();
-                    InvokeAsync(StateHasChanged);
-                });
-            }
-
-            IsLoading = false;
-        }
-
-        /// <summary>
-        /// Performs the server update steps.
-        /// </summary>
-        private async Task<bool> UpdateServer()
-        {
-            bool success = false;
-
-            ServerUpdateRequestModel server = new();
-
-            ServerInformationModel existingServer = ServerRecords.First(s => s.Id == EditServerId);
-
-            if (!string.IsNullOrWhiteSpace(ModalServerName) && ModalServerName != existingServer.Name)
-            {
-                server.Name = ModalServerName;
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Name: {existingServer.Name} -> {ModalServerName}");
-            }
-
-            if (ModalEventInterval != 0 && ModalEventInterval != existingServer.EventInterval)
-            {
-                server.Duration = ModalEventInterval;
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Event Interval: {existingServer.EventInterval} -> {ModalEventInterval}");
-            }
-
-            if (!string.IsNullOrWhiteSpace(ModalHostName) && ModalHostName != existingServer.HostName)
-            {
-                server.HostName = ModalHostName;
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Host Name: {existingServer.HostName} -> {ModalHostName}");
-            }
-
-            if (!string.IsNullOrWhiteSpace(ModalGame))
-            {
-                string[] gameParts = ModalGame.Split(' ');
-                string version = gameParts[1].Replace("(", "")
-                    .Replace(")", "");
-
-                if (gameParts[0] != existingServer.Game)
-                {
-                    server.Game = gameParts[0];
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game: {existingServer.Game} -> {gameParts[0]}");
-                }
-
-                if (version != existingServer.GameVersion)
-                {
-                    server.GameVersion = version;
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game Version: {existingServer.GameVersion} -> {version}");
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(ModalConnection))
-            {
-                string[] connectionParts = ModalConnection.Split(':');
-
-                if (connectionParts[0] != existingServer.Connection.IpAddress)
-                {
-                    server.IPAddress = connectionParts[0];
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Ip Address: {existingServer.Connection.IpAddress} -> {connectionParts[0]}");
-                }
-
-                if (connectionParts[1] != existingServer.Connection.Port.ToString())
-                {
-                    server.Port = int.Parse(connectionParts[1]);
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Port: {existingServer.Connection.Port} -> {connectionParts[1]}");
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(ModalDowntime))
-            {
-                string[] downtimeParts = ModalDowntime.Split(' ');
-                string duration = downtimeParts[1].Replace("(", "")
-                    .Replace(")", "");
-
-                if (existingServer.Downtime == null)
-                {
-                    server.Time = downtimeParts[0];
-                    server.Duration = int.Parse(duration);
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime: null -> {downtimeParts[0]}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime Duration: null -> {duration}");
-                }
-
-                else if (downtimeParts[0] != existingServer.Downtime.Time)
-                {
-                    server.Time = downtimeParts[0];
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime: {existingServer.Downtime.Time} -> {downtimeParts[0]}");
-                }
-
-                else if (duration != existingServer.Downtime.Duration.ToString())
-                {
-                    server.Duration = int.Parse(duration);
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime Duration: {existingServer.Downtime.Duration} -> {duration}");
-                }
-            }
-
-            if (EditIsActive.HasValue && EditIsActive != existingServer.IsActive)
-            {
-                server.IsActive = EditIsActive.Value;
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Is Active: {existingServer.IsActive} -> {EditIsActive.Value}");
-            }
-
-            ServerInformationModel? updatedServer = await APIService.UpdateServer(EditServerId,
-                server);
-
-            if (updatedServer != null)
-            {
-                int index = ServerRecords.FindIndex(s => s.Id == EditServerId);
-                ServerRecords[index] = updatedServer;
-                SuccessMessage = "Saved changes successfully!";
-                success = true;
-            }
-
-            else
-            {
-                ErrorMessage = "Something went wrong. Please check logs for details.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-            }
-
-            return success;
-        }
+        private void NavigateToEdit(int id) => Navigation.NavigateTo($"/servers/{id}");
 
         /// <summary>
         /// Performs the server creation steps.
         /// </summary>
-        private async Task<bool> CreateServer()
+        private async Task CreateServer()
         {
-            bool success = false;
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Create Server Clicked");
 
-            if (string.IsNullOrWhiteSpace(ModalServerName))
+            IsLoading = true;
+            bool success = false;
+            ErrorMessage = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(NewServerName))
             {
                 ErrorMessage = "Name is required.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                return success;
+                IsLoading = false;
+                return;
             }
 
-            if (string.IsNullOrWhiteSpace(ModalHostName))
+            if (string.IsNullOrWhiteSpace(NewHostName))
             {
                 ErrorMessage = "Host name is required.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                return success;
+                IsLoading = false;
+                return;
             }
 
-            if (string.IsNullOrWhiteSpace(ModalGame))
+            if (string.IsNullOrWhiteSpace(NewGame))
             {
                 ErrorMessage = "Game is required.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                return success;
+                IsLoading = false;
+                return;
             }
 
-            if (string.IsNullOrWhiteSpace(ModalConnection))
+            if (string.IsNullOrWhiteSpace(NewConnection))
             {
                 ErrorMessage = "Connection is required.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                return success;
+                IsLoading = false;
+                return;
             }
 
-            if (ModalEventInterval == 0)
+            if (NewEventInterval == 0)
             {
                 ErrorMessage = "Event interval is required.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                return success;
+                IsLoading = false;
+                return;
             }
 
-            ServerInformationModel? existingServer = ServerRecords.Find(s => s.Name == ModalServerName);
+            ServerInformationModel? existingServer = ServerRecords.Find(s => s.Name == NewServerName);
 
             if (existingServer == null)
             {
-                string[] gameParts = ModalGame.Split(' ');
+                string[] gameParts = NewGame.Split(' ');
                 string version = gameParts[1].Replace("(", "")
                     .Replace(")", "");
-                string[] connectionParts = ModalConnection.Split(':');
+                string[] connectionParts = NewConnection.Split(':');
                 string[] downtimeParts = [];
                 string? duration = null;
 
-                if (!string.IsNullOrWhiteSpace(ModalDowntime))
+                if (!string.IsNullOrWhiteSpace(NewDowntime))
                 {
-                    downtimeParts = ModalDowntime.Split(' ');
+                    downtimeParts = NewDowntime.Split(' ');
                     duration = downtimeParts[1].Replace("(", "")
                         .Replace(")", "");
                 }
 
                 ServerRequestModel server = new()
                 {
-                    Name = ModalServerName,
-                    EventInterval = ModalEventInterval,
-                    HostName = ModalHostName,
+                    Name = NewServerName,
+                    EventInterval = NewEventInterval,
+                    HostName = NewHostName,
                     Game = gameParts[0],
                     GameVersion = version,
                     IPAddress = connectionParts[0],
                     Port = int.Parse(connectionParts[1]),
-                    Time = ModalDowntime == string.Empty ? null : downtimeParts[0],
+                    Time = NewDowntime == string.Empty ? null : downtimeParts[0],
                     Duration = duration == null ? null : int.Parse(duration)
                 };
 
-                ServerInformationModel? newServer = await APIService.CreateServer(server);
+                (ServerInformationModel? newServer, ResponseModel? apiResponse) = await APIService.CreateServer(server);
 
                 if (newServer != null)
                 {
                     ServerRecords.Add(newServer);
-                    SuccessMessage = "Created server successfully!";
                     success = true;
                 }
 
                 else
                 {
-                    ErrorMessage = "Something went wrong. Please check logs for details.";
+                    ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
                 }
             }
@@ -542,9 +351,28 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             {
                 ErrorMessage = "A server with that name already exists.";
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                IsLoading = false;
+                return;
             }
 
-            return success;
+            await InvokeAsync(StateHasChanged);
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Create Success: {success}");
+
+            await Task.Delay(2000).ContinueWith(_ =>
+            {
+                if (success)
+                {
+                    ShowModal = false;
+                }
+
+                ErrorMessage = string.Empty;
+
+                ServerGrid.Reload();
+                InvokeAsync(StateHasChanged);
+            });
+
+            IsLoading = false;
         }
     }
 }

@@ -408,7 +408,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Information.Update")]
         [VersionedRoute("serverstatus/serverinformation/{id:int}", "2.0")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerInformationRecord), Description = "Returns the updated item.")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid or a server exists with the given name.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no server  was found matching the id.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -460,6 +460,31 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 };
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(HttpStatusCode.BadRequest, response.Data);
+            }
+
+            if (await _serverInformationService.ServerExists(request.Name))
+            {
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        request));
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "A server with the name already exists."
+                    }
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 
@@ -575,12 +600,29 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                         {
                             await _changeService.LogChange(audit.Item2,
                                 "Server Downtime Duration",
-                                downtime.Duration.ToString(),
+                                downtime.Duration == 0 ? "null" : downtime.Duration.ToString(),
                                 request.Duration.ToString());
                             downtime.Duration = request.Duration;
                         }
 
                         serverRecord.Downtime = downtime;
+                    }
+
+                    if (request.ClearDowntime.HasValue && serverRecord.Downtime != null)
+                    {
+                        DowntimeRecord downtime = serverRecord.Downtime;
+
+                        await _changeService.LogChange(audit.Item2,
+                                "Server Downtime",
+                                downtime.Time,
+                                "null");
+
+                        await _changeService.LogChange(audit.Item2,
+                                "Server Downtime Duration",
+                                downtime.Duration.ToString(),
+                                "null");
+
+                        serverRecord.Downtime = null;
                     }
 
                     response = new ResponseModel()

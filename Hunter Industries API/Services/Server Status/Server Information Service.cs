@@ -422,15 +422,29 @@ join [Connection] C with (nolock) on C.IPAddress = @ipAddress
                     parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@port"));
                 }
 
-                if (string.IsNullOrWhiteSpace(server.Time) || server.Duration == 0)
+                if (server.ClearDowntime.HasValue && server.ClearDowntime.Value)
                 {
-                    sql = sql.Replace(@"
-	DowntimeId = D.DowntimeId", "")
+                    sql = sql.Replace(@"D.DowntimeId", "null")
                         .Replace(@"
 left join Downtime D with (nolock) on D.[Time] = @time
     and D.Duration = @duration", "");
+
                     parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@time"));
                     parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@duration"));
+                }
+
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(server.Time) || server.Duration == 0)
+                    {
+                        sql = sql.Replace(@"
+	DowntimeId = D.DowntimeId", "")
+                            .Replace(@"
+left join Downtime D with (nolock) on D.[Time] = @time
+    and D.Duration = @duration", "");
+                        parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@time"));
+                        parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@duration"));
+                    }
                 }
 
                 List<string> sqlLines = sql.Split(new[] { Environment.NewLine, "\n", "\r\n" }, StringSplitOptions.None).ToList();

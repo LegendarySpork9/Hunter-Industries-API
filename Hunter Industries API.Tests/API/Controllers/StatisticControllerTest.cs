@@ -144,7 +144,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 }, (Exception)null))
                 .Returns((new List<object>
                 {
-                    new ServerHealthOverviewRecord
+                    new Objects.Statistics.Dashboard.ServerHealthOverviewRecord
                     {
                         ServerId = 1,
                         Name = "Test",

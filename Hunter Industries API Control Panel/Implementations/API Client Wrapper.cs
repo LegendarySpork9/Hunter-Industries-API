@@ -8,6 +8,7 @@ using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using UserModel = HunterIndustriesAPIControlPanel.Models.Responses.UserModel;
 
@@ -257,9 +258,10 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the new user from the API.
         /// </summary>
-        public async Task<UserModel?> CreateUser(UserRequestModel user)
+        public async Task<(UserModel?, ResponseModel?)> CreateUser(UserRequestModel user)
         {
             UserModel? createdUser = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
@@ -295,6 +297,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     createdUser = JsonConvert.DeserializeObject<UserModel>(response.Content);
                 }
 
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
                 if (response.ErrorException != null)
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
@@ -308,7 +320,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return createdUser;
+            return (createdUser, apiResponse);
         }
 
         /// <summary>
@@ -366,7 +378,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns a the user from the API.
+        /// Returns the user from the API.
         /// </summary>
         public async Task<UserModel?> GetUser(int userId)
         {
@@ -420,7 +432,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns a the application from the API.
+        /// Returns the application from the API.
         /// </summary>
         public async Task<ApplicationModel?> GetApplication(int applicationId)
         {
@@ -637,10 +649,11 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns updated user from the API.
         /// </summary>
-        public async Task<UserModel?> UpdateUser(int userId,
+        public async Task<(UserModel?, ResponseModel?)> UpdateUser(int userId,
             UserRequestModel user)
         {
             UserModel? updatedUser = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
@@ -677,6 +690,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     updatedUser = JsonConvert.DeserializeObject<UserModel>(response.Content);
                 }
 
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
                 if (response.ErrorException != null)
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
@@ -690,15 +713,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return updatedUser;
+            return (updatedUser, apiResponse);
         }
 
         /// <summary>
         /// Returns the new user setting from the API.
         /// </summary>
-        public async Task<UserSettingModel?> CreateUserSetting(UserSettingRequestModel userSetting)
+        public async Task<(UserSettingModel?, ResponseModel?)> CreateUserSetting(UserSettingRequestModel userSetting)
         {
             UserSettingModel? createdUserSetting = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
@@ -733,6 +757,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     createdUserSetting = JsonConvert.DeserializeObject<UserSettingModel>(response.Content);
                 }
 
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
                 if (response.ErrorException != null)
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
@@ -746,16 +780,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return createdUserSetting;
+            return (createdUserSetting, apiResponse);
         }
 
         /// <summary>
         /// Returns updated user setting from the API.
         /// </summary>
-        public async Task<SettingModel?> UpdateUserSetting(int userSettingId,
-            string value)
+        public async Task<(SettingModel?, ResponseModel?)> UpdateUserSetting(int userSettingId,
+            UserSettingUpdateRequestModel updateUserSetting)
         {
             SettingModel? updatedUserSetting = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
@@ -769,7 +804,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
 
-                string body = JsonConvert.SerializeObject(value);
+                string body = JsonConvert.SerializeObject(updateUserSetting);
 
                 RestRequest request = new()
                 {
@@ -791,6 +826,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     updatedUserSetting = JsonConvert.DeserializeObject<SettingModel>(response.Content);
                 }
 
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
                 if (response.ErrorException != null)
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
@@ -804,7 +849,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return updatedUserSetting;
+            return (updatedUserSetting, apiResponse);
         }
 
         /// <summary>
@@ -1076,9 +1121,10 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the new server from the API.
         /// </summary>
-        public async Task<ServerInformationModel?> CreateServer(ServerRequestModel server)
+        public async Task<(ServerInformationModel?, ResponseModel?)> CreateServer(ServerRequestModel server)
         {
             ServerInformationModel? createdServer = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
@@ -1113,6 +1159,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     createdServer = JsonConvert.DeserializeObject<ServerInformationModel>(response.Content);
                 }
 
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
                 if (response.ErrorException != null)
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
@@ -1126,16 +1182,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return createdServer;
+            return (createdServer, apiResponse);
         }
 
         /// <summary>
         /// Returns the updated server from the API.
         /// </summary>
-        public async Task<ServerInformationModel?> UpdateServer(int serverId,
+        public async Task<(ServerInformationModel?, ResponseModel?)> UpdateServer(int serverId,
             ServerUpdateRequestModel server)
         {
             ServerInformationModel? updatedServer = null;
+            ResponseModel? apiResponse = null;
 
             try
             {
@@ -1171,6 +1228,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     updatedServer = JsonConvert.DeserializeObject<ServerInformationModel>(response.Content);
                 }
 
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
                 if (response.ErrorException != null)
                 {
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
@@ -1184,7 +1251,113 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return updatedServer;
+            return (updatedServer, apiResponse);
+        }
+
+        /// <summary>
+        /// Returns the server from the API.
+        /// </summary>
+        public async Task<ServerInformationModel?> GetServer(int serverId)
+        {
+            ServerInformationModel? server = null;
+
+            try
+            {
+                string url = BuildURL("/serverstatus/serverinformation",
+                    serverId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    server = JsonConvert.DeserializeObject<ServerInformationModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return server;
+        }
+
+        /// <summary>
+        /// Returns the statistics for the server from the API.
+        /// </summary>
+        public async Task<ServerStatisticsModel?> GetServerStatistics(int serverId)
+        {
+            ServerStatisticsModel? serverStatistics = null;
+
+            try
+            {
+                string url = BuildURL("/statistic/server",
+                    serverId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    serverStatistics = JsonConvert.DeserializeObject<ServerStatisticsModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return serverStatistics;
         }
 
         /// <summary>

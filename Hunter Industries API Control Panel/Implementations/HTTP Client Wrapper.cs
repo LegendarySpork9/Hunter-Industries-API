@@ -30,7 +30,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Http Client");
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
 
-                response = client.Send(request);
+                response = await client.SendAsync(request);
             }
 
             catch (Exception ex)

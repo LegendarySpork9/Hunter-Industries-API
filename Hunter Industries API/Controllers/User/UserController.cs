@@ -453,7 +453,7 @@ namespace HunterIndustriesAPI.Controllers.User
         [RequiredPolicyAuthorisationAttributeFilter("User.Update")]
         [VersionedRoute("user/{id:int}", "1.1")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserRecord), Description = "Returns the updated item.")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid or a user exists with the given username.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no user was found matching the id.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -510,6 +510,31 @@ namespace HunterIndustriesAPI.Controllers.User
                 };
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(HttpStatusCode.BadRequest, response.Data);
+            }
+
+            if (await _userService.UserExists(request.Username))
+            {
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("user"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        request));
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        information = "A user with the username already exists."
+                    }
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"User (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(HttpStatusCode.BadRequest, response.Data);
             }
 

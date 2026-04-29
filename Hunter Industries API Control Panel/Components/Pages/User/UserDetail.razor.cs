@@ -2,6 +2,7 @@
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Functions;
+using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
@@ -16,6 +17,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private IConfigurableLoggerService _Logger { get; set; } = default!;
         [Inject]
         private APIService APIService { get; set; } = default!;
+        [Inject]
+        private APISettingsModel APISettings { get; set; } = default!;
 
         [Parameter]
         public int Id { get; set; }
@@ -30,10 +33,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private string EditPassword = string.Empty;
         private List<string> EditScopes = [];
         private List<UserSettingModel> UnchangedUserSettings = [];
+        private string ControlPanelUsername = string.Empty;
         private bool ShowPassword;
+        private bool IsLoading;
+        private string ErrorMessage = string.Empty;
         private bool SaveUserSuccess;
         private bool ShowDeleteConfirm;
         private List<UserSettingRequestModel> NewSettings = [];
+        private (string, bool) IsSettingLoading;
         private string? SavedSettingsApplication;
         private bool ShowValidationErrors;
         private List<string> ValidationErrors = [];
@@ -109,6 +116,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 })]
             })];
 
+            ControlPanelUsername = CredentialsFunction.GetCredentialsUsername(APISettings);
+
             LoadingData = false;
         }
 
@@ -140,6 +149,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Changes Clicked");
 
+            IsLoading = true;
+
             if (User != null)
             {
                 UserRequestModel userUpdate = new();
@@ -162,39 +173,42 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 {
                     userUpdate.Scopes = EditScopes;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Scopes: {string.Join(',', User.Scopes)} -> {string.Join(',', EditScopes)}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Scopes: {string.Join(", ", User.Scopes)} -> {string.Join(", ", EditScopes)}");
                 }
 
-                User = await APIService.UpdateUser(User.Id,
+                (UserModel? user, ResponseModel? apiResponse) = await APIService.UpdateUser(User.Id,
                     userUpdate);
                 
-                if (User != null)
+                if (user != null)
                 {
                     SaveUserSuccess = true;
+                    User = user;
                     EditUsername = User.Username;
                     EditPassword = User.Password;
                     EditScopes = [.. User.Scopes];
-
-                    await InvokeAsync(StateHasChanged);
                 }
 
                 else
                 {
                     SaveUserSuccess = false;
+                    ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
                 }
+
+                await InvokeAsync(StateHasChanged);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveUserSuccess}");
 
-                if (SaveUserSuccess)
+                await Task.Delay(2000).ContinueWith(_ =>
                 {
-                    await Task.Delay(2000).ContinueWith(_ =>
-                    {
-                        SaveUserSuccess = false;
+                    SaveUserSuccess = false;
+                    ErrorMessage = string.Empty;
 
-                        InvokeAsync(StateHasChanged);
-                    });
-                }
+                    InvokeAsync(StateHasChanged);
+                });
             }
+
+            IsLoading = false;
         }
 
         /// <summary>
@@ -318,6 +332,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Settings Clicked");
 
+            IsSettingLoading.Item1 = application;
+            IsSettingLoading.Item2 = true;
             int settingsAddedOrUpdated = 0;
 
             ApplicationModel app = Applications.First(a => a.Name == application);
@@ -359,7 +375,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                 foreach (UserSettingRequestModel newSetting in newSettings)
                 {
-                    UserSettingModel? newAPISetting = await APIService.CreateUserSetting(newSetting);
+                    (UserSettingModel? newAPISetting, ResponseModel? apiResponse) = await APIService.CreateUserSetting(newSetting);
 
                     if (newAPISetting != null)
                     {
@@ -393,7 +409,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                     else
                     {
-                        SaveSettingErrors.Add($"Something went wrong when adding {newSetting.SettingName} ({newSetting.SettingValue}) to {application}. Check logs for details.");
+                        SaveSettingErrors.Add($"API returned {apiResponse?.StatusCode} ({apiResponse?.Message}) when adding {newSetting.SettingName} ({newSetting.SettingValue}) to {application}.");
                     }
                 }
 
@@ -408,8 +424,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                 foreach (SettingModel setting in settingsToUpdate)
                 {
-                    SettingModel? updatedSetting = await APIService.UpdateUserSetting(setting.Id,
-                        setting.Value);
+                    UserSettingUpdateRequestModel updateSettingModel = new()
+                    {
+                        Value = setting.Value
+                    };
+
+                    (SettingModel? updatedSetting, ResponseModel? apiResponse) = await APIService.UpdateUserSetting(setting.Id,
+                        updateSettingModel);
 
                     if (updatedSetting != null)
                     {
@@ -418,7 +439,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
                     else
                     {
-                        SaveSettingErrors.Add($"Something went wrong when updating {setting.Name} ({setting.Value}) for {application}. Check logs for details.");
+                        SaveSettingErrors.Add($"API returned {apiResponse?.StatusCode} ({apiResponse?.Message}) when updating {setting.Name} ({setting.Value}) for {application}.");
                     }
                 }
 
@@ -471,6 +492,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                     });
                 }
             }
+
+            IsSettingLoading.Item1 = string.Empty;
+            IsSettingLoading.Item2 = false;
         }
 
         /// <summary>

@@ -1804,6 +1804,11 @@
             Whether the server is active.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerUpdateModel.ClearDowntime">
+            <summary>
+            Whether the downtime should be cleared.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel">
             <summary>
             </summary>

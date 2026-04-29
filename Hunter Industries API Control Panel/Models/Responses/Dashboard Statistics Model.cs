@@ -16,6 +16,6 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses
         public required List<StatusCallModel> StatusCalls { get; set; }
         public required List<ChangeCallModel> Changes { get; set; }
         public required List<LoginAttemptStatModel> LoginAttempts { get; set; }
-        public required List<ServerHealthModel> ServerHealth { get; set; }
+        public required List<DashboardServerHealthModel> ServerHealth { get; set; }
     }
 }

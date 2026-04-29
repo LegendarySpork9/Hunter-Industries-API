@@ -16,5 +16,6 @@ namespace HunterIndustriesAPIControlPanel.Models.Requests
         public string? Time { get; set; }
         public int? Duration { get; set; }
         public bool? IsActive { get; set; }
+        public bool? ClearDowntime { get; set; }
     }
 }

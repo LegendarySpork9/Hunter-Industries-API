@@ -1,4 +1,5 @@
 @page "/servers/{Id:int}"
+@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Server Detail - HI Control Panel</PageTitle>
 
@@ -6,220 +7,349 @@
     <a href="/servers" class="btn btn-outline-light btn-sm">&larr; Back to Servers</a>
 </div>
 
-@if (_server == null)
+@if (Server == null && Statistics == null && LoadingData)
 {
-    <div class="alert alert-warning">Server not found.</div>
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 }
+
 else
 {
-    <!-- Server Information -->
-    <div class="card mb-4 card-rounded">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Server Information</h5>
-            @if (_server.IsActive)
-            {
-                <StatusBadge Text="Active" Type="active" />
-            }
-            else
-            {
-                <StatusBadge Text="Inactive" Type="inactive" />
-            }
+    @if (Server == null)
+    {
+        <div class="alert alert-warning">Server not found.</div>
+    }
+
+    else
+    {
+        <!-- Server Information -->
+        <div class="card mb-4 card-rounded">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Server Information</h5>
+                @if (Server.IsActive)
+                {
+                    <StatusBadge Text="Active"
+                        Type="active" />
+                }
+
+                else
+                {
+                    <StatusBadge Text="Inactive"
+                        Type="inactive" />
+                }
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" @bind="EditServerName" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Host Name</label>
+                        <select class="form-control" @bind="EditHostName">
+                            <option value="" disabled selected>Select an option</option>
+                            @foreach (string hostName in HostNames)
+                            {
+                                <option value="@hostName">@hostName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Game</label>
+                        <select class="form-control" @bind="EditGame">
+                            <option value="" disabled selected>Select an option</option>
+                            @foreach (string game in Games)
+                            {
+                                <option value="@game">@game</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Connection</label>
+                        <select class="form-control" @bind="EditConnection">
+                            <option value="" disabled selected>Select an option</option>
+                            @foreach (string connection in Connections)
+                            {
+                                <option value="@connection">@connection</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Downtime</label>
+                        <select class="form-control" @bind="EditDowntime">
+                            <option value="" disabled selected>Select an option</option>
+                            @if (Server.Downtime != null)
+                            {
+                                <option value="No Downtime">No Downtime</option>
+                            }
+                            @foreach (string downtime in Downtimes)
+                            {
+                                <option value="@downtime">@downtime</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Event Interval (s)</label>
+                        <input type="number" class="form-control" @bind="EditEventInterval" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="form-check form-switch mb-0 form-switch-offset">
+                            <input class="form-check-input" type="checkbox" role="switch" @bind="EditIsActive" />
+                            <label class="form-check-label">Active</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary" disabled="@IsLoading" @onclick="SaveServer">
+                        @if (IsLoading)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        }
+                        Save Changes
+                    </button>
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger py-2 d-inline-block ms-2 mb-0 align-middle">@ErrorMessage</div>
+                    }
+
+                    @if (SaveSuccess)
+                    {
+                        <span class="text-success ms-2">Saved successfully!</span>
+                    }
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row g-3">
+
+        @if (Statistics != null)
+        {
+            <!--Health-->
+            <div class="card mb-4 h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Health Over Time (30 Days)</h6>
+                    <RadzenChart Style="height: 280px;">
+                        <RadzenAreaSeries Data="@Statistics.ServerHealth"
+                            CategoryProperty="Day"
+                            ValueProperty="Uptime"
+                            Title="Uptime"
+                            Fill="#4472C4"
+                            Stroke="#4472C4">
+                            <TooltipTemplate Context="data">
+                                @{
+                                    ServerHealthModel health = (ServerHealthModel)data;
+                                }
+                                <div>
+                                    <strong>@health.Day</strong><br />
+                                    Uptime: @health.Uptime %
+                                </div>
+                            </TooltipTemplate>
+                        </RadzenAreaSeries>
+                        <RadzenCategoryAxis Formatter="@FormatHealthDay" />
+                        <RadzenValueAxis Min="0"
+                            Max="100"
+                            Step="20">
+                            <RadzenGridLines Visible="true"
+                                Stroke="#555" />
+                        </RadzenValueAxis>
+                        <RadzenLegend Visible="false" />
+                    </RadzenChart>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-3 mb-4">
                 <div class="col-md-4">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-control" @bind="_editName" />
+                    <div class="card h-100 card-rounded">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted mb-3">Alerts by Component</h6>
+                            @if (Statistics.ComponentAlerts.Count > 0)
+                            {
+                                <RadzenChart Style="height: 200px;">
+                                    <RadzenChartTooltipOptions Visible="false" />
+                                    <RadzenDonutSeries Data="@Statistics.ComponentAlerts"
+                                        CategoryProperty="Component"
+                                        ValueProperty="Alerts"
+                                        InnerRadius="40"
+                                        Radius="70"
+                                        Fills="@ComponentAlertColours"
+                                        Strokes="@ComponentAlertColours" />
+                                    <RadzenLegend Visible="false" />
+                                </RadzenChart>
+                                <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                                    @for (int x = 0; x < Statistics.ComponentAlerts.Count; x++)
+                                    {
+                                        ComponentAlertModel item = Statistics.ComponentAlerts[x];
+                                        string colour = ComponentAlertColours[x % ComponentAlertColours.Length];
+
+                                        <span class="text-muted">
+                                            <span class="legend-dot" style="background:@colour;"></span>
+                                            @item.Component (@item.Alerts)
+                                        </span>
+                                    }
+                                </div>
+                            }
+
+                            else
+                            {
+                                <p class="text-muted">No alerts recorded.</p>
+                            }
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Host Name</label>
-                    <input type="text" class="form-control" @bind="_editHostName" />
+                    <div class="card h-100 card-rounded">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted mb-3">Alerts by Status</h6>
+                            @if (Statistics.StatusAlerts.Count > 0)
+                            {
+                                <RadzenChart Style="height: 200px;">
+                                    <RadzenChartTooltipOptions Visible="false" />
+                                    <RadzenDonutSeries Data="@Statistics.StatusAlerts"
+                                        CategoryProperty="Status"
+                                        ValueProperty="Alerts"
+                                        InnerRadius="40"
+                                        Radius="70"
+                                        Fills="@StatusAlertColours"
+                                        Strokes="@StatusAlertColours" />
+                                    <RadzenLegend Visible="false" />
+                                </RadzenChart>
+                                <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                                    @for (int x = 0; x < Statistics.StatusAlerts.Count; x++)
+                                    {
+                                        StatusAlertModel item = Statistics.StatusAlerts[x];
+                                        string colour = StatusAlertColours[x % StatusAlertColours.Length];
+
+                                        <span class="text-muted">
+                                            <span class="legend-dot" style="background:@colour;"></span>
+                                            @item.Status (@item.Alerts)
+                                        </span>
+                                    }
+                                </div>
+                            }
+
+                            else
+                            {
+                                <p class="text-muted">No alerts recorded.</p>
+                            }
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Game</label>
-                    <input type="text" class="form-control" @bind="_editGame" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Game Version</label>
-                    <input type="text" class="form-control" @bind="_editGameVersion" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">IP Address</label>
-                    <input type="text" class="form-control" @bind="_editIPAddress" />
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Port</label>
-                    <input type="number" class="form-control" @bind="_editPort" />
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Downtime</label>
-                    <input type="text" class="form-control" @bind="_editDowntime" placeholder="HH:MM:SS" />
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Event Interval (s)</label>
-                    <input type="number" class="form-control" @bind="_editEventInterval" />
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">&nbsp;</label>
-                    <div class="form-check form-switch mb-0 form-switch-offset">
-                        <input class="form-check-input" type="checkbox" role="switch" @bind="_editIsActive" />
-                        <label class="form-check-label">Active</label>
+                    <div class="card h-100 card-rounded">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted mb-3">Last Event per Component</h6>
+                            @if (Statistics.LatestEvents.Count > 0)
+                            {
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="table-header">Component</th>
+                                            <th class="table-header">Status</th>
+                                            <th class="table-header">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (ServerEventModel serverEvent in Statistics.LatestEvents)
+                                        {
+                                            <tr>
+                                                <td class="text-light-grey">@serverEvent.Component</td>
+                                                <td>
+                                                    <StatusBadge Text="@serverEvent.Status"
+                                                        Type="@(serverEvent.Status == "Online" ? "active" : serverEvent.Status == "Offline" ? "danger" : "warning")" />
+                                                </td>
+                                                <td class="text-light-grey">@serverEvent.DateOccured.ToString("dd MMM yyyy HH:mm")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            
+                            else
+                            {
+                                <p class="text-muted">No events recorded.</p>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mt-3">
-                <button class="btn btn-primary" @onclick="SaveServer">Save Changes</button>
-                @if (_saveSuccess)
-                {
-                    <span class="text-success ms-2">Saved successfully!</span>
-                }
-            </div>
-        </div>
-    </div>
 
-    <!-- Charts Row -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card h-100 card-rounded">
-                <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Alerts by Component</h6>
-                    @if (_alertsByComponent.Count > 0)
-                    {
-                        <RadzenChart Style="height: 200px;">
-                            <RadzenDonutSeries Data="@_alertsByComponent" CategoryProperty="Label" ValueProperty="Value"
-                                                InnerRadius="50"
-                                                Fills="@_alertComponentColours" Strokes="@_alertComponentColours" />
-                            <RadzenLegend Visible="false" />
-                        </RadzenChart>
-                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                            @for (int i = 0; i < _alertsByComponent.Count; i++)
-                            {
-                                var item = _alertsByComponent[i];
-                                var colour = _alertComponentColours[i % _alertComponentColours.Length];
-                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted">No alerts recorded.</p>
-                    }
+            <!-- Recent Alerts -->
+            <div class="card mb-4 card-rounded">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Recent Alerts</h6>
+                </div>
+                <div class="card-body p-0">
+                    <RadzenDataGrid Data="@Statistics.RecentAlerts" TItem="RecentAlertModel"
+                        AllowSorting="false">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                                Property="AlertId"
+                                Title="ID"
+                                Width="70px" />
+                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                                Property="Reporter"
+                                Title="Reporter" />
+                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                                Property="Component"
+                                Title="Component" />
+                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                                Property="ComponentStatus"
+                                Title="Component Status" />
+                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                                Title="Alert Status">
+                                <Template Context="alert">
+                                    <StatusBadge Text="@alert.AlertStatus"
+                                        Type="@(alert.AlertStatus == "Resolved" ? "active" : alert.AlertStatus == "Reported" ? "danger" : "warning")" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                                Title="Date">
+                                <Template Context="alert">
+                                    @alert.AlertDate.ToString("dd MMM yyyy HH:mm")
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100 card-rounded">
-                <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Alerts by Status</h6>
-                    @if (_alertsByStatus.Count > 0)
-                    {
-                        <RadzenChart Style="height: 200px;">
-                            <RadzenDonutSeries Data="@_alertsByStatus" CategoryProperty="Label" ValueProperty="Value"
-                                                InnerRadius="50"
-                                                Fills="@_alertStatusColours" Strokes="@_alertStatusColours" />
-                            <RadzenLegend Visible="false" />
-                        </RadzenChart>
-                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                            @for (int i = 0; i < _alertsByStatus.Count; i++)
-                            {
-                                var item = _alertsByStatus[i];
-                                var colour = _alertStatusColours[i % _alertStatusColours.Length];
-                                <span class="text-muted"><span class="legend-dot" style="background:@colour;"></span>@item.Label (@item.Value)</span>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted">No alerts recorded.</p>
-                    }
+
+            <!-- Recent Events -->
+            <div class="card mb-4 card-rounded">
+                <div class="card-header">
+                    <h6 class="mb-0">Recent Events</h6>
+                </div>
+                <div class="card-body p-0">
+                    <RadzenDataGrid Data="@Statistics.RecentEvents" TItem="ServerEventModel"
+                        AllowSorting="false">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="ServerEventModel"
+                                Property="Component"
+                                Title="Component" />
+                            <RadzenDataGridColumn TItem="ServerEventModel"
+                                Title="Status">
+                                <Template Context="serverEvent">
+                                    <StatusBadge Text="@serverEvent.Status"
+                                        Type="@(serverEvent.Status == "Online" ? "active" : serverEvent.Status == "Offline" ? "danger" : "warning")" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="ServerEventModel"
+                                Title="Date">
+                                <Template Context="serverEvent">
+                                    @serverEvent.DateOccured.ToString("dd MMM yyyy HH:mm")
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100 card-rounded">
-                <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Last Event per Component</h6>
-                    @if (_lastEventPerComponent.Count > 0)
-                    {
-                        <table class="table table-sm mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="table-header">Component</th>
-                                    <th class="table-header">Status</th>
-                                    <th class="table-header">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var evt in _lastEventPerComponent)
-                                {
-                                    <tr>
-                                        <td class="text-light-grey">@evt.Component</td>
-                                        <td>
-                                            <StatusBadge Text="@evt.Status" Type="@(evt.Status == "Online" ? "active" : evt.Status == "Offline" ? "danger" : "warning")" />
-                                        </td>
-                                        <td class="text-light-grey">@evt.DateOccured.ToString("dd MMM yyyy HH:mm")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p class="text-muted">No events recorded.</p>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
+        }
 
-    <!-- Recent Alerts -->
-    <div class="card mb-4 card-rounded">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h6 class="mb-0">Recent Alerts</h6>
-        </div>
-        <div class="card-body p-0">
-            <RadzenDataGrid Data="@_alerts.Take(5)" TItem="ServerAlertRecord" AllowSorting="true">
-                <Columns>
-                    <RadzenDataGridColumn TItem="ServerAlertRecord" Property="AlertId" Title="ID" Width="70px" />
-                    <RadzenDataGridColumn TItem="ServerAlertRecord" Property="Reporter" Title="Reporter" />
-                    <RadzenDataGridColumn TItem="ServerAlertRecord" Property="Component" Title="Component" />
-                    <RadzenDataGridColumn TItem="ServerAlertRecord" Property="ComponentStatus" Title="Component Status" />
-                    <RadzenDataGridColumn TItem="ServerAlertRecord" Title="Alert Status">
-                        <Template Context="alert">
-                            <StatusBadge Text="@alert.AlertStatus" Type="@(alert.AlertStatus == "Resolved" ? "active" : alert.AlertStatus == "Reported" ? "danger" : "warning")" />
-                        </Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ServerAlertRecord" Title="Date">
-                        <Template Context="alert">
-                            @alert.AlertDate.ToString("dd MMM yyyy HH:mm")
-                        </Template>
-                    </RadzenDataGridColumn>
-                </Columns>
-            </RadzenDataGrid>
-        </div>
-    </div>
-
-    <!-- Recent Events -->
-    <div class="card mb-4 card-rounded">
-        <div class="card-header">
-            <h6 class="mb-0">Recent Events</h6>
-        </div>
-        <div class="card-body p-0">
-            <RadzenDataGrid Data="@_events.Take(5)" TItem="ServerEventRecord" AllowSorting="true">
-                <Columns>
-                    <RadzenDataGridColumn TItem="ServerEventRecord" Property="Component" Title="Component" />
-                    <RadzenDataGridColumn TItem="ServerEventRecord" Title="Status">
-                        <Template Context="evt">
-                            <StatusBadge Text="@evt.Status" Type="@(evt.Status == "Online" ? "active" : evt.Status == "Offline" ? "danger" : "warning")" />
-                        </Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ServerEventRecord" Title="Date">
-                        <Template Context="evt">
-                            @evt.DateOccured.ToString("dd MMM yyyy HH:mm")
-                        </Template>
-                    </RadzenDataGridColumn>
-                </Columns>
-            </RadzenDataGrid>
-        </div>
-    </div>
+        else
+        {
+            <div class="alert alert-warning">Server Statistics not found.</div>
+        }
+    }
 }
