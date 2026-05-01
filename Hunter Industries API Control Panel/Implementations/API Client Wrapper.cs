@@ -594,15 +594,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns the paged application from the API.
+        /// Returns the paged configuration object from the API.
         /// </summary>
-        public async Task<PagedAPIResponseModel<ApplicationModel>?> GetPagedApplication(List<KeyValuePair<string, object>>? queryParameters = null)
+        public async Task<T?> GetPagedConfiguration<T>(string entity,
+            List<KeyValuePair<string, object>>? queryParameters = null)
         {
-            PagedAPIResponseModel<ApplicationModel>? pagedApplication = null;
+            T? pagedObject = default;
 
             try
             {
-                string url = BuildURL("/configuration/application",
+                string url = BuildURL($"/configuration/{entity}",
                     queryParameters: queryParameters);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
@@ -627,7 +628,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    pagedApplication = JsonConvert.DeserializeObject<PagedAPIResponseModel<ApplicationModel>>(response.Content);
+                    pagedObject = JsonConvert.DeserializeObject<T>(response.Content);
                 }
 
                 if (response.ErrorException != null)
@@ -643,7 +644,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return pagedApplication;
+            return pagedObject;
         }
 
         /// <summary>
@@ -904,218 +905,6 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             }
 
             return servers;
-        }
-
-        /// <summary>
-        /// Returns the paged machine from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<MachineModel>?> GetPagedMachine(List<KeyValuePair<string, object>>? queryParameters = null)
-        {
-            PagedAPIResponseModel<MachineModel>? pagedMachine = null;
-
-            try
-            {
-                string url = BuildURL("/configuration/machine",
-                    queryParameters: queryParameters);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
-
-                RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
-
-                RestRequest request = new()
-                {
-                    Method = Method.Get
-                };
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
-
-                RestResponse response = await client.ExecuteAsync(request);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
-                {
-                    pagedMachine = JsonConvert.DeserializeObject<PagedAPIResponseModel<MachineModel>>(response.Content);
-                }
-
-                if (response.ErrorException != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-            }
-
-            return pagedMachine;
-        }
-
-        /// <summary>
-        /// Returns the paged game from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<GameModel>?> GetPagedGame(List<KeyValuePair<string, object>>? queryParameters = null)
-        {
-            PagedAPIResponseModel<GameModel>? pagedGame = null;
-
-            try
-            {
-                string url = BuildURL("/configuration/game",
-                    queryParameters: queryParameters);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
-
-                RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
-
-                RestRequest request = new()
-                {
-                    Method = Method.Get
-                };
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
-
-                RestResponse response = await client.ExecuteAsync(request);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
-                {
-                    pagedGame = JsonConvert.DeserializeObject<PagedAPIResponseModel<GameModel>>(response.Content);
-                }
-
-                if (response.ErrorException != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-            }
-
-            return pagedGame;
-        }
-
-        /// <summary>
-        /// Returns the paged connection from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<ConnectionModel>?> GetPagedConnection(List<KeyValuePair<string, object>>? queryParameters = null)
-        {
-            PagedAPIResponseModel<ConnectionModel>? pagedConnection = null;
-
-            try
-            {
-                string url = BuildURL("/configuration/connection",
-                    queryParameters: queryParameters);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
-
-                RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
-
-                RestRequest request = new()
-                {
-                    Method = Method.Get
-                };
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
-
-                RestResponse response = await client.ExecuteAsync(request);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
-                {
-                    pagedConnection = JsonConvert.DeserializeObject<PagedAPIResponseModel<ConnectionModel>>(response.Content);
-                }
-
-                if (response.ErrorException != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-            }
-
-            return pagedConnection;
-        }
-
-        /// <summary>
-        /// Returns the paged downtime from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<DowntimeModel>?> GetPagedDowntime(List<KeyValuePair<string, object>>? queryParameters = null)
-        {
-            PagedAPIResponseModel<DowntimeModel>? pagedDowntime = null;
-
-            try
-            {
-                string url = BuildURL("/configuration/downtime",
-                    queryParameters: queryParameters);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
-
-                RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
-
-                RestRequest request = new()
-                {
-                    Method = Method.Get
-                };
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
-
-                RestResponse response = await client.ExecuteAsync(request);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
-                {
-                    pagedDowntime = JsonConvert.DeserializeObject<PagedAPIResponseModel<DowntimeModel>>(response.Content);
-                }
-
-                if (response.ErrorException != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-            }
-
-            return pagedDowntime;
         }
 
         /// <summary>
@@ -1410,6 +1199,128 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             }
 
             return configuration;
+        }
+
+        /// <summary>
+        /// Returns the configuration entity from the API.
+        /// </summary>
+        public async Task<T?> GetConfigurationEntity<T>(string entity,
+            int entityId)
+        {
+            T? entityObject = default;
+
+            try
+            {
+                string url = BuildURL($"/configuration/{entity}",
+                    entityId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    entityObject = JsonConvert.DeserializeObject<T>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return entityObject;
+        }
+
+        /// <summary>
+        /// Returns the new configuration entity from the API.
+        /// </summary>
+        public async Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity,
+            T2 entityObject)
+        {
+            T? createdEntity = default;
+            ResponseModel? apiResponse = null;
+
+            try
+            {
+                string url = BuildURL($"/configuration/{entity}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(entityObject);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Post
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
+                {
+                    createdEntity = JsonConvert.DeserializeObject<T>(response.Content);
+                }
+
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return (createdEntity, apiResponse);
         }
 
         /// <summary>

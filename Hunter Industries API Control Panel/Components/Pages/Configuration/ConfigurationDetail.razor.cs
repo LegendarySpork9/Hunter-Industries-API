@@ -1,13 +1,45 @@
-using Microsoft.AspNetCore.Components;
+// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Models;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 {
     public partial class ConfigurationDetail
     {
-        [Parameter] public string Entity { get; set; } = string.Empty;
-        [Inject] private ExampleAPIService APIService { get; set; } = default!;
+        [Inject]
+        private IConfigurableLoggerService _Logger { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
+        [Inject]
+        private APISettingsModel APISettings { get; set; } = default!;
+
+        [Parameter]
+        public string Entity { get; set; } = string.Empty;
+        [Parameter]
+        public int Id { get; set; }
+
+        private ApplicationModel? Application;
+        private AuthorisationModel? Authorisation;
+        private ComponentModel? Component;
+        private ConnectionModel? Connection;
+        private DowntimeModel? Downtime;
+        private GameModel? Game;
+        private MachineModel? Machine;
+
+        private string DisplayName = string.Empty;
+        private bool LoadingData = true;
+        private bool HasData = false;
+
+
+
+
+
+
+        [Inject] private ExampleAPIService ExampleAPIService { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
 
         private string _displayName = string.Empty;
@@ -55,36 +87,64 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             ["machine"] = "Machine"
         };
 
-        protected override void OnInitialized()
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
+        protected override async Task OnInitializedAsync()
         {
-            _displayName = DisplayNames.GetValueOrDefault(Entity, Entity);
-            LoadData();
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened User Page");
+
+            DisplayName = DisplayNames.GetValueOrDefault(Entity, Entity);
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity: {Entity}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Display Name: {DisplayName}");
+
+            await LoadData();
+
+            if (Application != null || Authorisation != null || Component != null || Connection != null
+                || Component != null || Downtime != null || Game != null || Machine != null)
+            {
+                HasData = true;
+            }
+
+
+            LoadingData = false;
         }
 
-        private void LoadData()
+        /// <summary>
+        /// Loads and transforms the configuration data.
+        /// </summary>
+        private async Task LoadData()
         {
             switch (Entity)
             {
                 case "application":
-                    _applications = APIService.GetConfigurationApplications();
+                    Application = await APIService.GetConfigurationEntity<ApplicationModel?>(Entity,
+                        Id);
                     break;
                 case "authorisation":
-                    _authorisations = APIService.GetConfigurationAuthorisations();
+                    Authorisation = await APIService.GetConfigurationEntity<AuthorisationModel?>(Entity,
+                        Id);
                     break;
                 case "component":
-                    _components = APIService.GetConfigurationComponents();
+                    Component = await APIService.GetConfigurationEntity<ComponentModel?>(Entity,
+                        Id);
                     break;
                 case "connection":
-                    _connections = APIService.GetConfigurationConnections();
+                    Connection = await APIService.GetConfigurationEntity<ConnectionModel?>(Entity,
+                        Id);
                     break;
                 case "downtime":
-                    _downtimes = APIService.GetConfigurationDowntimes();
+                    Downtime = await APIService.GetConfigurationEntity<DowntimeModel?>(Entity,
+                        Id);
                     break;
                 case "game":
-                    _games = APIService.GetConfigurationGames();
+                    Game = await APIService.GetConfigurationEntity<GameModel?>(Entity,
+                        Id);
                     break;
                 case "machine":
-                    _machines = APIService.GetConfigurationMachines();
+                    Machine = await APIService.GetConfigurationEntity<MachineModel?>(Entity,
+                        Id);
                     break;
             }
         }
@@ -133,25 +193,25 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             switch (Entity)
             {
                 case "application":
-                    APIService.CreateConfigurationApplication(_newAppName, _newAppPhrase);
+                    ExampleAPIService.CreateConfigurationApplication(_newAppName, _newAppPhrase);
                     break;
                 case "authorisation":
-                    APIService.CreateConfigurationAuthorisation(_newAuthPhrase);
+                    ExampleAPIService.CreateConfigurationAuthorisation(_newAuthPhrase);
                     break;
                 case "component":
-                    APIService.CreateConfigurationComponent(_newComponentName);
+                    ExampleAPIService.CreateConfigurationComponent(_newComponentName);
                     break;
                 case "connection":
-                    APIService.CreateConfigurationConnection(_newConnectionIP, _newConnectionPort);
+                    ExampleAPIService.CreateConfigurationConnection(_newConnectionIP, _newConnectionPort);
                     break;
                 case "downtime":
-                    APIService.CreateConfigurationDowntime(_newDowntimeTime, _newDowntimeDuration);
+                    ExampleAPIService.CreateConfigurationDowntime(_newDowntimeTime, _newDowntimeDuration);
                     break;
                 case "game":
-                    APIService.CreateConfigurationGame(_newGameName, _newGameVersion);
+                    ExampleAPIService.CreateConfigurationGame(_newGameName, _newGameVersion);
                     break;
                 case "machine":
-                    APIService.CreateConfigurationMachine(_newMachineHostName);
+                    ExampleAPIService.CreateConfigurationMachine(_newMachineHostName);
                     break;
             }
 
@@ -178,25 +238,25 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             switch (Entity)
             {
                 case "application":
-                    APIService.DeleteConfigurationApplication(_deleteTargetId);
+                    ExampleAPIService.DeleteConfigurationApplication(_deleteTargetId);
                     break;
                 case "authorisation":
-                    APIService.DeleteConfigurationAuthorisation(_deleteTargetId);
+                    ExampleAPIService.DeleteConfigurationAuthorisation(_deleteTargetId);
                     break;
                 case "component":
-                    APIService.DeleteConfigurationComponent(_deleteTargetId);
+                    ExampleAPIService.DeleteConfigurationComponent(_deleteTargetId);
                     break;
                 case "connection":
-                    APIService.DeleteConfigurationConnection(_deleteTargetId);
+                    ExampleAPIService.DeleteConfigurationConnection(_deleteTargetId);
                     break;
                 case "downtime":
-                    APIService.DeleteConfigurationDowntime(_deleteTargetId);
+                    ExampleAPIService.DeleteConfigurationDowntime(_deleteTargetId);
                     break;
                 case "game":
-                    APIService.DeleteConfigurationGame(_deleteTargetId);
+                    ExampleAPIService.DeleteConfigurationGame(_deleteTargetId);
                     break;
                 case "machine":
-                    APIService.DeleteConfigurationMachine(_deleteTargetId);
+                    ExampleAPIService.DeleteConfigurationMachine(_deleteTargetId);
                     break;
             }
 
@@ -210,43 +270,43 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
         private void SaveApplication(ConfigurationApplicationRecord app)
         {
-            APIService.UpdateConfigurationApplication(app.Id, app.Name, app.Phrase);
+            ExampleAPIService.UpdateConfigurationApplication(app.Id, app.Name, app.Phrase);
             ShowSaveSuccess(app.Id);
         }
 
         private void SaveAuthorisation(ConfigurationAuthorisationRecord auth)
         {
-            APIService.UpdateConfigurationAuthorisation(auth.Id, auth.Phrase);
+            ExampleAPIService.UpdateConfigurationAuthorisation(auth.Id, auth.Phrase);
             ShowSaveSuccess(auth.Id);
         }
 
         private void SaveComponent(ConfigurationComponentRecord comp)
         {
-            APIService.UpdateConfigurationComponent(comp.Id, comp.Name);
+            ExampleAPIService.UpdateConfigurationComponent(comp.Id, comp.Name);
             ShowSaveSuccess(comp.Id);
         }
 
         private void SaveConnection(ConfigurationConnectionRecord conn)
         {
-            APIService.UpdateConfigurationConnection(conn.Id, conn.IPAddress, conn.Port);
+            ExampleAPIService.UpdateConfigurationConnection(conn.Id, conn.IPAddress, conn.Port);
             ShowSaveSuccess(conn.Id);
         }
 
         private void SaveDowntime(ConfigurationDowntimeRecord dt)
         {
-            APIService.UpdateConfigurationDowntime(dt.Id, dt.Time, dt.Duration);
+            ExampleAPIService.UpdateConfigurationDowntime(dt.Id, dt.Time, dt.Duration);
             ShowSaveSuccess(dt.Id);
         }
 
         private void SaveGame(ConfigurationGameRecord game)
         {
-            APIService.UpdateConfigurationGame(game.Id, game.Name, game.Version);
+            ExampleAPIService.UpdateConfigurationGame(game.Id, game.Name, game.Version);
             ShowSaveSuccess(game.Id);
         }
 
         private void SaveMachine(ConfigurationMachineRecord machine)
         {
-            APIService.UpdateConfigurationMachine(machine.Id, machine.HostName);
+            ExampleAPIService.UpdateConfigurationMachine(machine.Id, machine.HostName);
             ShowSaveSuccess(machine.Id);
         }
 
@@ -267,20 +327,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
         private void ConfirmAddSetting(int applicationId)
         {
-            APIService.CreateConfigurationApplicationSetting(applicationId, _newSettingName, _newSettingType, _newSettingRequired);
+            ExampleAPIService.CreateConfigurationApplicationSetting(applicationId, _newSettingName, _newSettingType, _newSettingRequired);
             _isAddingSettingForAppId = null;
             LoadData();
         }
 
         private void SaveSetting(int applicationId, ConfigurationApplicationSettingRecord setting)
         {
-            APIService.UpdateConfigurationApplicationSetting(applicationId, setting.Id, setting.Name, setting.Type, setting.Required);
+            ExampleAPIService.UpdateConfigurationApplicationSetting(applicationId, setting.Id, setting.Name, setting.Type, setting.Required);
             ShowSaveSuccess(setting.Id);
         }
 
         private void DeleteSetting(int applicationId, int settingId)
         {
-            APIService.DeleteConfigurationApplicationSetting(applicationId, settingId);
+            ExampleAPIService.DeleteConfigurationApplicationSetting(applicationId, settingId);
             LoadData();
         }
     }

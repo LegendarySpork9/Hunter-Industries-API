@@ -1,7 +1,7 @@
 @page "/users"
 @using HunterIndustriesAPIControlPanel.Models.Responses
 
-<PageTitle>Users - HI Control Panel</PageTitle>
+<PageTitle>Users</PageTitle>
 
 <div class="page-header">
     <h1>Users</h1>
@@ -26,8 +26,7 @@ else
         AllowFiltering="true"
         FilterMode="FilterMode.Simple"
         PageSize="25"
-        AllowPaging="true"
-        Style="cursor: pointer;">
+        AllowPaging="true">
         <Columns>
             <RadzenDataGridColumn TItem="UserModel"
                 Property="Id"

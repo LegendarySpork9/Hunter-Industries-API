@@ -20,6 +20,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         public int? QueryUserId { get; set; }
         [SupplyParameterFromQuery(Name = "application")]
         public int? QueryApplicationId { get; set; }
+        [SupplyParameterFromQuery(Name = "page")]
+        public int? QueryPage { get; set; }
 
         private UserModel? User;
         private ApplicationModel? Application;
@@ -29,7 +31,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
         private SharedStatisticsModel? Statistics;
         private PagedAPIResponseModel<AuditHistoryModel>? AuditLogs;
-        private int TotalPageCount = 0;
 
         private DateTime? FilterFromDate;
         private DateTime? FilterToDate;
@@ -84,9 +85,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                 EntityId = QueryApplicationId.Value;
             }
 
+            if (QueryPage.HasValue && QueryPage.Value > 0)
+            {
+                PageNumber = QueryPage.Value;
+            }
+
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Page Title: {PageTitle}");
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity: {Entity}");
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity Id: {EntityId}");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Page Number: {PageNumber}");
 
             await LoadSummary();
             await LoadData();
@@ -145,7 +152,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             string? username = User?.Username ?? null;
             string? application = Application?.Name ?? null;
 
-            AuditLogs = await APIService.GetAuditHistories(fromDate,
+            (AuditLogs) = await APIService.GetAuditHistories(fromDate,
                 toDate,
                 FilterIPAddress,
                 FilterEndpoint,
@@ -154,8 +161,28 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                 PageSize,
                 PageNumber);
 
+            if (AuditLogs == null)
+            {
+                AuditLogs = new()
+                {
+                    Entries = [],
+                    EntryCount = 0,
+                    PageNumber = 1,
+                    PageSize = 25,
+                    TotalPageCount = 0,
+                    TotalCount = 0
+                };
+            }
+
+            UpdateUrl();
+
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Entries: {AuditLogs?.EntryCount ?? 0}");
         }
+
+        /// <summary>
+        /// Updates the page url.
+        /// </summary>
+        private void UpdateUrl() => Navigation.NavigateTo($"/logs?{Entity}={EntityId}&page={PageNumber}", replace: true);
 
         /// <summary>
         /// Applys the set filters.
@@ -204,7 +231,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Next >> Clicked");
 
-            if (PageNumber < TotalPageCount)
+            if (PageNumber < AuditLogs?.TotalPageCount)
             {
                 PageNumber++;
                 await LoadData();

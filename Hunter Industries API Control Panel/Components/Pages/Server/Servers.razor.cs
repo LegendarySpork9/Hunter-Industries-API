@@ -73,7 +73,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<MachineModel>? pagedMachines = await APIService.GetMachines(200,
+                PagedAPIResponseModel<MachineModel>? pagedMachines = await APIService.GetPagedConfiguration<PagedAPIResponseModel<MachineModel>?>("machine",
+                    200,
                     pageNumber);
 
                 if (pagedMachines != null && pagedMachines.EntryCount > 0)
@@ -112,7 +113,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<GameModel>? pagedGames = await APIService.GetGames(200,
+                PagedAPIResponseModel<GameModel>? pagedGames = await APIService.GetPagedConfiguration<PagedAPIResponseModel<GameModel>?>("game",
+                    200,
                     pageNumber);
 
                 if (pagedGames != null && pagedGames.EntryCount > 0)
@@ -151,7 +153,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<ConnectionModel>? pagedConnections = await APIService.GetConnections(200,
+                PagedAPIResponseModel<ConnectionModel>? pagedConnections = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ConnectionModel>?>("connection",
+                    200,
                     pageNumber);
 
                 if (pagedConnections != null && pagedConnections.EntryCount > 0)
@@ -190,7 +193,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<DowntimeModel>? pagedDowntimes = await APIService.GetDowntimes(200,
+                PagedAPIResponseModel<DowntimeModel>? pagedDowntimes = await APIService.GetPagedConfiguration<PagedAPIResponseModel<DowntimeModel>?>("downtime",
+                    200,
                     pageNumber);
 
                 if (pagedDowntimes != null && pagedDowntimes.EntryCount > 0)

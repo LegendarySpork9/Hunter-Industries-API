@@ -149,7 +149,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.OK, response.Data);
+                return Content(HttpStatusCode.NoContent, response.Data);
             }
 
             await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),

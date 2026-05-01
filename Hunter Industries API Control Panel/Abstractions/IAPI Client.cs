@@ -21,19 +21,17 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<ApplicationModel?> GetApplication(int applicationId);
         Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId);
         Task<List<UserSettingModel>> GetUserSettings(int userId);
-        Task<PagedAPIResponseModel<ApplicationModel>?> GetPagedApplication(List<KeyValuePair<string, object>>? queryParameters = null);
+        Task<T?> GetPagedConfiguration<T>(string entity, List<KeyValuePair<string, object>>? queryParameters = null);
         Task<(UserModel?, ResponseModel?)> UpdateUser(int userId, UserRequestModel user);
         Task<(UserSettingModel?, ResponseModel?)> CreateUserSetting(UserSettingRequestModel userSetting);
         Task<(SettingModel?, ResponseModel?)> UpdateUserSetting(int userSettingId, UserSettingUpdateRequestModel updateUserSetting);
         Task<List<ServerInformationModel>> GetServers();
-        Task<PagedAPIResponseModel<MachineModel>?> GetPagedMachine(List<KeyValuePair<string, object>>? queryParameters = null);
-        Task<PagedAPIResponseModel<GameModel>?> GetPagedGame(List<KeyValuePair<string, object>>? queryParameters = null);
-        Task<PagedAPIResponseModel<ConnectionModel>?> GetPagedConnection(List<KeyValuePair<string, object>>? queryParameters = null);
-        Task<PagedAPIResponseModel<DowntimeModel>?> GetPagedDowntime(List<KeyValuePair<string, object>>? queryParameters = null);
         Task<(ServerInformationModel?, ResponseModel?)> CreateServer(ServerRequestModel server);
         Task<(ServerInformationModel?, ResponseModel?)> UpdateServer(int serverId, ServerUpdateRequestModel server);
         Task<ServerInformationModel?> GetServer(int serverId);
         Task<ServerStatisticsModel?> GetServerStatistics(int serverId);
         Task<ConfigurationModel?> GetConfiguration();
+        Task<T?> GetConfigurationEntity<T>(string entity, int entityId);
+        Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity, T2 entityObject);
     }
 }

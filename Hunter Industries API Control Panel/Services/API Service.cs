@@ -5,7 +5,6 @@ using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
-using RestSharp;
 namespace HunterIndustriesAPIControlPanel.Services
 {
     public class APIService
@@ -539,19 +538,20 @@ namespace HunterIndustriesAPIControlPanel.Services
         }
 
         /// <summary>
-        /// Gets the applications from the API.
+        /// Gets the configuration objects from the API.
         /// </summary>
-        public async Task<PagedAPIResponseModel<ApplicationModel>?> GetApplications(int pageSize = 25,
+        public async Task<T?> GetPagedConfiguration<T>(string entity,
+            int pageSize = 25,
             int pageNumber = 1)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching applications from API");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching {entity}s from API");
 
             if (ExpiryTime < _Clock.UtcNow)
             {
                 await Authorise();
             }
 
-            PagedAPIResponseModel<ApplicationModel>? applications = null;
+            T? configurationObjects = default;
 
             List<KeyValuePair<string, object>> queryParameters = [];
 
@@ -567,17 +567,17 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             try
             {
-                applications = await _APIClient.GetPagedApplication(queryParameters);
+                configurationObjects = await _APIClient.GetPagedConfiguration<T>(entity,
+                    queryParameters);
 
-                if (applications != null)
+                if (configurationObjects != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Applications Returned: {applications.EntryCount}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched applications from API");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched {entity}s from API");
                 }
 
                 else
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch applications from API");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}s from API");
                 }
             }
 
@@ -585,10 +585,10 @@ namespace HunterIndustriesAPIControlPanel.Services
             {
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch applications from API");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}s from API");
             }
 
-            return applications;
+            return configurationObjects;
         }
 
         /// <summary>
@@ -765,218 +765,6 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return servers;
-        }
-
-        /// <summary>
-        /// Gets the machines from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<MachineModel>?> GetMachines(int pageSize = 25,
-            int pageNumber = 1)
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching machines from API");
-
-            if (ExpiryTime < _Clock.UtcNow)
-            {
-                await Authorise();
-            }
-
-            PagedAPIResponseModel<MachineModel>? machines = null;
-
-            List<KeyValuePair<string, object>> queryParameters = [];
-
-            if (pageSize != 25)
-            {
-                queryParameters.Add(new("pageSize", pageSize));
-            }
-
-            if (pageNumber != 1)
-            {
-                queryParameters.Add(new("pageNumber", pageNumber));
-            }
-
-            try
-            {
-                machines = await _APIClient.GetPagedMachine(queryParameters);
-
-                if (machines != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Machines Returned: {machines.EntryCount}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched machines from API");
-                }
-
-                else
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch machines from API");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch machines from API");
-            }
-
-            return machines;
-        }
-
-        /// <summary>
-        /// Gets the games from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<GameModel>?> GetGames(int pageSize = 25,
-            int pageNumber = 1)
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching games from API");
-
-            if (ExpiryTime < _Clock.UtcNow)
-            {
-                await Authorise();
-            }
-
-            PagedAPIResponseModel<GameModel>? games = null;
-
-            List<KeyValuePair<string, object>> queryParameters = [];
-
-            if (pageSize != 25)
-            {
-                queryParameters.Add(new("pageSize", pageSize));
-            }
-
-            if (pageNumber != 1)
-            {
-                queryParameters.Add(new("pageNumber", pageNumber));
-            }
-
-            try
-            {
-                games = await _APIClient.GetPagedGame(queryParameters);
-
-                if (games != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Games Returned: {games.EntryCount}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched connections from API");
-                }
-
-                else
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch games from API");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch games from API");
-            }
-
-            return games;
-        }
-
-        /// <summary>
-        /// Gets the connections from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<ConnectionModel>?> GetConnections(int pageSize = 25,
-            int pageNumber = 1)
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching connections from API");
-
-            if (ExpiryTime < _Clock.UtcNow)
-            {
-                await Authorise();
-            }
-
-            PagedAPIResponseModel<ConnectionModel>? connections = null;
-
-            List<KeyValuePair<string, object>> queryParameters = [];
-
-            if (pageSize != 25)
-            {
-                queryParameters.Add(new("pageSize", pageSize));
-            }
-
-            if (pageNumber != 1)
-            {
-                queryParameters.Add(new("pageNumber", pageNumber));
-            }
-
-            try
-            {
-                connections = await _APIClient.GetPagedConnection(queryParameters);
-
-                if (connections != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Connections Returned: {connections.EntryCount}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched connections from API");
-                }
-
-                else
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch connections from API");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch connections from API");
-            }
-
-            return connections;
-        }
-
-        /// <summary>
-        /// Gets the downtimes from the API.
-        /// </summary>
-        public async Task<PagedAPIResponseModel<DowntimeModel>?> GetDowntimes(int pageSize = 25,
-            int pageNumber = 1)
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching downtimes from API");
-
-            if (ExpiryTime < _Clock.UtcNow)
-            {
-                await Authorise();
-            }
-
-            PagedAPIResponseModel<DowntimeModel>? downtimes = null;
-
-            List<KeyValuePair<string, object>> queryParameters = [];
-
-            if (pageSize != 25)
-            {
-                queryParameters.Add(new("pageSize", pageSize));
-            }
-
-            if (pageNumber != 1)
-            {
-                queryParameters.Add(new("pageNumber", pageNumber));
-            }
-
-            try
-            {
-                downtimes = await _APIClient.GetPagedDowntime(queryParameters);
-
-                if (downtimes != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Downtimes Returned: {downtimes.EntryCount}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched downtimes from API");
-                }
-
-                else
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch downtimes from API");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch downtimes from API");
-            }
-
-            return downtimes;
         }
 
         /// <summary>
@@ -1231,6 +1019,90 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return configuration;
+        }
+
+        /// <summary>
+        /// Gets the configuration entity from the API.
+        /// </summary>
+        public async Task<T?> GetConfigurationEntity<T>(string entity,
+            int entityId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching {entity}, {entityId}, from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            T? entityObject = default;
+
+            try
+            {
+                entityObject = await _APIClient.GetConfigurationEntity<T>(entity,
+                    entityId);
+
+                if (entityObject != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched {entity}, {entityId}, from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}, {entityId}, from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}, {entityId}, from API");
+            }
+
+            return entityObject;
+        }
+
+        /// <summary>
+        /// Creates a configuration entity in the API.
+        /// </summary>
+        public async Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity,
+            string newEntityValue,
+            T2 entityObject)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating {entity}, {newEntityValue}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            T1? newEntityObject = default;
+            ResponseModel? apiResponse = null;
+
+            try
+            {
+                (newEntityObject, apiResponse) = await _APIClient.CreateConfigurationEntity<T1, T2>(entity,
+                    entityObject);
+
+                if (newEntityObject != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Created {entity}, {newEntityValue}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create {entity}, {newEntityValue}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to create {entity}, {newEntityValue}, in API");
+            }
+
+            return (newEntityObject, apiResponse);
         }
     }
 }

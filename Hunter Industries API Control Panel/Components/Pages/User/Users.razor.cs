@@ -39,6 +39,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
+            
             _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Users Page");
 
             UserRecords = await APIService.GetUsers(true);

@@ -3,7 +3,7 @@
 @using HunterIndustriesAPIControlPanel.Models.Responses
 @using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
-<PageTitle>Logs - HI Control Panel</PageTitle>
+<PageTitle>Logs</PageTitle>
 
 <div class="mb-3">
     @if (QueryUserId.HasValue)
@@ -219,16 +219,15 @@ else
     <!-- Results -->
     <RadzenDataGrid Data="@AuditLogs?.Entries"
         TItem="AuditHistoryModel"
-        AllowSorting="true"
+        AllowSorting="false"
         RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))"
         Style="cursor: pointer;">
         <Columns>
             <RadzenDataGridColumn TItem="AuditHistoryModel"
                 Property="Id"
-                Title="ID"
-                Width="70px" />
+                Title="ID" />
             <RadzenDataGridColumn TItem="AuditHistoryModel"
-                Property="IPAddress"
+                Property="IpAddress"
                 Title="IP Address" />
             <RadzenDataGridColumn TItem="AuditHistoryModel"
                 Property="Endpoint"

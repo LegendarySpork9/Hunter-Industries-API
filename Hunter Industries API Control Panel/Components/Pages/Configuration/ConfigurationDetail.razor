@@ -1,9 +1,9 @@
-@page "/configuration/{Entity}"
+@page "/configuration/{Entity}/{Id:int}"
 
-<PageTitle>@_displayName Configuration - HI Control Panel</PageTitle>
+<PageTitle>@DisplayName Configuration Detail</PageTitle>
 
 <div class="mb-3">
-    <a href="/configuration" class="btn btn-outline-light btn-sm">&larr; Back to Configuration</a>
+    <a href="/configuration/@Entity" class="btn btn-outline-light btn-sm">&larr; Back to @DisplayName Configuration</a>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-4">

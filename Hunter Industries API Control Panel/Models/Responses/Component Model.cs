@@ -2,12 +2,12 @@
 namespace HunterIndustriesAPIControlPanel.Models.Responses
 {
     /// <summary>
-    /// Stores the configuration authorisation api response.
+    /// Stores the configuration component api response.
     /// </summary>
-    public class AuthorisationModel
+    public class ComponentModel
     {
         public required int Id { get; set; }
-        public required string Phrase { get; set; }
+        public required string Name { get; set; }
         public required bool IsDeleted { get; set; }
     }
 }

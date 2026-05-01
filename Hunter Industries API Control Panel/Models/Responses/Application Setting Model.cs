@@ -6,10 +6,10 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses
     /// </summary>
     public class ApplicationSettingModel
     {
-        public int Id { get; set; }
+        public required int Id { get; set; }
         public required string Name { get; set; }
         public required string Type { get; set; }
-        public bool Required { get; set; }
-        public bool IsDeleted { get; set; }
+        public required bool Required { get; set; }
+        public required bool IsDeleted { get; set; }
     }
 }

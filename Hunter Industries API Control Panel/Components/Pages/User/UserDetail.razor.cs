@@ -63,7 +63,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
             while (nextPage)
             {
-                PagedAPIResponseModel<ApplicationModel>? pagedApplications = await APIService.GetApplications(200, pageNumber);
+                PagedAPIResponseModel<ApplicationModel>? pagedApplications = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ApplicationModel>?>("application",
+                    200,
+                    pageNumber);
 
                 if (pagedApplications != null && pagedApplications.EntryCount > 0)
                 {
