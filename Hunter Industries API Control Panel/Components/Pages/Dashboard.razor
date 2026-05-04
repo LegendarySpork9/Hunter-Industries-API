@@ -71,7 +71,7 @@ else
         <div class="col-md-6">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">API Traffic Over Time (30 Days)</h6>
+                    <h6 class="card-title text-muted mb-3">API Traffic Over Time (This Month)</h6>
                     <RadzenChart Style="height: 280px;">
                         <RadzenAreaSeries Data="@Statistics.ApiTraffic"
                             CategoryProperty="Day"
@@ -119,7 +119,7 @@ else
         <div class="col-md-6">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Errors by IP Address &amp; Summary</h6>
+                    <h6 class="card-title text-muted mb-3">Errors by IP Address &amp; Summary (This Month)</h6>
                     <RadzenChart Style="height: 280px;">
                         @foreach (KeyValuePair<string, List<ChartDataItem>> group in ErrorsByIPGrouped)
                         {
@@ -173,7 +173,7 @@ else
         <div class="col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
+                    <h6 class="card-title text-muted mb-3">Calls by Endpoint (This Month)</h6>
                     @if (Statistics.EndpointCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
@@ -211,7 +211,7 @@ else
         <div class="col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Calls by Method</h6>
+                    <h6 class="card-title text-muted mb-3">Calls by Method (This Month)</h6>
                     @if (Statistics.MethodCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
@@ -249,7 +249,7 @@ else
         <div class="col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
+                    <h6 class="card-title text-muted mb-3">Calls by Status Code (This Month)</h6>
                     @if (Statistics.StatusCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
@@ -287,7 +287,7 @@ else
         <div class="col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Changes by Field</h6>
+                    <h6 class="card-title text-muted mb-3">Changes by Field (This Month)</h6>
                     @if (Statistics.Changes.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
@@ -329,7 +329,7 @@ else
         <div class="col-md-6">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Login Attempts by Username &amp; Application</h6>
+                    <h6 class="card-title text-muted mb-3">Login Attempts by Username &amp; Application (This Month)</h6>
                     <RadzenChart Style="height: 250px;">
                         @foreach (KeyValuePair<string, List<ChartDataItem>> group in LoginAttemptsByApp)
                         {
@@ -375,7 +375,7 @@ else
         <div class="col-md-6">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
-                    <h6 class="card-title text-muted mb-3">Server Health Overview (Average 30 Days)</h6>
+                    <h6 class="card-title text-muted mb-3">Server Health Overview (This Month)</h6>
                     <RadzenChart Style="height: 250px;">
                         <RadzenChartTooltipOptions Visible="false" />
                         <RadzenBarSeries Data="@Statistics.ServerHealth"

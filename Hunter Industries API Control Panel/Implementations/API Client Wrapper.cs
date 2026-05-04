@@ -1261,7 +1261,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         public async Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity,
             T2 entityObject)
         {
-            T? createdEntity = default;
+            T1? createdEntity = default;
             ResponseModel? apiResponse = null;
 
             try
@@ -1294,7 +1294,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
-                    createdEntity = JsonConvert.DeserializeObject<T>(response.Content);
+                    createdEntity = JsonConvert.DeserializeObject<T1>(response.Content);
                 }
 
                 else if (response.Content != null)

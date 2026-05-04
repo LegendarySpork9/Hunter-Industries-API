@@ -9,7 +9,6 @@ using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using Radzen.Blazor;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 {
@@ -31,20 +30,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private PaginatedResponse<ConfigurationListObjectModel>? Records;
 
         private string DisplayName = string.Empty;
-        private bool IsAdding;
+        private bool ShowCreateModal;
         private List<string> Phrases = [];
         private string NewAppName = string.Empty;
         private string NewAppPhrase = string.Empty;
         private string NewAuthPhrase = string.Empty;
         private string NewComponentName = string.Empty;
         private string NewConnectionIP = string.Empty;
-        private int NewConnectionPort;
+        private int NewConnectionPort = 0;
         private string NewDowntimeTime = string.Empty;
-        private int NewDowntimeDuration;
+        private int NewDowntimeDuration = 0;
         private string NewGameName = string.Empty;
         private string NewGameVersion = string.Empty;
         private string NewMachineHostName = string.Empty;
         private bool IsLoading;
+        private string ErrorMessage = string.Empty;
         private int PageSize = 25;
         private int PageNumber = 1;
 
@@ -291,116 +291,216 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// <summary>
         /// Starts adding a new configuration object.
         /// </summary>
-        private void StartAdd()
+        private void OpenCreateModal()
         {
-            IsAdding = true;
+            ShowCreateModal = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Add Object Modal");
-        }
-
-        /// <summary>
-        /// Adds the new configuration object.
-        /// </summary>
-        private async Task ConfirmAdd()
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Create Clicked");
-
-            IsLoading = true;
-            ResponseModel? apiResponse;
-
-            switch (Entity)
-            {
-                case "application":
-                    ApplicationRequestModel application = new()
-                    {
-                        Name = NewAppName,
-                        Phrase = NewAppPhrase
-                    };
-
-                    (ApplicationModel? newApplication, apiResponse) = await APIService.CreateConfigurationEntity<ApplicationModel, ApplicationRequestModel>(Entity,
-                        NewAppName,
-                        application);
-                    break;
-                case "authorisation":
-                    AuthorisationRequestModel authorisation = new()
-                    {
-                        Phrase = NewAppPhrase
-                    };
-
-                    (AuthorisationModel? newAuthorisation, apiResponse) = await APIService.CreateConfigurationEntity<AuthorisationModel, AuthorisationRequestModel>(Entity,
-                        NewAppPhrase,
-                        authorisation);
-                    break;
-                case "component":
-                    ComponentRequestModel component = new()
-                    {
-                        Name = NewComponentName
-                    };
-
-                    (ComponentModel? newComponent, apiResponse) = await APIService.CreateConfigurationEntity<ComponentModel, ComponentRequestModel>(Entity,
-                        NewComponentName,
-                        component);
-                    break;
-                case "connection":
-                    ConnectionRequestModel connection = new()
-                    {
-                        IPAddress = NewConnectionIP,
-                        Port = NewConnectionPort
-                    };
-
-                    (ConnectionModel? newConnection, apiResponse) = await APIService.CreateConfigurationEntity<ConnectionModel, ConnectionRequestModel>(Entity,
-                        $"{NewConnectionIP}:{NewConnectionPort}",
-                        connection);
-                    break;
-                case "downtime":
-                    DowntimeRequestModel downtime = new()
-                    {
-                        Time = NewDowntimeTime,
-                        Duration = NewDowntimeDuration
-                    };
-
-                    (DowntimeModel? newDowntime, apiResponse) = await APIService.CreateConfigurationEntity<DowntimeModel, DowntimeRequestModel>(Entity,
-                        $"{NewDowntimeTime} ({NewDowntimeDuration})",
-                        downtime);
-                    break;
-                case "game":
-                    GameRequestModel game = new()
-                    {
-                        Name = NewGameName,
-                        Version = NewGameVersion
-                    };
-
-                    (GameModel? newGame, apiResponse) = await APIService.CreateConfigurationEntity<GameModel, GameRequestModel>(Entity,
-                        $"{NewGameName} ({NewGameVersion})",
-                        game);
-                    break;
-                case "machine":
-                    MachineRequestModel machine = new()
-                    {
-                        HostName = NewMachineHostName
-                    };
-
-                    (MachineModel? newMachine, apiResponse) = await APIService.CreateConfigurationEntity<MachineModel, MachineRequestModel>(Entity,
-                        NewMachineHostName,
-                        machine);
-                    break;
-            }
-
-            IsLoading = false;
-            IsAdding = false;
-            ResetNewFields();
-            await LoadData();
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Create Entity Modal");
         }
 
         /// <summary>
         /// Cancels the new configuration object.
         /// </summary>
-        private void CancelAdd()
+        private void CloseCreateModal()
         {
-            IsAdding = false;
+            ShowCreateModal = false;
             ResetNewFields();
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Add Object Modal");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Create Entity Modal");
+        }
+
+        /// <summary>
+        /// Adds the new configuration object.
+        /// </summary>
+        private async Task CreateEntity()
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Create Clicked");
+
+            IsLoading = true;
+            bool success = false;
+            ResponseModel? apiResponse = null;
+
+            if (Entity == "application")
+            {
+                if (string.IsNullOrWhiteSpace(NewAppName) || string.IsNullOrWhiteSpace(NewAppPhrase))
+                {
+                    ErrorMessage = "Name and phrase are required.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                ApplicationRequestModel application = new()
+                {
+                    Name = NewAppName,
+                    Phrase = NewAppPhrase
+                };
+
+                (ApplicationModel? newApplication, apiResponse) = await APIService.CreateConfigurationEntity<ApplicationModel, ApplicationRequestModel>(Entity,
+                    NewAppName,
+                    application);
+
+                success = newApplication != null;
+            }
+
+            else if (Entity == "authorisation")
+            {
+                if (string.IsNullOrWhiteSpace(NewAppPhrase))
+                {
+                    ErrorMessage = "Phrase required.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                AuthorisationRequestModel authorisation = new()
+                {
+                    Phrase = NewAppPhrase
+                };
+
+                (AuthorisationModel? newAuthorisation, apiResponse) = await APIService.CreateConfigurationEntity<AuthorisationModel, AuthorisationRequestModel>(Entity,
+                    NewAppPhrase,
+                    authorisation);
+
+                success = newAuthorisation != null;
+            }
+
+            else if (Entity == "component")
+            {
+                if (string.IsNullOrWhiteSpace(NewComponentName))
+                {
+                    ErrorMessage = "Name is required.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                ComponentRequestModel component = new()
+                {
+                    Name = NewComponentName
+                };
+
+                (ComponentModel? newComponent, apiResponse) = await APIService.CreateConfigurationEntity<ComponentModel, ComponentRequestModel>(Entity,
+                    NewComponentName,
+                    component);
+
+                success = newComponent != null;
+            }
+
+            else if (Entity == "connection")
+            {
+                if (string.IsNullOrWhiteSpace(NewConnectionIP) || NewConnectionPort == 0)
+                {
+                    ErrorMessage = "Ip address and port are required.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                ConnectionRequestModel connection = new()
+                {
+                    IPAddress = NewConnectionIP,
+                    Port = NewConnectionPort
+                };
+
+                (ConnectionModel? newConnection, apiResponse) = await APIService.CreateConfigurationEntity<ConnectionModel, ConnectionRequestModel>(Entity,
+                    $"{NewConnectionIP}:{NewConnectionPort}",
+                    connection);
+
+                success = newConnection != null;
+            }
+
+            else if (Entity == "downtime")
+            {
+                if (string.IsNullOrWhiteSpace(NewDowntimeTime) || NewDowntimeDuration == 0)
+                {
+                    ErrorMessage = "Time and duration are required.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                DowntimeRequestModel downtime = new()
+                {
+                    Time = NewDowntimeTime,
+                    Duration = NewDowntimeDuration
+                };
+
+                (DowntimeModel? newDowntime, apiResponse) = await APIService.CreateConfigurationEntity<DowntimeModel, DowntimeRequestModel>(Entity,
+                    $"{NewDowntimeTime} ({NewDowntimeDuration})",
+                    downtime);
+
+                success = newDowntime != null;
+            }
+
+            else if (Entity == "game")
+            {
+                if (string.IsNullOrWhiteSpace(NewGameName) || string.IsNullOrWhiteSpace(NewGameVersion))
+                {
+                    ErrorMessage = "Game and game version are required.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                GameRequestModel game = new()
+                {
+                    Name = NewGameName,
+                    Version = NewGameVersion
+                };
+
+                (GameModel? newGame, apiResponse) = await APIService.CreateConfigurationEntity<GameModel, GameRequestModel>(Entity,
+                    $"{NewGameName} ({NewGameVersion})",
+                    game);
+
+                success = newGame != null;
+            }
+
+            else if (Entity == "machine")
+            {
+                if (string.IsNullOrWhiteSpace(NewMachineHostName))
+                {
+                    ErrorMessage = "Host name is required.";
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                MachineRequestModel machine = new()
+                {
+                    HostName = NewMachineHostName
+                };
+
+                (MachineModel? newMachine, apiResponse) = await APIService.CreateConfigurationEntity<MachineModel, MachineRequestModel>(Entity,
+                    NewMachineHostName,
+                    machine);
+
+                success = newMachine != null;
+            }
+
+            if (apiResponse != null)
+            {
+                ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+            }
+
+            await InvokeAsync(StateHasChanged);
+
+            await Task.Delay(2000).ContinueWith(_ =>
+            {
+                if (success)
+                {
+                    ShowCreateModal = false;
+                }
+
+                ErrorMessage = string.Empty;
+
+                ResetNewFields();
+                InvokeAsync(StateHasChanged);
+            });
+
+            await LoadData();
+            IsLoading = false;
         }
 
         /// <summary>
