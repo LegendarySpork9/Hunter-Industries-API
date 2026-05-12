@@ -139,7 +139,7 @@ else
                                         <strong>@error.Label (@totalErrors)</strong>
                                         @foreach (MultiGroupedErrorModel row in groupedErrors)
                                         {
-                                            <div>@ExtractClassMethod(row.Summary): @row.Errors</div>
+                                            <div>@ErrorConverter.ExtractClassMethod(row.Summary): @row.Errors</div>
                                         }
                                     </div>
                                 </TooltipTemplate>

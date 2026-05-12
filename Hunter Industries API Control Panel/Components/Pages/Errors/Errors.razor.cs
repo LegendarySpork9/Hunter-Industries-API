@@ -1,161 +1,157 @@
-using Microsoft.AspNetCore.Components;
-using HunterIndustriesAPIControlPanel.Models;
+// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Components.Shared;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
 {
     public partial class Errors
     {
-        [Inject] private ExampleAPIService APIService { get; set; } = default!;
-        [Inject] private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private IConfigurableLoggerService _Logger { get; set; } = default!;
+        [Inject]
+        private IClock _Clock { get; set; } = default!;
+        [Inject]
+        private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
 
-        private List<ErrorLogRecord> _allErrors = new();
-        private List<ErrorLogRecord> _filteredErrors = new();
-        private List<ErrorLogRecord> _pagedErrors = new();
-        private List<ChartDataItem> _errorsOverTime = new();
-        private List<ChartDataItem> _errorsByIP = new();
-        private List<ChartDataItem> _errorsBySummary = new();
-        private string[] _errorsByIPColours = Array.Empty<string>();
-        private string _errorsYearRange = string.Empty;
+        private ErrorStatisticsModel? Statistics;
+        private PagedAPIResponseModel<ErrorModel>? ErrorLog;
 
-        private static readonly string[] DefaultPalette = new[]
+        private DateTime? FilterFromDate;
+        private DateTime? FilterToDate;
+        private string FilterIPAddress = string.Empty;
+        private string FilterSummary = string.Empty;
+        private int PageSize = 25;
+        private int PageNumber = 1;
+        private bool IsLoading;
+
+        private string[] IPErrorColours = [];
+        private string[] SummaryErrorColours = [];
+        private string ErrorYearRange = string.Empty;
+
+        /// <summary>
+        /// Loads and transforms the summary data.
+        /// </summary>
+        protected override async Task OnInitializedAsync()
         {
-            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
-            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
-        };
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Errors Page");
 
-        private int _pageSize = 25;
-        private int _pageNumber = 1;
-        private DateTime? _filterFromDate;
-        private string _filterIPAddress = string.Empty;
-        private string _filterSummary = string.Empty;
+            IsLoading = true;
 
-        private int TotalPages => _filteredErrors.Count == 0 ? 1 : (int)Math.Ceiling((double)_filteredErrors.Count / _pageSize);
+            Statistics = await APIService.GetErrorStatistics();
 
-        protected override void OnInitialized()
-        {
-            _allErrors = APIService.GetErrors();
-            _filteredErrors = _allErrors;
-            BuildCharts();
-            UpdatePagedErrors();
+            if (Statistics != null)
+            {
+                IPErrorColours = [.. Statistics.IPErrors.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Ip Error Colour(s): {IPErrorColours.Length}");
+
+                SummaryErrorColours = [.. Statistics.SummaryErrors.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Summary Error Colour(s): {SummaryErrorColours.Length}");
+
+                DateTime now = _Clock.UtcNow;
+                int startyear = new DateTime(now.Year, now.Month, 1).AddMonths(-11).Year;
+                int endYear = now.Year;
+
+                ErrorYearRange = startyear == endYear ? $"{startyear}" : $"{startyear} → {endYear}";
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Error Year Range: {ErrorYearRange}");
+            }
+
+            await LoadData();
         }
 
-        private void BuildCharts()
+        /// <summary>
+        /// Loads and transforms the error data.
+        /// </summary>
+        private async Task LoadData()
         {
-            var errorsByMonth = _allErrors
-                .GroupBy(e => new { e.DateOccured.Year, e.DateOccured.Month })
-                .ToDictionary(g => (g.Key.Year, g.Key.Month), g => g.Count());
+            IsLoading = true;
 
-            // Build a full 12-month range ending at the current month
-            var now = DateTime.UtcNow;
-            _errorsOverTime = Enumerable.Range(0, 12)
-                .Select(i =>
+            string? fromDate = FilterFromDate?.ToString("dd/MM/yyyy");
+            string? toDate = FilterToDate?.ToString("dd/MM/yyyy");
+
+            (ErrorLog) = await APIService.GetErrors(fromDate,
+                toDate,
+                FilterIPAddress,
+                FilterSummary,
+                PageSize,
+                PageNumber);
+
+            if (ErrorLog == null)
+            {
+                ErrorLog = new()
                 {
-                    var date = new DateTime(now.Year, now.Month, 1).AddMonths(-11 + i);
-                    return new ChartDataItem
-                    {
-                        Label = date.ToString("MMM"),
-                        Value = errorsByMonth.GetValueOrDefault((date.Year, date.Month), 0),
-                        Category = date.ToString("MMM yyyy")
-                    };
-                })
-                .ToList();
+                    Entries = [],
+                    EntryCount = 0,
+                    PageNumber = 1,
+                    PageSize = 25,
+                    TotalPageCount = 0,
+                    TotalCount = 0
+                };
+            }
 
-            var startYear = new DateTime(now.Year, now.Month, 1).AddMonths(-11).Year;
-            var endYear = now.Year;
-            _errorsYearRange = startYear == endYear ? $"{startYear}" : $"{startYear} → {endYear}";
-
-            _errorsByIP = _allErrors
-                .GroupBy(e => e.IPAddress)
-                .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
-                .ToList();
-
-            _errorsByIPColours = _errorsByIP
-                .Select((_, i) => DefaultPalette[i % DefaultPalette.Length])
-                .ToArray();
-
-            _errorsBySummary = _allErrors
-                .GroupBy(e => ExtractClassMethod(e.Summary))
-                .Select(g => new ChartDataItem { Label = g.Key, Value = g.Count() })
-                .Where(c => c.Value > 0)
-                .OrderByDescending(c => c.Value)
-                .Take(6)
-                .ToList();
+            IsLoading = false;
         }
 
-        private void UpdatePagedErrors()
+        /// <summary>
+        /// Applys the set filters.
+        /// </summary>
+        private async Task ApplyFilters()
         {
-            _pagedErrors = _filteredErrors
-                .Skip((_pageNumber - 1) * _pageSize)
-                .Take(_pageSize)
-                .ToList();
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Apply Clicked");
+
+            PageNumber = 1;
+            await LoadData();
         }
 
-        private void ApplyFilters()
+        /// <summary>
+        /// Clears the applied filters.
+        /// </summary>
+        private async Task ClearFilters()
         {
-            _filteredErrors = APIService.GetErrors(
-                _filterFromDate,
-                string.IsNullOrWhiteSpace(_filterIPAddress) ? null : _filterIPAddress,
-                string.IsNullOrWhiteSpace(_filterSummary) ? null : _filterSummary);
-            _pageNumber = 1;
-            UpdatePagedErrors();
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Clear Clicked");
+
+            FilterFromDate = null;
+            FilterToDate = null;
+            FilterIPAddress = string.Empty;
+            FilterSummary = string.Empty;
+            PageNumber = 1;
+            await LoadData();
         }
 
-        private void ClearFilters()
+        /// <summary>
+        /// Loads the last page of audit logs.
+        /// </summary>
+        private async Task PreviousPage()
         {
-            _filterFromDate = null;
-            _filterIPAddress = string.Empty;
-            _filterSummary = string.Empty;
-            _filteredErrors = _allErrors;
-            _pageNumber = 1;
-            UpdatePagedErrors();
-        }
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "<< Prev Clicked");
 
-        private void PreviousPage()
-        {
-            if (_pageNumber > 1)
+            if (PageNumber > 1)
             {
-                _pageNumber--;
-                UpdatePagedErrors();
+                PageNumber--;
+                await LoadData();
             }
         }
 
-        private void NextPage()
+        /// <summary>
+        /// Loads the next page of audit logs.
+        /// </summary>
+        private async Task NextPage()
         {
-            if (_pageNumber < TotalPages)
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Next >> Clicked");
+
+            if (PageNumber < ErrorLog?.TotalPageCount)
             {
-                _pageNumber++;
-                UpdatePagedErrors();
+                PageNumber++;
+                await LoadData();
             }
-        }
-
-        private void OnPageSizeChanged()
-        {
-            _pageNumber = 1;
-            UpdatePagedErrors();
-        }
-
-        private static string ExtractClassMethod(string summary)
-        {
-            var words = summary.TrimEnd('.').Split(' ');
-
-            for (int i = words.Length - 1; i >= 0; i--)
-            {
-                if (words[i].Contains('.'))
-                {
-                    var classMethod = words[i].TrimEnd('.');
-                    var dotIndex = classMethod.LastIndexOf('.');
-
-                    if (dotIndex >= 0)
-                    {
-                        return classMethod[(dotIndex + 1)..];
-                    }
-
-                    return classMethod;
-                }
-            }
-
-            return summary.Length > 40 ? summary[..40] + "..." : summary;
         }
     }
 }

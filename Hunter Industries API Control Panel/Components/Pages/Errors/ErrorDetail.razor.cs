@@ -1,19 +1,38 @@
-using Microsoft.AspNetCore.Components;
-using HunterIndustriesAPIControlPanel.Models;
+// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
 {
     public partial class ErrorDetail
     {
-        [Parameter] public int Id { get; set; }
-        [Inject] private ExampleAPIService APIService { get; set; } = default!;
+        [Inject]
+        private IConfigurableLoggerService _Logger { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
 
-        private ErrorLogRecord? _error;
+        [Parameter]
+        public int Id { get; set; }
 
-        protected override void OnInitialized()
+        private ErrorModel? Error;
+
+        private bool IsLoading { get; set; }
+
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
+        protected override async Task OnInitializedAsync()
         {
-            _error = APIService.GetError(Id);
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Error Detail Page");
+
+            IsLoading = true;
+
+            Error = await APIService.GetError(Id);
+
+            IsLoading = false;
         }
     }
 }

@@ -106,7 +106,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened User Page");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Configuration Detail Page");
 
             DisplayName = DisplayNames.GetValueOrDefault(Entity, Entity);
 

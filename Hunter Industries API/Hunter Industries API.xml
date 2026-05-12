@@ -1994,6 +1994,11 @@
             The date from which to pull records.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.ToDate">
+            <summary>
+            The date to which to pull records.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ErrorLogFilterModel.IPAddress">
             <summary>
             The IP address the records were made from.
@@ -3594,12 +3599,12 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetErrorLog(System.Int32,System.String,System.String,System.DateTime,System.Int32,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetErrorLog(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.Int32,System.Int32)">
             <summary>
             Returns all error log records that match the parameters.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetTotalErrorLog(System.String,System.String,System.DateTime)">
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetTotalErrorLog(System.String,System.String,System.DateTime,System.DateTime)">
             <summary>
             Returns the number of error log records that match the parameters.
             </summary>

@@ -36,5 +36,8 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity, T2 entityObject, List<KeyValuePair<string, object>>? queryParameters = null);
         Task<bool> DeleteConfigurationEntity(string entity, int entityId);
         Task<(T1?, ResponseModel?)> UpdateConfigurationEntity<T1, T2>(string entity, int entityId, T2 entityObject);
+        Task<ErrorStatisticsModel?> GetErrorStatistics();
+        Task<PagedAPIResponseModel<ErrorModel>?> GetPagedErrorLog(List<KeyValuePair<string, object>>? queryParameters = null);
+        Task<ErrorModel?> GetError(int errorId);
     }
 }

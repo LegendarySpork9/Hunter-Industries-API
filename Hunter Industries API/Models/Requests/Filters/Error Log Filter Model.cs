@@ -10,6 +10,10 @@ namespace HunterIndustriesAPI.Models.Requests.Filters
         /// </summary>
         public string FromDate { get; set; } = "01/01/1900";
         /// <summary>
+        /// The date to which to pull records.
+        /// </summary>
+        public string ToDate { get; set; } = "01/01/1900";
+        /// <summary>
         /// The IP address the records were made from.
         /// </summary>
         public string IPAddress { get; set; }

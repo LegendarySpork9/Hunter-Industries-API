@@ -53,7 +53,7 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             ErrorLogService service = new ErrorLogService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
 
-            (List<ErrorLogRecord> actual, int totalRecords) = await service.GetErrorLog(0, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
+            (List<ErrorLogRecord> actual, int totalRecords) = await service.GetErrorLog(0, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(5, totalRecords);
@@ -76,7 +76,7 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             ErrorLogService service = new ErrorLogService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
 
-            (List<ErrorLogRecord> actual, int totalRecords) = await service.GetErrorLog(0, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
+            (List<ErrorLogRecord> actual, int totalRecords) = await service.GetErrorLog(0, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
 
             Assert.AreEqual(0, actual.Count);
             Assert.AreEqual(0, totalRecords);

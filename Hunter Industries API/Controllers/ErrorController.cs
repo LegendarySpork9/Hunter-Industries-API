@@ -126,6 +126,7 @@ namespace HunterIndustriesAPI.Controllers
                 filters.IPAddress,
                 filters.Summary,
                 DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc),
+                DateTime.SpecifyKind(DateTime.ParseExact(filters.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc),
                 filters.PageSize,
                 filters.PageNumber);
 
@@ -224,6 +225,7 @@ namespace HunterIndustriesAPI.Controllers
             List<ErrorLogRecord> errorLogs = (await _errorLogService.GetErrorLog(id,
                 null,
                 null,
+                _Clock.DefaultDate,
                 _Clock.DefaultDate,
                 25,
                 1)).Item1;

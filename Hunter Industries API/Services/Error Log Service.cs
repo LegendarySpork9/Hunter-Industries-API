@@ -45,10 +45,11 @@ namespace HunterIndustriesAPI.Services
             string ipAddress,
             string summary,
             DateTime fromDate,
+            DateTime toDate,
             int pageSize,
             int pageNumber)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { errorId.ToString(), ipAddress, summary, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { errorId.ToString(), ipAddress, summary, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<ErrorLogRecord> errorLogs = new List<ErrorLogRecord>();
             int totalRecords = 0;
@@ -86,6 +87,12 @@ namespace HunterIndustriesAPI.Services
                     parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
+                if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
+                {
+                    sql += "\nand DateOccured < cast(@toDate as datetime)";
+                    parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
+                }
+
                 sql += @"
 order by ErrorId desc
 offset (@pageSize * (@pageNumber - 1)) rows
@@ -114,7 +121,7 @@ fetch next @pageSize rows only";
                     _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
                 }
 
-                totalRecords = await GetTotalErrorLog(ipAddress, summary, fromDate);
+                totalRecords = await GetTotalErrorLog(ipAddress, summary, fromDate, toDate);
             }
 
             catch (Exception ex)
@@ -133,9 +140,10 @@ fetch next @pageSize rows only";
         /// </summary>
         private async Task<int> GetTotalErrorLog(string ipAddress,
             string summary,
-            DateTime fromDate)
+            DateTime fromDate,
+            DateTime toDate)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetTotalErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, summary, fromDate.ToString() })}.");
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetTotalErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, summary, fromDate.ToString(), toDate.ToString() })}.");
 
             int totalRecords = 0;
 
@@ -160,6 +168,13 @@ fetch next @pageSize rows only";
                 {
                     sql += "\nand DateOccured >= cast(@fromDate as datetime)";
                     parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
+                }
+
+
+                if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
+                {
+                    sql += "\nand DateOccured < cast(@toDate as datetime)";
+                    parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
                 }
 
                 (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0),

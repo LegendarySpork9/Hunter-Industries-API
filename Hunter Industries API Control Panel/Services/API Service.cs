@@ -2,6 +2,7 @@
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Abstractions;
+using HunterIndustriesAPIControlPanel.Components.Pages.Errors;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
 using HunterIndustriesAPIControlPanel.Models.Requests.Post;
@@ -1162,6 +1163,180 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return (updatedEntityObject, apiResponse);
+        }
+
+        /// <summary>
+        /// Gets the error statistics from the API.
+        /// </summary>
+        public async Task<ErrorStatisticsModel?> GetErrorStatistics()
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching error statistics from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ErrorStatisticsModel? errorStatistics = null;
+
+            try
+            {
+                errorStatistics = await _APIClient.GetErrorStatistics();
+
+                if (errorStatistics != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched error statistics from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch error statistics from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch error statistics from API");
+            }
+
+            return errorStatistics;
+        }
+
+        /// <summary>
+        /// Gets the error logs from the API matching the given parameters.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<ErrorModel>?> GetErrors(string? fromDate = null,
+            string? toDate = null,
+            string? ipAddress = null,
+            string? summary = null,
+            int pageSize = 25,
+            int pageNumber = 1)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetching error records from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PagedAPIResponseModel<ErrorModel>? pagedResponse = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (!string.IsNullOrWhiteSpace(fromDate))
+            {
+                queryParameters.Add(new("fromDate", fromDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(toDate))
+            {
+                queryParameters.Add(new("toDate", toDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(ipAddress))
+            {
+                queryParameters.Add(new("ipAddress", ipAddress));
+            }
+
+            if (!string.IsNullOrWhiteSpace(summary))
+            {
+                queryParameters.Add(new("summary", summary));
+            }
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
+
+            try
+            {
+                pagedResponse = await _APIClient.GetPagedErrorLog(queryParameters);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Errors Returned: {pagedResponse?.EntryCount ?? 0}");
+
+                if (pagedResponse != null)
+                {
+                    List<ErrorModel> errors = pagedResponse.Entries;
+
+                    foreach (ErrorModel error in errors)
+                    {
+                        _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specifying date times as UTC for error {error.Id}");
+
+                        error.DateOccured = DateTime.SpecifyKind(error.DateOccured, DateTimeKind.Utc);
+
+                        _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specified date times as UTC for error {error.Id}");
+                    }
+
+                    pagedResponse.Entries = errors;
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Fetched error records from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch error records from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Failed to fetch audit history records from API");
+            }
+
+            return pagedResponse;
+        }
+
+        /// <summary>
+        /// Gets the error from the API.
+        /// </summary>
+        public async Task<ErrorModel?> GetError(int errorId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching error, {errorId}, from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            ErrorModel? error = null;
+
+            try
+            {
+                error = await _APIClient.GetError(errorId);
+
+                if (error != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specifying date times as UTC for error {error.Id}");
+
+                    error.DateOccured = DateTime.SpecifyKind(error.DateOccured, DateTimeKind.Utc);
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specified date times as UTC for error {error.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched error, {errorId}, from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch error, {errorId}, from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch error, {errorId}, from API");
+            }
+
+            return error;
         }
     }
 }

@@ -1,6 +1,8 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Components.Shared;
+using HunterIndustriesAPIControlPanel.Converters;
 using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
@@ -33,12 +35,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private string[] EndpointColours = [];
         private string[] FieldColours = [];
 
-        private static readonly string[] DefaultPalette =
-        [
-            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
-            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
-        ];
-
         /// <summary>
         /// Loads and transforms the data.
         /// </summary>
@@ -57,14 +53,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Visible Traffic Label(s): {VisibleTrafficLabels.Count}");
 
-                ServerHealthColours = [.. Statistics.ServerHealth.Select((_, e) => DefaultPalette[e % DefaultPalette.Length])];
+                ServerHealthColours = [.. Statistics.ServerHealth.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Health Colour(s): {ServerHealthColours.Length}");
 
                 List<string> ipAddresses = [.. Statistics.Errors.GroupBy(e => e.IpAddress)
                     .OrderByDescending(e => e.Sum(err => err.Errors))
                     .Select(e => e.Key)];
-                ErrorsByIPGrouped = Statistics.Errors.GroupBy(e => ExtractClassMethod(e.Summary))
+                ErrorsByIPGrouped = Statistics.Errors.GroupBy(e => ErrorConverter.ExtractClassMethod(e.Summary))
                     .ToDictionary(e => e.Key, e =>
                 {
                     Dictionary<string, int>? existing = e.GroupBy(err => err.IpAddress)
@@ -79,7 +75,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Errors By IP: {ErrorsByIPGrouped.Count}");
 
-                ErrorColours = ErrorsByIPGrouped.Keys.Select((key, e) => (key, colour: DefaultPalette[e % DefaultPalette.Length]))
+                ErrorColours = ErrorsByIPGrouped.Keys.Select((key, e) => (key, colour: Colours.DefaultPalette[e % Colours.DefaultPalette.Length]))
                     .ToDictionary(err => err.key, err => err.colour);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Error Colour(s): {ErrorColours.Count}");
@@ -108,11 +104,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Status Colour(s): {StatusColours.Length}");
 
-                EndpointColours = [.. Statistics.EndpointCalls.Select((_, e) => DefaultPalette[e % DefaultPalette.Length])];
+                EndpointColours = [.. Statistics.EndpointCalls.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Endpoint Colour(s): {EndpointColours.Length}");
 
-                FieldColours = [.. Statistics.Changes.Select((_, c) => DefaultPalette[c % DefaultPalette.Length])];
+                FieldColours = [.. Statistics.Changes.Select((_, c) => Colours.DefaultPalette[c % Colours.DefaultPalette.Length])];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Field Colour(s): {FieldColours.Length}");
 
@@ -132,7 +128,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Login Attempts By App: {LoginAttemptsByApp.Count}");
 
-                LoginAttemptColours = LoginAttemptsByApp.Keys.Select((key, l) => (key, colour: DefaultPalette[l % DefaultPalette.Length]))
+                LoginAttemptColours = LoginAttemptsByApp.Keys.Select((key, l) => (key, colour: Colours.DefaultPalette[l % Colours.DefaultPalette.Length]))
                     .ToDictionary(la => la.key, la => la.colour);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Login Attempt Colour(s): {LoginAttemptColours.Count}");
@@ -154,7 +150,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
             if (string.IsNullOrEmpty(trend))
             {
-                double change = ((current - previous) / previous) * 100;
+                double change = ((double)(current - previous) / previous) * 100;
 
                 if (change >= 0)
                 {
@@ -215,50 +211,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             }
 
             return label;
-        }
-
-        /// <summary>
-        /// Returns the class name from the given string.
-        /// </summary>
-        private static string ExtractClassMethod(string summary)
-        {
-            string className = string.Empty;
-
-            string[] words = summary.TrimEnd('.').Split(' ');
-
-            for (int i = words.Length - 1; i >= 0; i--)
-            {
-                if (words[i].Contains('.'))
-                {
-                    string classMethod = words[i].TrimEnd('.');
-                    int dotIndex = classMethod.LastIndexOf('.');
-
-                    if (dotIndex >= 0)
-                    {
-                        className = classMethod[(dotIndex + 1)..];
-                    }
-
-                    else
-                    {
-                        className = classMethod;
-                    }
-                }
-            }
-
-            if (string.IsNullOrEmpty(className))
-            {
-                if (summary.Length > 40)
-                {
-                    className = $"{summary[..40]}...";
-                }
-
-                else
-                {
-                    className = summary;
-                }
-            }
-
-            return className;
         }
     }
 }

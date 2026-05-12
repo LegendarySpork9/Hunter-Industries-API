@@ -85,7 +85,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get("component");
+            IHttpActionResult actionResult = await controller.Get("component", null);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
@@ -107,7 +107,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get("component");
+            IHttpActionResult actionResult = await controller.Get("component", null);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);

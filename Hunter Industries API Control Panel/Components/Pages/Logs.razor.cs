@@ -1,6 +1,7 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Components.Shared;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
@@ -44,12 +45,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private string[] StatusColours = [];
         private string[] EndpointColours = [];
         private string[] FieldColours = [];
-
-        private static readonly string[] DefaultPalette =
-        [
-            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
-            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
-        ];
 
         /// <summary>
         /// Sets the page title.
@@ -134,11 +129,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Status Colour(s): {StatusColours.Length}");
 
-                EndpointColours = [.. Statistics.EndpointCalls.Select((_, e) => DefaultPalette[e % DefaultPalette.Length])];
+                EndpointColours = [.. Statistics.EndpointCalls.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Endpoint Colour(s): {EndpointColours.Length}");
 
-                FieldColours = [.. Statistics.Changes.Select((_, c) => DefaultPalette[c % DefaultPalette.Length])];
+                FieldColours = [.. Statistics.Changes.Select((_, c) => Colours.DefaultPalette[c % Colours.DefaultPalette.Length])];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Field Colour(s): {FieldColours.Length}");
             }

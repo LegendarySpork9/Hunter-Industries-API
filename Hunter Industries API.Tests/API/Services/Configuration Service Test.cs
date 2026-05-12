@@ -51,7 +51,7 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, null, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, null, true, 10, 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(5, totalRecords);
@@ -72,7 +72,7 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, null, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("component", 0, null, true, 10, 1);
 
             Assert.AreEqual(0, actual.Count);
             Assert.AreEqual(0, totalRecords);
@@ -141,7 +141,7 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("application", 0, null, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("application", 0, null, true, 10, 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(2, ((ApplicationRecord)actual[0]).Settings.Count);
@@ -183,7 +183,7 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             ConfigurationService service = new ConfigurationService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
 
-            (List<object> actual, int totalRecords) = await service.GetRecords("application", 0, null, 10, 1);
+            (List<object> actual, int totalRecords) = await service.GetRecords("application", 0, null, true, 10, 1);
 
             Assert.AreEqual(1, actual.Count);
             Assert.AreEqual(1, ((ApplicationRecord)actual[0]).Settings.Count);

@@ -1,6 +1,7 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Components.Shared;
 using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
 using HunterIndustriesAPIControlPanel.Models.Responses;
@@ -43,12 +44,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private bool SaveSuccess;
         private string[] ComponentAlertColours = [];
         private string[] StatusAlertColours = [];
-
-        private static readonly string[] DefaultPalette = new[]
-        {
-            "#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5",
-            "#70AD47", "#264478", "#9B57A0", "#636363", "#EB7E30"
-        };
 
         /// <summary>
         /// Sets the page title.
@@ -266,7 +261,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Visible Health Label(s): {VisibleHealthLabels.Count}");
 
-                ComponentAlertColours = [.. Statistics.ComponentAlerts.Select((_, ca) => DefaultPalette[ca % DefaultPalette.Length])];
+                ComponentAlertColours = [.. Statistics.ComponentAlerts.Select((_, ca) => Colours.DefaultPalette[ca % Colours.DefaultPalette.Length])];
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Component Alert Colour(s): {ComponentAlertColours.Length}");
 
