@@ -397,6 +397,7 @@
     <Compile Include="Models\Requests\Bodies\User\User Model.cs" />
     <Compile Include="Models\Requests\Bodies\User\User Settings Model.cs" />
     <Compile Include="Models\Requests\Filters\Assistant\Assistant Filter Model.cs" />
+    <Compile Include="Models\Requests\Filters\Configuration Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Error Log Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\User Filter Model.cs" />

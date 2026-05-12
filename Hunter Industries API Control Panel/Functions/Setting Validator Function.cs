@@ -1,5 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPIControlPanel.Models.Requests;
+using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using System.ComponentModel;
 

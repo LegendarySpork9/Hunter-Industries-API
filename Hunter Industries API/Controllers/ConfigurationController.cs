@@ -3,6 +3,7 @@ using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPICommon.Abstractions;
@@ -122,18 +123,16 @@ namespace HunterIndustriesAPI.Controllers
         /// </remarks>
         /// <param name="entity">The name of the configuration object.</param>
         /// <param name="entityId">The id number of the parent entity record.</param>
-        /// <param name="pageSize">The number of records to pull per page.</param>
-        /// <param name="pageNumber">The number of the page to pull.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Configuration.Read")]
         [VersionedRoute("configuration/{entity}", "2.0")]
         [SwaggerOperation("GetConfigurationList")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ConfigurationResponseModel>), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(string entity,
-            [FromUri] int pageSize = 25,
-            [FromUri] int pageNumber = 1,
+            [FromUri] ConfigurationFilterModel filters,
             [FromUri] int entityId = 0)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
@@ -145,6 +144,7 @@ namespace HunterIndustriesAPI.Controllers
                 _FileSystem,
                 _Options,
                 _Database);
+            ModelValidationService _modelValidator = new ModelValidationService();
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -152,12 +152,42 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            if (pageSize > 200)
+            if (filters == null)
             {
-                pageSize = 200;
+                filters = new ConfigurationFilterModel();
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            if (filters.PageSize > 200)
+            {
+                filters.PageSize = 200;
+            }
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, entityId.ToString() })}, {ParameterFunction.FormatParameters(filters)}.");
+
+            if (!_modelValidator.IsValid(filters))
+            {
+                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(null,
+                        filters));
+
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "Invalid or no filters provided."
+                    }
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(HttpStatusCode.BadRequest, response.Data);
+            }
 
             int? parentEntityId = null;
 
@@ -169,8 +199,9 @@ namespace HunterIndustriesAPI.Controllers
             (List<object> records, int totalRecords) = await _configurationService.GetRecords(entity,
                 0,
                 parentEntityId,
-                pageSize,
-                pageNumber);
+                filters.IncludeUsed,
+                filters.PageSize,
+                filters.PageNumber);
 
             if (records.Count == 0)
             {
@@ -181,7 +212,7 @@ namespace HunterIndustriesAPI.Controllers
                     AuditHistoryConverter.GetStatusId("NoContent"),
                     username,
                     applicationName,
-                    new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() });
+                    new string[] { entity, entityId.ToString(), filters.IncludeUsed.ToString(), filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
                 response = new ResponseModel()
                 {
@@ -203,9 +234,9 @@ namespace HunterIndustriesAPI.Controllers
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() });
+                new string[] { entity, entityId.ToString(), filters.IncludeUsed.ToString(), filters.PageSize.ToString(), filters.PageNumber.ToString() });
 
-            int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)pageSize);
+            int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
 
             response = new ResponseModel()
             {
@@ -214,8 +245,8 @@ namespace HunterIndustriesAPI.Controllers
                 {
                     Entries = records,
                     EntryCount = records.Count,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
+                    PageNumber = filters.PageNumber,
+                    PageSize = filters.PageSize,
                     TotalPageCount = totalPages,
                     TotalCount = totalRecords
                 }

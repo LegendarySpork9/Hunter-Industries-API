@@ -9,6 +9,6 @@ namespace HunterIndustriesAPIControlPanel.Models
         public string BaseURL { get; set; }
         public string Version { get; set; }
         public string Credentials { get; set; }
-        public string PayloadLocation { get; set; }
+        public string AuthPayloadLocation { get; set; }
     }
 }

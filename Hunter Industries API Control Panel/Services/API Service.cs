@@ -3,6 +3,8 @@ using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Models.Requests;
+using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
+using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 namespace HunterIndustriesAPIControlPanel.Services
@@ -316,31 +318,33 @@ namespace HunterIndustriesAPIControlPanel.Services
         }
 
         /// <summary>
-        /// Gets the application from the API.
+        /// Gets the configuration entity from the API.
         /// </summary>
-        public async Task<ApplicationModel?> GetApplication(int applicationId)
+        public async Task<T?> GetConfigurationEntity<T>(string entity,
+            int entityId)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching application, {applicationId}, from API");
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching {entity}, {entityId}, from API");
 
             if (ExpiryTime < _Clock.UtcNow)
             {
                 await Authorise();
             }
 
-            ApplicationModel? application = null;
+            T? entityObject = default;
 
             try
             {
-                application = await _APIClient.GetApplication(applicationId);
+                entityObject = await _APIClient.GetConfigurationEntity<T>(entity,
+                    entityId);
 
-                if (application != null)
+                if (entityObject != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched application, {applicationId}, from API");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched {entity}, {entityId}, from API");
                 }
 
                 else
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch application, {applicationId}, from API");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}, {entityId}, from API");
                 }
             }
 
@@ -348,10 +352,10 @@ namespace HunterIndustriesAPIControlPanel.Services
             {
                 _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch application, {applicationId}, from API");
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}, {entityId}, from API");
             }
 
-            return application;
+            return entityObject;
         }
 
         /// <summary>
@@ -542,7 +546,8 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// </summary>
         public async Task<T?> GetPagedConfiguration<T>(string entity,
             int pageSize = 25,
-            int pageNumber = 1)
+            int pageNumber = 1,
+            bool ignoreQuery = true)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching {entity}s from API");
 
@@ -568,7 +573,8 @@ namespace HunterIndustriesAPIControlPanel.Services
             try
             {
                 configurationObjects = await _APIClient.GetPagedConfiguration<T>(entity,
-                    queryParameters);
+                    queryParameters,
+                    ignoreQuery);
 
                 if (configurationObjects != null)
                 {
@@ -1022,52 +1028,12 @@ namespace HunterIndustriesAPIControlPanel.Services
         }
 
         /// <summary>
-        /// Gets the configuration entity from the API.
-        /// </summary>
-        public async Task<T?> GetConfigurationEntity<T>(string entity,
-            int entityId)
-        {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching {entity}, {entityId}, from API");
-
-            if (ExpiryTime < _Clock.UtcNow)
-            {
-                await Authorise();
-            }
-
-            T? entityObject = default;
-
-            try
-            {
-                entityObject = await _APIClient.GetConfigurationEntity<T>(entity,
-                    entityId);
-
-                if (entityObject != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched {entity}, {entityId}, from API");
-                }
-
-                else
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}, {entityId}, from API");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch {entity}, {entityId}, from API");
-            }
-
-            return entityObject;
-        }
-
-        /// <summary>
         /// Creates a configuration entity in the API.
         /// </summary>
         public async Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity,
             string newEntityValue,
-            T2 entityObject)
+            T2 entityObject,
+            int? parentEntityId = null)
         {
             _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Creating {entity}, {newEntityValue}, in API");
 
@@ -1079,10 +1045,18 @@ namespace HunterIndustriesAPIControlPanel.Services
             T1? newEntityObject = default;
             ResponseModel? apiResponse = null;
 
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (parentEntityId.HasValue)
+            {
+                queryParameters.Add(new("entityId", parentEntityId.Value));
+            }
+
             try
             {
                 (newEntityObject, apiResponse) = await _APIClient.CreateConfigurationEntity<T1, T2>(entity,
-                    entityObject);
+                    entityObject,
+                    queryParameters);
 
                 if (newEntityObject != null)
                 {
@@ -1103,6 +1077,91 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return (newEntityObject, apiResponse);
+        }
+
+        /// <summary>
+        /// Deletes an entity in the API.
+        /// </summary>
+        public async Task<bool> DeleteConfigurationEntity(string entity,
+            int entityId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Deleting {entity}, {entityId}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            bool deleted = false;
+
+            try
+            {
+                deleted = await _APIClient.DeleteConfigurationEntity(entity,
+                    entityId);
+
+                if (deleted)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Deleted {entity}, {entityId}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to delete {entity}, {entityId}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to delete {entity}, {entityId}, in API");
+            }
+
+            return deleted;
+        }
+
+        /// <summary>
+        /// Updates a configuration entity in the API.
+        /// </summary>
+        public async Task<(T1?, ResponseModel?)> UpdateConfigurationEntity<T1, T2>(string entity,
+            int entityId,
+            T2 entityObject)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updating {entity}, {entityId}, in API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            T1? updatedEntityObject = default;
+            ResponseModel? apiResponse = null;
+
+            try
+            {
+                (updatedEntityObject, apiResponse) = await _APIClient.UpdateConfigurationEntity<T1, T2>(entity,
+                    entityId,
+                    entityObject);
+
+                if (updatedEntityObject != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Updated {entity}, {entityId}, in API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update {entity}, {entityId}, in API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to update {entity}, {entityId}, in API");
+            }
+
+            return (updatedEntityObject, apiResponse);
         }
     }
 }

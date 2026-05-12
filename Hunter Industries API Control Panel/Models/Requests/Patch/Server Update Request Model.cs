@@ -1,5 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-namespace HunterIndustriesAPIControlPanel.Models.Requests
+namespace HunterIndustriesAPIControlPanel.Models.Requests.Patch
 {
     /// <summary>
     /// Stores the server data for the api request.

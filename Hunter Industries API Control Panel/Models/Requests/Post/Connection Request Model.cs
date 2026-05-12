@@ -1,5 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-namespace HunterIndustriesAPIControlPanel.Models.Requests
+namespace HunterIndustriesAPIControlPanel.Models.Requests.Post
 {
     /// <summary>
     /// Stores the connection data for the api request.

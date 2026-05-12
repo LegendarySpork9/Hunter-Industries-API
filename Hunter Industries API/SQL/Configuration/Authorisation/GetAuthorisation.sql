@@ -1,5 +1,5 @@
 select
-	PhraseId,
+	Authorisation.PhraseId,
 	Phrase,
-	IsDeleted
+	Authorisation.IsDeleted
 from Authorisation with (nolock)

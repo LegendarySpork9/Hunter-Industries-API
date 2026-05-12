@@ -1,5 +1,5 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-namespace HunterIndustriesAPIControlPanel.Models.Requests
+namespace HunterIndustriesAPIControlPanel.Models.Requests.Patch
 {
     /// <summary>
     /// Stores the user setting data for the update api request.

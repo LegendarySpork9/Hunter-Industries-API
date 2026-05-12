@@ -118,25 +118,33 @@ fetch next @pageSize rows only";
             switch (entity)
             {
                 case "application": return @"
-where [Name] = @name";
+where [Name] = @name
+and IsDeleted = 0";
                 case "applicationSetting": return @"
 where ApplicationId = @applicationId
-and [Name] = @name";
+and [Name] = @name
+and IsDeleted = 0";
                 case "authorisation": return @"
-where Phrase = @phrase";
+where Phrase = @phrase
+and IsDeleted = 0";
                 case "component": return @"
-where [Name] = @name";
+where [Name] = @name
+and IsDeleted = 0";
                 case "connection": return @"
 where IPAddress = @ipAddress
-and [Port] = @port";
+and [Port] = @port
+and IsDeleted = 0";
                 case "downtime": return @"
 where Time = @time
-and Duration = @duration";
+and Duration = @duration
+and IsDeleted = 0";
                 case "game": return @"
 where [Name] = @name
-and [Version] = @version";
+and [Version] = @version
+and IsDeleted = 0";
                 case "machine": return @"
-where HostName = @hostName";
+where HostName = @hostName
+and IsDeleted = 0";
                 default: return "Unknown.sql";
             }
         }

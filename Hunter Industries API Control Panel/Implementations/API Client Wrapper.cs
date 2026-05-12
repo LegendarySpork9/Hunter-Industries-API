@@ -5,12 +5,12 @@ using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Converters;
 using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Requests;
+using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
+using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestSharp;
-using UserModel = HunterIndustriesAPIControlPanel.Models.Responses.UserModel;
 
 namespace HunterIndustriesAPIControlPanel.Implementations
 {
@@ -57,7 +57,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
 
-                string body = _FileSystem.ReadAllText($@"{APISettings.PayloadLocation}\Authorise.json");
+                string body = _FileSystem.ReadAllText(APISettings.AuthPayloadLocation);
 
                 RestRequest request = new()
                 {
@@ -432,16 +432,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns the application from the API.
+        /// Returns the configuration entity from the API.
         /// </summary>
-        public async Task<ApplicationModel?> GetApplication(int applicationId)
+        public async Task<T?> GetConfigurationEntity<T>(string entity,
+            int entityId)
         {
-            ApplicationModel? application = null;
+            T? entityObject = default;
 
             try
             {
-                string url = BuildURL("/configuration/application",
-                    applicationId);
+                string url = BuildURL($"/configuration/{entity}",
+                    entityId);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -465,7 +466,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    application = JsonConvert.DeserializeObject<ApplicationModel>(response.Content);
+                    entityObject = JsonConvert.DeserializeObject<T>(response.Content);
                 }
 
                 if (response.ErrorException != null)
@@ -481,7 +482,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
             }
 
-            return application;
+            return entityObject;
         }
 
         /// <summary>
@@ -597,14 +598,16 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// Returns the paged configuration object from the API.
         /// </summary>
         public async Task<T?> GetPagedConfiguration<T>(string entity,
-            List<KeyValuePair<string, object>>? queryParameters = null)
+            List<KeyValuePair<string, object>>? queryParameters = null,
+            bool ignoreQuery = true)
         {
             T? pagedObject = default;
 
             try
             {
                 string url = BuildURL($"/configuration/{entity}",
-                    queryParameters: queryParameters);
+                    queryParameters: queryParameters,
+                    ignoreQuery: ignoreQuery);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -1202,71 +1205,19 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns the configuration entity from the API.
-        /// </summary>
-        public async Task<T?> GetConfigurationEntity<T>(string entity,
-            int entityId)
-        {
-            T? entityObject = default;
-
-            try
-            {
-                string url = BuildURL($"/configuration/{entity}",
-                    entityId);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
-
-                RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
-
-                RestRequest request = new()
-                {
-                    Method = Method.Get
-                };
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
-
-                RestResponse response = await client.ExecuteAsync(request);
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
-                {
-                    entityObject = JsonConvert.DeserializeObject<T>(response.Content);
-                }
-
-                if (response.ErrorException != null)
-                {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
-            }
-
-            return entityObject;
-        }
-
-        /// <summary>
         /// Returns the new configuration entity from the API.
         /// </summary>
         public async Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity,
-            T2 entityObject)
+            T2 entityObject,
+            List<KeyValuePair<string, object>>? queryParameters = null)
         {
             T1? createdEntity = default;
             ResponseModel? apiResponse = null;
 
             try
             {
-                string url = BuildURL($"/configuration/{entity}");
+                string url = BuildURL($"/configuration/{entity}",
+                    queryParameters: queryParameters);
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
 
@@ -1321,6 +1272,130 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             }
 
             return (createdEntity, apiResponse);
+        }
+
+        /// <summary>
+        /// Returns whether the enityt was deleted in the API.
+        /// </summary>
+        public async Task<bool> DeleteConfigurationEntity(string entity,
+            int entityId)
+        {
+            bool deleted = false;
+
+            try
+            {
+                string url = BuildURL($"/configuration/{entity}",
+                    entityId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Delete
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    deleted = true;
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return deleted;
+        }
+
+        /// <summary>
+        /// Returns the updated configuration entity from the API.
+        /// </summary>
+        public async Task<(T1?, ResponseModel?)> UpdateConfigurationEntity<T1, T2>(string entity,
+            int entityId,
+            T2 entityObject)
+        {
+            T1? updatedEntity = default;
+            ResponseModel? apiResponse = null;
+
+            try
+            {
+                string url = BuildURL($"/configuration/{entity}",
+                    entityId);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                string body = JsonConvert.SerializeObject(entityObject);
+
+                RestRequest request = new()
+                {
+                    Method = Method.Patch
+                };
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    updatedEntity = JsonConvert.DeserializeObject<T1>(response.Content);
+                }
+
+                else if (response.Content != null)
+                {
+                    APIMessageModel? apiMessage = JsonConvert.DeserializeObject<APIMessageModel>(response.Content);
+                    apiResponse = new()
+                    {
+                        StatusCode = response.StatusCode,
+                        Message = apiMessage?.Error ?? apiMessage?.Information ?? "No message returned by the API."
+                    };
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return (updatedEntity, apiResponse);
         }
 
         /// <summary>

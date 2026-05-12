@@ -26,9 +26,7 @@ else
     <!-- Results -->
     <RadzenDataGrid Data="@Records?.Entries"
         TItem="ConfigurationListObjectModel"
-        AllowSorting="false"
-        RowClick="@(args => Navigation.NavigateTo($"/configuration/{Entity}/{args.Data.Id}?fromPage={PageNumber}"))"
-        Style="cursor: pointer;">
+        AllowSorting="false">
         <Columns>
             <RadzenDataGridColumn TItem="ConfigurationListObjectModel"
                 Property="Id"
@@ -49,6 +47,33 @@ else
                     {
                         <StatusBadge Text="Active"
                             Type="active" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="ConfigurationListObjectModel"
+                Title="Actions"
+                Width="160px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="entity">
+                    @if (!entity.IsDeleted)
+                    {
+                        <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToEdit(entity.Id)" @onclick:stopPropagation="true" title="Edit">
+                            &#9998;
+                        </button>
+                        @if (Entity == "application")
+                        {
+                            <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToLogs(entity.Id)" @onclick:stopPropagation="true" title="Logs">
+                                &#128203;
+                            </button>
+                        }
+                        
+                        @if (entity.Name != ControlPanelApplication)
+                        {
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(entity)" @onclick:stopPropagation="true" title="Delete">
+                                &#128465;
+                            </button>
+                        }
                     }
                 </Template>
             </RadzenDataGridColumn>
@@ -102,64 +127,58 @@ else
                                     </select>
                                 </div>
                                 break;
+
                             case "authorisation":
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Phrase</label>
-                                        <input type="text" class="form-control" @bind="NewAuthPhrase" />
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phrase</label>
+                                    <input type="text" class="form-control" @bind="NewAuthPhrase" />
                                 </div>
                                 break;
+
                             case "component":
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Name</label>
-                                        <input type="text" class="form-control" @bind="NewComponentName" />
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" @bind="NewComponentName" />
                                 </div>
                                 break;
+
                             case "connection":
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">IP Address</label>
-                                        <input type="text" class="form-control" @bind="NewConnectionIP" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Port</label>
-                                        <input type="number" class="form-control" @bind="NewConnectionPort" />
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">IP Address</label>
+                                    <input type="text" class="form-control" @bind="NewConnectionIP" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Port</label>
+                                    <input type="text" class="form-control" @bind="NewConnectionPort" />
                                 </div>
                                 break;
+
                             case "downtime":
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Time</label>
-                                        <input type="text" class="form-control" @bind="NewDowntimeTime" placeholder="HH:mm:ss" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Duration (seconds)</label>
-                                        <input type="number" class="form-control" @bind="NewDowntimeDuration" />
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Time</label>
+                                    <input type="text" class="form-control" @bind="NewDowntimeTime" placeholder="HH:mm:ss" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Duration (seconds)</label>
+                                    <input type="text" class="form-control" @bind="NewDowntimeDuration" />
                                 </div>
                                 break;
+
                             case "game":
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Name</label>
-                                        <input type="text" class="form-control" @bind="NewGameName" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Version</label>
-                                        <input type="text" class="form-control" @bind="NewGameVersion" />
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" @bind="NewGameName" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Version</label>
+                                    <input type="text" class="form-control" @bind="NewGameVersion" />
                                 </div>
                                 break;
+
                             case "machine":
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Host Name</label>
-                                        <input type="text" class="form-control" @bind="NewMachineHostName" />
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Host Name</label>
+                                    <input type="text" class="form-control" @bind="NewMachineHostName" />
                                 </div>
                                 break;
                         }
@@ -188,4 +207,11 @@ else
             </div>
         </div>
     }
+
+    <ConfirmDialog IsVisible="ShowDeleteConfirm"
+                   Title="@($"Delete {DisplayName}")"
+                   Message="@($"Are you sure you want to delete {DisplayName} '{EntityToDelete?.Name}'?")"
+                   ConfirmText="Delete"
+                   OnConfirm="DeleteConfiguration"
+                   OnCancel="CancelDelete" />
 }

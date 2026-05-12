@@ -319,6 +319,21 @@ namespace HunterIndustriesAPI.Filters.Operation
                         {
                             param.name = "entityObject";
                         }
+
+                        if (param.name == "filters.includeUsed")
+                        {
+                            param.name = "includeUsed";
+                        }
+
+                        if (param.name == "filters.pageSize")
+                        {
+                            param.name = "pageSize";
+                        }
+
+                        if (param.name == "filters.pageNumber")
+                        {
+                            param.name = "pageNumber";
+                        }
                     }
                 }
             }

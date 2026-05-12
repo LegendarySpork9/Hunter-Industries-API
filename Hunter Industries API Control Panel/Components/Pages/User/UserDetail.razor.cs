@@ -4,6 +4,8 @@ using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Functions;
 using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Requests;
+using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
+using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using HunterIndustriesAPIControlPanel.Services;

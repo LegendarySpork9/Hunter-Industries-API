@@ -1,9 +1,10 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Functions;
 using HunterIndustriesAPIControlPanel.Mappers;
 using HunterIndustriesAPIControlPanel.Models;
-using HunterIndustriesAPIControlPanel.Models.Requests;
+using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using HunterIndustriesAPIControlPanel.Services;
@@ -17,9 +18,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
         [Inject]
+        private IFileSystem _FileSystem { get; set; } = default!;
+        [Inject]
         private NavigationManager Navigation { get; set; } = default!;
         [Inject]
         private APIService APIService { get; set; } = default!;
+        [Inject]
+        private APISettingsModel APISettings { get; set; } = default!;
 
         [SupplyParameterFromQuery(Name = "page")]
         public int? QueryPage { get; set; }
@@ -32,6 +37,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private string DisplayName = string.Empty;
         private bool ShowCreateModal;
         private List<string> Phrases = [];
+        private string ControlPanelApplication = string.Empty;
         private string NewAppName = string.Empty;
         private string NewAppPhrase = string.Empty;
         private string NewAuthPhrase = string.Empty;
@@ -45,6 +51,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private string NewMachineHostName = string.Empty;
         private bool IsLoading;
         private string ErrorMessage = string.Empty;
+        private bool ShowDeleteConfirm;
+        private ConfigurationListObjectModel? EntityToDelete;
         private int PageSize = 25;
         private int PageNumber = 1;
 
@@ -85,6 +93,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task LoadData()
         {
+            ConfigurationFunction _configurationFunction = new(_FileSystem,
+                APISettings);
+
             if (Entity == "application")
             {
                 PagedAPIResponseModel<ApplicationModel>? applications = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ApplicationModel>?>(Entity,
@@ -102,8 +113,10 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                         TotalPageCount = applications.TotalPageCount,
                         TotalCount = applications.TotalCount
                     };
+                    ControlPanelApplication = _configurationFunction.GetControlPanelApplication(applications.Entries);
                 }
 
+                PageNumber = Records?.PageNumber ?? PageNumber;
                 Phrases = await GetPhrases();
             }
 
@@ -255,9 +268,10 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             while (nextPage)
             {
-                PagedAPIResponseModel<AuthorisationModel>? pagedAuthorisation = await APIService.GetPagedConfiguration<PagedAPIResponseModel<AuthorisationModel>?>("machine",
+                PagedAPIResponseModel<AuthorisationModel>? pagedAuthorisation = await APIService.GetPagedConfiguration<PagedAPIResponseModel<AuthorisationModel>?>("authorisation",
                     200,
-                    pageNumber);
+                    pageNumber,
+                    false);
 
                 if (pagedAuthorisation != null && pagedAuthorisation.EntryCount > 0)
                 {
@@ -293,6 +307,18 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private void OpenCreateModal()
         {
+            NewAppName = string.Empty;
+            NewAppPhrase = string.Empty;
+            NewAuthPhrase = string.Empty;
+            NewComponentName = string.Empty;
+            NewConnectionIP = string.Empty;
+            NewConnectionPort = 0;
+            NewDowntimeTime = string.Empty;
+            NewDowntimeDuration = 0;
+            NewGameName = string.Empty;
+            NewGameVersion = string.Empty;
+            NewMachineHostName = string.Empty;
+            ErrorMessage = string.Empty;
             ShowCreateModal = true;
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Create Entity Modal");
@@ -304,7 +330,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private void CloseCreateModal()
         {
             ShowCreateModal = false;
-            ResetNewFields();
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Create Entity Modal");
         }
@@ -318,6 +343,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             IsLoading = true;
             bool success = false;
+            ErrorMessage = string.Empty;
             ResponseModel? apiResponse = null;
 
             if (Entity == "application")
@@ -345,7 +371,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Entity == "authorisation")
             {
-                if (string.IsNullOrWhiteSpace(NewAppPhrase))
+                if (string.IsNullOrWhiteSpace(NewAuthPhrase))
                 {
                     ErrorMessage = "Phrase required.";
                     _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
@@ -355,11 +381,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
                 AuthorisationRequestModel authorisation = new()
                 {
-                    Phrase = NewAppPhrase
+                    Phrase = NewAuthPhrase
                 };
 
                 (AuthorisationModel? newAuthorisation, apiResponse) = await APIService.CreateConfigurationEntity<AuthorisationModel, AuthorisationRequestModel>(Entity,
-                    NewAppPhrase,
+                    NewAuthPhrase,
                     authorisation);
 
                 success = newAuthorisation != null;
@@ -493,32 +519,67 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     ShowCreateModal = false;
                 }
 
-                ErrorMessage = string.Empty;
-
-                ResetNewFields();
                 InvokeAsync(StateHasChanged);
             });
 
             await LoadData();
+            ErrorMessage = string.Empty;
             IsLoading = false;
         }
 
         /// <summary>
-        /// Sets the new fields to blank.
+        /// Directs the user to the edit page.
         /// </summary>
-        private void ResetNewFields()
+        private void NavigateToEdit(int id) => Navigation.NavigateTo($"/configuration/{Entity}/{id}?fromPage={PageNumber}");
+
+        /// <summary>
+        /// Directs the user to the logs page.
+        /// </summary>
+        private void NavigateToLogs(int id) => Navigation.NavigateTo($"/logs?application={id}");
+
+        /// <summary>
+        /// Shows the delete confirmation modal.
+        /// </summary>
+        private void ConfirmDelete(ConfigurationListObjectModel entity)
         {
-            NewAppName = string.Empty;
-            NewAppPhrase = string.Empty;
-            NewAuthPhrase = string.Empty;
-            NewComponentName = string.Empty;
-            NewConnectionIP = string.Empty;
-            NewConnectionPort = 0;
-            NewDowntimeTime = string.Empty;
-            NewDowntimeDuration = 0;
-            NewGameName = string.Empty;
-            NewGameVersion = string.Empty;
-            NewMachineHostName = string.Empty;
+            EntityToDelete = entity;
+            ShowDeleteConfirm = true;
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Delete Confirmation Modal");
+        }
+
+        /// <summary>
+        /// Performs the configuration deletion steps.
+        /// </summary>
+        private async Task DeleteConfiguration()
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Delete Configuration Clicked");
+
+            if (EntityToDelete != null)
+            {
+                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                    EntityToDelete.Id);
+
+                if (deleted && Records != null)
+                {
+                    int index = Records.Entries.IndexOf(EntityToDelete);
+                    Records.Entries[index].IsDeleted = true;
+                }
+            }
+
+            ShowDeleteConfirm = false;
+            EntityToDelete = null;
+        }
+
+        /// <summary>
+        /// Hides the delete confirmation modal.
+        /// </summary>
+        private void CancelDelete()
+        {
+            ShowDeleteConfirm = false;
+            EntityToDelete = null;
+
+            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Delete Confirmation Model");
         }
 
         /// <summary>

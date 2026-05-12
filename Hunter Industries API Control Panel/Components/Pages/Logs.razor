@@ -209,8 +209,8 @@ else
                     <input type="text" class="form-control" @bind="FilterIPAddress" placeholder="e.g. 192.168.1.100" />
                 </div>
                 <div class="col-md-2 d-flex gap-2">
-                    <button class="btn btn-primary btn-sm" @onclick="ApplyFilters">Apply</button>
-                    <button class="btn btn-outline-light btn-sm" @onclick="ClearFilters">Clear</button>
+                    <button class="btn btn-primary btn-sm" disabled="@IsLoading" @onclick="ApplyFilters">Apply</button>
+                    <button class="btn btn-outline-light btn-sm" disabled="@IsLoading" @onclick="ClearFilters">Clear</button>
                 </div>
             </div>
         </div>
@@ -275,9 +275,9 @@ else
                 <option value="25">25</option>
                 <option value="50">50</option>
             </select>
-            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber <= 1)" @onclick="PreviousPage">&laquo; Prev</button>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber <= 1 || IsLoading)" @onclick="PreviousPage">&laquo; Prev</button>
             <span class="text-muted">Page @PageNumber of @AuditLogs?.TotalPageCount</span>
-            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber >= AuditLogs?.TotalPageCount)" @onclick="NextPage">Next &raquo;</button>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber >= AuditLogs?.TotalPageCount || IsLoading)" @onclick="NextPage">Next &raquo;</button>
         </div>
     </div>
 }

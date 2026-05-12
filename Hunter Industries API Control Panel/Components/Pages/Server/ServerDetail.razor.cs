@@ -2,6 +2,7 @@
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Models.Requests;
+using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;

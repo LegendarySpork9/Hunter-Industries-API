@@ -10,9 +10,14 @@ namespace HunterIndustriesAPIControlPanel.Converters
         {
             return type switch
             {
-                "Int16" => "Integer (16 x 2,048)",
-                "Int32" => "Integer (32 x 4,096)",
-                "Int64" => "Integer (64 x 8,192)",
+                "Byte" => "Byte (0 -> 255)",
+                "Decimal" => "Currancy",
+                "Double" => "Math Integer",
+                "Int16" => "Integer (~32 KB)",
+                "Int32" => "Integer (~2 GB)",
+                "Int64" => "Integer (~8 EB)",
+                "Int128" => "Integer (~139 BB)",
+                "SByte" => "SByte (-128 -> 127)",
                 "Single" => "Float",
                 "TimeSpan" => "Duration",
                 _ => type

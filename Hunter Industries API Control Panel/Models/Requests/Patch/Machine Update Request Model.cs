@@ -1,11 +1,11 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-namespace HunterIndustriesAPIControlPanel.Models.Requests
+namespace HunterIndustriesAPIControlPanel.Models.Requests.Patch
 {
     /// <summary>
     /// Stores the machine data for the api request.
     /// </summary>
-    public class MachineRequestModel
+    public class MachineUpdateRequestModel
     {
-        public required string HostName { get; set; }
+        public string? HostName { get; set; }
     }
 }

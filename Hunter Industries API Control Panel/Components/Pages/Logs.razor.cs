@@ -38,6 +38,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private string FilterIPAddress = string.Empty;
         private int PageSize = 25;
         private int PageNumber = 1;
+        private bool IsLoading;
 
         private string[] MethodColours = [];
         private string[] StatusColours = [];
@@ -73,7 +74,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
             else if (QueryApplicationId.HasValue)
             {
-                ApplicationModel? application = await APIService.GetApplication(QueryApplicationId.Value);
+                ApplicationModel? application = await APIService.GetConfigurationEntity<ApplicationModel>("application",
+                    QueryApplicationId.Value);
 
                 if (application != null)
                 {
@@ -147,6 +149,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task LoadData()
         {
+            IsLoading = true;
+
             string? fromDate = FilterFromDate?.ToString("dd/MM/yyyy");
             string? toDate = FilterToDate?.ToString("dd/MM/yyyy");
             string? username = User?.Username ?? null;
@@ -177,6 +181,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             UpdateUrl();
 
             _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Entries: {AuditLogs?.EntryCount ?? 0}");
+
+            IsLoading = false;
         }
 
         /// <summary>

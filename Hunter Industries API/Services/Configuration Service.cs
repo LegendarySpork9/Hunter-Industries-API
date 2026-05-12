@@ -43,6 +43,7 @@ namespace HunterIndustriesAPI.Services
         public async Task<(List<object>, int)> GetRecords(string entity,
             int id,
             int? parentEntityId = null,
+            bool includeUsed = true,
             int pageSize = 0,
             int pageNumber = 0)
         {
@@ -55,6 +56,14 @@ namespace HunterIndustriesAPI.Services
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLGet(entity)}");
                 SqlParameter[] parameters;
+
+                if (!includeUsed && entity == "authorisation")
+                {
+                    sql += @"
+left join [Application] with (nolock) on Authorisation.PhraseId = [Application].PhraseId and [Application].IsDeleted = 0
+where [Application].ApplicationId is null
+and Authorisation.IsDeleted = 0";
+                }
 
                 if (id != 0)
                 {
