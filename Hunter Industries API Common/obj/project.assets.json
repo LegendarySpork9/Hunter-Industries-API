@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    ".NETStandard,Version=v2.0": {
+    "netstandard2.0": {
       "log4net/3.3.0": {
         "type": "package",
         "dependencies": {
@@ -719,7 +719,7 @@
     "net10.0": [
       "log4net >= 3.3.0"
     ],
-    ".NETStandard,Version=v2.0": [
+    "netstandard2.0": [
       "NETStandard.Library >= 2.0.3",
       "log4net >= 3.3.0"
     ]
@@ -777,7 +777,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
@@ -805,7 +805,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1107,7 +1107,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203\\RuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300\\RuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.Win32.Primitives": "(,4.3.0]",
           "System.AppContext": "(,4.3.0]",

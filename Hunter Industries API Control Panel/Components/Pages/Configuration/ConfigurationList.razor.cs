@@ -32,7 +32,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         [Parameter]
         public string Entity { get; set; } = string.Empty;
 
-        private PaginatedResponse<ConfigurationListObjectModel>? Records;
+        private PagedAPIResponseModel<ConfigurationListObjectModel>? Records;
 
         private string DisplayName = string.Empty;
         private bool ShowCreateModal;

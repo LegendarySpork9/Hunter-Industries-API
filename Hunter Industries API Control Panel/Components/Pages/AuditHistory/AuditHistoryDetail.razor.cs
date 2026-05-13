@@ -1,72 +1,38 @@
-using Microsoft.AspNetCore.Components;
-using HunterIndustriesAPIControlPanel.Models;
+// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
 {
     public partial class AuditHistoryDetail
     {
         [Inject]
-        private ExampleAPIService APIService { get; set; } = default!;
+        private IConfigurableLoggerService _Logger { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
 
         [Parameter]
         public int Id { get; set; }
 
-        [SupplyParameterFromQuery(Name = "fromPage")]
-        public int? FromAuditPage { get; set; }
+        private AuditHistoryModel? AuditHistory;
 
-        private int FromPage = 1;
+        private bool IsLoading { get; set; }
 
-        private AuditHistoryRecord? Record;
-
-        protected override void OnInitialized()
+        /// <summary>
+        /// Loads the data.
+        /// </summary>
+        protected override async Task OnInitializedAsync()
         {
-            FromPage = FromAuditPage.HasValue && FromAuditPage.Value > 0 ? FromAuditPage.Value : 1;
-            Record = APIService.GetAuditHistoryRecord(Id);
-        }
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Audit History Detail Page");
 
-        private static string GetMethodBadgeClass(string method)
-        {
-            return method switch
-            {
-                "GET" => "badge-method-get",
-                "POST" => "badge-method-post",
-                "PATCH" => "badge-method-patch",
-                "DELETE" => "badge-method-delete",
-                _ => "bg-secondary"
-            };
-        }
+            IsLoading = true;
 
-        private static string GetStatusBadgeClass(string status)
-        {
-            string className = "bg-secondary";
+            AuditHistory = await APIService.GetAuditHistory(Id);
 
-            if (status.StartsWith("200"))
-            {
-                className = "badge-status-200";
-            }
-
-            else if (status.StartsWith("201"))
-            {
-                className = "badge-status-201";
-            }
-
-            else if (status.StartsWith("400"))
-            {
-                className = "badge-status-400";
-            }
-
-            else if (status.StartsWith("401"))
-            {
-                className = "badge-status-401";
-            }
-
-            else if (status.StartsWith("500"))
-            {
-                className = "badge-status-500";
-            }
-
-            return className;
+            IsLoading = false;
         }
     }
 }

@@ -467,11 +467,11 @@ namespace HunterIndustriesAPIControlPanel.Services
             {
                 pagedResponse = await _APIClient.GetPagedAuditHistory(queryParameters);
 
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Histories Returned: {pagedResponse?.EntryCount ?? 0}");
+
                 if (pagedResponse != null)
                 {
                     List<AuditHistoryModel> auditHistories = pagedResponse.Entries;
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Histories Returned: {auditHistories.Count}");
 
                     foreach (AuditHistoryModel auditHistory in auditHistories)
                     {
@@ -1337,6 +1337,50 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return error;
+        }
+
+        /// <summary>
+        /// Gets the audit History from the API.
+        /// </summary>
+        public async Task<AuditHistoryModel?> GetAuditHistory(int auditId)
+        {
+            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetching audit history, {auditId}, from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            AuditHistoryModel? auditHistory = null;
+
+            try
+            {
+                auditHistory = await _APIClient.GetAuditHistory(auditId);
+
+                if (auditHistory != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specifying date times as UTC for audit history {auditHistory.Id}");
+
+                    auditHistory.OccuredAt = DateTime.SpecifyKind(auditHistory.OccuredAt, DateTimeKind.Utc);
+
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Specified date times as UTC for audit history {auditHistory.Id}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Fetched audit history, {auditId}, from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch audit history, {auditId}, from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Failed to fetch audit history, {auditId}, from API");
+            }
+
+            return auditHistory;
         }
     }
 }

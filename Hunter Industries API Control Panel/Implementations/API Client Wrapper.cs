@@ -1558,6 +1558,60 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
+        /// Returns the audit history from the API.
+        /// </summary>
+        public async Task<AuditHistoryModel?> GetAuditHistory(int auditId)
+        {
+            AuditHistoryModel? auditHistory = null;
+
+            try
+            {
+                string url = BuildURL("/audithistory",
+                    auditId,
+                    ignoreQuery: true);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    auditHistory = JsonConvert.DeserializeObject<AuditHistoryModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
+                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+            }
+
+            return auditHistory;
+        }
+
+        /// <summary>
         /// Returns the API url.
         /// </summary>
         private string BuildURL(string endpoint,

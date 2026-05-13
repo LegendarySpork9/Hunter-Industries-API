@@ -39,5 +39,6 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<ErrorStatisticsModel?> GetErrorStatistics();
         Task<PagedAPIResponseModel<ErrorModel>?> GetPagedErrorLog(List<KeyValuePair<string, object>>? queryParameters = null);
         Task<ErrorModel?> GetError(int errorId);
+        Task<AuditHistoryModel?> GetAuditHistory(int auditId);
     }
 }

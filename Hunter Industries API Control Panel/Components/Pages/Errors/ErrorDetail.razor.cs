@@ -22,7 +22,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         private bool IsLoading { get; set; }
 
         /// <summary>
-        /// Loads and transforms the data.
+        /// Loads the data.
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
