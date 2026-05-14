@@ -121,7 +121,7 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Errors by IP Address &amp; Summary (This Month)</h6>
                     <RadzenChart Style="height: 280px;">
-                        @foreach (KeyValuePair<string, List<ChartDataItem>> group in ErrorsByIPGrouped)
+                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> group in ErrorsByIPGrouped)
                         {
                             <RadzenStackedBarSeries Data="@group.Value"
                                 CategoryProperty="Label"
@@ -131,7 +131,7 @@ else
                                 Fill="@ErrorColours[group.Key]">
                                 <TooltipTemplate Context="data">
                                     @{
-                                        ChartDataItem error = (ChartDataItem)data;
+                                        (string Label, int Value) error = data;
                                         IEnumerable<MultiGroupedErrorModel> groupedErrors = Statistics!.Errors.Where(e => e.IpAddress == error.Label);
                                         int totalErrors = groupedErrors.Sum(e => e.Errors);
                                     }
@@ -153,7 +153,7 @@ else
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @foreach (KeyValuePair<string, List<ChartDataItem>> item in ErrorsByIPGrouped)
+                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> item in ErrorsByIPGrouped)
                         {
                             string colour = ErrorColours[item.Key];
 
@@ -331,7 +331,7 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Login Attempts by Username &amp; Application (This Month)</h6>
                     <RadzenChart Style="height: 250px;">
-                        @foreach (KeyValuePair<string, List<ChartDataItem>> group in LoginAttemptsByApp)
+                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> group in LoginAttemptsByApp)
                         {
                             <RadzenStackedBarSeries Data="@group.Value"
                                 CategoryProperty="Label"
@@ -340,7 +340,9 @@ else
                                 StrokeWidth="0"
                                 Fill="@LoginAttemptColours[group.Key]">
                                 <TooltipTemplate Context="data">
-                                    @{ ChartDataItem login = (ChartDataItem)data; }
+                                    @{
+                                        (string Label, int Value) login = data;
+                                    }
                                     <div>
                                         <strong>@login.Label</strong>
                                         @foreach (LoginAttemptStatModel row in Statistics!.LoginAttempts.Where(l => l.Username == login.Label))
@@ -359,7 +361,7 @@ else
                         <RadzenLegend Visible="false" />
                     </RadzenChart>
                     <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @foreach (KeyValuePair<string, List<ChartDataItem>> item in LoginAttemptsByApp)
+                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> item in LoginAttemptsByApp)
                         {
                             string colour = LoginAttemptColours[item.Key];
 

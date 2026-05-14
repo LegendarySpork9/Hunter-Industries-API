@@ -493,7 +493,8 @@ fetch next @pageSize rows only";
         public void TestGetSQLFilterApplication()
         {
             string expected = @"
-where [Name] = @name";
+where [Name] = @name
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("application");
 
             Assert.AreEqual(expected, actual);
@@ -507,7 +508,8 @@ where [Name] = @name";
         {
             string expected = @"
 where ApplicationId = @applicationId
-and [Name] = @name";
+and [Name] = @name
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("applicationSetting");
 
             Assert.AreEqual(expected, actual);
@@ -520,7 +522,8 @@ and [Name] = @name";
         public void TestGetSQLFilterAuthorisation()
         {
             string expected = @"
-where Phrase = @phrase";
+where Phrase = @phrase
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("authorisation");
 
             Assert.AreEqual(expected, actual);
@@ -533,7 +536,8 @@ where Phrase = @phrase";
         public void TestGetSQLFilterComponent()
         {
             string expected = @"
-where [Name] = @name";
+where [Name] = @name
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("component");
 
             Assert.AreEqual(expected, actual);
@@ -547,7 +551,8 @@ where [Name] = @name";
         {
             string expected = @"
 where IPAddress = @ipAddress
-and [Port] = @port";
+and [Port] = @port
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("connection");
 
             Assert.AreEqual(expected, actual);
@@ -561,7 +566,8 @@ and [Port] = @port";
         {
             string expected = @"
 where Time = @time
-and Duration = @duration";
+and Duration = @duration
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("downtime");
 
             Assert.AreEqual(expected, actual);
@@ -575,7 +581,8 @@ and Duration = @duration";
         {
             string expected = @"
 where [Name] = @name
-and [Version] = @version";
+and [Version] = @version
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("game");
 
             Assert.AreEqual(expected, actual);
@@ -588,7 +595,8 @@ and [Version] = @version";
         public void TestGetSQLFilterMachine()
         {
             string expected = @"
-where HostName = @hostName";
+where HostName = @hostName
+and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("machine");
 
             Assert.AreEqual(expected, actual);

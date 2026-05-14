@@ -335,60 +335,72 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         }
 
         /// <summary>
-        /// Tests whether the GetStatusId method returns 3 when given "BadRequest".
+        /// Tests whether the GetStatusId method returns 3 when given "NoContent".
+        /// </summary>
+        [TestMethod]
+        public void TestGetStatusIdNoContent()
+        {
+            int expected = 3;
+            int actual = AuditHistoryConverter.GetStatusId("NoContent");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetStatusId method returns 4 when given "BadRequest".
         /// </summary>
         [TestMethod]
         public void TestGetStatusIdBadRequest()
         {
-            int expected = 3;
+            int expected = 4;
             int actual = AuditHistoryConverter.GetStatusId("BadRequest");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusId method returns 4 when given "Unauthorized".
+        /// Tests whether the GetStatusId method returns 5 when given "Unauthorized".
         /// </summary>
         [TestMethod]
         public void TestGetStatusIdUnauthorized()
         {
-            int expected = 4;
+            int expected = 5;
             int actual = AuditHistoryConverter.GetStatusId("Unauthorized");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusId method returns 5 when given "Forbidden".
+        /// Tests whether the GetStatusId method returns 6 when given "Forbidden".
         /// </summary>
         [TestMethod]
         public void TestGetStatusIdForbidden()
         {
-            int expected = 5;
+            int expected = 6;
             int actual = AuditHistoryConverter.GetStatusId("Forbidden");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusId method returns 6 when given "NotFound".
+        /// Tests whether the GetStatusId method returns 7 when given "NotFound".
         /// </summary>
         [TestMethod]
         public void TestGetStatusIdNotFound()
         {
-            int expected = 6;
+            int expected = 7;
             int actual = AuditHistoryConverter.GetStatusId("NotFound");
 
             Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
-        /// Tests whether the GetStatusId method returns 7 when given "InternalServerError".
+        /// Tests whether the GetStatusId method returns 8 when given "InternalServerError".
         /// </summary>
         [TestMethod]
         public void TestGetStatusIdInternalServerError()
         {
-            int expected = 7;
+            int expected = 8;
             int actual = AuditHistoryConverter.GetStatusId("InternalServerError");
 
             Assert.AreEqual(expected, actual);

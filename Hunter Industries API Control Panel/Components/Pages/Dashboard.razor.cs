@@ -3,7 +3,6 @@ using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Components.Shared;
 using HunterIndustriesAPIControlPanel.Converters;
-using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
@@ -22,8 +21,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private DashboardStatisticsModel? Statistics;
         private List<AuditHistoryModel> RecentActivity = [];
 
-        private Dictionary<string, List<ChartDataItem>> ErrorsByIPGrouped = [];
-        private Dictionary<string, List<ChartDataItem>> LoginAttemptsByApp = [];
+        private Dictionary<string, List<(string Label, int Value)>> ErrorsByIPGrouped = [];
+        private Dictionary<string, List<(string Label, int Value)>> LoginAttemptsByApp = [];
         private HashSet<string> VisibleTrafficLabels = [];
         private const int TrafficLabelThreshold = 15;
         private const int TrafficLabelStep = 5;
@@ -66,11 +65,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     Dictionary<string, int>? existing = e.GroupBy(err => err.IpAddress)
                     .ToDictionary(err => err.Key, err => err.Sum(ev => ev.Errors));
 
-                    return ipAddresses.Select(ip => new ChartDataItem
-                    {
-                        Label = ip,
-                        Value = existing.GetValueOrDefault(ip, 0)
-                    }).ToList();
+                    return ipAddresses.Select(ip => (Label: ip, Value: existing.GetValueOrDefault(ip, 0))).ToList();
                 });
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Errors By IP: {ErrorsByIPGrouped.Count}");
@@ -120,11 +115,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     .OrderBy(a => a)];
                 Dictionary<(string, string), int> loginLookup = Statistics.LoginAttempts.GroupBy(l => new { l.Application, l.Username })
                     .ToDictionary(ll => (ll.Key.Application, ll.Key.Username), ll => ll.Sum(login => login.TotalAttempts));
-                LoginAttemptsByApp = applications.ToDictionary(app => app, app => users.Select(user => new ChartDataItem
-                {
-                    Label = user,
-                    Value = loginLookup.GetValueOrDefault((app, user), 0)
-                }).ToList());
+                LoginAttemptsByApp = applications.ToDictionary(app => app, app => users.Select(user => (Label: user, Value: loginLookup.GetValueOrDefault((app, user), 0))).ToList());
 
                 _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Login Attempts By App: {LoginAttemptsByApp.Count}");
 
@@ -143,9 +134,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         {
             string trend = string.Empty;
 
-            if (previous == 0 && current > 0)
+            if (previous == 0)
             {
-                trend = "+100%";
+                trend = current > 0 ? "+100%" : "+0%";
             }
 
             if (string.IsNullOrEmpty(trend))

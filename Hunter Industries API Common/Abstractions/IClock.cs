@@ -6,11 +6,7 @@ namespace HunterIndustriesAPICommon.Abstractions
     /// </summary>
     public interface IClock
     {
-        /// <summary>
-        /// </summary>
         DateTime UtcNow { get; }
-        /// <summary>
-        /// </summary>
         DateTime DefaultDate { get; }
     }
 }

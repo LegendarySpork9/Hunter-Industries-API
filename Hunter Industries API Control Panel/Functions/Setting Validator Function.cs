@@ -8,8 +8,7 @@ namespace HunterIndustriesAPIControlPanel.Functions
     public static class SettingValidatorFunction
     {
         /// <summary>
-        /// Returns a list of validation errors for the supplied application's settings,
-        /// resolving each setting's effective post-save value from pending-new → current → null.
+        /// Returns a list of validation errors for the supplied application's settings.
         /// </summary>
         public static List<string> ValidateApplicationSettings(ApplicationModel application,
             UserSettingModel? currentUserSettings,

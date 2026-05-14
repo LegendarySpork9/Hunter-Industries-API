@@ -6,8 +6,6 @@ namespace HunterIndustriesAPICommon.Abstractions
     /// </summary>
     public interface ILoggerService
     {
-        /// <summary>
-        /// </summary>
         void LogMessage(string level, string message, string summary = null);
     }
 }

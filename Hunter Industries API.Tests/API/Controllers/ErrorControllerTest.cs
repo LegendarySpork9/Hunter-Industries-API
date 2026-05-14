@@ -81,7 +81,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         }
 
         /// <summary>
-        /// Checks whether the Get method returns a 200 status code with an info message when no records are found.
+        /// Checks whether the Get method returns a 204 status code with an info message when no records are found.
         /// </summary>
         [TestMethod]
         public async Task TestGetEmpty()
@@ -105,7 +105,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
 
             Assert.IsNotNull(contentResult);
-            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NoContent, contentResult.StatusCode);
         }
 
         #endregion

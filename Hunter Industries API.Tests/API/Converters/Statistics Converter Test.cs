@@ -71,13 +71,13 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         }
 
         /// <summary>
-        /// Tests whether the GetSQLDashboard method returns "GetServerHealth30Days.sql" when given "serverHealthUptime".
+        /// Tests whether the GetSQLDashboard method returns "GetServerHealth30Days.sql" when given "serverHealth".
         /// </summary>
         [TestMethod]
-        public void TestGetSQLDashboardServerHealthUptime()
+        public void TestGetSQLDashboardServerHealth()
         {
             string expected = "GetServerHealth30Days.sql";
-            string actual = StatisticsConverter.GetSQLDashboard("serverHealthUptime");
+            string actual = StatisticsConverter.GetSQLDashboard("serverHealth");
 
             Assert.AreEqual(expected, actual);
         }
@@ -263,6 +263,18 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         }
 
         /// <summary>
+        /// Tests whether the GetSQLServer method returns "GetServerHealth30Days.sql" when given "serverHealth".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLServerServerHealth()
+        {
+            string expected = "GetServerHealth30Days.sql";
+            string actual = StatisticsConverter.GetSQLServer("serverHealth");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
         /// Tests whether the GetSQLServer method returns "GetRecentAlerts.sql" when given "recentAlerts".
         /// </summary>
         [TestMethod]
@@ -398,12 +410,12 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         }
 
         /// <summary>
-        /// Tests whether the GetDataReaderMappingsDashboard method returns a mapping when given "serverHealthUptime".
+        /// Tests whether the GetDataReaderMappingsDashboard method returns a mapping when given "serverHealth".
         /// </summary>
         [TestMethod]
-        public void TestGetDataReaderMappingsDashboardServerHealthUptime()
+        public void TestGetDataReaderMappingsDashboardServerHealth()
         {
-            var actual = StatisticsConverter.GetDataReaderMappingsDashboard("serverHealthUptime");
+            var actual = StatisticsConverter.GetDataReaderMappingsDashboard("serverHealth");
 
             Assert.IsNotNull(actual);
         }
@@ -511,6 +523,17 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         public void TestGetDataReaderMappingsServerLastComponentEvents()
         {
             var actual = StatisticsConverter.GetDataReaderMappingsServer("lastComponentEvents");
+
+            Assert.IsNotNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsServer method returns a mapping when given "serverHealth".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsServerServerHealth()
+        {
+            var actual = StatisticsConverter.GetDataReaderMappingsServer("serverHealth");
 
             Assert.IsNotNull(actual);
         }

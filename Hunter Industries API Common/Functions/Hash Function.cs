@@ -4,8 +4,6 @@ using System.Text;
 
 namespace HunterIndustriesAPICommon.Functions
 {
-    /// <summary>
-    /// </summary>
     public static class HashFunction
     {
         /// <summary>

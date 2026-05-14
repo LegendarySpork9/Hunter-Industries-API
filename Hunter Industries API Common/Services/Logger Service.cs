@@ -3,8 +3,6 @@ using log4net;
 
 namespace HunterIndustriesAPICommon.Services
 {
-    /// <summary>
-    /// </summary>
     public class LoggerService
     {
         private readonly string Identifier;

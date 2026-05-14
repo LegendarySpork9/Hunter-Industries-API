@@ -3,8 +3,6 @@ using HunterIndustriesAPICommon.Abstractions;
 
 namespace HunterIndustriesAPICommon.Implementations
 {
-    /// <summary>
-    /// </summary>
     public class SystemClockProvider : IClock
     {
         /// <summary>

@@ -206,7 +206,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         public async Task TestUserSettingAddedFailed()
         {
             Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(((object)null, (Exception)null));
 
             UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
 

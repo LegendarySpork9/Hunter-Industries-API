@@ -41,7 +41,6 @@ namespace HunterIndustriesAPIControlPanel
             builder.Services.AddSingleton<IAPIClient, APIClientWrapper>();
             builder.Services.AddSingleton<IHTTPClient, HTTPClientWrapper>();
             builder.Services.AddSingleton<APIService>();
-            builder.Services.AddSingleton<ExampleAPIService>();
             builder.Services.AddScoped<Radzen.DialogService>();
             builder.Services.AddScoped<Radzen.NotificationService>();
             builder.Services.AddScoped<Radzen.TooltipService>();

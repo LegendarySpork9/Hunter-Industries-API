@@ -1,8 +1,6 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
 namespace HunterIndustriesAPIControlPanel.Functions
 {
-    /// <summary>
-    /// </summary>
     public static class IPAddressFunction
     {
         /// <summary>

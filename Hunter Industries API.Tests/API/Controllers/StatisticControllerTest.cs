@@ -204,6 +204,14 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 }, (Exception)null))
                 .Returns((new List<object>
                 {
+                    new Objects.Statistics.Server.ServerHealthOverviewRecord
+                    {
+                        Day = "2024-01-01",
+                        Uptime = 99.5m
+                    }
+                }, (Exception)null))
+                .Returns((new List<object>
+                {
                     new RecentAlertRecord
                     {
                         AlertId = 1,

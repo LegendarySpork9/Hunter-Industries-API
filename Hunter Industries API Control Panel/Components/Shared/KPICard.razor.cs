@@ -1,3 +1,4 @@
+// Copyright © - Unpublished - Toby Hunter
 using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Shared
