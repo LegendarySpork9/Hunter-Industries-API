@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
         [TestMethod]
         public void TestToListObject()
         {
-            DowntimeModel downtime = new DowntimeModel
+            DowntimeModel downtime = new()
             {
                 Id = 1,
                 Time = "02:00",
@@ -25,9 +25,14 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
 
             ConfigurationListObjectModel actual = downtime.ToListObject();
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("02:00 (30)", actual.Name);
-            Assert.AreEqual(false, actual.IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "02:00 (30)",
+                actual.Name);
+            Assert.IsFalse(
+                actual.IsDeleted);
         }
     }
 }

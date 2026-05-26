@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
         [TestMethod]
         public void TestToListObject()
         {
-            ApplicationSettingModel setting = new ApplicationSettingModel
+            ApplicationSettingModel setting = new()
             {
                 Id = 1,
                 Name = "Theme",
@@ -26,9 +26,14 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
 
             ConfigurationListObjectModel actual = setting.ToListObject();
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("Theme", actual.Name);
-            Assert.AreEqual(false, actual.IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "Theme",
+                actual.Name);
+            Assert.IsFalse(
+                actual.IsDeleted);
         }
     }
 }

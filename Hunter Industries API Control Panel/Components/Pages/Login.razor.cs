@@ -15,19 +15,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
         [Inject]
-        private APIService APIService { get; set; } = default!;
-        [Inject]
         private IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
         [Inject]
         private NavigationManager Navigation { get; set; } = default!;
         [Inject]
         private ProtectedSessionStorage SessionStorage { get; set; } = default!;
         [Inject]
+        private APIService APIService { get; set; } = default!;
+        [Inject]
         private UserModel User { get; set; } = default!;
 
         private readonly LoginForm LoginInformation = new();
 
         private bool IsLoading;
+
         private string ErrorMessage = string.Empty;
 
         /// <summary>
@@ -38,7 +39,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             if (firstRender)
             {
                 _Logger.ChangeIdentifier(IPAddressFunction.FetchIpAddress(HttpContextAccessor));
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Login Page");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    "Opened Login Page");
             }
         }
 
@@ -47,7 +50,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task HandleLogin()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Login Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Login Clicked");
 
             IsLoading = true;
             ErrorMessage = string.Empty;
@@ -61,7 +66,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
                 if (user != null && user.Scopes.Contains("Control Panel API"))
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, "Login Successful");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        "Login Successful");
                     _Logger.ChangeIdentifier($"{user.Username} ({IPAddressFunction.FetchIpAddress(HttpContextAccessor)})");
 
                     User.Id = user.Id;
@@ -70,7 +77,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     User.Scopes = user.Scopes;
                     User.IsLoggedIn = true;
 
-                    await SessionStorage.SetAsync("loggedInUser",
+                    await SessionStorage.SetAsync(
+                        "loggedInUser",
                         User);
 
                     Navigation.NavigateTo("/");
@@ -79,21 +87,24 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                 else
                 {
                     ErrorMessage = "Invalid credentials. Please check your username, password and ensure you have the \"Control Panel API\" scope.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
             }
 
             catch (Exception ex)
             {
                 ErrorMessage = "An error occurred during authentication. Please try again.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            finally
-            {
-                IsLoading = false;
-            }
+            IsLoading = false;
         }
 
         /// <summary>

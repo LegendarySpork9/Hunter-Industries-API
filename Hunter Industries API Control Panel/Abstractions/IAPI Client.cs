@@ -1,5 +1,4 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
 using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
@@ -24,7 +23,7 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<SharedStatisticsModel?> GetLogStatistics(string entity, int entityId);
         Task<List<UserSettingModel>> GetUserSettings(int userId);
         Task<T?> GetPagedConfiguration<T>(string entity, List<KeyValuePair<string, object>>? queryParameters = null, bool ignoreQuery = true);
-        Task<(UserModel?, ResponseModel?)> UpdateUser(int userId, UserRequestModel user);
+        Task<(UserModel?, ResponseModel?)> UpdateUser(int userId, UserUpdateRequestModel user);
         Task<(UserSettingModel?, ResponseModel?)> CreateUserSetting(UserSettingRequestModel userSetting);
         Task<(SettingModel?, ResponseModel?)> UpdateUserSetting(int userSettingId, UserSettingUpdateRequestModel updateUserSetting);
         Task<List<ServerInformationModel>> GetServers();

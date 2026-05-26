@@ -15,18 +15,22 @@ namespace HunterIndustriesAPI.Tests.API.Services
     [TestClass]
     public class AuditHistoryServiceTest
     {
-        private readonly Mock<ILoggerService> _mockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _mockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _mockOptions = new Mock<IDatabaseOptions>();
-        private readonly Mock<IClock> _mockClock = new Mock<IClock>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
+        private readonly Mock<IClock> _MockClock = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _mockOptions.Setup(o => o.SQLFiles).Returns("C:\\SQL");
-            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("SELECT 1");
-            _mockClock.Setup(c => c.DefaultDate).Returns(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-            _mockClock.Setup(c => c.UtcNow).Returns(new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc));
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns("C:\\SQL");
+            _MockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>()))
+                .Returns("SELECT 1");
+            _MockClock.Setup(c => c.DefaultDate)
+                .Returns(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            _MockClock.Setup(c => c.UtcNow)
+                .Returns(new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc));
         }
 
         #region LogRequest
@@ -37,15 +41,32 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestLogRequest()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
 
-            AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
 
-            (bool logged, int auditId) = await service.LogRequest("127.0.0.1", 1, 1, 1, 1);
+            (bool logged, int auditId) = await service.LogRequest(
+                "127.0.0.1",
+                1,
+                1,
+                1,
+                1);
 
             Assert.IsTrue(logged);
-            Assert.AreEqual(1, auditId);
+            Assert.AreEqual(
+                1,
+                auditId);
         }
 
         /// <summary>
@@ -54,15 +75,32 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestLogRequestFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    null,
+                    null));
 
-            AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
 
-            (bool logged, int auditId) = await service.LogRequest("127.0.0.1", 1, 1, 1, 1);
+            (bool logged, int auditId) = await service.LogRequest(
+                "127.0.0.1",
+                1,
+                1,
+                1,
+                1);
 
             Assert.IsFalse(logged);
-            Assert.AreEqual(0, auditId);
+            Assert.AreEqual(
+                0,
+                auditId);
         }
 
         #endregion
@@ -75,12 +113,27 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestLogLoginAttempt()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
 
-            await service.LogLoginAttempt(1, true, "admin", "password", "phrase");
+            await service.LogLoginAttempt(
+                1,
+                true,
+                "admin",
+                "password",
+                "phrase");
         }
 
         #endregion
@@ -93,8 +146,8 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetAuditHistory()
         {
-            List<AuditHistoryRecord> records = new List<AuditHistoryRecord>
-            {
+            List<AuditHistoryRecord> records =
+            [
                 new AuditHistoryRecord
                 {
                     Id = 1,
@@ -104,24 +157,58 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     Method = "POST",
                     Status = "OK",
                     OccuredAt = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-                    Paramaters = new string[0],
+                    Paramaters = [],
                     LoginAttempt = null,
-                    Change = new List<ChangeRecord>()
+                    Change = []
                 }
-            };
+            ];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((5, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    5,
+                    null));
 
-            AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
 
-            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(0, null, null, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
+            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(
+                0,
+                null,
+                null,
+                null,
+                null,
+                new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                10,
+                1);
 
-            Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual(5, totalRecords);
-            Assert.AreEqual("127.0.0.1", actual[0].IPAddress);
-            Assert.AreEqual("token", actual[0].Endpoint);
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                5,
+                totalRecords);
+            Assert.AreEqual(
+                "127.0.0.1",
+                actual[0].IPAddress);
+            Assert.AreEqual(
+                "token",
+                actual[0].Endpoint);
         }
 
         /// <summary>
@@ -130,18 +217,48 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetAuditHistoryEmpty()
         {
-            List<AuditHistoryRecord> records = new List<AuditHistoryRecord>();
+            List<AuditHistoryRecord> records = [];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
 
-            AuditHistoryService service = new AuditHistoryService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, _mockClock.Object);
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
 
-            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(0, null, null, null, null, new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc), 10, 1);
+            (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(
+                0,
+                null,
+                null,
+                null,
+                null,
+                new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                10,
+                1);
 
-            Assert.AreEqual(0, actual.Count);
-            Assert.AreEqual(0, totalRecords);
+            Assert.AreEqual(
+                0,
+                actual.Count);
+            Assert.AreEqual(
+                0,
+                totalRecords);
         }
 
         #endregion

@@ -22,7 +22,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public ChangeService(ILoggerService _logger,
+        public ChangeService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -36,12 +37,15 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Creates a record in the Change table.
         /// </summary>
-        public async Task<bool> LogChange(int auditId,
+        public async Task<bool> LogChange(
+            int auditId,
             string field,
             string oldValue,
             string newValue)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), field, oldValue, newValue })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ChangeService.LogChange called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), field, oldValue, newValue })}.");
 
             bool successful = false;
 
@@ -56,14 +60,20 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@newValue", SqlDbType.VarChar) { Value = newValue }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ChangeService.LogChange.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (rowsAffected == 1)
@@ -75,11 +85,18 @@ namespace HunterIndustriesAPI.Services
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ChangeService.LogChange.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ChangeService.LogChange returned {successful}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ChangeService.LogChange returned {successful}.");
             return successful;
         }
     }

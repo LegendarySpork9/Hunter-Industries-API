@@ -36,7 +36,8 @@ namespace HunterIndustriesAPI.Controllers
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public AuditController(ILoggerService _logger,
+        public AuditController(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
             IDatabaseOptions _options,
@@ -67,7 +68,8 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get([FromUri] AuditHistoryFilterModel filters)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
@@ -90,18 +92,22 @@ namespace HunterIndustriesAPI.Controllers
                 filters.PageSize = 200;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Audit History endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(filters))
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                     AuditHistoryConverter.GetEndpointId("audithistory"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
                     AuditHistoryConverter.GetStatusId("BadRequest"),
                     username,
                     applicationName,
-                    ParameterFunction.FormatParameters(null,
+                    ParameterFunction.FormatParameters(
+                        null,
                         filters));
 
                 response = new ResponseModel()
@@ -113,11 +119,16 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.BadRequest, response.Data);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info, 
+                    $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest, 
+                    response.Data);
             }
 
-            (List<AuditHistoryRecord> auditHistories, int totalRecords) = await _auditHistoryService.GetAuditHistory(0,
+            (List<AuditHistoryRecord> auditHistories, int totalRecords) = await _auditHistoryService.GetAuditHistory(
+                0,
                 filters.IPAddress,
                 filters.Endpoint,
                 filters.Username,
@@ -129,14 +140,16 @@ namespace HunterIndustriesAPI.Controllers
 
             if (auditHistories.Count == 0)
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                     AuditHistoryConverter.GetEndpointId("audithistory"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
                     AuditHistoryConverter.GetStatusId("NoContent"),
                     username,
                     applicationName,
-                    ParameterFunction.FormatParameters(null,
+                    ParameterFunction.FormatParameters(
+                        null,
                         filters));
 
                 response = new ResponseModel()
@@ -148,18 +161,24 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.NoContent, response.Data);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info, 
+                    $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.NoContent, 
+                    response.Data);
             }
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("audithistory"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                ParameterFunction.FormatParameters(null,
+                ParameterFunction.FormatParameters(
+                    null,
                     filters));
 
             int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
@@ -178,8 +197,12 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
 
         /// <summary>
@@ -200,7 +223,8 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
@@ -212,9 +236,12 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint called with the following parameter \"{id}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Audit History endpoint called with the following parameter \"{id}\".");
 
-            List<AuditHistoryRecord> auditHistories = (await _auditHistoryService.GetAuditHistory(id,
+            List<AuditHistoryRecord> auditHistories = (await _auditHistoryService.GetAuditHistory(
+                id,
                 null,
                 null,
                 null,
@@ -226,14 +253,18 @@ namespace HunterIndustriesAPI.Controllers
 
             if (auditHistories.Count == 0)
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                     AuditHistoryConverter.GetEndpointId("audithistory"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
                     AuditHistoryConverter.GetStatusId("NotFound"),
                     username,
                     applicationName,
-                    new string[] { id.ToString() });
+                    new string[] 
+                    { 
+                        id.ToString() 
+                    });
 
                 response = new ResponseModel()
                 {
@@ -244,18 +275,26 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.OK, response.Data);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info, 
+                    $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.OK, 
+                    response.Data);
             }
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("audithistory"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                new string[] { id.ToString() });
+                new string[] 
+                { 
+                    id.ToString() 
+                });
 
             response = new ResponseModel()
             {
@@ -263,8 +302,12 @@ namespace HunterIndustriesAPI.Controllers
                 Data = auditHistories[0]
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Audit History endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
     }
 }

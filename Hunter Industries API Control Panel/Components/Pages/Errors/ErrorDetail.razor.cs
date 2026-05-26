@@ -26,7 +26,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Error Detail Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Error Detail Page");
 
             IsLoading = true;
 

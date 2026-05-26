@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
         [TestMethod]
         public void TestToListObject()
         {
-            MachineModel machine = new MachineModel
+            MachineModel machine = new()
             {
                 Id = 1,
                 HostName = "SERVER-01",
@@ -24,9 +24,14 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
 
             ConfigurationListObjectModel actual = machine.ToListObject();
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("SERVER-01", actual.Name);
-            Assert.AreEqual(false, actual.IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "SERVER-01",
+                actual.Name);
+            Assert.IsFalse(
+                actual.IsDeleted);
         }
     }
 }

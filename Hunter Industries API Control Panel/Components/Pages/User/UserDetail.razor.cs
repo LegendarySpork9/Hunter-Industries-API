@@ -3,7 +3,6 @@ using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Functions;
 using HunterIndustriesAPIControlPanel.Models;
-using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
 using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
@@ -29,7 +28,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private List<UserSettingModel> UserSettings = [];
         private List<ApplicationModel> Applications = [];
 
-        private bool LoadingData = true;
+        private bool IsLoading;
+        private bool SaveUserSuccess;
+        private bool ShowDeleteConfirm;
+        private (string, bool) IsSettingLoading;
+        private bool ShowValidationErrors;
+        private bool ShowSaveSettingErrors;
+
+        private string ErrorMessage = string.Empty;
+        private List<string> ValidationErrors = [];
+        private List<string> SaveSettingErrors = [];
+
+        private string? SavedSettingsApplication;
+        private string SavedSettingsMessage = "Saved changes successfully!";
+
         private List<string> AvailableScopes = [];
         private string EditUsername = string.Empty;
         private string EditPassword = string.Empty;
@@ -37,25 +49,18 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         private List<UserSettingModel> UnchangedUserSettings = [];
         private string ControlPanelUsername = string.Empty;
         private bool ShowPassword;
-        private bool IsLoading;
-        private string ErrorMessage = string.Empty;
-        private bool SaveUserSuccess;
-        private bool ShowDeleteConfirm;
-        private List<UserSettingRequestModel> NewSettings = [];
-        private (string, bool) IsSettingLoading;
-        private string? SavedSettingsApplication;
-        private bool ShowValidationErrors;
-        private List<string> ValidationErrors = [];
-        private bool ShowSaveSettingErrors;
-        private List<string> SaveSettingErrors = [];
-        private string SavedSettingsMessage = "Saved changes successfully!";
+        private List<UserSettingRequestModel> NewSettings = [];        
 
         /// <summary>
         /// Loads and transforms the data.
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened User Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened User Page");
+
+            IsLoading = true;
 
             User = await APIService.GetUser(Id);
             UserSettings = await APIService.GetUserSettings(Id);
@@ -65,7 +70,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
             while (nextPage)
             {
-                PagedAPIResponseModel<ApplicationModel>? pagedApplications = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ApplicationModel>?>("application",
+                PagedAPIResponseModel<ApplicationModel>? pagedApplications = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ApplicationModel>?>(
+                    "application",
                     200,
                     pageNumber);
 
@@ -99,7 +105,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 List<string> scopes = [.. users.SelectMany(u => u.Scopes)];
                 AvailableScopes = [.. scopes.Distinct()];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Available Scope(s): {AvailableScopes.Count}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Available Scope(s): {AvailableScopes.Count}");
             }
 
             if (User != null)
@@ -122,27 +130,32 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
             ControlPanelUsername = CredentialsFunction.GetCredentialsUsername(APISettings);
 
-            LoadingData = false;
+            IsLoading = false;
         }
 
         /// <summary>
         /// Changes whether the scope is enabled.
         /// </summary>
-        private void ToggleScope(string scope,
+        private void ToggleScope(
+            string scope,
             bool isChecked)
         {
             if (isChecked && !EditScopes.Contains(scope))
             {
                 EditScopes.Add(scope);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Added Scope: {scope}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Added Scope: {scope}");
             }
 
             else if (!isChecked)
             {
                 EditScopes.Remove(scope);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Removed Scope: {scope}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Removed Scope: {scope}");
             }
         }
 
@@ -151,36 +164,49 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task SaveUser()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Changes Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Changes Clicked");
 
             IsLoading = true;
 
             if (User != null)
             {
-                UserRequestModel userUpdate = new();
+                UserUpdateRequestModel userUpdate = new();
 
                 if (!string.IsNullOrWhiteSpace(EditUsername) && EditUsername != User.Username)
                 {
                     userUpdate.Username = EditUsername;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Username: {User.Username} -> {EditUsername}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Username: {User.Username} -> {EditUsername}");
                 }
 
                 if (!string.IsNullOrWhiteSpace(EditPassword) && EditPassword != User.Password)
                 {
                     userUpdate.Password = EditPassword;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Password: {User.Password} -> {EditPassword}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Password: {User.Password} -> {EditPassword}");
                 }
 
                 if (EditScopes.Count > 0 && !EditScopes.ToHashSet().SetEquals(User.Scopes))
                 {
                     userUpdate.Scopes = EditScopes;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Scopes: {string.Join(", ", User.Scopes)} -> {string.Join(", ", EditScopes)}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Scopes: {string.Join(
+                            ", ",
+                            User.Scopes)} -> {string.Join(
+                                ", ",
+                                EditScopes)}");
                 }
 
-                (UserModel? user, ResponseModel? apiResponse) = await APIService.UpdateUser(User.Id,
+                (UserModel? user, ResponseModel? apiResponse) = await APIService.UpdateUser(
+                    User.Id,
                     userUpdate);
                 
                 if (user != null)
@@ -196,12 +222,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 {
                     SaveUserSuccess = false;
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveUserSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveUserSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -222,7 +252,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             ShowDeleteConfirm = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Delete Confirmation Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Opened Delete Confirmation Modal");
         }
 
         /// <summary>
@@ -230,7 +262,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task DeleteUser()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Delete Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Delete Clicked");
 
             if (User != null)
             {
@@ -248,13 +282,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             ShowDeleteConfirm = false;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Delete Confirmation Model");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Closed Delete Confirmation Model");
         }
 
         /// <summary>
         /// Checks if the setting is being added.
         /// </summary>
-        private bool IsAddingSetting(string application,
+        private bool IsAddingSetting(
+            string application,
             string settingName)
         {
             bool addingSetting;
@@ -277,7 +314,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Gets the new setting's value.
         /// </summary>
-        private string GetNewSettingValue(string application,
+        private string GetNewSettingValue(
+            string application,
             string settingName)
         {
             UserSettingRequestModel? newSetting = NewSettings.FirstOrDefault(ns => ns.Application == application && ns.SettingName == settingName);
@@ -288,7 +326,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Adds the new setting to the list.
         /// </summary>
-        private void SetNewSettingValue(string application,
+        private void SetNewSettingValue(
+            string application,
             string settingName,
             string value)
         {
@@ -299,10 +338,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Starts adding the new setting.
         /// </summary>
-        private void StartAddSetting(string application,
+        private void StartAddSetting(
+            string application,
             string settingName)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Add Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Add Clicked");
 
             if (User != null)
             {
@@ -319,10 +361,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Removes the setting from the new setting list.
         /// </summary>
-        private void CancelAddSetting(string application,
+        private void CancelAddSetting(
+            string application,
             string settingName)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Cancel Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Cancel Clicked");
 
             int index = NewSettings.FindIndex(us => us.Application == application && us.SettingName == settingName);
             NewSettings.RemoveAt(index);
@@ -331,10 +376,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// <summary>
         /// Updates the settings.
         /// </summary>
-        private async Task SaveSettings(string application,
+        private async Task SaveSettings(
+            string application,
             UserSettingModel? userSettings)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Settings Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Settings Clicked");
 
             IsSettingLoading.Item1 = application;
             IsSettingLoading.Item2 = true;
@@ -343,7 +391,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ApplicationModel app = Applications.First(a => a.Name == application);
             List<UserSettingRequestModel> newSettings = [.. NewSettings.Where(ns => ns.Application == application)];
 
-            ValidationErrors.AddRange(SettingValidatorFunction.ValidateApplicationSettings(app,
+            ValidationErrors.AddRange(SettingValidatorFunction.ValidateApplicationSettings(
+                app,
                 userSettings,
                 newSettings));
 
@@ -368,7 +417,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             {
                 ShowValidationErrors = true;
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Validation Error Modal");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Opened Validation Error Modal");
 
                 await InvokeAsync(StateHasChanged);
             }
@@ -433,7 +484,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                         Value = setting.Value
                     };
 
-                    (SettingModel? updatedSetting, ResponseModel? apiResponse) = await APIService.UpdateUserSetting(setting.Id,
+                    (SettingModel? updatedSetting, ResponseModel? apiResponse) = await APIService.UpdateUserSetting(
+                        setting.Id,
                         updateSettingModel);
 
                     if (updatedSetting != null)
@@ -471,7 +523,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                         SavedSettingsMessage = $"Saved {settingsAddedOrUpdated} changes successfully!";
                     }
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Save Setting Error Modal");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        "Opened Save Setting Error Modal");
 
                     await InvokeAsync(StateHasChanged);
                 }
@@ -484,7 +538,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                     await InvokeAsync(StateHasChanged);
                 }
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SavedSettingsApplication != null}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SavedSettingsApplication != null}");
 
                 if (SavedSettingsApplication != null)
                 {
@@ -509,7 +565,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ShowValidationErrors = false;
             ValidationErrors = [];
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Validation Errors Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Closed Validation Errors Modal");
         }
 
         /// <summary>
@@ -520,13 +578,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ShowSaveSettingErrors = false;
             SaveSettingErrors = [];
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Save Setting Errors Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Closed Save Setting Errors Modal");
         }
 
         /// <summary>
         /// Returns the text for the save button.
         /// </summary>
-        private string GetSaveButtonText(string application,
+        private string GetSaveButtonText(
+            string application,
             UserSettingModel? userSettings)
         {
             int unsavedCount = NewSettings.Count(ns => ns.Application == application && !string.IsNullOrWhiteSpace(ns.SettingValue));

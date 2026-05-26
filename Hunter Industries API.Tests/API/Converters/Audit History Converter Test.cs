@@ -1,6 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPICommon.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HunterIndustriesAPI.Tests.API.Converters
@@ -19,7 +18,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 0;
             int actual = AuditHistoryConverter.GetEndpointId("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -31,7 +32,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 1;
             int actual = AuditHistoryConverter.GetEndpointId("token");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -43,7 +46,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 2;
             int actual = AuditHistoryConverter.GetEndpointId("audithistory");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -55,7 +60,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 3;
             int actual = AuditHistoryConverter.GetEndpointId("assistant/config");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -67,7 +74,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 4;
             int actual = AuditHistoryConverter.GetEndpointId("assistant/version");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -79,7 +88,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 5;
             int actual = AuditHistoryConverter.GetEndpointId("assistant/deletion");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -91,7 +102,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 6;
             int actual = AuditHistoryConverter.GetEndpointId("assistant/location");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -103,7 +116,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 7;
             int actual = AuditHistoryConverter.GetEndpointId("user");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -115,7 +130,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 8;
             int actual = AuditHistoryConverter.GetEndpointId("usersettings");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -127,7 +144,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 9;
             int actual = AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -139,7 +158,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 10;
             int actual = AuditHistoryConverter.GetEndpointId("serverstatus/serverevent");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -151,7 +172,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 11;
             int actual = AuditHistoryConverter.GetEndpointId("serverstatus/serveralert");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -163,7 +186,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 12;
             int actual = AuditHistoryConverter.GetEndpointId("errorlog");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -175,7 +200,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 13;
             int actual = AuditHistoryConverter.GetEndpointId("configuration");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -191,7 +218,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 1;
             int actual = AuditHistoryConverter.GetEndpointVersionId("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -203,7 +232,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 1;
             int actual = AuditHistoryConverter.GetEndpointVersionId("1.0");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -215,7 +246,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 2;
             int actual = AuditHistoryConverter.GetEndpointVersionId("1.1");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -227,7 +260,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 3;
             int actual = AuditHistoryConverter.GetEndpointVersionId("2.0");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -243,7 +278,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 0;
             int actual = AuditHistoryConverter.GetMethodId("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -255,7 +292,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 1;
             int actual = AuditHistoryConverter.GetMethodId("GET");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -267,7 +306,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 2;
             int actual = AuditHistoryConverter.GetMethodId("POST");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -279,7 +320,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 3;
             int actual = AuditHistoryConverter.GetMethodId("PATCH");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -291,7 +334,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 4;
             int actual = AuditHistoryConverter.GetMethodId("DELETE");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -307,7 +352,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 0;
             int actual = AuditHistoryConverter.GetStatusId("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -319,7 +366,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 1;
             int actual = AuditHistoryConverter.GetStatusId("OK");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -331,7 +380,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 2;
             int actual = AuditHistoryConverter.GetStatusId("Created");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -343,7 +394,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 3;
             int actual = AuditHistoryConverter.GetStatusId("NoContent");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -355,7 +408,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 4;
             int actual = AuditHistoryConverter.GetStatusId("BadRequest");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -367,7 +422,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 5;
             int actual = AuditHistoryConverter.GetStatusId("Unauthorized");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -379,7 +436,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 6;
             int actual = AuditHistoryConverter.GetStatusId("Forbidden");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -391,7 +450,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 7;
             int actual = AuditHistoryConverter.GetStatusId("NotFound");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -403,7 +464,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             int expected = 8;
             int actual = AuditHistoryConverter.GetStatusId("InternalServerError");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion

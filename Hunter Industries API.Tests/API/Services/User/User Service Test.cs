@@ -15,15 +15,17 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
     [TestClass]
     public class UserServiceTest
     {
-        private readonly Mock<ILoggerService> _MockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _MockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _MockOptions = new Mock<IDatabaseOptions>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("select 1");
-            _MockOptions.Setup(o => o.SQLFiles).Returns(@"C:\SQL");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("select 1");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns(@"C:\SQL");
         }
 
         #region GetUsers
@@ -34,20 +36,48 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUsers()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(int, string, string, bool)> { (1, "TestUser", "HashedPassword", false) }, null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<string> { "User", "Assistant API" }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [(1, "TestUser", "HashedPassword", false)],
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    ["User"],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<UserRecord> actual = await service.GetUsers(0, null);
+            List<UserRecord> actual = await service.GetUsers(
+                0,
+                null);
 
-            Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual(1, actual[0].Id);
-            Assert.AreEqual("TestUser", actual[0].Username);
-            Assert.AreEqual("HashedPassword", actual[0].Password);
-            Assert.AreEqual(2, actual[0].Scopes.Count);
-            Assert.AreEqual(false, actual[0].IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                1,
+                actual[0].Id);
+            Assert.AreEqual(
+                "TestUser",
+                actual[0].Username);
+            Assert.AreEqual(
+                "HashedPassword",
+                actual[0].Password);
+            Assert.AreEqual(
+                2,
+                actual[0].Scopes.Count);
+            Assert.IsFalse(actual[0].IsDeleted);
         }
 
         /// <summary>
@@ -56,14 +86,28 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUsersEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(int, string, string, bool)>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<UserRecord> actual = await service.GetUsers(0, null);
+            List<UserRecord> actual = await service.GetUsers(
+                0,
+                null);
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         #endregion
@@ -76,10 +120,20 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserExistsUsername()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [1],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserExists("TestUser");
 
@@ -92,10 +146,20 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserExistsUsernameNot()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserExists("TestUser");
 
@@ -112,10 +176,20 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserExistsId()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [1],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserExists(1);
 
@@ -128,10 +202,20 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserExistsIdNot()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserExists(1);
 
@@ -148,15 +232,28 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserCreated()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            (bool created, int userId) = await service.UserCreated("TestUser", "Password");
+            (bool created, int userId) = await service.UserCreated(
+                "TestUser",
+                "Password");
 
             Assert.IsTrue(created);
-            Assert.AreEqual(1, userId);
+            Assert.AreEqual(
+                1,
+                userId);
         }
 
         /// <summary>
@@ -165,15 +262,28 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserCreatedFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    null,
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            (bool created, int userId) = await service.UserCreated("TestUser", "Password");
+            (bool created, int userId) = await service.UserCreated(
+                "TestUser",
+                "Password");
 
             Assert.IsFalse(created);
-            Assert.AreEqual(0, userId);
+            Assert.AreEqual(
+                0,
+                userId);
         }
 
         #endregion
@@ -186,12 +296,23 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserScopeCreated()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.UserScopeCreated(1, new List<string> { "User", "Assistant API" });
+            bool actual = await service.UserScopeCreated(
+                1,
+                ["User", "Assistant API"]);
 
             Assert.IsTrue(actual);
         }
@@ -202,12 +323,23 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserScopeCreatedFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    null,
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.UserScopeCreated(1, new List<string> { "User" });
+            bool actual = await service.UserScopeCreated(
+                1,
+                ["User"]);
 
             Assert.IsFalse(actual);
         }
@@ -222,16 +354,32 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUserScopes()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<string> { "User", "Assistant API" }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    ["User"],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<string> actual = await service.GetUserScopes(1);
 
-            Assert.AreEqual(2, actual.Count);
-            Assert.AreEqual("User", actual[0]);
-            Assert.AreEqual("Assistant API", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Count);
+            Assert.AreEqual(
+                "User",
+                actual[0]);
+            Assert.AreEqual(
+                "Assistant API",
+                actual[1]);
         }
 
         /// <summary>
@@ -240,14 +388,26 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUserScopesEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<string>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<string> actual = await service.GetUserScopes(1);
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         #endregion
@@ -260,10 +420,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserDeleted()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserDeleted(1);
 
@@ -276,10 +445,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserDeletedFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
 
-            UserService service = new UserService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserDeleted(1);
 

@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
         [TestMethod]
         public void TestToListObject()
         {
-            GameModel game = new GameModel
+            GameModel game = new()
             {
                 Id = 1,
                 Name = "Minecraft",
@@ -25,9 +25,14 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
 
             ConfigurationListObjectModel actual = game.ToListObject();
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("Minecraft (1.20.4)", actual.Name);
-            Assert.AreEqual(false, actual.IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "Minecraft (1.20.4)",
+                actual.Name);
+            Assert.IsFalse(
+                actual.IsDeleted);
         }
     }
 }

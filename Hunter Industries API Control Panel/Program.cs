@@ -16,23 +16,34 @@ namespace HunterIndustriesAPIControlPanel
         // Configures the application at startup.
         public static void Main(string[] args)
         {
-            log4net.Config.XmlConfigurator.Configure(new FileInfo(Path.Combine(AppContext.BaseDirectory, "log4net.config")));
+            log4net.Config.XmlConfigurator.Configure(new FileInfo(Path.Combine(
+                AppContext.BaseDirectory,
+                "log4net.config")));
 
             IConfigurableLoggerService _logger = new LoggerServiceWrapper("System");
 
-            _logger.LogMessage(StandardValues.LoggerValues.Info, "Starting Website");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Starting Website");
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Created Builder");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Created Builder");
 
-            builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+            builder.Services.AddRazorComponents()
+                .AddInteractiveServerComponents();
 
             APISettingsModel apiSettings = new();
 
-            builder.Configuration.Bind("AppSettings", apiSettings);
+            builder.Configuration.Bind(
+                "AppSettings",
+                apiSettings);
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Loaded Configuration");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Loaded Configuration");
 
             builder.Services.AddSingleton(apiSettings);
             builder.Services.AddSingleton<IConfigurableLoggerService>(_logger);
@@ -48,11 +59,15 @@ namespace HunterIndustriesAPIControlPanel
             builder.Services.AddScoped<UserModel>();
             builder.Services.AddHttpContextAccessor();
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Services");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Configured Services");
 
             WebApplication app = builder.Build();
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Built Application");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Built Application");
 
             if (!app.Environment.IsDevelopment())
             {
@@ -62,24 +77,39 @@ namespace HunterIndustriesAPIControlPanel
 
             app.UseHttpsRedirection();
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured HTTPS Redirection");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Configured HTTPS Redirection");
 
-            app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+            app.UseStatusCodePagesWithReExecute(
+                "/not-found",
+                createScopeForStatusCodePages: true);
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Status Code Pages");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Configured Status Code Pages");
 
             app.UseAntiforgery();
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Antiforgery");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Configured Antiforgery");
 
             app.MapStaticAssets();
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Static Assets");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Configured Static Assets");
 
-            app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+            app.MapRazorComponents<App>()
+                .AddInteractiveServerRenderMode();
 
-            _logger.LogMessage(StandardValues.LoggerValues.Debug, "Mapped Razor Components with Interactive Server Render Mode");
-            _logger.LogMessage(StandardValues.LoggerValues.Info, "Running Website");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Mapped Razor Components with Interactive Server Render Mode");
+            _logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Running Website");
 
             app.Run();
         }

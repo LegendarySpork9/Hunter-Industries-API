@@ -16,7 +16,8 @@ namespace HunterIndustriesAPI.Filters.Operation
         /// <summary>
         /// Alters the details of the parameters on the Swagger UI depending on the controller.
         /// </summary>
-        public void Apply(Swashbuckle.Swagger.Operation operation,
+        public void Apply(
+            Swashbuckle.Swagger.Operation operation,
             SchemaRegistry schemaRegistry,
             ApiDescription apiDescription)
         {

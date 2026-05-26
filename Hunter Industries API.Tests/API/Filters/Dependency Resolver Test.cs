@@ -20,8 +20,8 @@ namespace HunterIndustriesAPI.Tests.API.Filters
         [TestMethod]
         public void TestGetService()
         {
-            ServiceCollection services = new ServiceCollection();
-            DependencyResolver resolver = new DependencyResolver(services.BuildServiceProvider());
+            ServiceCollection services = new();
+            DependencyResolver resolver = new(services.BuildServiceProvider());
 
             object actual = resolver.GetService(typeof(IDisposable));
 
@@ -34,14 +34,16 @@ namespace HunterIndustriesAPI.Tests.API.Filters
         [TestMethod]
         public void TestGetServiceRegistered()
         {
-            ServiceCollection services = new ServiceCollection();
+            ServiceCollection services = new();
             services.AddSingleton<IFormatProvider, TestFormatProvider>();
-            DependencyResolver resolver = new DependencyResolver(services.BuildServiceProvider());
+            DependencyResolver resolver = new(services.BuildServiceProvider());
 
             object actual = resolver.GetService(typeof(IFormatProvider));
 
             Assert.IsNotNull(actual);
-            Assert.IsInstanceOfType(actual, typeof(TestFormatProvider));
+            Assert.IsInstanceOfType(
+                actual,
+                typeof(TestFormatProvider));
         }
 
         #endregion
@@ -54,8 +56,8 @@ namespace HunterIndustriesAPI.Tests.API.Filters
         [TestMethod]
         public void TestBeginScope()
         {
-            ServiceCollection services = new ServiceCollection();
-            DependencyResolver resolver = new DependencyResolver(services.BuildServiceProvider());
+            ServiceCollection services = new();
+            DependencyResolver resolver = new(services.BuildServiceProvider());
 
             IDependencyScope actual = resolver.BeginScope();
 
@@ -68,15 +70,17 @@ namespace HunterIndustriesAPI.Tests.API.Filters
         [TestMethod]
         public void TestBeginScopeResolvesService()
         {
-            ServiceCollection services = new ServiceCollection();
+            ServiceCollection services = new();
             services.AddSingleton<IFormatProvider, TestFormatProvider>();
-            DependencyResolver resolver = new DependencyResolver(services.BuildServiceProvider());
+            DependencyResolver resolver = new(services.BuildServiceProvider());
 
             IDependencyScope scope = resolver.BeginScope();
             object actual = scope.GetService(typeof(IFormatProvider));
 
             Assert.IsNotNull(actual);
-            Assert.IsInstanceOfType(actual, typeof(TestFormatProvider));
+            Assert.IsInstanceOfType(
+                actual,
+                typeof(TestFormatProvider));
         }
 
         #endregion
@@ -89,12 +93,14 @@ namespace HunterIndustriesAPI.Tests.API.Filters
         [TestMethod]
         public void TestGetServices()
         {
-            ServiceCollection services = new ServiceCollection();
-            DependencyResolver resolver = new DependencyResolver(services.BuildServiceProvider());
+            ServiceCollection services = new();
+            DependencyResolver resolver = new(services.BuildServiceProvider());
 
             IEnumerable<object> actual = resolver.GetServices(typeof(IDisposable));
 
-            Assert.AreEqual(0, actual.Count());
+            Assert.AreEqual(
+                0,
+                actual.Count());
         }
 
         /// <summary>
@@ -103,14 +109,16 @@ namespace HunterIndustriesAPI.Tests.API.Filters
         [TestMethod]
         public void TestGetServicesRegistered()
         {
-            ServiceCollection services = new ServiceCollection();
+            ServiceCollection services = new();
             services.AddSingleton<IFormatProvider, TestFormatProvider>();
             services.AddSingleton<IFormatProvider, TestFormatProviderTwo>();
-            DependencyResolver resolver = new DependencyResolver(services.BuildServiceProvider());
+            DependencyResolver resolver = new(services.BuildServiceProvider());
 
             IEnumerable<object> actual = resolver.GetServices(typeof(IFormatProvider));
 
-            Assert.AreEqual(2, actual.Count());
+            Assert.AreEqual(
+                2,
+                actual.Count());
         }
 
         #endregion

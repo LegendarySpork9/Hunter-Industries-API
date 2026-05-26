@@ -14,15 +14,17 @@ namespace HunterIndustriesAPI.Tests.API.Services
     [TestClass]
     public class TokenServiceTest
     {
-        private readonly Mock<ILoggerService> _mockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _mockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _mockOptions = new Mock<IDatabaseOptions>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _mockOptions.Setup(o => o.SQLFiles).Returns("C:\\SQL");
-            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("SELECT 1");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns("C:\\SQL");
+            _MockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>()))
+                .Returns("SELECT 1");
         }
 
         #region ApplicationName
@@ -35,14 +37,27 @@ namespace HunterIndustriesAPI.Tests.API.Services
         {
             string expected = "TestApplication";
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((expected, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    expected,
+                    null));
 
-            TokenService service = new TokenService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, "testphrase");
+            TokenService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                "testphrase");
 
             string actual = await service.ApplicationName();
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -51,10 +66,21 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestApplicationNameEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    null,
+                    null));
 
-            TokenService service = new TokenService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, "testphrase");
+            TokenService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                "testphrase");
 
             string actual = await service.ApplicationName();
 
@@ -71,25 +97,48 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetUsers()
         {
-            List<(string, string)> users = new List<(string, string)>
-            {
+            List<(string, string)> users =
+            [
                 ("admin", "password1"),
                 ("user", "password2")
-            };
+            ];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((users, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (string, string)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    users,
+                    null));
 
-            TokenService service = new TokenService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, "testphrase");
+            TokenService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                "testphrase");
 
             (string[] usernames, string[] passwords) = await service.GetUsers();
 
-            Assert.AreEqual(2, usernames.Length);
-            Assert.AreEqual(2, passwords.Length);
-            Assert.AreEqual("admin", usernames[0]);
-            Assert.AreEqual("password1", passwords[0]);
-            Assert.AreEqual("user", usernames[1]);
-            Assert.AreEqual("password2", passwords[1]);
+            Assert.AreEqual(
+                2,
+                usernames.Length);
+            Assert.AreEqual(
+                2,
+                passwords.Length);
+            Assert.AreEqual(
+                "admin",
+                usernames[0]);
+            Assert.AreEqual(
+                "password1",
+                passwords[0]);
+            Assert.AreEqual(
+                "user",
+                usernames[1]);
+            Assert.AreEqual(
+                "password2",
+                passwords[1]);
         }
 
         /// <summary>
@@ -98,17 +147,32 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetUsersEmpty()
         {
-            List<(string, string)> users = new List<(string, string)>();
+            List<(string, string)> users = [];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((users, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (string, string)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    users,
+                    null));
 
-            TokenService service = new TokenService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, "testphrase");
+            TokenService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                "testphrase");
 
             (string[] usernames, string[] passwords) = await service.GetUsers();
 
-            Assert.AreEqual(0, usernames.Length);
-            Assert.AreEqual(0, passwords.Length);
+            Assert.AreEqual(
+                0,
+                usernames.Length);
+            Assert.AreEqual(
+                0,
+                passwords.Length);
         }
 
         #endregion
@@ -121,18 +185,35 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetAuthorisationPhrases()
         {
-            List<string> phrases = new List<string> { "phrase1", "phrase2" };
+            List<string> phrases = ["phrase1", "phrase2"];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((phrases, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    phrases,
+                    null));
 
-            TokenService service = new TokenService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, "testphrase");
+            TokenService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                "testphrase");
 
             string[] actual = await service.GetAuthorisationPhrases();
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("phrase1", actual[0]);
-            Assert.AreEqual("phrase2", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "phrase1",
+                actual[0]);
+            Assert.AreEqual(
+                "phrase2",
+                actual[1]);
         }
 
         /// <summary>
@@ -141,16 +222,29 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetAuthorisationPhrasesEmpty()
         {
-            List<string> phrases = new List<string>();
+            List<string> phrases = [];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, string>>(), It.IsAny<SqlParameter[]>()).Result).Returns((phrases, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    phrases,
+                    null));
 
-            TokenService service = new TokenService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object, "testphrase");
+            TokenService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                "testphrase");
 
             string[] actual = await service.GetAuthorisationPhrases();
 
-            Assert.AreEqual(0, actual.Length);
+            Assert.AreEqual(
+                0,
+                actual.Length);
         }
 
         #endregion

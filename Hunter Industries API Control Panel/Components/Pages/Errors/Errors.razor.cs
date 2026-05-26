@@ -22,13 +22,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         private ErrorStatisticsModel? Statistics;
         private PagedAPIResponseModel<ErrorModel>? ErrorLog;
 
+        private bool IsLoading;
+
         private DateTime? FilterFromDate;
         private DateTime? FilterToDate;
         private string FilterIPAddress = string.Empty;
         private string FilterSummary = string.Empty;
         private int PageSize = 25;
         private int PageNumber = 1;
-        private bool IsLoading;
 
         private string[] IPErrorColours = [];
         private string[] SummaryErrorColours = [];
@@ -39,7 +40,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Errors Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Errors Page");
 
             IsLoading = true;
 
@@ -49,11 +52,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
             {
                 IPErrorColours = [.. Statistics.IPErrors.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Ip Error Colour(s): {IPErrorColours.Length}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Ip Error Colour(s): {IPErrorColours.Length}");
 
                 SummaryErrorColours = [.. Statistics.SummaryErrors.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Summary Error Colour(s): {SummaryErrorColours.Length}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Summary Error Colour(s): {SummaryErrorColours.Length}");
 
                 DateTime now = _Clock.UtcNow;
                 int startyear = new DateTime(now.Year, now.Month, 1).AddMonths(-11).Year;
@@ -61,7 +68,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
 
                 ErrorYearRange = startyear == endYear ? $"{startyear}" : $"{startyear} → {endYear}";
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Error Year Range: {ErrorYearRange}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Error Year Range: {ErrorYearRange}");
             }
 
             await LoadData();
@@ -77,7 +86,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
             string? fromDate = FilterFromDate?.ToString("dd/MM/yyyy");
             string? toDate = FilterToDate?.ToString("dd/MM/yyyy");
 
-            (ErrorLog) = await APIService.GetErrors(fromDate,
+            (ErrorLog) = await APIService.GetErrors(
+                fromDate,
                 toDate,
                 FilterIPAddress,
                 FilterSummary,
@@ -105,7 +115,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         /// </summary>
         private async Task ApplyFilters()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Apply Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Apply Clicked");
 
             PageNumber = 1;
             await LoadData();
@@ -116,7 +128,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         /// </summary>
         private async Task ClearFilters()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Clear Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Clear Clicked");
 
             FilterFromDate = null;
             FilterToDate = null;
@@ -131,7 +145,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         /// </summary>
         private async Task PreviousPage()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "<< Prev Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "<< Prev Clicked");
 
             if (PageNumber > 1)
             {
@@ -145,7 +161,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         /// </summary>
         private async Task NextPage()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Next >> Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Next >> Clicked");
 
             if (PageNumber < ErrorLog?.TotalPageCount)
             {

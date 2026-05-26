@@ -18,15 +18,17 @@ namespace HunterIndustriesAPI.Tests.API.Services
     [TestClass]
     public class StatisticServiceTest
     {
-        private readonly Mock<ILoggerService> _MockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _MockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _MockOptions = new Mock<IDatabaseOptions>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("select 1");
-            _MockOptions.Setup(o => o.SQLFiles).Returns(@"C:\SQL");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("select 1");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns(@"C:\SQL");
         }
 
         #region GetDashboardStatistic
@@ -37,41 +39,52 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetDashboardStatistic()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object>
-            {
-                new TopBarStatRecord
-                {
-                    Applications = 1,
-                    Users = 2,
-                    Calls = new MonthlyStatRecord
-                    {
-                        ThisMonth = 3,
-                        LastMonth = 2
-                    },
-                    LoginAttempts = new MonthlyStatRecord
-                    {
-                        ThisMonth = 4,
-                        LastMonth = 3
-                    },
-                    Changes = new MonthlyStatRecord
-                    {
-                        ThisMonth = 5,
-                        LastMonth = 4
-                    },
-                    Errors = new MonthlyStatRecord
-                    {
-                        ThisMonth = 6,
-                        LastMonth = 5
-                    }
-                }
-            }, (Exception)null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new TopBarStatRecord
+                        {
+                            Applications = 1,
+                            Users = 2,
+                            Calls = new MonthlyStatRecord
+                            {
+                                ThisMonth = 3,
+                                LastMonth = 2
+                            },
+                            LoginAttempts = new MonthlyStatRecord
+                            {
+                                ThisMonth = 4,
+                                LastMonth = 3
+                            },
+                            Changes = new MonthlyStatRecord
+                            {
+                                ThisMonth = 5,
+                                LastMonth = 4
+                            },
+                            Errors = new MonthlyStatRecord
+                            {
+                                ThisMonth = 6,
+                                LastMonth = 5
+                            }
+                        }
+                    ],
+                    (Exception)null));
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<object> records = await service.GetDashboardStatistic("topBarStats");
 
-            Assert.AreEqual(1, records.Count);
+            Assert.AreEqual(
+                1,
+                records.Count);
         }
 
         /// <summary>
@@ -80,13 +93,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetDashboardStatisticUnknown()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            Mock<IDatabase> mockDatabase = new();
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<object> records = await service.GetDashboardStatistic("unknown");
 
-            Assert.AreEqual(0, records.Count);
+            Assert.AreEqual(
+                0,
+                records.Count);
         }
 
         #endregion
@@ -99,21 +118,32 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetSharedStatistic()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object>
-            {
-                new EndpointCallRecord
-                {
-                    Endpoint = "/token",
-                    Calls = 10
-                }
-            }, (Exception)null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new EndpointCallRecord
+                        {
+                            Endpoint = "/token",
+                            Calls = 10
+                        }
+                    ],
+                    (Exception)null));
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<object> records = await service.GetSharedStatistic("endpointCalls");
 
-            Assert.AreEqual(1, records.Count);
+            Assert.AreEqual(
+                1,
+                records.Count);
         }
 
         /// <summary>
@@ -122,21 +152,35 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetSharedStatisticApplication()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object>
-            {
-                new EndpointCallRecord
-                {
-                    Endpoint = "/token",
-                    Calls = 5
-                }
-            }, (Exception)null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new EndpointCallRecord
+                        {
+                            Endpoint = "/token",
+                            Calls = 5
+                        }
+                    ],
+                    (Exception)null));
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<object> records = await service.GetSharedStatistic("endpointCalls", "application", 1);
+            List<object> records = await service.GetSharedStatistic(
+                "endpointCalls",
+                "application",
+                1);
 
-            Assert.AreEqual(1, records.Count);
+            Assert.AreEqual(
+                1,
+                records.Count);
         }
 
         /// <summary>
@@ -145,21 +189,35 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetSharedStatisticUser()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object>
-            {
-                new EndpointCallRecord
-                {
-                    Endpoint = "/token",
-                    Calls = 3
-                }
-            }, (Exception)null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new EndpointCallRecord
+                        {
+                            Endpoint = "/token",
+                            Calls = 3
+                        }
+                    ],
+                    (Exception)null));
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<object> records = await service.GetSharedStatistic("endpointCalls", "user", 1);
+            List<object> records = await service.GetSharedStatistic(
+                "endpointCalls",
+                "user",
+                1);
 
-            Assert.AreEqual(1, records.Count);
+            Assert.AreEqual(
+                1,
+                records.Count);
         }
 
         /// <summary>
@@ -168,13 +226,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetSharedStatisticUnknown()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            Mock<IDatabase> mockDatabase = new();
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<object> records = await service.GetSharedStatistic("unknown");
 
-            Assert.AreEqual(0, records.Count);
+            Assert.AreEqual(
+                0,
+                records.Count);
         }
 
         #endregion
@@ -187,21 +251,34 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetServerStatistic()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object>
-            {
-                new AlertComponentRecord
-                {
-                    Component = "CPU",
-                    Alerts = 3
-                }
-            }, (Exception)null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new AlertComponentRecord
+                        {
+                            Component = "CPU",
+                            Alerts = 3
+                        }
+                    ],
+                    (Exception)null));
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<object> records = await service.GetServerStatistic("componentAlerts", 1);
+            List<object> records = await service.GetServerStatistic(
+                "componentAlerts",
+                1);
 
-            Assert.AreEqual(1, records.Count);
+            Assert.AreEqual(
+                1,
+                records.Count);
         }
 
         /// <summary>
@@ -210,13 +287,21 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetServerStatisticUnknown()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            Mock<IDatabase> mockDatabase = new();
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<object> records = await service.GetServerStatistic("unknown", 1);
+            List<object> records = await service.GetServerStatistic(
+                "unknown",
+                1);
 
-            Assert.AreEqual(0, records.Count);
+            Assert.AreEqual(
+                0,
+                records.Count);
         }
 
         #endregion
@@ -229,21 +314,32 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetErrorStatistic()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, object>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<object>
-            {
-                new ErrorOverTimeRecord
-                {
-                    Month = "January",
-                    Errors = 5
-                }
-            }, (Exception)null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new ErrorOverTimeRecord
+                        {
+                            Month = "January",
+                            Errors = 5
+                        }
+                    ],
+                    (Exception)null));
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<object> records = await service.GetErrorStatistic("errorsOverTime");
 
-            Assert.AreEqual(1, records.Count);
+            Assert.AreEqual(
+                1,
+                records.Count);
         }
 
         /// <summary>
@@ -252,13 +348,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestGetErrorStatisticUnknown()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
+            Mock<IDatabase> mockDatabase = new();
 
-            StatisticService service = new StatisticService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<object> records = await service.GetErrorStatistic("unknown");
 
-            Assert.AreEqual(0, records.Count);
+            Assert.AreEqual(
+                0,
+                records.Count);
         }
 
         #endregion

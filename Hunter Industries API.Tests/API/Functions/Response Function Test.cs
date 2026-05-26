@@ -16,7 +16,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string expected = "{\"Name\":\"Test\",\"Value\":1}";
             string actual = ResponseFunction.GetModelJSON(new { Name = "Test", Value = 1 });
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -28,7 +30,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string expected = "null";
             string actual = ResponseFunction.GetModelJSON(null);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -40,7 +44,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string expected = "{}";
             string actual = ResponseFunction.GetModelJSON(new { });
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
     }
 }

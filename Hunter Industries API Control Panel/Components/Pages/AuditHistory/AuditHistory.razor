@@ -1,6 +1,4 @@
 @page "/audit-history"
-@using HunterIndustriesAPIControlPanel.Converters
-@using HunterIndustriesAPIControlPanel.Models.Responses
 
 <PageTitle>Audit History</PageTitle>
 
@@ -48,37 +46,44 @@ else
     </div>
 
     <!-- Results -->
-    <RadzenDataGrid Data="@AuditLogs?.Entries"
+    <RadzenDataGrid
+        Data="@AuditLogs?.Entries"
         TItem="AuditHistoryModel"
         AllowSorting="false"
         RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))"
         Style="cursor: pointer;">
         <Columns>
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Property="Id"
                 Title="ID"
                 Width="100px" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
-                                  Property="IpAddress"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
+                Property="IpAddress"
                 Title="IP Address" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Property="Endpoint"
                 Title="Endpoint" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Title="Method"
                 Width="90px">
                 <Template Context="record">
                     <span class="badge @GraphConverter.GetMethodBadgeClass(record.Method)">@record.Method</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Title="Status"
                 Width="200px">
                 <Template Context="record">
                     <span class="badge @GraphConverter.GetStatusBadgeClass(record.Status)">@record.Status</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                    TItem="AuditHistoryModel"
                     Title="Date"
                     Width="190px">
                 <Template Context="record">

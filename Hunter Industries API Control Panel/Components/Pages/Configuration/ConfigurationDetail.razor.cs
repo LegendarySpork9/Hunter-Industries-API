@@ -35,14 +35,25 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private GameModel? Game;
         private MachineModel? Machine;
 
-        private string DisplayName = string.Empty;
-        private bool LoadingData = true;
+        private bool IsLoading;
         private bool HasData = false;
-        private List<string> Phrases = [];
-        private List<ApplicationSettingModel> UnchangedSettings = [];
         private bool IsControlPanelApplication;
         private bool IsControlPanelAuthorisation;
         private bool IsDeleted;
+        private bool IsSaving;
+        private bool IsAddingSetting;
+        private bool IsSavingSetting;
+        private bool SaveSuccess;
+        private bool AddSettingSuccess;
+        private bool SaveSettingSuccess;
+        private bool ShowDeleteConfirm;
+
+        private string ErrorFor = string.Empty;
+        private string ErrorMessage = string.Empty;
+
+        private string DisplayName = string.Empty;
+        private List<string> Phrases = [];
+        private List<ApplicationSettingModel> UnchangedSettings = [];
         private string EditAppName = string.Empty;
         private string EditAppPhrase = string.Empty;
         private string DeleteDisplayName = string.Empty;
@@ -58,15 +69,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private string EditGameName = string.Empty;
         private string EditGameVersion = string.Empty;
         private string EditHostName = string.Empty;
-        private bool IsSaving;
-        private bool IsAddingSetting;
-        private bool IsSavingSetting;
-        private string ErrorFor = string.Empty;
-        private string ErrorMessage = string.Empty;
-        private bool SaveSuccess;
-        private bool AddSettingSuccess;
-        private bool SaveSettingSuccess;
-        private bool ShowDeleteConfirm;
 
         private List<KeyValuePair<string, string>> DataTypes =
         [
@@ -106,12 +108,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Configuration Detail Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Configuration Detail Page");
 
-            DisplayName = DisplayNames.GetValueOrDefault(Entity, Entity);
+            IsLoading = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity: {Entity}");
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Display Name: {DisplayName}");
+            DisplayName = DisplayNames.GetValueOrDefault(
+                Entity,
+                Entity);
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"Entity: {Entity}");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"Display Name: {DisplayName}");
 
             await LoadData();
 
@@ -121,7 +133,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 HasData = true;
             }
 
-            LoadingData = false;
+            IsLoading = false;
         }
 
         /// <summary>
@@ -129,12 +141,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task LoadData()
         {
-            ConfigurationFunction _configurationFunction = new(_FileSystem,
+            ConfigurationFunction _configurationFunction = new(
+                _FileSystem,
                 APISettings);
 
             if (Entity == "application")
             {
-                Application = await APIService.GetConfigurationEntity<ApplicationModel?>(Entity,
+                Application = await APIService.GetConfigurationEntity<ApplicationModel?>(
+                    Entity,
                     Id);
 
                 if (Application != null)
@@ -157,7 +171,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Entity == "authorisation")
             {
-                Authorisation = await APIService.GetConfigurationEntity<AuthorisationModel?>(Entity,
+                Authorisation = await APIService.GetConfigurationEntity<AuthorisationModel?>(
+                    Entity,
                     Id);
 
                 if (Authorisation != null)
@@ -169,7 +184,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Entity == "component")
             {
-                Component = await APIService.GetConfigurationEntity<ComponentModel?>(Entity,
+                Component = await APIService.GetConfigurationEntity<ComponentModel?>(
+                    Entity,
                     Id);
 
                 if (Component != null)
@@ -180,7 +196,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Entity == "connection")
             {
-                Connection = await APIService.GetConfigurationEntity<ConnectionModel?>(Entity,
+                Connection = await APIService.GetConfigurationEntity<ConnectionModel?>(
+                    Entity,
                     Id);
 
                 if (Connection != null)
@@ -192,7 +209,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Entity == "downtime")
             {
-                Downtime = await APIService.GetConfigurationEntity<DowntimeModel?>(Entity,
+                Downtime = await APIService.GetConfigurationEntity<DowntimeModel?>(
+                    Entity,
                     Id);
 
                 if (Downtime != null)
@@ -204,7 +222,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Entity == "game")
             {
-                Game = await APIService.GetConfigurationEntity<GameModel?>(Entity,
+                Game = await APIService.GetConfigurationEntity<GameModel?>(
+                    Entity,
                     Id);
 
                 if (Game != null)
@@ -216,7 +235,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Entity == "machine")
             {
-                Machine = await APIService.GetConfigurationEntity<MachineModel?>(Entity,
+                Machine = await APIService.GetConfigurationEntity<MachineModel?>(
+                    Entity,
                     Id);
 
                 if (Machine != null)
@@ -238,7 +258,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             while (nextPage)
             {
-                PagedAPIResponseModel<AuthorisationModel>? pagedAuthorisation = await APIService.GetPagedConfiguration<PagedAPIResponseModel<AuthorisationModel>?>("authorisation",
+                PagedAPIResponseModel<AuthorisationModel>? pagedAuthorisation = await APIService.GetPagedConfiguration<PagedAPIResponseModel<AuthorisationModel>?>(
+                    "authorisation",
                     200,
                     pageNumber,
                     false);
@@ -284,6 +305,10 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             }
 
             ShowDeleteConfirm = true;
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Opened Delete Confirmation Modal");
         }
 
         /// <summary>
@@ -291,11 +316,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task DeleteConfiguration()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Delete Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Delete Clicked");
 
             if (DeleteSettingId.HasValue && Application != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity("applicationSetting",
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    "applicationSetting",
                     DeleteSettingId.Value);
                 
                 int index = Application.Settings.FindIndex(s => s.Id == DeleteSettingId);
@@ -304,7 +332,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Application != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    Entity,
                     Id);
                 Application.IsDeleted = deleted;
                 IsDeleted = deleted;
@@ -312,7 +341,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Authorisation != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    Entity,
                     Id);
                 Authorisation.IsDeleted = deleted;
                 IsDeleted = deleted;
@@ -320,7 +350,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Component != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    Entity,
                     Id);
                 Component.IsDeleted = deleted;
                 IsDeleted = deleted;
@@ -328,7 +359,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Connection != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    Entity,
                     Id);
                 Connection.IsDeleted = deleted;
                 IsDeleted = deleted;
@@ -336,7 +368,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Downtime != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    Entity,
                     Id);
                 Downtime.IsDeleted = deleted;
                 IsDeleted = deleted;
@@ -344,7 +377,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Game != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    Entity,
                     Id);
                 Game.IsDeleted = deleted;
                 IsDeleted = deleted;
@@ -352,7 +386,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             else if (Machine != null)
             {
-                bool deleted = await APIService.DeleteConfigurationEntity(Entity,
+                bool deleted = await APIService.DeleteConfigurationEntity(
+                    Entity,
                     Id);
                 Machine.IsDeleted = deleted;
                 IsDeleted = deleted;
@@ -373,6 +408,10 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
             DeleteDisplayName = string.Empty;
             ShowDeleteConfirm = false;
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Closed Delete Confirmation Model");
         }
 
         /// <summary>
@@ -380,7 +419,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task SaveApplication()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Application Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Application Clicked");
 
             IsSaving = true;
 
@@ -392,17 +433,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     applicationUpdate.Name = EditAppName;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Application Name: {Application.Name} -> {EditAppName}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Application Name: {Application.Name} -> {EditAppName}");
                 }
 
                 if (!string.IsNullOrWhiteSpace(EditAppPhrase) && EditAppPhrase != Application.Authorisation.Phrase)
                 {
                     applicationUpdate.Phrase = EditAppPhrase;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Application Name: {Application.Authorisation.Phrase} -> {EditAppPhrase}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Application Name: {Application.Authorisation.Phrase} -> {EditAppPhrase}");
                 }
 
-                (ApplicationModel? application, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ApplicationModel, ApplicationUpdateRequestModel>(Entity,
+                (ApplicationModel? application, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ApplicationModel, ApplicationUpdateRequestModel>(
+                    Entity,
                     Id,
                     applicationUpdate);
 
@@ -419,12 +465,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSuccess = false;
                     ErrorFor = "Entity";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -445,7 +495,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// <returns></returns>
         private async Task SaveAuthorisation()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsSaving = true;
 
@@ -457,10 +509,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     authorisationUpdate.Phrase = EditAuthPhrase;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Authorisation Phrase: {Authorisation.Phrase} -> {EditAuthPhrase}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Authorisation Phrase: {Authorisation.Phrase} -> {EditAuthPhrase}");
                 }
 
-                (AuthorisationModel? authorisation, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<AuthorisationModel, AuthorisationUpdateRequestModel>(Entity,
+                (AuthorisationModel? authorisation, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<AuthorisationModel, AuthorisationUpdateRequestModel>(
+                    Entity,
                     Id,
                     authorisationUpdate);
 
@@ -476,12 +531,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSuccess = false;
                     ErrorFor = "Entity";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -501,7 +560,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task SaveComponent()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsSaving = true;
 
@@ -513,10 +574,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     componentUpdate.Name = EditComponentName;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Component Name: {Component.Name} -> {EditComponentName}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Component Name: {Component.Name} -> {EditComponentName}");
                 }
 
-                (ComponentModel? component, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ComponentModel, ComponentUpdateRequestModel>(Entity,
+                (ComponentModel? component, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ComponentModel, ComponentUpdateRequestModel>(
+                    Entity,
                     Id,
                     componentUpdate);
 
@@ -532,12 +596,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSuccess = false;
                     ErrorFor = "Entity";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -557,7 +625,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task SaveConnection()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsSaving = true;
 
@@ -569,17 +639,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     connectionUpdate.IPAddress = EditConnectionIP;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Connection Ip Address: {Connection.IPAddress} -> {EditConnectionIP}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Connection Ip Address: {Connection.IPAddress} -> {EditConnectionIP}");
                 }
 
                 if (EditConnectionPort > 0 && EditConnectionPort != Connection.Port)
                 {
                     connectionUpdate.Port = EditConnectionPort;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Connection Port: {Connection.Port} -> {EditConnectionPort}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Connection Port: {Connection.Port} -> {EditConnectionPort}");
                 }
 
-                (ConnectionModel? connection, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ConnectionModel, ConnectionUpdateRequestModel>(Entity,
+                (ConnectionModel? connection, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ConnectionModel, ConnectionUpdateRequestModel>(
+                    Entity,
                     Id,
                     connectionUpdate);
 
@@ -596,12 +671,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSuccess = false;
                     ErrorFor = "Entity";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -621,7 +700,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task SaveDowntime()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsSaving = true;
 
@@ -633,17 +714,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     downtimeUpdate.Time = EditDowntimeTime;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Downtime Time: {Downtime.Time} -> {EditDowntimeTime}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Downtime Time: {Downtime.Time} -> {EditDowntimeTime}");
                 }
 
                 if (EditDowntimeDuration > 0 && EditDowntimeDuration != Downtime.Duration)
                 {
                     downtimeUpdate.Duration = EditDowntimeDuration;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Downtime Duration: {Downtime.Duration} -> {EditDowntimeDuration}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Downtime Duration: {Downtime.Duration} -> {EditDowntimeDuration}");
                 }
 
-                (DowntimeModel? downtime, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<DowntimeModel, DowntimeUpdateRequestModel>(Entity,
+                (DowntimeModel? downtime, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<DowntimeModel, DowntimeUpdateRequestModel>(
+                    Entity,
                     Id,
                     downtimeUpdate);
 
@@ -660,12 +746,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSuccess = false;
                     ErrorFor = "Entity";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -685,7 +775,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task SaveGame()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsSaving = true;
 
@@ -697,17 +789,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     gameUpdate.Name = EditGameName;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Game Name: {Game.Name} -> {EditGameName}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Game Name: {Game.Name} -> {EditGameName}");
                 }
 
                 if (!string.IsNullOrWhiteSpace(EditGameVersion) && EditGameVersion != Game.Version)
                 {
                     gameUpdate.Version = EditGameVersion;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Game Version: {Game.Version} -> {EditGameVersion}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Game Version: {Game.Version} -> {EditGameVersion}");
                 }
 
-                (GameModel? game, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<GameModel, GameUpdateRequestModel>(Entity,
+                (GameModel? game, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<GameModel, GameUpdateRequestModel>(
+                    Entity,
                     Id,
                     gameUpdate);
 
@@ -724,12 +821,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSuccess = false;
                     ErrorFor = "Entity";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -749,7 +850,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task SaveMachine()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsSaving = true;
 
@@ -761,10 +864,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     machineUpdate.HostName = EditHostName;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Machine Host Name: {Machine.HostName} -> {EditHostName}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Machine Host Name: {Machine.HostName} -> {EditHostName}");
                 }
 
-                (MachineModel? machine, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<MachineModel, MachineUpdateRequestModel>(Entity,
+                (MachineModel? machine, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<MachineModel, MachineUpdateRequestModel>(
+                    Entity,
                     Id,
                     machineUpdate);
 
@@ -780,12 +886,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSuccess = false;
                     ErrorFor = "Entity";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {
@@ -805,7 +915,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private void StartAddSetting()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Add Setting Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Add Setting Clicked");
 
             NewSetting = new()
             {
@@ -820,7 +932,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private void CancelAddSetting()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Cancel Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Cancel Clicked");
 
             NewSetting = null;
         }
@@ -830,7 +944,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task ConfirmAddSetting()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsAddingSetting = true;
             ErrorFor = string.Empty;
@@ -842,7 +958,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     ErrorFor = "AddSetting";
                     ErrorMessage = "Name and type are required.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                     IsAddingSetting = false;
                     return;
                 }
@@ -851,7 +969,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
                 if (existingSetting == null)
                 {
-                    (ApplicationSettingModel? applicationSetting, ResponseModel? apiResponse) = await APIService.CreateConfigurationEntity<ApplicationSettingModel, ApplicationSettingRequestModel>("applicationSetting",
+                    (ApplicationSettingModel? applicationSetting, ResponseModel? apiResponse) = await APIService.CreateConfigurationEntity<ApplicationSettingModel, ApplicationSettingRequestModel>(
+                        "applicationSetting",
                     NewSetting.Name,
                     NewSetting,
                     Id);
@@ -866,7 +985,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     {
                         AddSettingSuccess = false;
                         ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            ErrorMessage);
                     }
                 }
 
@@ -874,14 +995,18 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     ErrorFor = "AddSetting";
                     ErrorMessage = "A setting with that name already exists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                     IsAddingSetting = false;
                     return;
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {AddSettingSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {AddSettingSuccess}");
 
                 if (AddSettingSuccess)
                 {
@@ -905,7 +1030,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         private async Task SaveSetting(ApplicationSettingModel setting)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
 
             IsSavingSetting = true;
             EditSettingId = setting.Id;
@@ -921,33 +1048,42 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     settingUpdate.Name = setting.Name;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Setting Name: {unchangedSetting.Name} -> {setting.Name}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Setting Name: {unchangedSetting.Name} -> {setting.Name}");
                 }
 
                 if (setting.Type != unchangedSetting.Type)
                 {
                     settingUpdate.Type = setting.Type;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Setting Type: {unchangedSetting.Type} -> {setting.Type}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Setting Type: {unchangedSetting.Type} -> {setting.Type}");
                 }
 
                 if (setting.Required != unchangedSetting.Required)
                 {
                     settingUpdate.Required = setting.Required;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Setting Required: {unchangedSetting.Required} -> {setting.Required}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Setting Required: {unchangedSetting.Required} -> {setting.Required}");
                 }
 
                 if (string.IsNullOrWhiteSpace(settingUpdate.Name) && string.IsNullOrWhiteSpace(settingUpdate.Type) && !settingUpdate.Required.HasValue)
                 {
                     ErrorFor = $"SaveSetting {setting.Id}";
                     ErrorMessage = "Name, type or required are required.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                     IsSavingSetting = false;
                     return;
                 }
 
-                (ApplicationSettingModel? applicationSetting, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ApplicationSettingModel, ApplicationSettingUpdateRequestModel>("applicationSetting",
+                (ApplicationSettingModel? applicationSetting, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<ApplicationSettingModel, ApplicationSettingUpdateRequestModel>(
+                    "applicationSetting",
                     setting.Id,
                     settingUpdate);
 
@@ -964,12 +1100,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     SaveSettingSuccess = false;
                     ErrorFor = $"SaveSetting {setting.Id}";
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSettingSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSettingSuccess}");
 
                 if (SaveSettingSuccess)
                 {

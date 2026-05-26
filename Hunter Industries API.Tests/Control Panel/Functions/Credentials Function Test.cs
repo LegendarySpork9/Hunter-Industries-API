@@ -19,11 +19,13 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         public void TestGetCredentialsUsername()
         {
             string encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes("TestUser:TestPassword"));
-            APISettingsModel settings = new APISettingsModel { Credentials = $"Basic {encoded}" };
+            APISettingsModel settings = new() { Credentials = $"Basic {encoded}" };
 
             string actual = CredentialsFunction.GetCredentialsUsername(settings);
 
-            Assert.AreEqual("TestUser", actual);
+            Assert.AreEqual(
+                "TestUser",
+                actual);
         }
 
         /// <summary>
@@ -32,11 +34,13 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestGetCredentialsUsernameNull()
         {
-            APISettingsModel settings = new APISettingsModel { Credentials = null };
+            APISettingsModel settings = new() { Credentials = null };
 
             string actual = CredentialsFunction.GetCredentialsUsername(settings);
 
-            Assert.AreEqual(string.Empty, actual);
+            Assert.AreEqual(
+                string.Empty,
+                actual);
         }
 
         /// <summary>
@@ -47,7 +51,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         {
             string actual = CredentialsFunction.GetCredentialsUsername(null);
 
-            Assert.AreEqual(string.Empty, actual);
+            Assert.AreEqual(
+                string.Empty,
+                actual);
         }
 
         /// <summary>
@@ -56,11 +62,13 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestGetCredentialsUsernameInvalidBase64()
         {
-            APISettingsModel settings = new APISettingsModel { Credentials = "Basic !!!invalid!!!" };
+            APISettingsModel settings = new() { Credentials = "Basic !!!invalid!!!" };
 
             string actual = CredentialsFunction.GetCredentialsUsername(settings);
 
-            Assert.AreEqual(string.Empty, actual);
+            Assert.AreEqual(
+                string.Empty,
+                actual);
         }
 
         /// <summary>
@@ -70,11 +78,13 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         public void TestGetCredentialsUsernameNoColon()
         {
             string encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes("TestUserNoPassword"));
-            APISettingsModel settings = new APISettingsModel { Credentials = $"Basic {encoded}" };
+            APISettingsModel settings = new() { Credentials = $"Basic {encoded}" };
 
             string actual = CredentialsFunction.GetCredentialsUsername(settings);
 
-            Assert.AreEqual(string.Empty, actual);
+            Assert.AreEqual(
+                string.Empty,
+                actual);
         }
 
         /// <summary>
@@ -84,11 +94,13 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         public void TestGetCredentialsUsernameNoPrefix()
         {
             string encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes("TestUser:TestPassword"));
-            APISettingsModel settings = new APISettingsModel { Credentials = encoded };
+            APISettingsModel settings = new() { Credentials = encoded };
 
             string actual = CredentialsFunction.GetCredentialsUsername(settings);
 
-            Assert.AreEqual(string.Empty, actual);
+            Assert.AreEqual(
+                string.Empty,
+                actual);
         }
 
         #endregion

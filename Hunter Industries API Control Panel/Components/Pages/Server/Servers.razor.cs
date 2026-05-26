@@ -14,33 +14,39 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
         [Inject]
-        private APIService APIService { get; set; } = default!;
-        [Inject]
         private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
 
         private RadzenDataGrid<ServerInformationModel> ServerGrid = new();
-        private List<ServerInformationModel> ServerRecords = [];
+        private List<ServerInformationModel>? ServerRecords;
+
+        private bool IsLoading;
+        private bool ShowModal;
+
+        private string ErrorMessage = string.Empty;
 
         private List<string> HostNames = [];
         private List<string> Games = [];
         private List<string> Connections = [];
         private List<string> Downtimes = [];
-        private bool ShowModal;
         private string NewServerName = string.Empty;
         private string NewHostName = string.Empty;
         private string NewGame = string.Empty;
         private string NewConnection = string.Empty;
         private string NewDowntime = string.Empty;
         private int NewEventInterval;
-        private bool IsLoading;
-        private string ErrorMessage = string.Empty;
 
         /// <summary>
         /// Loads and transforms the data.
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Servers Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Servers Page");
+
+            IsLoading = true;
 
             ServerRecords = await APIService.GetServers();
 
@@ -59,6 +65,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             List<DowntimeModel> downtimes = await GetDowntimes();
             Downtimes.AddRange(downtimes.Where(d => !d.IsDeleted)
                 .Select(d => $"{d.Time} ({d.Duration})"));
+
+            IsLoading = false;
         }
 
         /// <summary>
@@ -73,7 +81,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<MachineModel>? pagedMachines = await APIService.GetPagedConfiguration<PagedAPIResponseModel<MachineModel>?>("machine",
+                PagedAPIResponseModel<MachineModel>? pagedMachines = await APIService.GetPagedConfiguration<PagedAPIResponseModel<MachineModel>?>(
+                    "machine",
                     200,
                     pageNumber);
 
@@ -113,7 +122,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<GameModel>? pagedGames = await APIService.GetPagedConfiguration<PagedAPIResponseModel<GameModel>?>("game",
+                PagedAPIResponseModel<GameModel>? pagedGames = await APIService.GetPagedConfiguration<PagedAPIResponseModel<GameModel>?>(
+                    "game",
                     200,
                     pageNumber);
 
@@ -153,7 +163,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<ConnectionModel>? pagedConnections = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ConnectionModel>?>("connection",
+                PagedAPIResponseModel<ConnectionModel>? pagedConnections = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ConnectionModel>?>(
+                    "connection",
                     200,
                     pageNumber);
 
@@ -193,7 +204,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<DowntimeModel>? pagedDowntimes = await APIService.GetPagedConfiguration<PagedAPIResponseModel<DowntimeModel>?>("downtime",
+                PagedAPIResponseModel<DowntimeModel>? pagedDowntimes = await APIService.GetPagedConfiguration<PagedAPIResponseModel<DowntimeModel>?>(
+                    "downtime",
                     200,
                     pageNumber);
 
@@ -235,7 +247,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             ErrorMessage = string.Empty;
             ShowModal = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Create Server Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Opened Create Server Modal");
         }
 
         /// <summary>
@@ -246,7 +260,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             ErrorMessage = string.Empty;
             ShowModal = false;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Create Server Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Closed Create Server Modal");
         }
 
         /// <summary>
@@ -259,7 +275,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         /// </summary>
         private async Task CreateServer()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Create Server Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Create Server Clicked");
 
             IsLoading = true;
             bool success = false;
@@ -268,7 +286,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             if (string.IsNullOrWhiteSpace(NewServerName))
             {
                 ErrorMessage = "Name is required.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
                 IsLoading = false;
                 return;
             }
@@ -276,7 +296,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             if (string.IsNullOrWhiteSpace(NewHostName))
             {
                 ErrorMessage = "Host name is required.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
                 IsLoading = false;
                 return;
             }
@@ -284,7 +306,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             if (string.IsNullOrWhiteSpace(NewGame))
             {
                 ErrorMessage = "Game is required.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
                 IsLoading = false;
                 return;
             }
@@ -292,7 +316,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             if (string.IsNullOrWhiteSpace(NewConnection))
             {
                 ErrorMessage = "Connection is required.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
                 IsLoading = false;
                 return;
             }
@@ -300,12 +326,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             if (NewEventInterval == 0)
             {
                 ErrorMessage = "Event interval is required.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
                 IsLoading = false;
                 return;
             }
 
-            ServerInformationModel? existingServer = ServerRecords.Find(s => s.Name == NewServerName);
+            ServerInformationModel? existingServer = ServerRecords?.Find(s => s.Name == NewServerName);
 
             if (existingServer == null)
             {
@@ -347,21 +375,27 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 else
                 {
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
             }
 
             else
             {
                 ErrorMessage = "A server with that name already exists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
                 IsLoading = false;
                 return;
             }
 
             await InvokeAsync(StateHasChanged);
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Create Success: {success}");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"Create Success: {success}");
 
             await Task.Delay(2000).ContinueWith(_ =>
             {

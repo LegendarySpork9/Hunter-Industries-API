@@ -14,9 +14,11 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetScopesUpdateListNull()
         {
-            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(new List<string> { "User" }, null);
+            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(["User"], null);
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         /// <summary>
@@ -25,11 +27,15 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetScopesUpdateListMatching()
         {
-            List<string> current = new List<string> { "User", "Assistant API" };
-            List<string> required = new List<string> { "User", "Assistant API" };
-            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
+            List<string> current = [ "User", "Assistant API" ];
+            List<string> required = [ "User", "Assistant API" ];
+            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(
+                current,
+                required);
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         /// <summary>
@@ -38,13 +44,21 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetScopesUpdateListAdd()
         {
-            List<string> current = new List<string> { "User" };
-            List<string> required = new List<string> { "User", "Assistant API" };
-            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
+            List<string> current = [ "User" ];
+            List<string> required = [ "User", "Assistant API" ];
+            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(
+                current,
+                required);
 
-            Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual("Add", actual[0].Key);
-            Assert.AreEqual("Assistant API", actual[0].Value);
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                "Add",
+                actual[0].Key);
+            Assert.AreEqual(
+                "Assistant API",
+                actual[0].Value);
         }
 
         /// <summary>
@@ -53,13 +67,21 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetScopesUpdateListRemove()
         {
-            List<string> current = new List<string> { "User", "Assistant API" };
-            List<string> required = new List<string> { "User" };
-            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
+            List<string> current = [ "User", "Assistant API" ];
+            List<string> required = [ "User" ];
+            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(
+                current,
+                required);
 
-            Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual("Remove", actual[0].Key);
-            Assert.AreEqual("Assistant API", actual[0].Value);
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                "Remove",
+                actual[0].Key);
+            Assert.AreEqual(
+                "Assistant API",
+                actual[0].Value);
         }
 
         /// <summary>
@@ -68,15 +90,27 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetScopesUpdateListMixed()
         {
-            List<string> current = new List<string> { "User", "Assistant API" };
-            List<string> required = new List<string> { "User", "Server Status API" };
-            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(current, required);
+            List<string> current = [ "User", "Assistant API" ];
+            List<string> required = [ "User", "Server Status API" ];
+            List<KeyValuePair<string, string>> actual = UserFunction.GetScopesUpdateList(
+                current,
+                required);
 
-            Assert.AreEqual(2, actual.Count);
-            Assert.AreEqual("Add", actual[0].Key);
-            Assert.AreEqual("Server Status API", actual[0].Value);
-            Assert.AreEqual("Remove", actual[1].Key);
-            Assert.AreEqual("Assistant API", actual[1].Value);
+            Assert.AreEqual(
+                2,
+                actual.Count);
+            Assert.AreEqual(
+                "Add",
+                actual[0].Key);
+            Assert.AreEqual(
+                "Server Status API",
+                actual[0].Value);
+            Assert.AreEqual(
+                "Remove",
+                actual[1].Key);
+            Assert.AreEqual(
+                "Assistant API",
+                actual[1].Value);
         }
     }
 }

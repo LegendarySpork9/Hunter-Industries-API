@@ -1,5 +1,4 @@
 @page "/servers"
-@using HunterIndustriesAPIControlPanel.Models.Responses
 
 <PageTitle>Servers</PageTitle>
 
@@ -8,7 +7,7 @@
     <button class="btn btn-primary" @onclick="OpenModal">Add Server</button>
 </div>
 
-@if (ServerRecords.Count == 0)
+@if (IsLoading && ServerRecords == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -19,7 +18,8 @@
 
 else
 {
-    <RadzenDataGrid @ref="ServerGrid"
+    <RadzenDataGrid
+        @ref="ServerGrid"
         Data="@ServerRecords"
         TItem="ServerInformationModel"
         AllowSorting="true"
@@ -28,32 +28,39 @@ else
         PageSize="25"
         AllowPaging="true">
         <Columns>
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Property="Id"
                 Title="ID"
                 Width="70px"
                 Sortable="false"
                 Filterable="false" />
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Property="Name"
                 Title="Name" />
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Property="EventInterval"
                 Title="Event Interval"
                 Width="120px"
                 Sortable="false"
                 Filterable="false" />
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Property="HostName"
                 Title="Host Name" />
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Property="Game"
                 Title="Game" />
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Property="GameVersion"
                 Title="Version"
                 Width="100px" />
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Title="Address"
                 Sortable="false"
                 Filterable="false">
@@ -61,7 +68,8 @@ else
                     @server.Connection.IpAddress:@server.Connection.Port
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Title="Downtime"
                 Width="100px"
                 Sortable="false"
@@ -70,7 +78,8 @@ else
                     @(server.Downtime?.Time ?? "N/A")
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Title="Duration"
                 Width="100px"
                 Sortable="false"
@@ -79,7 +88,8 @@ else
                     @(server.Downtime?.Duration.ToString() ?? "N/A")
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Title="Status"
                 Width="100px"
                 Sortable="false"
@@ -87,17 +97,20 @@ else
                 <Template Context="server">
                     @if (server.IsActive)
                     {
-                        <StatusBadge Text="Active"
+                        <StatusBadge
+                            Text="Active"
                             Type="active" />
                     }
                     else
                     {
-                        <StatusBadge Text="Inactive"
+                        <StatusBadge
+                            Text="Inactive"
                             Type="inactive" />
                     }
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="ServerInformationModel"
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
                 Title="Actions"
                 Width="80px"
                 Sortable="false"

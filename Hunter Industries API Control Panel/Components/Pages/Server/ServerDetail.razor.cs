@@ -14,7 +14,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
     {
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
-
         [Inject]
         private APIService APIService { get; set; } = default!;
 
@@ -24,7 +23,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private ServerInformationModel? Server;
         private ServerStatisticsModel? Statistics;
 
-        private bool LoadingData = true;
+        private bool IsLoading;
+        private bool SaveSuccess;
+
+        private string ErrorMessage = string.Empty;
+
         private HashSet<string> VisibleHealthLabels = [];
         private const int HealthLabelThreshold = 15;
         private const int HealthLabelStep = 5;
@@ -39,18 +42,19 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private string EditDowntime = string.Empty;
         private int EditEventInterval;
         private bool EditIsActive;
-        private bool IsLoading;
-        private string ErrorMessage = string.Empty;
-        private bool SaveSuccess;
         private string[] ComponentAlertColours = [];
         private string[] StatusAlertColours = [];
 
         /// <summary>
-        /// Sets the page title.
+        /// Loads and transforms the data.
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Server Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Server Page");
+
+            IsLoading = true;
 
             Server = await APIService.GetServer(Id);
 
@@ -81,9 +85,38 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             Downtimes.AddRange(downtimes.Where(d => !d.IsDeleted)
                 .Select(d => $"{d.Time} ({d.Duration})"));
 
-            await LoadData();
+            Statistics = await APIService.GetServerStatistics(Id);
 
-            LoadingData = false;
+            if (Statistics != null)
+            {
+                int healthStep = Statistics.ServerHealth.Count > HealthLabelThreshold ? HealthLabelStep : 1;
+                VisibleHealthLabels = [.. Statistics.ServerHealth.Where((_, i) => i % healthStep == 0)
+                    .Select(t => t.Day)];
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Visible Health Label(s): {VisibleHealthLabels.Count}");
+
+                ComponentAlertColours = [.. Statistics.ComponentAlerts.Select((_, ca) => Colours.DefaultPalette[ca % Colours.DefaultPalette.Length])];
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Component Alert Colour(s): {ComponentAlertColours.Length}");
+
+                StatusAlertColours = [.. Statistics.StatusAlerts.Select(sa => sa.Status switch
+                {
+                    "Resolved" => "#28a745",
+                    "Reported" => "#dc3545",
+                    "Investigating" => "#ffc107",
+                    _ => "#6c757d"
+                })];
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Status Alert Colour(s): {StatusAlertColours.Length}");
+            }
+
+            IsLoading = false;
         }
 
         /// <summary>
@@ -98,7 +131,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<MachineModel>? pagedMachines = await APIService.GetPagedConfiguration<PagedAPIResponseModel<MachineModel>?>("machine",
+                PagedAPIResponseModel<MachineModel>? pagedMachines = await APIService.GetPagedConfiguration<PagedAPIResponseModel<MachineModel>?>(
+                    "machine",
                     200,
                     pageNumber);
 
@@ -138,7 +172,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<GameModel>? pagedGames = await APIService.GetPagedConfiguration<PagedAPIResponseModel<GameModel>?>("game",
+                PagedAPIResponseModel<GameModel>? pagedGames = await APIService.GetPagedConfiguration<PagedAPIResponseModel<GameModel>?>(
+                    "game",
                     200,
                     pageNumber);
 
@@ -178,7 +213,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<ConnectionModel>? pagedConnections = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ConnectionModel>?>("connection",
+                PagedAPIResponseModel<ConnectionModel>? pagedConnections = await APIService.GetPagedConfiguration<PagedAPIResponseModel<ConnectionModel>?>(
+                    "connection",
                     200,
                     pageNumber);
 
@@ -218,7 +254,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             while (nextPage)
             {
-                PagedAPIResponseModel<DowntimeModel>? pagedDowntimes = await APIService.GetPagedConfiguration<PagedAPIResponseModel<DowntimeModel>?>("downtime",
+                PagedAPIResponseModel<DowntimeModel>? pagedDowntimes = await APIService.GetPagedConfiguration<PagedAPIResponseModel<DowntimeModel>?>(
+                    "downtime",
                     200,
                     pageNumber);
 
@@ -247,37 +284,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         }
 
         /// <summary>
-        /// Loads and transforms the data.
-        /// </summary>
-        private async Task LoadData()
-        {
-            Statistics = await APIService.GetServerStatistics(Id);
-
-            if (Statistics != null)
-            {
-                int healthStep = Statistics.ServerHealth.Count > HealthLabelThreshold ? HealthLabelStep : 1;
-                VisibleHealthLabels = [.. Statistics.ServerHealth.Where((_, i) => i % healthStep == 0)
-                    .Select(t => t.Day)];
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Visible Health Label(s): {VisibleHealthLabels.Count}");
-
-                ComponentAlertColours = [.. Statistics.ComponentAlerts.Select((_, ca) => Colours.DefaultPalette[ca % Colours.DefaultPalette.Length])];
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Component Alert Colour(s): {ComponentAlertColours.Length}");
-
-                StatusAlertColours = [.. Statistics.StatusAlerts.Select(sa => sa.Status switch
-                {
-                    "Resolved" => "#28a745",
-                    "Reported" => "#dc3545",
-                    "Investigating" => "#ffc107",
-                    _ => "#6c757d"
-                })];
-
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Status Alert Colour(s): {StatusAlertColours.Length}");
-            }
-        }
-
-        /// <summary>
         /// Returns the health day label or blank if the axis is being thinned out.
         /// </summary>
         private string FormatHealthDay(object value)
@@ -297,7 +303,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         /// </summary>
         private async Task SaveServer()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Save Changes Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Changes Clicked");
 
             IsLoading = true;
 
@@ -309,21 +317,27 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 {
                     server.Name = EditServerName;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Name: {Server.Name} -> {EditServerName}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Server Name: {Server.Name} -> {EditServerName}");
                 }
 
                 if (EditEventInterval != 0 && EditEventInterval != Server.EventInterval)
                 {
                     server.Duration = EditEventInterval;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Event Interval: {Server.EventInterval} -> {EditEventInterval}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Server Event Interval: {Server.EventInterval} -> {EditEventInterval}");
                 }
 
                 if (!string.IsNullOrWhiteSpace(EditHostName) && EditHostName != Server.HostName)
                 {
                     server.HostName = EditHostName;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Host Name: {Server.HostName} -> {EditHostName}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Server Host Name: {Server.HostName} -> {EditHostName}");
                 }
 
                 if (!string.IsNullOrWhiteSpace(EditGame))
@@ -339,12 +353,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
                         if (gameParts[0] != Server.Game)
                         {
-                            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game: {Server.Game} -> {gameParts[0]}");
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Debug,
+                                $"Server Game: {Server.Game} -> {gameParts[0]}");
                         }
 
                         if (version != Server.GameVersion)
                         {
-                            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Game Version: {Server.GameVersion} -> {version}");
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Debug,
+                                $"Server Game Version: {Server.GameVersion} -> {version}");
                         }
                     }
                 }
@@ -360,12 +378,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
                         if (connectionParts[0] != Server.Connection.IpAddress)
                         {
-                            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Ip Address: {Server.Connection.IpAddress} -> {connectionParts[0]}");
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Debug,
+                                $"Server Ip Address: {Server.Connection.IpAddress} -> {connectionParts[0]}");
                         }
 
                         if (connectionParts[1] != Server.Connection.Port.ToString())
                         {
-                            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Port: {Server.Connection.Port} -> {connectionParts[1]}");
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Debug,
+                                $"Server Port: {Server.Connection.Port} -> {connectionParts[1]}");
                         }
                     }
                 }
@@ -376,8 +398,12 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                     {
                         server.ClearDowntime = true;
 
-                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime: {Server.Downtime?.Time} -> null");
-                        _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Downtime Duration: {Server.Downtime?.Duration} -> null");
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Debug,
+                            $"Server Downtime: {Server.Downtime?.Time} -> null");
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Debug,
+                            $"Server Downtime Duration: {Server.Downtime?.Duration} -> null");
                     }
 
                     else
@@ -420,10 +446,13 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 {
                     server.IsActive = EditIsActive;
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Server Is Active: {Server.IsActive} -> {EditIsActive}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Server Is Active: {Server.IsActive} -> {EditIsActive}");
                 }
 
-                (ServerInformationModel? updatedServer, ResponseModel? apiResponse) = await APIService.UpdateServer(Id,
+                (ServerInformationModel? updatedServer, ResponseModel? apiResponse) = await APIService.UpdateServer(
+                    Id,
                     server);
 
                 if (updatedServer != null)
@@ -443,12 +472,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 {
                     SaveSuccess = false;
                     ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
 
                 await InvokeAsync(StateHasChanged);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Save Success: {SaveSuccess}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
 
                 await Task.Delay(2000).ContinueWith(_ =>
                 {

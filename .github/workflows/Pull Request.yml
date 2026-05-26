@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2.1.0
+      uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -19,28 +19,29 @@ jobs:
         dotnet-version: '10.0.x'
 
     - name: Setup msbuild
-      uses: microsoft/setup-msbuild@v1
-
-    - name: Setup VSTest
-      uses: darenm/Setup-VSTest@v1
+      uses: microsoft/setup-msbuild@v2
 
     - name: Restore NuGet packages
       run: |
         nuget restore "Hunter Industries API.sln"
+        dotnet restore "Hunter Industries API Common/Hunter Industries API Common.csproj"
         dotnet restore "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj"
+        dotnet restore "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj"
 
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
 
-    - name: Build .NET Framework projects
-      run: |
-        MSBuild.exe "Hunter Industries API/Hunter Industries API.csproj" /p:configuration="Release"
-        MSBuild.exe "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" /p:configuration="Release"
+    - name: Build .NET Common project
+      run: dotnet build "Hunter Industries API Common/Hunter Industries API Common.csproj" --configuration Release --no-restore
 
-    - name: Build .NET projects
-      run: |
-        dotnet build "Hunter Industries API Common/Hunter Industries API Common.csproj" --configuration Release
-        dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release
+    - name: Build .NET Framework projects
+      run: msbuild.exe "Hunter Industries API/Hunter Industries API.csproj" /p:configuration="Release"
+
+    - name: Build .NET Control Panel project
+      run: dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release --no-restore
+
+    - name: Build test project
+      run: dotnet build "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-restore
 
     - name: Run tests
-      run: vstest.console.exe ".\Hunter Industries API.Tests\bin\Release\Hunter Industries API.Tests.dll"
+      run: dotnet test "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-build --logger "trx"

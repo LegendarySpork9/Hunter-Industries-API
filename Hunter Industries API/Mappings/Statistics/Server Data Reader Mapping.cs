@@ -46,7 +46,9 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Component = reader.GetString(0),
                 Status = reader.GetString(1),
-                DateOccured = DateTime.SpecifyKind(reader.GetDateTime(2), DateTimeKind.Utc)
+                DateOccured = DateTime.SpecifyKind(
+                    reader.GetDateTime(2),
+                    DateTimeKind.Utc)
             };
 
             return eventComponent;
@@ -78,7 +80,9 @@ namespace HunterIndustriesAPI.Mappings
                 Component = reader.GetString(2),
                 ComponentStatus = reader.GetString(3),
                 AlertStatus = reader.GetString(4),
-                AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc)
+                AlertDate = DateTime.SpecifyKind(
+                    reader.GetDateTime(5),
+                    DateTimeKind.Utc)
             };
 
             return recentAlert;

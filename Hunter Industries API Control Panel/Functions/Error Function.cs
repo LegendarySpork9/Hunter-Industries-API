@@ -1,7 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-namespace HunterIndustriesAPIControlPanel.Converters
+namespace HunterIndustriesAPIControlPanel.Functions
 {
-    public static class ErrorConverter
+    public class ErrorFunction
     {
         /// <summary>
         /// Returns the class name from the given string.
@@ -10,7 +10,8 @@ namespace HunterIndustriesAPIControlPanel.Converters
         {
             string className = string.Empty;
 
-            string[] words = summary.TrimEnd('.').Split(' ');
+            string[] words = summary.TrimEnd('.')
+                .Split(' ');
 
             for (int i = words.Length - 1; i >= 0; i--)
             {

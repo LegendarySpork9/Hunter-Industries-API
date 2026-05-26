@@ -16,13 +16,17 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetUsername()
         {
-            ClaimsIdentity identity = new ClaimsIdentity(new[] { new Claim("username", "TestUser") }, "TestAuth");
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            ClaimsIdentity identity = new(
+                [new Claim("username", "TestUser")],
+                "TestAuth");
+            ClaimsPrincipal principal = new(identity);
 
             string expected = "TestUser";
             string actual = ClaimFunction.GetUsername(principal);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -42,8 +46,10 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetUsernameNoClaim()
         {
-            ClaimsIdentity identity = new ClaimsIdentity(new[] { new Claim("scope", "User") }, "TestAuth");
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            ClaimsIdentity identity = new(
+                [new Claim("scope", "User")],
+                "TestAuth");
+            ClaimsPrincipal principal = new(identity);
 
             string actual = ClaimFunction.GetUsername(principal);
 
@@ -60,13 +66,17 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetApplicationName()
         {
-            ClaimsIdentity identity = new ClaimsIdentity(new[] { new Claim("application", "TestApp") }, "TestAuth");
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            ClaimsIdentity identity = new(
+                [new Claim("application", "TestApp")],
+                "TestAuth");
+            ClaimsPrincipal principal = new(identity);
 
             string expected = "TestApp";
             string actual = ClaimFunction.GetApplicationName(principal);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -86,8 +96,10 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestGetApplicationNameNoClaim()
         {
-            ClaimsIdentity identity = new ClaimsIdentity(new[] { new Claim("scope", "User") }, "TestAuth");
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            ClaimsIdentity identity = new(
+                [new Claim("scope", "User")],
+                "TestAuth");
+            ClaimsPrincipal principal = new(identity);
 
             string actual = ClaimFunction.GetApplicationName(principal);
 

@@ -16,15 +16,17 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
     [TestClass]
     public class ServerInformationServiceTest
     {
-        private readonly Mock<ILoggerService> _MockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _MockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _MockOptions = new Mock<IDatabaseOptions>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("select 1");
-            _MockOptions.Setup(o => o.SQLFiles).Returns(@"C:\SQL");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("select 1");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns(@"C:\SQL");
         }
 
         #region GetServers
@@ -35,35 +37,62 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestGetServers()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerInformationRecord>
-                {
-                    new ServerInformationRecord
-                    {
-                        Id = 1,
-                        Name = "Test",
-                        HostName = "TestServer",
-                        Game = "TestGame",
-                        GameVersion = "1.0",
-                        Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
-                        Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
-                        IsActive = true
-                    }
-                }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new ServerInformationRecord
+                        {
+                            Id = 1,
+                            Name = "Test",
+                            HostName = "TestServer",
+                            Game = "TestGame",
+                            GameVersion = "1.0",
+                            Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
+                            Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
+                            IsActive = true
+                        }
+                    ],
+                    null));
 
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<ServerInformationRecord> actual = await service.GetServers(true);
 
-            Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual("Test", actual[0].Name);
-            Assert.AreEqual("TestServer", actual[0].HostName);
-            Assert.AreEqual("TestGame", actual[0].Game);
-            Assert.AreEqual("1.0", actual[0].GameVersion);
-            Assert.AreEqual("127.0.0.1", actual[0].Connection.IPAddress);
-            Assert.AreEqual(25565, actual[0].Connection.Port);
-            Assert.AreEqual("03:00", actual[0].Downtime.Time);
-            Assert.AreEqual(60, actual[0].Downtime.Duration);
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                "Test",
+                actual[0].Name);
+            Assert.AreEqual(
+                "TestServer",
+                actual[0].HostName);
+            Assert.AreEqual(
+                "TestGame",
+                actual[0].Game);
+            Assert.AreEqual(
+                "1.0",
+                actual[0].GameVersion);
+            Assert.AreEqual(
+                "127.0.0.1",
+                actual[0].Connection.IPAddress);
+            Assert.AreEqual(
+                25565,
+                actual[0].Connection.Port);
+            Assert.AreEqual(
+                "03:00",
+                actual[0].Downtime.Time);
+            Assert.AreEqual(
+                60,
+                actual[0].Downtime.Duration);
             Assert.IsTrue(actual[0].IsActive);
         }
 
@@ -73,14 +102,26 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestGetServersEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerInformationRecord>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<ServerInformationRecord> actual = await service.GetServers(true);
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         #endregion
@@ -93,10 +134,20 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestServerExists()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [1],
+                    null));
 
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.ServerExists("Test");
 
@@ -109,12 +160,154 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestServerExistsNot()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.ServerExists("Test");
+
+            Assert.IsFalse(actual);
+        }
+
+        #endregion
+
+        #region GetServer
+
+        /// <summary>
+        /// Checks whether the GetServer method returns a populated record.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetServer()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new ServerInformationRecord
+                        {
+                            Id = 1,
+                            Name = "Test",
+                            HostName = "TestServer",
+                            Game = "TestGame",
+                            GameVersion = "1.0",
+                            Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
+                            Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
+                            IsActive = true
+                        }
+                    ],
+                    null));
+
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            ServerInformationRecord actual = await service.GetServer(1);
+
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "Test",
+                actual.Name);
+            Assert.AreEqual(
+                "TestServer",
+                actual.HostName);
+        }
+
+        /// <summary>
+        /// Checks whether the GetServer method returns null when no server is found.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetServerEmpty()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
+
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            ServerInformationRecord actual = await service.GetServer(1);
+
+            Assert.IsNull(actual);
+        }
+
+        #endregion
+
+        #region ServerExists (int)
+
+        /// <summary>
+        /// Checks whether the ServerExists method returns true when a server exists with the given id.
+        /// </summary>
+        [TestMethod]
+        public async Task TestServerExistsId()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [1],
+                    null));
+
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            bool actual = await service.ServerExists(1);
+
+            Assert.IsTrue(actual);
+        }
+
+        /// <summary>
+        /// Checks whether the ServerExists method returns false when no server exists with the given id.
+        /// </summary>
+        [TestMethod]
+        public async Task TestServerExistsIdNot()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
+
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            bool actual = await service.ServerExists(1);
 
             Assert.IsFalse(actual);
         }
@@ -129,10 +322,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestServerAdded()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             (bool added, int serverId) = await service.ServerAdded(new ServerInformationModel
             {
@@ -147,7 +349,9 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
             });
 
             Assert.IsTrue(added);
-            Assert.AreEqual(1, serverId);
+            Assert.AreEqual(
+                1,
+                serverId);
         }
 
         /// <summary>
@@ -156,10 +360,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestServerAddedFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    null,
+                    null));
 
-            ServerInformationService service = new ServerInformationService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             (bool added, int serverId) = await service.ServerAdded(new ServerInformationModel
             {
@@ -174,7 +387,73 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
             });
 
             Assert.IsFalse(added);
-            Assert.AreEqual(0, serverId);
+            Assert.AreEqual(
+                0,
+                serverId);
+        }
+
+        #endregion
+
+        #region ServerUpdated
+
+        /// <summary>
+        /// Checks whether the ServerUpdated method returns true when the server is updated.
+        /// </summary>
+        [TestMethod]
+        public async Task TestServerUpdated()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            bool actual = await service.ServerUpdated(
+                1,
+                new ServerUpdateModel
+                {
+                    IsActive = true
+                });
+
+            Assert.IsTrue(actual);
+        }
+
+        /// <summary>
+        /// Checks whether the ServerUpdated method returns false when the update fails.
+        /// </summary>
+        [TestMethod]
+        public async Task TestServerUpdatedFailed()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
+
+            ServerInformationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            bool actual = await service.ServerUpdated(
+                1,
+                new ServerUpdateModel
+                {
+                    IsActive = true
+                });
+
+            Assert.IsFalse(actual);
         }
 
         #endregion

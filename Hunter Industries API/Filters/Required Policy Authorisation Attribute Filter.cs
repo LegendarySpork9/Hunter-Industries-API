@@ -39,12 +39,10 @@ namespace HunterIndustriesAPI.Filters
 
             string permissionToCheck = RequiredPermission;
 
-            RequiredPolicyAuthorisationAttributeFilter actionAttribute = actionContext.ActionDescriptor
-                .GetCustomAttributes<RequiredPolicyAuthorisationAttributeFilter>()
+            RequiredPolicyAuthorisationAttributeFilter actionAttribute = actionContext.ActionDescriptor.GetCustomAttributes<RequiredPolicyAuthorisationAttributeFilter>()
                 .FirstOrDefault();
 
-            RequiredPolicyAuthorisationAttributeFilter controllerAttribute = actionContext.ControllerContext.ControllerDescriptor
-                .GetCustomAttributes<RequiredPolicyAuthorisationAttributeFilter>()
+            RequiredPolicyAuthorisationAttributeFilter controllerAttribute = actionContext.ControllerContext.ControllerDescriptor.GetCustomAttributes<RequiredPolicyAuthorisationAttributeFilter>()
                 .FirstOrDefault();
 
             if (actionAttribute != null && controllerAttribute != null && actionAttribute != controllerAttribute)
@@ -52,13 +50,13 @@ namespace HunterIndustriesAPI.Filters
                 permissionToCheck = actionAttribute.RequiredPermission;
             }
 
-            IEnumerable<string> scopes = principal.Claims
-                .Where(c => c.Type == "scope")
+            IEnumerable<string> scopes = principal.Claims.Where(c => c.Type == "scope")
                 .Select(c => c.Value);
 
             List<string> grantedPermissions = ScopePermissionMapping.GetPermissions(scopes);
 
-            if (!ScopePermissionMapping.HasPermission(grantedPermissions,
+            if (!ScopePermissionMapping.HasPermission(
+                grantedPermissions,
                 permissionToCheck))
             {
                 actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);

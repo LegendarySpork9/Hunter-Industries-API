@@ -18,7 +18,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Boolean";
             string actual = ApplicationSettingConverter.GetDataType("Boolean");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -30,7 +32,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Byte (0 -> 255)";
             string actual = ApplicationSettingConverter.GetDataType("Byte");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -42,7 +46,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Currancy";
             string actual = ApplicationSettingConverter.GetDataType("Decimal");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -54,7 +60,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Math Integer";
             string actual = ApplicationSettingConverter.GetDataType("Double");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -66,7 +74,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Integer (~32 KB)";
             string actual = ApplicationSettingConverter.GetDataType("Int16");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -78,7 +88,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Integer (~2 GB)";
             string actual = ApplicationSettingConverter.GetDataType("Int32");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -90,7 +102,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Integer (~8 EB)";
             string actual = ApplicationSettingConverter.GetDataType("Int64");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -102,7 +116,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Integer (~139 BB)";
             string actual = ApplicationSettingConverter.GetDataType("Int128");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -114,7 +130,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "SByte (-128 -> 127)";
             string actual = ApplicationSettingConverter.GetDataType("SByte");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -126,7 +144,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Float";
             string actual = ApplicationSettingConverter.GetDataType("Single");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -138,7 +158,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "Duration";
             string actual = ApplicationSettingConverter.GetDataType("TimeSpan");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion

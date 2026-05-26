@@ -19,26 +19,31 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestValidateApplicationSettingsValid()
         {
-            ApplicationModel application = new ApplicationModel
+            ApplicationModel application = new()
             {
                 Id = 1,
                 Name = "TestApp",
                 Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                Settings = new List<ApplicationSettingModel>
-                {
+                Settings =
+                [
                     new ApplicationSettingModel { Id = 1, Name = "Theme", Type = "String", Required = true, IsDeleted = false }
-                },
+                ],
                 IsDeleted = false
             };
 
-            List<UserSettingRequestModel> pendingSettings = new List<UserSettingRequestModel>
-            {
+            List<UserSettingRequestModel> pendingSettings =
+            [
                 new UserSettingRequestModel { UserId = 1, Application = "TestApp", SettingName = "Theme", SettingValue = "Dark" }
-            };
+            ];
 
-            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(application, null, pendingSettings);
+            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(
+                application,
+                null,
+                pendingSettings);
 
-            Assert.AreEqual(0, errors.Count);
+            Assert.AreEqual(
+                0,
+                errors.Count);
         }
 
         /// <summary>
@@ -47,22 +52,29 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestValidateApplicationSettingsMissingRequired()
         {
-            ApplicationModel application = new ApplicationModel
+            ApplicationModel application = new()
             {
                 Id = 1,
                 Name = "TestApp",
                 Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                Settings = new List<ApplicationSettingModel>
-                {
+                Settings =
+                [
                     new ApplicationSettingModel { Id = 1, Name = "Theme", Type = "String", Required = true, IsDeleted = false }
-                },
+                ],
                 IsDeleted = false
             };
 
-            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(application, null, new List<UserSettingRequestModel>());
+            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(
+                application,
+                null,
+                []);
 
-            Assert.AreEqual(1, errors.Count);
-            Assert.AreEqual("Theme is required.", errors[0]);
+            Assert.AreEqual(
+                1,
+                errors.Count);
+            Assert.AreEqual(
+                "Theme is required.",
+                errors[0]);
         }
 
         /// <summary>
@@ -71,27 +83,34 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestValidateApplicationSettingsInvalidType()
         {
-            ApplicationModel application = new ApplicationModel
+            ApplicationModel application = new()
             {
                 Id = 1,
                 Name = "TestApp",
                 Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                Settings = new List<ApplicationSettingModel>
-                {
+                Settings =
+                [
                     new ApplicationSettingModel { Id = 1, Name = "Count", Type = "Int32", Required = false, IsDeleted = false }
-                },
+                ],
                 IsDeleted = false
             };
 
-            List<UserSettingRequestModel> pendingSettings = new List<UserSettingRequestModel>
-            {
+            List<UserSettingRequestModel> pendingSettings =
+            [
                 new UserSettingRequestModel { UserId = 1, Application = "TestApp", SettingName = "Count", SettingValue = "NotANumber" }
-            };
+            ];
 
-            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(application, null, pendingSettings);
+            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(
+                application,
+                null,
+                pendingSettings);
 
-            Assert.AreEqual(1, errors.Count);
-            Assert.AreEqual("Count must be a valid Int32.", errors[0]);
+            Assert.AreEqual(
+                1,
+                errors.Count);
+            Assert.AreEqual(
+                "Count must be a valid Int32.",
+                errors[0]);
         }
 
         /// <summary>
@@ -100,30 +119,35 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestValidateApplicationSettingsExistingSettingsFallback()
         {
-            ApplicationModel application = new ApplicationModel
+            ApplicationModel application = new()
             {
                 Id = 1,
                 Name = "TestApp",
                 Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                Settings = new List<ApplicationSettingModel>
-                {
+                Settings =
+                [
                     new ApplicationSettingModel { Id = 1, Name = "Theme", Type = "String", Required = true, IsDeleted = false }
-                },
+                ],
                 IsDeleted = false
             };
 
-            UserSettingModel currentSettings = new UserSettingModel
+            UserSettingModel currentSettings = new()
             {
                 Application = "TestApp",
-                Settings = new List<SettingModel>
-                {
+                Settings =
+                [
                     new SettingModel { Id = 1, Name = "Theme", Value = "Dark" }
-                }
+                ]
             };
 
-            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(application, currentSettings, new List<UserSettingRequestModel>());
+            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(
+                application,
+                currentSettings,
+                []);
 
-            Assert.AreEqual(0, errors.Count);
+            Assert.AreEqual(
+                0,
+                errors.Count);
         }
 
         #endregion
@@ -136,7 +160,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestTryConvertBoolean()
         {
-            bool actual = SettingValidatorFunction.TryConvert("Boolean", "True");
+            bool actual = SettingValidatorFunction.TryConvert(
+                "Boolean",
+                "True");
 
             Assert.IsTrue(actual);
         }
@@ -147,7 +173,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestTryConvertInt32()
         {
-            bool actual = SettingValidatorFunction.TryConvert("Int32", "42");
+            bool actual = SettingValidatorFunction.TryConvert(
+                "Int32",
+                "42");
 
             Assert.IsTrue(actual);
         }
@@ -158,7 +186,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestTryConvertInt32Invalid()
         {
-            bool actual = SettingValidatorFunction.TryConvert("Int32", "NotANumber");
+            bool actual = SettingValidatorFunction.TryConvert(
+                "Int32",
+                "NotANumber");
 
             Assert.IsFalse(actual);
         }
@@ -169,7 +199,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestTryConvertUnknownType()
         {
-            bool actual = SettingValidatorFunction.TryConvert("Trombone", "42");
+            bool actual = SettingValidatorFunction.TryConvert(
+                "Trombone",
+                "42");
 
             Assert.IsFalse(actual);
         }

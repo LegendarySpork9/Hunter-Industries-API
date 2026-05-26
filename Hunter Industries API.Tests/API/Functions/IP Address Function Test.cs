@@ -21,7 +21,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
 
             string actual = IPAddressFunction.FetchIpAddress(request);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -35,7 +37,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
 
             string actual = IPAddressFunction.FetchIpAddress(request);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -49,7 +53,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
 
             string actual = IPAddressFunction.FetchIpAddress(request);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -59,11 +65,15 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFetchIpAddressCFConnectingIPPriority()
         {
             string expected = "203.0.113.1";
-            HttpRequestBase request = CreateMockRequest(cfConnectingIp: expected, xForwardedFor: "198.51.100.1");
+            HttpRequestBase request = CreateMockRequest(
+                cfConnectingIp: expected,
+                xForwardedFor: "198.51.100.1");
 
             string actual = IPAddressFunction.FetchIpAddress(request);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -73,20 +83,29 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFetchIpAddressXForwardedForPriority()
         {
             string expected = "198.51.100.1";
-            HttpRequestBase request = CreateMockRequest(xForwardedFor: expected, userHostAddress: "127.0.0.1");
+            HttpRequestBase request = CreateMockRequest(
+                xForwardedFor: expected,
+                userHostAddress: "127.0.0.1");
 
             string actual = IPAddressFunction.FetchIpAddress(request);
 
-            Assert.AreNotEqual("127.0.0.1", actual);
-            Assert.AreEqual(expected, actual);
+            Assert.AreNotEqual(
+                "127.0.0.1",
+                actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
         /// Creates a mock HttpRequestBase with the specified header values for testing.
         /// </summary>
-        private HttpRequestBase CreateMockRequest(string cfConnectingIp = null, string xForwardedFor = null, string userHostAddress = null)
+        private HttpRequestBase CreateMockRequest(
+            string cfConnectingIp = null,
+            string xForwardedFor = null,
+            string userHostAddress = null)
         {
-            NameValueCollection headers = new NameValueCollection();
+            NameValueCollection headers = [];
 
             if (cfConnectingIp != null)
             {
@@ -98,9 +117,11 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 headers.Add("X-Forwarded-For", xForwardedFor);
             }
 
-            Mock<HttpRequestBase> mockRequest = new Mock<HttpRequestBase>();
-            mockRequest.Setup(r => r.Headers).Returns(headers);
-            mockRequest.Setup(r => r.UserHostAddress).Returns(userHostAddress);
+            Mock<HttpRequestBase> mockRequest = new();
+            mockRequest.Setup(r => r.Headers)
+                .Returns(headers);
+            mockRequest.Setup(r => r.UserHostAddress)
+                .Returns(userHostAddress);
 
             return mockRequest.Object;
         }

@@ -3,7 +3,6 @@ using HunterIndustriesAPIControlPanel.Mappers;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
 {
@@ -16,20 +15,25 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
         [TestMethod]
         public void TestToListObject()
         {
-            ApplicationModel application = new ApplicationModel
+            ApplicationModel application = new()
             {
                 Id = 1,
                 Name = "TestApp",
                 Authorisation = new AuthorisationModel { Id = 1, Phrase = "Phrase", IsDeleted = false },
-                Settings = new List<ApplicationSettingModel>(),
+                Settings = [],
                 IsDeleted = false
             };
 
             ConfigurationListObjectModel actual = application.ToListObject();
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("TestApp", actual.Name);
-            Assert.AreEqual(false, actual.IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "TestApp",
+                actual.Name);
+            Assert.IsFalse(
+                actual.IsDeleted);
         }
     }
 }

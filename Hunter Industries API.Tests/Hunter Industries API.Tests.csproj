@@ -41,11 +41,14 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Compile Remove="Control Panel\**\*.cs" />
+    <None Include="Control Panel\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <Compile Remove="API\**\*.cs" />
     <Compile Remove="Properties\**\*.cs" />
+    <None Include="API\**\*.cs" />
+    <None Include="Properties\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">

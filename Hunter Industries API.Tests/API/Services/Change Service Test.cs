@@ -12,15 +12,17 @@ namespace HunterIndustriesAPI.Tests.API.Services
     [TestClass]
     public class ChangeServiceTest
     {
-        private readonly Mock<ILoggerService> _mockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _mockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _mockOptions = new Mock<IDatabaseOptions>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _mockOptions.Setup(o => o.SQLFiles).Returns("C:\\SQL");
-            _mockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("SELECT 1");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns("C:\\SQL");
+            _MockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>()))
+                .Returns("SELECT 1");
         }
 
         /// <summary>
@@ -29,12 +31,25 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestLogChange()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            ChangeService service = new ChangeService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
+            ChangeService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.LogChange(1, "Field", "OldValue", "NewValue");
+            bool actual = await service.LogChange(
+                1,
+                "Field",
+                "OldValue",
+                "NewValue");
 
             Assert.IsTrue(actual);
         }
@@ -45,12 +60,25 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public async Task TestLogChangeFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
 
-            ChangeService service = new ChangeService(_mockLogger.Object, _mockFileSystem.Object, _mockOptions.Object, _mockDatabase.Object);
+            ChangeService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.LogChange(1, "Field", "OldValue", "NewValue");
+            bool actual = await service.LogChange(
+                1,
+                "Field",
+                "OldValue",
+                "NewValue");
 
             Assert.IsFalse(actual);
         }

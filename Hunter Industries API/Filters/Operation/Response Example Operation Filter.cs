@@ -16,7 +16,8 @@ namespace HunterIndustriesAPI.Filters.Operation
         /// <summary>
         /// Adds the response examples to the Swagger UI.
         /// </summary>
-        public void Apply(Swashbuckle.Swagger.Operation operation,
+        public void Apply(
+            Swashbuckle.Swagger.Operation operation,
             SchemaRegistry schemaRegistry,
             ApiDescription apiDescription)
         {

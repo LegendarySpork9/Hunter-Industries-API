@@ -10,7 +10,8 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Compares the scopes and generates the update list.
         /// </summary>
-        public static List<KeyValuePair<string, string>> GetScopesUpdateList(List<string> currentScopes,
+        public static List<KeyValuePair<string, string>> GetScopesUpdateList(
+            List<string> currentScopes,
             List<string> requiredScopes)
         {
             List<KeyValuePair<string, string>> updateScopes = new List<KeyValuePair<string, string>>();

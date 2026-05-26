@@ -19,14 +19,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
 
         private AuditHistoryModel? AuditHistory;
 
-        private bool IsLoading { get; set; }
+        private bool IsLoading;
 
         /// <summary>
         /// Loads the data.
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Audit History Detail Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Audit History Detail Page");
 
             IsLoading = true;
 

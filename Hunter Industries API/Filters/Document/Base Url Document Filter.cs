@@ -12,7 +12,8 @@ namespace HunterIndustriesAPI.Filters.Document
         /// <summary>
         /// Sets the base URL on the Swagger UI and strips the version prefix from endpoint paths.
         /// </summary>
-        public void Apply(SwaggerDocument swaggerDoc,
+        public void Apply(
+            SwaggerDocument swaggerDoc,
             SchemaRegistry schemaRegistry,
             IApiExplorer apiExplorer)
         {

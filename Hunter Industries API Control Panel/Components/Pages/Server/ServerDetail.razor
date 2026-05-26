@@ -1,5 +1,4 @@
 @page "/servers/{Id:int}"
-@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Server Detail</PageTitle>
 
@@ -7,7 +6,7 @@
     <a href="/servers" class="btn btn-outline-light btn-sm">&larr; Back to Servers</a>
 </div>
 
-@if (Server == null && Statistics == null && LoadingData)
+@if (IsLoading && Server == null && Statistics == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -31,13 +30,15 @@ else
                 <h5 class="mb-0">Server Information</h5>
                 @if (Server.IsActive)
                 {
-                    <StatusBadge Text="Active"
+                    <StatusBadge
+                        Text="Active"
                         Type="active" />
                 }
 
                 else
                 {
-                    <StatusBadge Text="Inactive"
+                    <StatusBadge
+                        Text="Inactive"
                         Type="inactive" />
                 }
             </div>
@@ -131,7 +132,8 @@ else
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Health Over Time (30 Days)</h6>
                     <RadzenChart Style="height: 280px;">
-                        <RadzenAreaSeries Data="@Statistics.ServerHealth"
+                        <RadzenAreaSeries
+                            Data="@Statistics.ServerHealth"
                             CategoryProperty="Day"
                             ValueProperty="Uptime"
                             Title="Uptime"
@@ -148,10 +150,12 @@ else
                             </TooltipTemplate>
                         </RadzenAreaSeries>
                         <RadzenCategoryAxis Formatter="@FormatHealthDay" />
-                        <RadzenValueAxis Min="0"
+                        <RadzenValueAxis
+                            Min="0"
                             Max="100"
                             Step="20">
-                            <RadzenGridLines Visible="true"
+                            <RadzenGridLines
+                                Visible="true"
                                 Stroke="#555" />
                         </RadzenValueAxis>
                         <RadzenLegend Visible="false" />
@@ -169,7 +173,8 @@ else
                             {
                                 <RadzenChart Style="height: 200px;">
                                     <RadzenChartTooltipOptions Visible="false" />
-                                    <RadzenDonutSeries Data="@Statistics.ComponentAlerts"
+                                    <RadzenDonutSeries
+                                        Data="@Statistics.ComponentAlerts"
                                         CategoryProperty="Component"
                                         ValueProperty="Alerts"
                                         InnerRadius="40"
@@ -207,7 +212,8 @@ else
                             {
                                 <RadzenChart Style="height: 200px;">
                                     <RadzenChartTooltipOptions Visible="false" />
-                                    <RadzenDonutSeries Data="@Statistics.StatusAlerts"
+                                    <RadzenDonutSeries
+                                        Data="@Statistics.StatusAlerts"
                                         CategoryProperty="Status"
                                         ValueProperty="Alerts"
                                         InnerRadius="40"
@@ -257,7 +263,8 @@ else
                                             <tr>
                                                 <td class="text-light-grey">@serverEvent.Component</td>
                                                 <td>
-                                                    <StatusBadge Text="@serverEvent.Status"
+                                                    <StatusBadge
+                                                        Text="@serverEvent.Status"
                                                         Type="@(serverEvent.Status == "Online" ? "active" : serverEvent.Status == "Offline" ? "danger" : "warning")" />
                                                 </td>
                                                 <td class="text-light-grey">@serverEvent.DateOccured.ToString("dd MMM yyyy HH:mm")</td>
@@ -282,30 +289,39 @@ else
                     <h6 class="mb-0">Recent Alerts</h6>
                 </div>
                 <div class="card-body p-0">
-                    <RadzenDataGrid Data="@Statistics.RecentAlerts" TItem="RecentAlertModel"
+                    <RadzenDataGrid
+                        Data="@Statistics.RecentAlerts"
+                        TItem="RecentAlertModel"
                         AllowSorting="false">
                         <Columns>
-                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                            <RadzenDataGridColumn
+                                TItem="RecentAlertModel"
                                 Property="AlertId"
                                 Title="ID"
                                 Width="70px" />
-                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                            <RadzenDataGridColumn
+                                TItem="RecentAlertModel"
                                 Property="Reporter"
                                 Title="Reporter" />
-                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                            <RadzenDataGridColumn
+                                TItem="RecentAlertModel"
                                 Property="Component"
                                 Title="Component" />
-                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                            <RadzenDataGridColumn
+                                TItem="RecentAlertModel"
                                 Property="ComponentStatus"
                                 Title="Component Status" />
-                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                            <RadzenDataGridColumn
+                                TItem="RecentAlertModel"
                                 Title="Alert Status">
                                 <Template Context="alert">
-                                    <StatusBadge Text="@alert.AlertStatus"
+                                    <StatusBadge
+                                        Text="@alert.AlertStatus"
                                         Type="@(alert.AlertStatus == "Resolved" ? "active" : alert.AlertStatus == "Reported" ? "danger" : "warning")" />
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="RecentAlertModel"
+                            <RadzenDataGridColumn
+                                TItem="RecentAlertModel"
                                 Title="Date">
                                 <Template Context="alert">
                                     @alert.AlertDate.ToString("dd MMM yyyy HH:mm")
@@ -322,20 +338,26 @@ else
                     <h6 class="mb-0">Recent Events</h6>
                 </div>
                 <div class="card-body p-0">
-                    <RadzenDataGrid Data="@Statistics.RecentEvents" TItem="ServerEventModel"
+                    <RadzenDataGrid
+                        Data="@Statistics.RecentEvents"
+                        TItem="ServerEventModel"
                         AllowSorting="false">
                         <Columns>
-                            <RadzenDataGridColumn TItem="ServerEventModel"
+                            <RadzenDataGridColumn
+                                TItem="ServerEventModel"
                                 Property="Component"
                                 Title="Component" />
-                            <RadzenDataGridColumn TItem="ServerEventModel"
+                            <RadzenDataGridColumn
+                                TItem="ServerEventModel"
                                 Title="Status">
                                 <Template Context="serverEvent">
-                                    <StatusBadge Text="@serverEvent.Status"
+                                    <StatusBadge
+                                        Text="@serverEvent.Status"
                                         Type="@(serverEvent.Status == "Online" ? "active" : serverEvent.Status == "Offline" ? "danger" : "warning")" />
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="ServerEventModel"
+                            <RadzenDataGridColumn
+                                TItem="ServerEventModel"
                                 Title="Date">
                                 <Template Context="serverEvent">
                                     @serverEvent.DateOccured.ToString("dd MMM yyyy HH:mm")

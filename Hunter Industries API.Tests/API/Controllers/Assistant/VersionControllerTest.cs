@@ -22,22 +22,30 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Assistant
     [TestClass]
     public class VersionControllerTest
     {
-        private readonly Mock<ILoggerService> _mockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _mockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _mockOptions = new Mock<IDatabaseOptions>();
-        private readonly Mock<IClock> _mockClock = new Mock<IClock>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
+        private readonly Mock<IClock> _MockClock = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("select 1");
-            _mockOptions.Setup(o => o.ConnectionString).Returns("Server=.;Database=Test;Trusted_Connection=True;");
-            _mockOptions.Setup(o => o.SQLFiles).Returns("C:\\SQLFiles");
-            _mockClock.Setup(c => c.DefaultDate).Returns(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-            _mockClock.Setup(c => c.UtcNow).Returns(new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc));
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("select 1");
+            _MockOptions.Setup(o => o.ConnectionString)
+                .Returns("Server=.;Database=Test;Trusted_Connection=True;");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns("C:\\SQLFiles");
+            _MockClock.Setup(c => c.DefaultDate)
+                .Returns(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            _MockClock.Setup(c => c.UtcNow)
+                .Returns(new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc));
 
             HttpContext.Current = new HttpContext(
-                new HttpRequest(null, "http://localhost", null),
+                new HttpRequest(
+                    null,
+                    "http://localhost",
+                    null),
                 new HttpResponse(new System.IO.StringWriter()));
         }
 
@@ -49,29 +57,53 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Assistant
         [TestMethod]
         public async Task TestGet()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, VersionResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new VersionResponseModel
+            VersionResponseModel versionResponse = new()
             {
                 AssistantName = "TestAssistant",
                 IdNumber = "A001",
                 Version = "2.5.0"
-            }, null));
+            };
 
-            VersionController controller = new VersionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, VersionResponseModel>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    versionResponse,
+                    null));
+
+            VersionController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/version")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v1.0/assistant/version")),
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get(new AssistantFilterModel
+            AssistantFilterModel filters = new()
             {
                 AssistantName = "TestAssistant",
                 AssistantId = "A001"
-            });
+            };
+
+            IHttpActionResult actionResult = await controller.Get(filters);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
-            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
         }
 
         /// <summary>
@@ -80,24 +112,46 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Assistant
         [TestMethod]
         public async Task TestGetNotFound()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, VersionResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new VersionResponseModel(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, VersionResponseModel>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    new VersionResponseModel(),
+                    null));
 
-            VersionController controller = new VersionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            VersionController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/version")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v1.0/assistant/version")),
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get(new AssistantFilterModel
+            AssistantFilterModel filters = new()
             {
                 AssistantName = "TestAssistant",
                 AssistantId = "A001"
-            });
+            };
+
+            IHttpActionResult actionResult = await controller.Get(filters);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
-            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
         }
 
         #endregion
@@ -110,29 +164,78 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Assistant
         [TestMethod]
         public async Task TestPatch()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, string)> { ("TestAssistant", "A001") }, null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, VersionResponseModel>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new VersionResponseModel
+            List<(string, string)> existsResults =
+            [
+                ("TestAssistant", "A001")
+            ];
+
+            VersionResponseModel versionResponse = new()
             {
                 AssistantName = "TestAssistant",
                 IdNumber = "A001",
                 Version = "2.5.0"
-            }, null));
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            };
 
-            VersionController controller = new VersionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (string, string)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    existsResults,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, VersionResponseModel>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    versionResponse,
+                    null));
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+
+            VersionController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/version")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v1.0/assistant/version")),
                 Configuration = new HttpConfiguration()
             };
 
+            AssistantFilterModel filters = new()
+            {
+                AssistantName = "TestAssistant",
+                AssistantId = "A001"
+            };
+
+            VersionModel request = new()
+            {
+                Version = "3.0.0"
+            };
+
             IHttpActionResult actionResult = await controller.Patch(
-                new VersionModel { Version = "3.0.0" },
-                new AssistantFilterModel { AssistantName = "TestAssistant", AssistantId = "A001" });
+                request,
+                filters);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
-            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
         }
 
         /// <summary>
@@ -141,22 +244,55 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Assistant
         [TestMethod]
         public async Task TestPatchNotFound()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, string)>(), null));
+            List<(string, string)> existsResults = [];
 
-            VersionController controller = new VersionController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (string, string)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    existsResults,
+                    null));
+
+            VersionController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v1.0/assistant/version")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v1.0/assistant/version")),
                 Configuration = new HttpConfiguration()
             };
 
+            AssistantFilterModel filters = new()
+            {
+                AssistantName = "NonExistent",
+                AssistantId = "X999"
+            };
+
+            VersionModel request = new()
+            {
+                Version = "3.0.0"
+            };
+
             IHttpActionResult actionResult = await controller.Patch(
-                new VersionModel { Version = "3.0.0" },
-                new AssistantFilterModel { AssistantName = "NonExistent", AssistantId = "X999" });
+                request,
+                filters);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
-            Assert.AreEqual(HttpStatusCode.NotFound, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.NotFound,
+                contentResult.StatusCode);
         }
 
         #endregion

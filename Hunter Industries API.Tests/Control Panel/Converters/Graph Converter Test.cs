@@ -18,7 +18,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "bg-secondary";
             string actual = GraphConverter.GetMethodBadgeClass("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -30,7 +32,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-method-get";
             string actual = GraphConverter.GetMethodBadgeClass("GET");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -42,7 +46,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-method-post";
             string actual = GraphConverter.GetMethodBadgeClass("POST");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -54,7 +60,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-method-patch";
             string actual = GraphConverter.GetMethodBadgeClass("PATCH");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -66,7 +74,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-method-delete";
             string actual = GraphConverter.GetMethodBadgeClass("DELETE");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -82,7 +92,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "bg-secondary";
             string actual = GraphConverter.GetStatusBadgeClass("999");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -94,7 +106,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-status-200";
             string actual = GraphConverter.GetStatusBadgeClass("200 OK");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -106,7 +120,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-status-201";
             string actual = GraphConverter.GetStatusBadgeClass("201 Created");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -118,7 +134,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-status-400";
             string actual = GraphConverter.GetStatusBadgeClass("400 Bad Request");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -130,7 +148,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-status-401";
             string actual = GraphConverter.GetStatusBadgeClass("401 Unauthorized");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -142,7 +162,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-status-403";
             string actual = GraphConverter.GetStatusBadgeClass("403 Forbidden");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -154,7 +176,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-status-404";
             string actual = GraphConverter.GetStatusBadgeClass("404 Not Found");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -166,7 +190,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "badge-status-500";
             string actual = GraphConverter.GetStatusBadgeClass("500 Internal Server Error");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion

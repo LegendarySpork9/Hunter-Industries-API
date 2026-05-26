@@ -1,7 +1,4 @@
 @page "/users/{Id:int}"
-@using HunterIndustriesAPIControlPanel.Converters
-@using HunterIndustriesAPIControlPanel.Models.Responses
-@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>User Detail</PageTitle>
 
@@ -9,7 +6,7 @@
     <a href="/users" class="btn btn-outline-light btn-sm">&larr; Back to Users</a>
 </div>
 
-@if (User == null && LoadingData)
+@if (IsLoading && User == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -33,13 +30,15 @@ else
                 <h5 class="mb-0">User Information</h5>
                 @if (User.IsDeleted)
                 {
-                    <StatusBadge Text="Deleted"
+                    <StatusBadge
+                        Text="Deleted"
                         Type="deleted" />
                 }
 
                 else
                 {
-                    <StatusBadge Text="Active"
+                    <StatusBadge
+                        Text="Active"
                         Type="active" />
                 }
             </div>
@@ -197,17 +196,20 @@ else
     }
 }
 
-<ConfirmDialog IsVisible="ShowDeleteConfirm"
+<ConfirmDialog
+    IsVisible="ShowDeleteConfirm"
     Title="Delete User"
     Message="@($"Are you sure you want to delete user '{User?.Username}'?")"
     ConfirmText="Delete"
     OnConfirm="DeleteUser"
     OnCancel="CancelDelete" />
-<AlertDialog IsVisible="ShowValidationErrors"
+<AlertDialog
+    IsVisible="ShowValidationErrors"
     Title="Validation Errors"
     Messages="ValidationErrors"
     OnClose="CloseValidationErrors" />
-<AlertDialog IsVisible="ShowSaveSettingErrors"
+<AlertDialog
+    IsVisible="ShowSaveSettingErrors"
     Title="Save Setting Errors"
     Messages="SaveSettingErrors"
     OnClose="CloseSaveSettingErrors" />

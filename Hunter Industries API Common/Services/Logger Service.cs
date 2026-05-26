@@ -9,7 +9,8 @@ namespace HunterIndustriesAPICommon.Services
         private readonly ILog Logger;
 
         // Sets the class's global variables.
-        public LoggerService(string id,
+        public LoggerService(
+            string id,
             string logAppender)
         {
             Identifier = id;
@@ -19,16 +20,27 @@ namespace HunterIndustriesAPICommon.Services
         /// <summary>
         /// Adds the message to the log file and SQL table.
         /// </summary>
-        public void LogMessage(string level,
+        public void LogMessage(
+            string level,
             string message,
             string summary = null)
         {
             switch (level)
             {
-                case "Info": Logger.Info($"{Identifier} - {message.Trim()}"); break;
-                case "Debug": Logger.Debug($"{Identifier} - {message.Trim()}"); break;
-                case "Warn": Logger.Warn($"{Identifier} - {message.Trim()}"); break;
-                case "Error": ThreadContext.Properties["IPAddress"] = Identifier; ThreadContext.Properties["Summary"] = summary; Logger.Error(message); break;
+                case "Info":
+                    Logger.Info($"{Identifier} - {message.Trim()}");
+                    break;
+                case "Debug":
+                    Logger.Debug($"{Identifier} - {message.Trim()}");
+                    break;
+                case "Warn":
+                    Logger.Warn($"{Identifier} - {message.Trim()}");
+                    break;
+                case "Error":
+                    ThreadContext.Properties["IPAddress"] = Identifier;
+                    ThreadContext.Properties["Summary"] = summary;
+                    Logger.Error(message);
+                    break;
             }
         }
     }

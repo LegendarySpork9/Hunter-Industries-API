@@ -1,6 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPICommon.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HunterIndustriesAPI.Tests.API.Converters
@@ -19,7 +18,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "Unknown.sql";
             string actual = StatisticsConverter.GetSQLDashboard("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -31,7 +32,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetTopBarStats.sql";
             string actual = StatisticsConverter.GetSQLDashboard("topBarStats");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -43,7 +46,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetAPITraffic.sql";
             string actual = StatisticsConverter.GetSQLDashboard("apiTraffic");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -55,7 +60,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetErrorsByIPAndSummary.sql";
             string actual = StatisticsConverter.GetSQLDashboard("errors");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -67,7 +74,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetLoginAttemptsByUsernameAndApplication.sql";
             string actual = StatisticsConverter.GetSQLDashboard("loginAttempts");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -79,7 +88,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetServerHealth30Days.sql";
             string actual = StatisticsConverter.GetSQLDashboard("serverHealth");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -95,7 +106,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "Unknown.sql";
             string actual = StatisticsConverter.GetSQLShared("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -107,7 +120,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetCallsByEndpoint.sql";
             string actual = StatisticsConverter.GetSQLShared("endpointCalls");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -119,7 +134,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetCallsByMethod.sql";
             string actual = StatisticsConverter.GetSQLShared("methodCalls");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -131,7 +148,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetCallsByStatus.sql";
             string actual = StatisticsConverter.GetSQLShared("statusCalls");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -143,7 +162,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetChangesByField.sql";
             string actual = StatisticsConverter.GetSQLShared("changeCalls");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -159,7 +180,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "Unknown.sql";
             string actual = StatisticsConverter.GetSQLSharedSort("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -170,8 +193,12 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         {
             string actual = StatisticsConverter.GetSQLSharedSort("endpointCalls");
 
-            StringAssert.Contains(actual, "group by [Value]");
-            StringAssert.Contains(actual, "order by EndpointCalls desc");
+            StringAssert.Contains(
+                actual,
+                "group by [Value]");
+            StringAssert.Contains(
+                actual,
+                "order by EndpointCalls desc");
         }
 
         /// <summary>
@@ -182,8 +209,12 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         {
             string actual = StatisticsConverter.GetSQLSharedSort("methodCalls");
 
-            StringAssert.Contains(actual, "group by [Value]");
-            StringAssert.Contains(actual, "order by MethodCalls desc");
+            StringAssert.Contains(
+                actual,
+                "group by [Value]");
+            StringAssert.Contains(
+                actual,
+                "order by MethodCalls desc");
         }
 
         /// <summary>
@@ -194,8 +225,12 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         {
             string actual = StatisticsConverter.GetSQLSharedSort("statusCalls");
 
-            StringAssert.Contains(actual, "group by [Value]");
-            StringAssert.Contains(actual, "order by StatusCalls desc");
+            StringAssert.Contains(
+                actual,
+                "group by [Value]");
+            StringAssert.Contains(
+                actual,
+                "order by StatusCalls desc");
         }
 
         /// <summary>
@@ -206,8 +241,12 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         {
             string actual = StatisticsConverter.GetSQLSharedSort("changeCalls");
 
-            StringAssert.Contains(actual, "group by Field");
-            StringAssert.Contains(actual, "order by ChangeCount desc");
+            StringAssert.Contains(
+                actual,
+                "group by Field");
+            StringAssert.Contains(
+                actual,
+                "order by ChangeCount desc");
         }
 
         #endregion
@@ -223,7 +262,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "Unknown.sql";
             string actual = StatisticsConverter.GetSQLServer("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -235,7 +276,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetAlertsByComponent.sql";
             string actual = StatisticsConverter.GetSQLServer("componentAlerts");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -247,7 +290,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetAlertsByStatus.sql";
             string actual = StatisticsConverter.GetSQLServer("statusAlerts");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -259,7 +304,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetLastEventPerComponent.sql";
             string actual = StatisticsConverter.GetSQLServer("lastComponentEvents");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -271,7 +318,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetServerHealth30Days.sql";
             string actual = StatisticsConverter.GetSQLServer("serverHealth");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -283,7 +332,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetRecentAlerts.sql";
             string actual = StatisticsConverter.GetSQLServer("recentAlerts");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -295,7 +346,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetRecentEvents.sql";
             string actual = StatisticsConverter.GetSQLServer("recentEvents");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -311,7 +364,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "Unknown.sql";
             string actual = StatisticsConverter.GetSQLError("Trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -323,7 +378,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetErrorsOverTime.sql";
             string actual = StatisticsConverter.GetSQLError("errorsOverTime");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -335,7 +392,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetErrorsByIPAddress.sql";
             string actual = StatisticsConverter.GetSQLError("ipErrors");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -347,7 +406,9 @@ namespace HunterIndustriesAPI.Tests.API.Converters
             string expected = "GetErrorsBySummary.sql";
             string actual = StatisticsConverter.GetSQLError("summaryErrors");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion

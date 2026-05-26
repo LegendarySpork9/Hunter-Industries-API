@@ -12,7 +12,8 @@ namespace HunterIndustriesAPI.Converters
         /// <summary>
         /// Converts the scope into a claim.
         /// </summary>
-        public static Claim[] GetClaims(string username,
+        public static Claim[] GetClaims(
+            string username,
             string applicationName,
             List<string> scopes)
         {
@@ -24,7 +25,10 @@ namespace HunterIndustriesAPI.Converters
 
             foreach (string scope in scopes)
             {
-                claims = claims.Append(new Claim("scope", scope)).ToArray();
+                claims = claims.Append(new Claim(
+                    "scope", 
+                    scope))
+                    .ToArray();
             }
 
             return claims;

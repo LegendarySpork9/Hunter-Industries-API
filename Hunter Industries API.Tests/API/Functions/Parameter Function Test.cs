@@ -16,9 +16,13 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersEmpty()
         {
-            string[] actual = ParameterFunction.FormatParameters(parameters: (string)null, model: null);
+            string[] actual = ParameterFunction.FormatParameters(
+                parameters: (string)null,
+                model: null);
 
-            Assert.AreEqual(0, actual.Length);
+            Assert.AreEqual(
+                0,
+                actual.Length);
         }
 
         /// <summary>
@@ -29,9 +33,15 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         {
             string[] actual = ParameterFunction.FormatParameters("\"value1\",\"value2\"");
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("value1", actual[0]);
-            Assert.AreEqual("value2", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "value1",
+                actual[0]);
+            Assert.AreEqual(
+                "value2",
+                actual[1]);
         }
 
         /// <summary>
@@ -41,11 +51,19 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersModel()
         {
             object model = new { Name = "Test", Value = 1 };
-            string[] actual = ParameterFunction.FormatParameters(null, model);
+            string[] actual = ParameterFunction.FormatParameters(
+                null,
+                model);
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("Test", actual[0]);
-            Assert.AreEqual("1", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "Test",
+                actual[0]);
+            Assert.AreEqual(
+                "1",
+                actual[1]);
         }
 
         /// <summary>
@@ -55,10 +73,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersModelNullProperty()
         {
             object model = new { Name = (string)null };
-            string[] actual = ParameterFunction.FormatParameters(null, model);
+            string[] actual = ParameterFunction.FormatParameters(
+                null,
+                model);
 
-            Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("", actual[0]);
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "",
+                actual[0]);
         }
 
         /// <summary>
@@ -68,11 +92,19 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersModelList()
         {
             object model = new { Items = new List<string> { "a", "b" } };
-            string[] actual = ParameterFunction.FormatParameters(null, model);
+            string[] actual = ParameterFunction.FormatParameters(
+                null,
+                model);
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("a", actual[0]);
-            Assert.AreEqual("b", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "a",
+                actual[0]);
+            Assert.AreEqual(
+                "b",
+                actual[1]);
         }
 
         /// <summary>
@@ -82,10 +114,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersModelPassword()
         {
             object model = new { Password = "Password" };
-            string[] actual = ParameterFunction.FormatParameters(null, model);
+            string[] actual = ParameterFunction.FormatParameters(
+                null,
+                model);
 
-            Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb", actual[0]);
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb",
+                actual[0]);
         }
 
         #endregion
@@ -98,7 +136,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersArrayNull()
         {
-            string actual = ParameterFunction.FormatParameters((string[])null, false);
+            string actual = ParameterFunction.FormatParameters(
+                (string[])null,
+                false);
 
             Assert.IsNull(actual);
         }
@@ -110,9 +150,13 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersArrayLog()
         {
             string expected = "\"value1\", \"value2\"";
-            string actual = ParameterFunction.FormatParameters(new string[] { "value1", "value2" }, false);
+            string actual = ParameterFunction.FormatParameters(
+                [ "value1", "value2" ],
+                false);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -122,9 +166,13 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersArraySQL()
         {
             string expected = "\"value1\",\"value2\"";
-            string actual = ParameterFunction.FormatParameters(new string[] { "value1", "value2" }, true);
+            string actual = ParameterFunction.FormatParameters(
+                [ "value1", "value2" ],
+                true);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -134,9 +182,13 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersArrayNullValue()
         {
             string expected = "\"value1\", \"null\"";
-            string actual = ParameterFunction.FormatParameters(new string[] { "value1", "" }, false);
+            string actual = ParameterFunction.FormatParameters(
+                [ "value1", "" ],
+                false);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -146,9 +198,13 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatParametersArrayNullValueSQL()
         {
             string expected = "\"value1\",\"null\"";
-            string actual = ParameterFunction.FormatParameters(new string[] { "value1", "" }, true);
+            string actual = ParameterFunction.FormatParameters(
+                [ "value1", "" ],
+                true);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -163,7 +219,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         {
             string actual = ParameterFunction.FormatParameters((object)null);
 
-            Assert.AreEqual(string.Empty, actual);
+            Assert.AreEqual(
+                string.Empty,
+                actual);
         }
 
         /// <summary>
@@ -176,7 +234,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             object model = new { Name = "Test", Value = 1 };
             string actual = ParameterFunction.FormatParameters(model);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -189,7 +249,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             object model = new { Name = (string)null };
             string actual = ParameterFunction.FormatParameters(model);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -202,7 +264,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             object model = new { Items = new List<string> { "a", "b" } };
             string actual = ParameterFunction.FormatParameters(model);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -215,7 +279,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             object model = new { Password = "Password" };
             string actual = ParameterFunction.FormatParameters(model);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -228,9 +294,13 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatListParametersListNull()
         {
-            string actual = ParameterFunction.FormatListParameters((object)null, true);
+            string actual = ParameterFunction.FormatListParameters(
+                (object)null,
+                true);
 
-            Assert.AreEqual(string.Empty, actual);
+            Assert.AreEqual(
+                string.Empty,
+                actual);
         }
 
         /// <summary>
@@ -240,14 +310,18 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatListParametersListKeyPair()
         {
             string expected = "\"User\", \"Assistant API\"";
-            List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>
-            {
+            List<KeyValuePair<string, string>> list =
+            [
                 new KeyValuePair<string, string>("Add", "User"),
                 new KeyValuePair<string, string>("Remove", "Assistant API")
-            };
-            string actual = ParameterFunction.FormatListParameters(list, true);
+            ];
+            string actual = ParameterFunction.FormatListParameters(
+                list,
+                true);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -257,10 +331,14 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestFormatListParametersListRegular()
         {
             string expected = "\"User\", \"Assistant API\"";
-            List<string> list = new List<string> { "User", "Assistant API" };
-            string actual = ParameterFunction.FormatListParameters(list, false);
+            List<string> list = [ "User", "Assistant API" ];
+            string actual = ParameterFunction.FormatListParameters(
+                list,
+                false);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -287,7 +365,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string expected = "value1, value2";
             string actual = ParameterFunction.FormatParameters(new List<object> { "value1", "value2" });
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -299,7 +379,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string expected = "\"value1\",\"value2\"";
             string actual = ParameterFunction.FormatParameters(new List<object> { "value1", "value2" }, true);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion
@@ -312,12 +394,20 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersModelOtherParametersNullModel()
         {
-            string[] otherParameters = new string[] { "entity", "1" };
-            string[] actual = ParameterFunction.FormatParameters((object)null, otherParameters);
+            string[] otherParameters = [ "entity", "1" ];
+            string[] actual = ParameterFunction.FormatParameters(
+                (object)null,
+                otherParameters);
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("entity", actual[0]);
-            Assert.AreEqual("1", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "entity",
+                actual[0]);
+            Assert.AreEqual(
+                "1",
+                actual[1]);
         }
 
         /// <summary>
@@ -326,15 +416,27 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersModelOtherParameters()
         {
-            string[] otherParameters = new string[] { "entity", "1" };
+            string[] otherParameters = [ "entity", "1" ];
             object model = new { Name = "Test", Value = 2 };
-            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+            string[] actual = ParameterFunction.FormatParameters(
+                model,
+                otherParameters);
 
-            Assert.AreEqual(4, actual.Length);
-            Assert.AreEqual("entity", actual[0]);
-            Assert.AreEqual("1", actual[1]);
-            Assert.AreEqual("Test", actual[2]);
-            Assert.AreEqual("2", actual[3]);
+            Assert.AreEqual(
+                4,
+                actual.Length);
+            Assert.AreEqual(
+                "entity",
+                actual[0]);
+            Assert.AreEqual(
+                "1",
+                actual[1]);
+            Assert.AreEqual(
+                "Test",
+                actual[2]);
+            Assert.AreEqual(
+                "2",
+                actual[3]);
         }
 
         /// <summary>
@@ -343,13 +445,21 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersModelOtherParametersNullProperty()
         {
-            string[] otherParameters = new string[] { "entity" };
+            string[] otherParameters = [ "entity" ];
             object model = new { Name = (string)null };
-            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+            string[] actual = ParameterFunction.FormatParameters(
+                model,
+                otherParameters);
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("entity", actual[0]);
-            Assert.AreEqual("", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "entity",
+                actual[0]);
+            Assert.AreEqual(
+                "",
+                actual[1]);
         }
 
         /// <summary>
@@ -358,14 +468,24 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersModelOtherParametersList()
         {
-            string[] otherParameters = new string[] { "entity" };
+            string[] otherParameters = [ "entity" ];
             object model = new { Items = new List<string> { "a", "b" } };
-            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+            string[] actual = ParameterFunction.FormatParameters(
+                model,
+                otherParameters);
 
-            Assert.AreEqual(3, actual.Length);
-            Assert.AreEqual("entity", actual[0]);
-            Assert.AreEqual("a", actual[1]);
-            Assert.AreEqual("b", actual[2]);
+            Assert.AreEqual(
+                3,
+                actual.Length);
+            Assert.AreEqual(
+                "entity",
+                actual[0]);
+            Assert.AreEqual(
+                "a",
+                actual[1]);
+            Assert.AreEqual(
+                "b",
+                actual[2]);
         }
 
         /// <summary>
@@ -374,13 +494,21 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersModelOtherParametersPassword()
         {
-            string[] otherParameters = new string[] { "entity" };
+            string[] otherParameters = [ "entity" ];
             object model = new { Password = "Password" };
-            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+            string[] actual = ParameterFunction.FormatParameters(
+                model,
+                otherParameters);
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("entity", actual[0]);
-            Assert.AreEqual("e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb", actual[1]);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "entity",
+                actual[0]);
+            Assert.AreEqual(
+                "e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb",
+                actual[1]);
         }
 
         /// <summary>
@@ -389,12 +517,18 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersModelOtherParametersEmpty()
         {
-            string[] otherParameters = new string[] { };
+            string[] otherParameters = [];
             object model = new { Name = "Test" };
-            string[] actual = ParameterFunction.FormatParameters(model, otherParameters);
+            string[] actual = ParameterFunction.FormatParameters(
+                model,
+                otherParameters);
 
-            Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("Test", actual[0]);
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "Test",
+                actual[0]);
         }
 
         #endregion

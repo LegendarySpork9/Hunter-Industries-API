@@ -1,5 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPIControlPanel.Converters;
+using HunterIndustriesAPIControlPanel.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
@@ -16,9 +16,11 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
         public void TestExtractClassMethod()
         {
             string expected = "UserService.GetUsers";
-            string actual = ErrorConverter.ExtractClassMethod("An error occurred in UserService.GetUsers.");
+            string actual = ErrorFunction.ExtractClassMethod("An error occurred in UserService.GetUsers.");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -28,9 +30,11 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
         public void TestExtractClassMethodFallbackLong()
         {
             string input = "An error occurred while processing the request for data";
-            string actual = ErrorConverter.ExtractClassMethod(input);
+            string actual = ErrorFunction.ExtractClassMethod(input);
 
-            Assert.AreEqual($"{input[..40]}...", actual);
+            Assert.AreEqual(
+                $"{input[..40]}...",
+                actual);
         }
 
         /// <summary>
@@ -40,9 +44,11 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
         public void TestExtractClassMethodFallbackShort()
         {
             string input = "An error occurred";
-            string actual = ErrorConverter.ExtractClassMethod(input);
+            string actual = ErrorFunction.ExtractClassMethod(input);
 
-            Assert.AreEqual(input, actual);
+            Assert.AreEqual(
+                input,
+                actual);
         }
 
         #endregion

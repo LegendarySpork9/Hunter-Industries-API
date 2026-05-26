@@ -1,10 +1,10 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-namespace HunterIndustriesAPIControlPanel.Models.Requests
+namespace HunterIndustriesAPIControlPanel.Models.Requests.Patch
 {
     /// <summary>
-    /// Stores the user data for the api request.
+    /// Stores the user data for the update api request.
     /// </summary>
-    public class UserRequestModel
+    public class UserUpdateRequestModel
     {
         public string? Username { get; set; }
         public string? Password { get; set; }

@@ -1,14 +1,11 @@
 @page "/logs"
-@using HunterIndustriesAPIControlPanel.Converters
-@using HunterIndustriesAPIControlPanel.Models.Responses
-@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Logs</PageTitle>
 
 <div class="mb-3">
     @if (QueryUserId.HasValue)
     {
-        <a href="/users" class="btn btn-outline-light btn-sm">&larr; Back to User</a>
+        <a href="/users" class="btn btn-outline-light btn-sm">&larr; Back to Users</a>
     }
 
     else if (QueryApplicationId.HasValue)
@@ -21,7 +18,7 @@
     <h1>@PageTitle</h1>
 </div>
 
-@if (Statistics == null)
+@if (IsLoading && AuditLogs == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -38,11 +35,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint</h6>
-                    @if (Statistics.EndpointCalls.Count > 0)
+                    @if (Statistics?.EndpointCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.EndpointCalls"
+                            <RadzenDonutSeries
+                                Data="@Statistics.EndpointCalls"
                                 CategoryProperty="Endpoint"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -76,11 +74,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method</h6>
-                    @if (Statistics.MethodCalls.Count > 0)
+                    @if (Statistics?.MethodCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.MethodCalls"
+                            <RadzenDonutSeries
+                                Data="@Statistics.MethodCalls"
                                 CategoryProperty="Method"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -114,11 +113,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code</h6>
-                    @if (Statistics.StatusCalls.Count > 0)
+                    @if (Statistics?.StatusCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.StatusCalls"
+                            <RadzenDonutSeries
+                                Data="@Statistics.StatusCalls"
                                 CategoryProperty="Status"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -152,11 +152,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field</h6>
-                    @if (Statistics.Changes.Count > 0)
+                    @if (Statistics?.Changes.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.Changes"
+                            <RadzenDonutSeries
+                                Data="@Statistics.Changes"
                                 CategoryProperty="Field"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -217,36 +218,43 @@ else
     </div>
 
     <!-- Results -->
-    <RadzenDataGrid Data="@AuditLogs?.Entries"
+    <RadzenDataGrid
+        Data="@AuditLogs?.Entries"
         TItem="AuditHistoryModel"
         AllowSorting="false"
         RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))"
         Style="cursor: pointer;">
         <Columns>
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Property="Id"
                 Title="ID" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Property="IpAddress"
                 Title="IP Address" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Property="Endpoint"
                 Title="Endpoint" />
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Title="Method"
                 Width="90px">
                 <Template Context="record">
                     <span class="badge @GraphConverter.GetMethodBadgeClass(record.Method)">@record.Method</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Title="Status"
                 Width="200px">
                 <Template Context="record">
                     <span class="badge @GraphConverter.GetStatusBadgeClass(record.Status)">@record.Status</span>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="AuditHistoryModel"
+            <RadzenDataGridColumn
+                TItem="AuditHistoryModel"
                 Title="Date"
                 Width="170px">
                 <Template Context="record">

@@ -21,22 +21,30 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
     [TestClass]
     public class ErrorControllerTest
     {
-        private readonly Mock<ILoggerService> _mockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _mockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _mockOptions = new Mock<IDatabaseOptions>();
-        private readonly Mock<IClock> _mockClock = new Mock<IClock>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
+        private readonly Mock<IClock> _MockClock = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("select 1");
-            _mockOptions.Setup(o => o.ConnectionString).Returns("Server=.;Database=Test;Trusted_Connection=True;");
-            _mockOptions.Setup(o => o.SQLFiles).Returns("C:\\SQLFiles");
-            _mockClock.Setup(c => c.DefaultDate).Returns(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-            _mockClock.Setup(c => c.UtcNow).Returns(new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc));
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("select 1");
+            _MockOptions.Setup(o => o.ConnectionString)
+                .Returns("Server=.;Database=Test;Trusted_Connection=True;");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns("C:\\SQLFiles");
+            _MockClock.Setup(c => c.DefaultDate)
+                .Returns(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            _MockClock.Setup(c => c.UtcNow)
+                .Returns(new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc));
 
             HttpContext.Current = new HttpContext(
-                new HttpRequest(null, "http://localhost", null),
+                new HttpRequest(
+                    null,
+                    "http://localhost",
+                    null),
                 new HttpResponse(new System.IO.StringWriter()));
         }
 
@@ -48,8 +56,8 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         [TestMethod]
         public async Task TestGet()
         {
-            List<ErrorLogRecord> records = new List<ErrorLogRecord>
-            {
+            List<ErrorLogRecord> records =
+            [
                 new ErrorLogRecord
                 {
                     Id = 1,
@@ -58,26 +66,52 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                     Summary = "This is an error.",
                     Message = "This is a detailed error trace."
                 }
-            };
+            ];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 
-            ErrorLogFilterModel filters = new ErrorLogFilterModel();
+            ErrorLogFilterModel filters = new();
 
             IHttpActionResult actionResult = await controller.Get(filters);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
 
             Assert.IsNotNull(contentResult);
-            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
         }
 
         /// <summary>
@@ -86,26 +120,52 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         [TestMethod]
         public async Task TestGetEmpty()
         {
-            List<ErrorLogRecord> records = new List<ErrorLogRecord>();
+            List<ErrorLogRecord> records = [];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
 
-            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 
-            ErrorLogFilterModel filters = new ErrorLogFilterModel();
+            ErrorLogFilterModel filters = new();
 
             IHttpActionResult actionResult = await controller.Get(filters);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
 
             Assert.IsNotNull(contentResult);
-            Assert.AreEqual(HttpStatusCode.NoContent, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.NoContent,
+                contentResult.StatusCode);
         }
 
         #endregion
@@ -118,8 +178,8 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         [TestMethod]
         public async Task TestGetById()
         {
-            List<ErrorLogRecord> records = new List<ErrorLogRecord>
-            {
+            List<ErrorLogRecord> records =
+            [
                 new ErrorLogRecord
                 {
                     Id = 1,
@@ -128,16 +188,40 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                     Summary = "This is an error.",
                     Message = "This is a detailed error trace."
                 }
-            };
+            ];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -145,7 +229,9 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
 
             Assert.IsNotNull(contentResult);
-            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
         }
 
         /// <summary>
@@ -154,16 +240,40 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         [TestMethod]
         public async Task TestGetByIdEmpty()
         {
-            List<ErrorLogRecord> records = new List<ErrorLogRecord>();
+            List<ErrorLogRecord> records = [];
 
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(("1", null));
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((records, null));
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
 
-            ErrorController controller = new ErrorController(_mockLogger.Object, _mockFileSystem.Object, _mockDatabase.Object, _mockOptions.Object, _mockClock.Object)
+            ErrorController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
             {
-                Request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://localhost/v2.0/errorlog")),
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v2.0/errorlog")),
                 Configuration = new HttpConfiguration()
             };
 
@@ -171,7 +281,9 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
 
             Assert.IsNotNull(contentResult);
-            Assert.AreEqual(HttpStatusCode.OK, contentResult.StatusCode);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
         }
 
         #endregion

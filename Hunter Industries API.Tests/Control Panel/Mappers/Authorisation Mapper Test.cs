@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
         [TestMethod]
         public void TestToListObject()
         {
-            AuthorisationModel authorisation = new AuthorisationModel
+            AuthorisationModel authorisation = new()
             {
                 Id = 1,
                 Phrase = "TestPhrase",
@@ -24,9 +24,14 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
 
             ConfigurationListObjectModel actual = authorisation.ToListObject();
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("TestPhrase", actual.Name);
-            Assert.AreEqual(false, actual.IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "TestPhrase",
+                actual.Name);
+            Assert.IsFalse(
+                actual.IsDeleted);
         }
     }
 }

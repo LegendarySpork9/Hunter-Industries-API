@@ -21,8 +21,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         public int? QueryUserId { get; set; }
         [SupplyParameterFromQuery(Name = "application")]
         public int? QueryApplicationId { get; set; }
-        [SupplyParameterFromQuery(Name = "page")]
-        public int? QueryPage { get; set; }
 
         private UserModel? User;
         private ApplicationModel? Application;
@@ -33,13 +31,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private SharedStatisticsModel? Statistics;
         private PagedAPIResponseModel<AuditHistoryModel>? AuditLogs;
 
+        private bool IsLoading;
+
         private DateTime? FilterFromDate;
         private DateTime? FilterToDate;
         private string FilterEndpoint = string.Empty;
         private string FilterIPAddress = string.Empty;
         private int PageSize = 25;
         private int PageNumber = 1;
-        private bool IsLoading;
 
         private string[] MethodColours = [];
         private string[] StatusColours = [];
@@ -51,7 +50,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Logs Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Logs Page");
+
+            IsLoading = true;
 
             if (QueryUserId.HasValue)
             {
@@ -69,7 +72,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
 
             else if (QueryApplicationId.HasValue)
             {
-                ApplicationModel? application = await APIService.GetConfigurationEntity<ApplicationModel>("application",
+                ApplicationModel? application = await APIService.GetConfigurationEntity<ApplicationModel>(
+                    "application",
                     QueryApplicationId.Value);
 
                 if (application != null)
@@ -82,18 +86,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                 EntityId = QueryApplicationId.Value;
             }
 
-            if (QueryPage.HasValue && QueryPage.Value > 0)
-            {
-                PageNumber = QueryPage.Value;
-            }
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Page Title: {PageTitle}");
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity: {Entity}");
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Entity Id: {EntityId}");
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Page Number: {PageNumber}");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"Page Title: {PageTitle}");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"Entity: {Entity}");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"Entity Id: {EntityId}");
 
             await LoadSummary();
             await LoadData();
+
+            IsLoading = false;
         }
 
         /// <summary>
@@ -101,7 +107,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task LoadSummary()
         {
-            Statistics = await APIService.GetLogStatistics(Entity, EntityId);
+            Statistics = await APIService.GetLogStatistics(
+                Entity,
+                EntityId);
 
             if (Statistics != null)
             {
@@ -114,9 +122,12 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     _ => "#6c757d"
                 })];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Method Colour(s): {MethodColours.Length}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Method Colour(s): {MethodColours.Length}");
 
-                StatusColours = [.. Statistics.StatusCalls.Select(s => s.Status switch {
+                StatusColours = [.. Statistics.StatusCalls.Select(s => s.Status switch
+                {
                     string status when status.StartsWith("200") => "#28a745",
                     string status when status.StartsWith("201") => "#17a2b8",
                     string status when status.StartsWith("400") => "#ffc107",
@@ -127,15 +138,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     _ => "#6c757d"
                 })];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Status Colour(s): {StatusColours.Length}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Status Colour(s): {StatusColours.Length}");
 
                 EndpointColours = [.. Statistics.EndpointCalls.Select((_, e) => Colours.DefaultPalette[e % Colours.DefaultPalette.Length])];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Endpoint Colour(s): {EndpointColours.Length}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Endpoint Colour(s): {EndpointColours.Length}");
 
                 FieldColours = [.. Statistics.Changes.Select((_, c) => Colours.DefaultPalette[c % Colours.DefaultPalette.Length])];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Field Colour(s): {FieldColours.Length}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Field Colour(s): {FieldColours.Length}");
             }
         }
 
@@ -151,7 +168,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             string? username = User?.Username ?? null;
             string? application = Application?.Name ?? null;
 
-            (AuditLogs) = await APIService.GetAuditHistories(fromDate,
+            (AuditLogs) = await APIService.GetAuditHistories(
+                fromDate,
                 toDate,
                 FilterIPAddress,
                 FilterEndpoint,
@@ -173,24 +191,17 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                 };
             }
 
-            UpdateUrl();
-
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Audit Entries: {AuditLogs?.EntryCount ?? 0}");
-
             IsLoading = false;
         }
-
-        /// <summary>
-        /// Updates the page url.
-        /// </summary>
-        private void UpdateUrl() => Navigation.NavigateTo($"/logs?{Entity}={EntityId}&page={PageNumber}", replace: true);
 
         /// <summary>
         /// Applys the set filters.
         /// </summary>
         private async Task ApplyFilters()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Apply Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Apply Clicked");
 
             PageNumber = 1;
             await LoadData();
@@ -201,7 +212,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task ClearFilters()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Clear Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Clear Clicked");
 
             FilterFromDate = null;
             FilterToDate = null;
@@ -216,7 +229,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task PreviousPage()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "<< Prev Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "<< Prev Clicked");
 
             if (PageNumber > 1)
             {
@@ -230,7 +245,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         /// </summary>
         private async Task NextPage()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Next >> Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Next >> Clicked");
 
             if (PageNumber < AuditLogs?.TotalPageCount)
             {

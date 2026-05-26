@@ -19,8 +19,12 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         {
             (string username, string password) = TokenFunction.ExtractCredentialsFromBasicAuth("InvalidValue");
 
-            Assert.AreEqual(string.Empty, username);
-            Assert.AreEqual(string.Empty, password);
+            Assert.AreEqual(
+                string.Empty,
+                username);
+            Assert.AreEqual(
+                string.Empty,
+                password);
         }
 
         /// <summary>
@@ -33,7 +37,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string header = "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("testuser:testpass"));
             (string username, string _) = TokenFunction.ExtractCredentialsFromBasicAuth(header);
 
-            Assert.AreEqual(expected, username);
+            Assert.AreEqual(
+                expected,
+                username);
         }
 
         /// <summary>
@@ -46,7 +52,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string header = "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("testuser:testpass"));
             (string _, string password) = TokenFunction.ExtractCredentialsFromBasicAuth(header);
 
-            Assert.AreEqual(expected, password);
+            Assert.AreEqual(
+                expected,
+                password);
         }
 
         /// <summary>
@@ -58,8 +66,12 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             string header = "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("nocolonhere"));
             (string username, string password) = TokenFunction.ExtractCredentialsFromBasicAuth(header);
 
-            Assert.AreEqual(string.Empty, username);
-            Assert.AreEqual(string.Empty, password);
+            Assert.AreEqual(
+                string.Empty,
+                username);
+            Assert.AreEqual(
+                string.Empty,
+                password);
         }
 
         #endregion
@@ -72,10 +84,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestIsValidUser()
         {
-            string[] usernames = new string[] { "admin" };
-            string[] passwords = new string[] { "pass" };
-            string[] phrases = new string[] { "phrase" };
-            bool actual = TokenFunction.IsValidUser(usernames, passwords, phrases, "wrong", "wrong", "wrong");
+            string[] usernames = [ "admin" ];
+            string[] passwords = [ "pass" ];
+            string[] phrases = [ "phrase" ];
+            bool actual = TokenFunction.IsValidUser(
+                usernames,
+                passwords,
+                phrases,
+                "wrong",
+                "wrong",
+                "wrong");
 
             Assert.IsFalse(actual);
         }
@@ -86,10 +104,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestIsValidUserWrongPassword()
         {
-            string[] usernames = new string[] { "admin" };
-            string[] passwords = new string[] { "pass" };
-            string[] phrases = new string[] { "phrase" };
-            bool actual = TokenFunction.IsValidUser(usernames, passwords, phrases, "admin", "wrong", "phrase");
+            string[] usernames = [ "admin" ];
+            string[] passwords = [ "pass" ];
+            string[] phrases = [ "phrase" ];
+            bool actual = TokenFunction.IsValidUser(
+                usernames,
+                passwords,
+                phrases,
+                "admin",
+                "wrong",
+                "phrase");
 
             Assert.IsFalse(actual);
         }
@@ -100,10 +124,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestIsValidUserWrongPhrase()
         {
-            string[] usernames = new string[] { "admin" };
-            string[] passwords = new string[] { "pass" };
-            string[] phrases = new string[] { "phrase" };
-            bool actual = TokenFunction.IsValidUser(usernames, passwords, phrases, "admin", "pass", "wrong");
+            string[] usernames = [ "admin" ];
+            string[] passwords = [ "pass" ];
+            string[] phrases = [ "phrase" ];
+            bool actual = TokenFunction.IsValidUser(
+                usernames,
+                passwords,
+                phrases,
+                "admin",
+                "pass",
+                "wrong");
 
             Assert.IsFalse(actual);
         }
@@ -114,10 +144,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestIsValidUserValid()
         {
-            string[] usernames = new string[] { "admin" };
-            string[] passwords = new string[] { "pass" };
-            string[] phrases = new string[] { "phrase" };
-            bool actual = TokenFunction.IsValidUser(usernames, passwords, phrases, "admin", "pass", "phrase");
+            string[] usernames = [ "admin" ];
+            string[] passwords = [ "pass" ];
+            string[] phrases = [ "phrase" ];
+            bool actual = TokenFunction.IsValidUser(
+                usernames,
+                passwords,
+                phrases,
+                "admin",
+                "pass",
+                "phrase");
 
             Assert.IsTrue(actual);
         }
@@ -128,10 +164,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestIsValidUserMultipleEntries()
         {
-            string[] usernames = new string[] { "admin", "user" };
-            string[] passwords = new string[] { "pass1", "pass2" };
-            string[] phrases = new string[] { "phrase1", "phrase2" };
-            bool actual = TokenFunction.IsValidUser(usernames, passwords, phrases, "user", "pass2", "phrase2");
+            string[] usernames = [ "admin", "user" ];
+            string[] passwords = [ "pass1", "pass2" ];
+            string[] phrases = [ "phrase1", "phrase2" ];
+            bool actual = TokenFunction.IsValidUser(
+                usernames,
+                passwords,
+                phrases,
+                "user",
+                "pass2",
+                "phrase2");
 
             Assert.IsTrue(actual);
         }

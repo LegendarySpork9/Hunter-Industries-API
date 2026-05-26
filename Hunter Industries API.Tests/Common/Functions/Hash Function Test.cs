@@ -49,7 +49,9 @@ namespace HunterIndustriesAPI.Tests.Common.Functions
             int expected = 128;
             string actual = HashFunction.HashString("password");
 
-            Assert.AreEqual(expected, actual.Length);
+            Assert.AreEqual(
+                expected,
+                actual.Length);
         }
 
         /// <summary>
@@ -61,7 +63,9 @@ namespace HunterIndustriesAPI.Tests.Common.Functions
             string first = HashFunction.HashString("password");
             string second = HashFunction.HashString("password");
 
-            Assert.AreEqual(first, second);
+            Assert.AreEqual(
+                first,
+                second);
         }
 
         /// <summary>
@@ -73,7 +77,9 @@ namespace HunterIndustriesAPI.Tests.Common.Functions
             string first = HashFunction.HashString("password");
             string second = HashFunction.HashString("different");
 
-            Assert.AreNotEqual(first, second);
+            Assert.AreNotEqual(
+                first,
+                second);
         }
     }
 }

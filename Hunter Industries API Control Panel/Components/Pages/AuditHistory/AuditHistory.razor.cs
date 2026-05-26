@@ -18,17 +18,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
 
         private PagedAPIResponseModel<AuditHistoryModel>? AuditLogs;
 
+        private bool IsLoading;
+
         private DateTime? FilterFromDate;
         private DateTime? FilterToDate;
         private string FilterEndpoint = string.Empty;
         private string FilterIPAddress = string.Empty;
         private int PageSize = 25;
         private int PageNumber = 1;
-        private bool IsLoading;
 
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Audit History Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Audit History Page");
 
             await LoadData();
         }
@@ -43,7 +46,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
             string? fromDate = FilterFromDate?.ToString("dd/MM/yyyy");
             string? toDate = FilterToDate?.ToString("dd/MM/yyyy");
 
-            (AuditLogs) = await APIService.GetAuditHistories(fromDate,
+            (AuditLogs) = await APIService.GetAuditHistories(
+                fromDate,
                 toDate,
                 FilterIPAddress,
                 FilterEndpoint,
@@ -73,7 +77,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         /// </summary>
         private async Task ApplyFilters()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Apply Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Apply Clicked");
 
             PageNumber = 1;
             await LoadData();
@@ -84,7 +90,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         /// </summary>
         private async Task ClearFilters()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Clear Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Clear Clicked");
 
             FilterFromDate = null;
             FilterToDate = null;
@@ -99,7 +107,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         /// </summary>
         private async Task PreviousPage()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "<< Prev Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "<< Prev Clicked");
 
             if (PageNumber > 1)
             {
@@ -113,7 +123,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         /// </summary>
         private async Task NextPage()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Next >> Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Next >> Clicked");
 
             if (PageNumber < AuditLogs?.TotalPageCount)
             {

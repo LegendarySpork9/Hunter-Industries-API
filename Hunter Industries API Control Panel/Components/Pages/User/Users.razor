@@ -1,5 +1,4 @@
 @page "/users"
-@using HunterIndustriesAPIControlPanel.Models.Responses
 
 <PageTitle>Users</PageTitle>
 
@@ -8,7 +7,7 @@
     <button class="btn btn-primary" @onclick="OpenCreateModal">Create User</button>
 </div>
 
-@if (UserRecords.Count == 0)
+@if (IsLoading && UserRecords == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -19,7 +18,8 @@
 
 else
 {
-    <RadzenDataGrid @ref="UserGrid"
+    <RadzenDataGrid
+        @ref="UserGrid"
         Data="@UserRecords"
         TItem="UserModel"
         AllowSorting="true"
@@ -28,16 +28,19 @@ else
         PageSize="25"
         AllowPaging="true">
         <Columns>
-            <RadzenDataGridColumn TItem="UserModel"
+            <RadzenDataGridColumn
+                TItem="UserModel"
                 Property="Id"
                 Title="ID"
                 Width="80px"
                 Sortable="false"
                 Filterable="false" />
-            <RadzenDataGridColumn TItem="UserModel"
+            <RadzenDataGridColumn
+                TItem="UserModel"
                 Property="Username"
                 Title="Username" />
-            <RadzenDataGridColumn TItem="UserModel"
+            <RadzenDataGridColumn
+                TItem="UserModel"
                 Title="Scopes"
                 Sortable="false"
                 Filterable="false">
@@ -48,7 +51,8 @@ else
                     }
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="UserModel"
+            <RadzenDataGridColumn
+                TItem="UserModel"
                 Title="Status"
                 Width="120px"
                 Sortable="false"
@@ -56,18 +60,21 @@ else
                 <Template Context="user">
                     @if (user.IsDeleted)
                     {
-                        <StatusBadge Text="Deleted"
+                        <StatusBadge
+                            Text="Deleted"
                             Type="deleted" />
                     }
 
                     else
                     {
-                        <StatusBadge Text="Active"
+                        <StatusBadge
+                            Text="Active"
                             Type="active" />
                     }
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="UserModel"
+            <RadzenDataGridColumn
+                TItem="UserModel"
                 Title="Actions"
                 Width="160px"
                 Sortable="false"
@@ -106,18 +113,18 @@ else
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Username</label>
-                            <input type="text" class="form-control" @bind="UserToCreate?.Username" placeholder="Enter username" />
+                            <input type="text" class="form-control" @bind="NewUserUsername" placeholder="Enter username" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
-                            <input type="password" class="form-control" @bind="UserToCreate?.Password" placeholder="Enter password" />
+                            <input type="password" class="form-control" @bind="NewUserPassword" placeholder="Enter password" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Scopes</label>
                             @foreach (string scope in AvailableScopes)
                             {
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" checked="@UserToCreate?.Scopes?.Contains(scope)" @onchange="(e) => ToggleScope(scope,
+                                    <input class="form-check-input" type="checkbox" checked="@NewUserScopes?.Contains(scope)" @onchange="(e) => ToggleScope(scope,
                                         (bool)e.Value!)" />
                                     <label class="form-check-label">@scope</label>
                                 </div>
@@ -148,10 +155,11 @@ else
         </div>
     }
 
-    <ConfirmDialog IsVisible="ShowDeleteConfirm"
-                   Title="Delete User"
-                   Message="@($"Are you sure you want to delete user '{UserToDelete?.Username}'?")"
-                   ConfirmText="Delete"
-                   OnConfirm="DeleteUser"
-                   OnCancel="CancelDelete" />
+    <ConfirmDialog
+        IsVisible="ShowDeleteConfirm"
+        Title="Delete User"
+        Message="@($"Are you sure you want to delete user '{UserToDelete?.Username}'?")"
+        ConfirmText="Delete"
+        OnConfirm="DeleteUser"
+        OnCancel="CancelDelete" />
 }

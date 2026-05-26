@@ -39,7 +39,8 @@ namespace HunterIndustriesAPI.Controllers
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public TokenController(ILoggerService _logger,
+        public TokenController(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
             IDatabaseOptions _options,
@@ -72,7 +73,8 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Post([FromBody, Required] AuthenticationModel request)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
@@ -91,23 +93,32 @@ namespace HunterIndustriesAPI.Controllers
                 request.AuthHeader = new Microsoft.Extensions.Primitives.StringValues($"{Request.Headers.Authorization.Scheme} {Request.Headers.Authorization.Parameter}");
             }
 
-            string[] validationIgnore = { "Username", "Password" };
+            string[] validationIgnore = 
+            { 
+                "Username", 
+                "Password" 
+            };
             int auditId = 0;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Token endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}.");
 
-            if (!_modelValidator.IsValid(request,
+            if (!_modelValidator.IsValid(
+                request,
                 true,
                 validationIgnore))
             {
-                auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                auditId = (await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                     AuditHistoryConverter.GetEndpointId("token"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
                     AuditHistoryConverter.GetStatusId("BadRequest"),
                     null,
                     null,
-                    ParameterFunction.FormatParameters(null,
+                    ParameterFunction.FormatParameters(
+                        null,
                         request))
                     ).Item2;
 
@@ -120,38 +131,52 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                await _auditHistoryService.LogLoginAttempt(auditId,
+                await _auditHistoryService.LogLoginAttempt(
+                    auditId,
                     false,
                     null,
                     null,
                     request.Phrase);
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.BadRequest, response.Data);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info, 
+                    $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest, 
+                    response.Data);
             }
 
-            TokenService _tokenService = new TokenService(_Logger,
+            TokenService _tokenService = new TokenService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
                 request.Phrase);
-            UserService _userService = new UserService(_Logger,
+            UserService _userService = new UserService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database);
 
             (request.Username, request.Password) = TokenFunction.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
 
-            if (!_modelValidator.IsValid(request,
+            if (!_modelValidator.IsValid(
+                request,
                 true))
             {
-                auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                auditId = (await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                     AuditHistoryConverter.GetEndpointId("token"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
                     AuditHistoryConverter.GetStatusId("BadRequest"),
                     null,
                     null,
-                    new string[] { request.Username, request.Password, request.Phrase })
+                    new string[] 
+                    { 
+                        request.Username, 
+                        request.Password, 
+                        request.Phrase 
+                    })
                     ).Item2;
 
                 response = new ResponseModel()
@@ -163,19 +188,25 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                await _auditHistoryService.LogLoginAttempt(auditId,
+                await _auditHistoryService.LogLoginAttempt(
+                    auditId,
                     false,
                     request.Username,
                     request.Password,
                     request.Phrase);
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.BadRequest, response.Data);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info, 
+                    $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest, 
+                    response.Data);
             }
 
             (string[] usernames, string[] passwords) = await _tokenService.GetUsers();
             string[] phrases = await _tokenService.GetAuthorisationPhrases();
 
-            if (TokenFunction.IsValidUser(usernames,
+            if (TokenFunction.IsValidUser(
+                usernames,
                 passwords,
                 phrases,
                 request.Username,
@@ -183,9 +214,11 @@ namespace HunterIndustriesAPI.Controllers
                 request.Phrase))
             {
                 string applicationName = await _tokenService.ApplicationName();
-                Claim[] claims = TokenConverter.GetClaims(request.Username,
+                Claim[] claims = TokenConverter.GetClaims(
+                    request.Username,
                     applicationName,
-                    await _userService.GetUserScopes(0,
+                    await _userService.GetUserScopes(
+                        0,
                         request.Username));
 
                 SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ValidationModel.SecretKey));
@@ -200,14 +233,20 @@ namespace HunterIndustriesAPI.Controllers
                     signingCredentials: creds
                 ));
 
-                auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                auditId = (await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                     AuditHistoryConverter.GetEndpointId("token"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
                     AuditHistoryConverter.GetStatusId("OK"),
                     null,
                     null,
-                    new string[] { request.Username, request.Password, request.Phrase })
+                    new string[] 
+                    { 
+                        request.Username, 
+                        request.Password, 
+                        request.Phrase 
+                    })
                     ).Item2;
 
                 response = new ResponseModel()
@@ -228,23 +267,34 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                await _auditHistoryService.LogLoginAttempt(auditId,
+                await _auditHistoryService.LogLoginAttempt(
+                    auditId,
                     true,
                     request.Username,
                     request.Password,
                     request.Phrase);
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.OK, response.Data);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info, 
+                    $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.OK, 
+                    response.Data);
             }
 
-            auditId = (await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            auditId = (await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("token"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("POST"),
                 AuditHistoryConverter.GetStatusId("Unauthorized"),
                 null,
                 null,
-                new string[] { request.Username, request.Password, request.Phrase })
+                new string[] 
+                { 
+                    request.Username, 
+                    request.Password, 
+                    request.Phrase 
+                })
                 ).Item2;
 
             response = new ResponseModel()
@@ -256,13 +306,18 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            await _auditHistoryService.LogLoginAttempt(auditId,
+            await _auditHistoryService.LogLoginAttempt(
+                auditId,
                 false,
                 request.Username,
                 request.Password,
                 request.Phrase);
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.Unauthorized, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.Unauthorized, 
+                response.Data);
         }
     }
 }

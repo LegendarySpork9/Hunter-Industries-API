@@ -1,6 +1,4 @@
 @page "/audit-history/{Id:int}"
-@using HunterIndustriesAPIControlPanel.Converters
-@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Audit Record</PageTitle>
 
@@ -106,13 +104,15 @@ else
                             <div>
                                 @if (AuditHistory.LoginAttempt.IsSuccessful)
                                 {
-                                    <StatusBadge Text="Yes"
+                                    <StatusBadge
+                                        Text="Yes"
                                         Type="active" />
                                 }
 
                                 else
                                 {
-                                    <StatusBadge Text="No"
+                                    <StatusBadge
+                                        Text="No"
                                         Type="deleted" />
                                 }
                             </div>

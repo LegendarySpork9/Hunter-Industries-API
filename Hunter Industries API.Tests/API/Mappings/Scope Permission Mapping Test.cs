@@ -16,9 +16,11 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestGetPermissions()
         {
-            List<string> actual = ScopePermissionMapping.GetPermissions(new List<string> { "Trombone" });
+            List<string> actual = ScopePermissionMapping.GetPermissions(["Trombone"]);
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         /// <summary>
@@ -27,9 +29,11 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestGetPermissionsControlPanelAPI()
         {
-            List<string> actual = ScopePermissionMapping.GetPermissions(new List<string> { "Control Panel API" });
+            List<string> actual = ScopePermissionMapping.GetPermissions(["Control Panel API"]);
 
-            Assert.AreEqual(13, actual.Count);
+            Assert.AreEqual(
+                13,
+                actual.Count);
             Assert.IsTrue(actual.Contains("Assistant.Config"));
             Assert.IsTrue(actual.Contains("Assistant.Deletion"));
             Assert.IsTrue(actual.Contains("Assistant.Location"));
@@ -51,9 +55,11 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestGetPermissionsAssistantAPI()
         {
-            List<string> actual = ScopePermissionMapping.GetPermissions(new List<string> { "Assistant API" });
+            List<string> actual = ScopePermissionMapping.GetPermissions(["Assistant API"]);
 
-            Assert.AreEqual(4, actual.Count);
+            Assert.AreEqual(
+                4,
+                actual.Count);
             Assert.IsTrue(actual.Contains("Assistant.Config"));
             Assert.IsTrue(actual.Contains("Assistant.Deletion"));
             Assert.IsTrue(actual.Contains("Assistant.Location"));
@@ -66,9 +72,11 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestGetPermissionsServerStatusAPI()
         {
-            List<string> actual = ScopePermissionMapping.GetPermissions(new List<string> { "Server Status API" });
+            List<string> actual = ScopePermissionMapping.GetPermissions(["Server Status API"]);
 
-            Assert.AreEqual(7, actual.Count);
+            Assert.AreEqual(
+                7,
+                actual.Count);
             Assert.IsTrue(actual.Contains("ServerStatus.Alert"));
             Assert.IsTrue(actual.Contains("ServerStatus.Event"));
             Assert.IsTrue(actual.Contains("ServerStatus.Information.Read"));
@@ -84,9 +92,11 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestGetPermissionsDistinct()
         {
-            List<string> actual = ScopePermissionMapping.GetPermissions(new List<string> { "Control Panel API", "Assistant API" });
+            List<string> actual = ScopePermissionMapping.GetPermissions(["Control Panel API", "Assistant API"]);
 
-            Assert.AreEqual(13, actual.Count);
+            Assert.AreEqual(
+                13,
+                actual.Count);
         }
 
         #endregion
@@ -99,8 +109,10 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestHasPermission()
         {
-            List<string> granted = new List<string> { "Assistant.Config" };
-            bool actual = ScopePermissionMapping.HasPermission(granted, "User");
+            List<string> granted = [ "Assistant.Config" ];
+            bool actual = ScopePermissionMapping.HasPermission(
+                granted,
+                "User");
 
             Assert.IsFalse(actual);
         }
@@ -111,8 +123,10 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestHasPermissionExact()
         {
-            List<string> granted = new List<string> { "Assistant.Config" };
-            bool actual = ScopePermissionMapping.HasPermission(granted, "Assistant.Config");
+            List<string> granted = [ "Assistant.Config" ];
+            bool actual = ScopePermissionMapping.HasPermission(
+                granted,
+                "Assistant.Config");
 
             Assert.IsTrue(actual);
         }
@@ -123,8 +137,10 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestHasPermissionParent()
         {
-            List<string> granted = new List<string> { "User" };
-            bool actual = ScopePermissionMapping.HasPermission(granted, "User.Read");
+            List<string> granted = [ "User" ];
+            bool actual = ScopePermissionMapping.HasPermission(
+                granted,
+                "User.Read");
 
             Assert.IsTrue(actual);
         }
@@ -135,8 +151,10 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
         [TestMethod]
         public void TestHasPermissionChild()
         {
-            List<string> granted = new List<string> { "User.Read" };
-            bool actual = ScopePermissionMapping.HasPermission(granted, "User");
+            List<string> granted = [ "User.Read" ];
+            bool actual = ScopePermissionMapping.HasPermission(
+                granted,
+                "User");
 
             Assert.IsTrue(actual);
         }

@@ -1,6 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPICommon.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -17,13 +16,26 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         public void TestGetClaims()
         {
             int expected = 2;
-            Claim[] actual = TokenConverter.GetClaims("TestUser", "TestApp", new List<string>());
+            Claim[] actual = TokenConverter.GetClaims(
+                "TestUser",
+                "TestApp",
+                []);
 
-            Assert.AreEqual(expected, actual.Length);
-            Assert.AreEqual("username", actual[0].Type);
-            Assert.AreEqual("TestUser", actual[0].Value);
-            Assert.AreEqual("application", actual[1].Type);
-            Assert.AreEqual("TestApp", actual[1].Value);
+            Assert.AreEqual(
+                expected,
+                actual.Length);
+            Assert.AreEqual(
+                "username",
+                actual[0].Type);
+            Assert.AreEqual(
+                "TestUser",
+                actual[0].Value);
+            Assert.AreEqual(
+                "application",
+                actual[1].Type);
+            Assert.AreEqual(
+                "TestApp",
+                actual[1].Value);
         }
 
         /// <summary>
@@ -32,15 +44,32 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         [TestMethod]
         public void TestGetClaimsSingleScope()
         {
-            Claim[] actual = TokenConverter.GetClaims("TestUser", "TestApp", new List<string> { "User" });
+            Claim[] actual = TokenConverter.GetClaims(
+                "TestUser",
+                "TestApp",
+                ["User"]);
 
-            Assert.AreEqual(3, actual.Length);
-            Assert.AreEqual("username", actual[0].Type);
-            Assert.AreEqual("TestUser", actual[0].Value);
-            Assert.AreEqual("application", actual[1].Type);
-            Assert.AreEqual("TestApp", actual[1].Value);
-            Assert.AreEqual("scope", actual[2].Type);
-            Assert.AreEqual("User", actual[2].Value);
+            Assert.AreEqual(
+                3,
+                actual.Length);
+            Assert.AreEqual(
+                "username",
+                actual[0].Type);
+            Assert.AreEqual(
+                "TestUser",
+                actual[0].Value);
+            Assert.AreEqual(
+                "application",
+                actual[1].Type);
+            Assert.AreEqual(
+                "TestApp",
+                actual[1].Value);
+            Assert.AreEqual(
+                "scope",
+                actual[2].Type);
+            Assert.AreEqual(
+                "User",
+                actual[2].Value);
         }
 
         /// <summary>
@@ -49,19 +78,36 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         [TestMethod]
         public void TestGetClaimsMultipleScopes()
         {
-            List<string> expected = new List<string> { "User", "Assistant API", "Server Status API" };
-            Claim[] actual = TokenConverter.GetClaims("TestUser", "TestApp", new List<string> { "User", "Assistant API", "Server Status API" });
+            List<string> expected = [ "User", "Assistant API", "Server Status API" ];
+            Claim[] actual = TokenConverter.GetClaims(
+                "TestUser",
+                "TestApp",
+                ["User", "Assistant API", "Server Status API"]);
 
-            Assert.AreEqual(expected.Count + 2, actual.Length);
-            Assert.AreEqual("username", actual[0].Type);
-            Assert.AreEqual("TestUser", actual[0].Value);
-            Assert.AreEqual("application", actual[1].Type);
-            Assert.AreEqual("TestApp", actual[1].Value);
+            Assert.AreEqual(
+                expected.Count + 2,
+                actual.Length);
+            Assert.AreEqual(
+                "username",
+                actual[0].Type);
+            Assert.AreEqual(
+                "TestUser",
+                actual[0].Value);
+            Assert.AreEqual(
+                "application",
+                actual[1].Type);
+            Assert.AreEqual(
+                "TestApp",
+                actual[1].Value);
 
             for (int x = 0; x < expected.Count; x++)
             {
-                Assert.AreEqual("scope", actual[x + 2].Type);
-                Assert.AreEqual(expected[x], actual[x + 2].Value);
+                Assert.AreEqual(
+                    "scope",
+                    actual[x + 2].Type);
+                Assert.AreEqual(
+                    expected[x],
+                    actual[x + 2].Value);
             }
         }
     }

@@ -25,7 +25,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public ServerEventService(ILoggerService _logger,
+        public ServerEventService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -41,7 +42,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<List<ServerEventRecord>> GetServerEvents(string component)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents called with the parameter \"{component}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerEventService.GetServerEvents called with the parameter \"{component}\".");
 
             List<ServerEventRecord> serverEvents = new List<ServerEventRecord>();
 
@@ -53,27 +56,37 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@component", SqlDbType.VarChar) { Value = component }
                 };
 
-                (List<ServerEventRecord> results, Exception ex) = await _Database.Query(sql, reader => new ServerEventRecord()
-                {
-                    EventId = reader.GetInt32(0),
-                    Component = reader.GetString(1),
-                    Status = reader.GetString(2),
-                    DateOccured = DateTime.SpecifyKind(reader.GetDateTime(8), DateTimeKind.Utc),
-                    Server = new RelatedServerRecord()
+                (List<ServerEventRecord> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => new ServerEventRecord()
                     {
-                        Id = reader.GetInt32(3),
-                        Name = reader.GetString(4),
-                        HostName = reader.GetString(5),
-                        Game = reader.GetString(6),
-                        GameVersion = reader.GetString(7)
-                    }
-                }, parameters);
+                        EventId = reader.GetInt32(0),
+                        Component = reader.GetString(1),
+                        Status = reader.GetString(2),
+                        DateOccured = DateTime.SpecifyKind(
+                            reader.GetDateTime(8),
+                            DateTimeKind.Utc),
+                        Server = new RelatedServerRecord()
+                        {
+                            Id = reader.GetInt32(3),
+                            Name = reader.GetString(4),
+                            HostName = reader.GetString(5),
+                            Game = reader.GetString(6),
+                            GameVersion = reader.GetString(7)
+                        }
+                    },
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerEventService.GetServerEvents.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 serverEvents = results;
@@ -82,11 +95,18 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerEventService.GetServerEvents.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.GetServerEvents returned {serverEvents.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerEventService.GetServerEvents returned {serverEvents.Count} records.");
             return serverEvents;
         }
 
@@ -95,7 +115,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<(bool, int)> LogServerEvent(ServerEventModel serverEvent)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent called with the parameters {ParameterFunction.FormatParameters(serverEvent)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerEventService.LogServerEvent called with the parameters {ParameterFunction.FormatParameters(serverEvent)}.");
 
             bool logged = true;
             int eventId = 0;
@@ -110,14 +132,20 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@status", SqlDbType.VarChar) { Value = serverEvent.Status }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                (object result, Exception ex) = await _Database.ExecuteScalar(
+                    sql,
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerEventService.LogServerEvent.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
 
                     logged = false;
                 }
@@ -136,14 +164,23 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerEventService.LogServerEvent.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
 
                 logged = false;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerEventService.LogServerEvent returned {logged}.");
-            return (logged, eventId);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerEventService.LogServerEvent returned {logged}.");
+            return (
+                logged,
+                eventId);
         }
     }
 }

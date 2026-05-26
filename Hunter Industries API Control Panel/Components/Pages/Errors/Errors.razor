@@ -1,7 +1,4 @@
 @page "/errors"
-@using HunterIndustriesAPIControlPanel.Converters
-@using HunterIndustriesAPIControlPanel.Models.Responses
-@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Errors</PageTitle>
 
@@ -29,14 +26,16 @@ else
                     @if (Statistics != null && Statistics.Errors.Count > 0)
                     {
                         <RadzenChart Style="height: 200px; width">
-                            <RadzenLineSeries Data="@Statistics.Errors"
+                            <RadzenLineSeries
+                                Data="@Statistics.Errors"
                                 CategoryProperty="Month"
                                 ValueProperty="Errors"
                                 Title="Errors"
                                 Stroke="rgb(220, 53, 69)" />
                             <RadzenCategoryAxis />
                             <RadzenValueAxis>
-                                <RadzenGridLines Visible="true"
+                                <RadzenGridLines
+                                    Visible="true"
                                     Stroke="#555" />
                             </RadzenValueAxis>
                             <RadzenLegend Visible="false" />
@@ -59,7 +58,8 @@ else
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.IPErrors"
+                            <RadzenDonutSeries
+                                Data="@Statistics.IPErrors"
                                 CategoryProperty="IPAddress"
                                 ValueProperty="Errors"
                                 InnerRadius="40"
@@ -97,7 +97,8 @@ else
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.SummaryErrors"
+                            <RadzenDonutSeries
+                                Data="@Statistics.SummaryErrors"
                                 CategoryProperty="Summary"
                                 ValueProperty="Errors"
                                 InnerRadius="40"
@@ -114,7 +115,7 @@ else
 
                                 <span class="text-muted">
                                     <span class="legend-dot" style="background:@colour;"></span>
-                                    @ErrorConverter.ExtractClassMethod(item.Summary) (@item.Errors)
+                                    @ErrorFunction.ExtractClassMethod(item.Summary) (@item.Errors)
                                 </span>
                             }
                         </div>
@@ -158,28 +159,33 @@ else
     </div>
 
     <!-- Error List -->
-    <RadzenDataGrid Data="@ErrorLog?.Entries"
+    <RadzenDataGrid
+        Data="@ErrorLog?.Entries"
         TItem="ErrorModel"
         AllowSorting="false"
         RowClick="@(args => Navigation.NavigateTo($"/errors/{args.Data.Id}"))"
         Style="cursor: pointer;">
         <Columns>
-            <RadzenDataGridColumn TItem="ErrorModel"
+            <RadzenDataGridColumn
+                TItem="ErrorModel"
                 Property="Id"
                 Title="ID"
                 Width="100px" />
-            <RadzenDataGridColumn TItem="ErrorModel"
+            <RadzenDataGridColumn
+                TItem="ErrorModel"
                 Title="Date"
                 Width="190px">
                 <Template Context="error">
                     @error.DateOccured.ToString("dd MMM yyyy HH:mm:ss")
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="ErrorModel"
+            <RadzenDataGridColumn
+                TItem="ErrorModel"
                 Property="IPAddress"
                 Title="IP Address"
                 Width="150px" />
-            <RadzenDataGridColumn TItem="ErrorModel"
+            <RadzenDataGridColumn
+                TItem="ErrorModel"
                 Property="Summary"
                 Title="Summary">
             </RadzenDataGridColumn>

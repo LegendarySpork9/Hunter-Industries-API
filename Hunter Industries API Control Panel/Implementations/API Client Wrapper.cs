@@ -4,7 +4,6 @@ using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Abstractions;
 using HunterIndustriesAPIControlPanel.Converters;
 using HunterIndustriesAPIControlPanel.Models;
-using HunterIndustriesAPIControlPanel.Models.Requests;
 using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
 using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
@@ -49,13 +48,21 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             {
                 string url = BuildURL("/auth/token");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", APISettings.Credentials);
-                client.AddDefaultHeader("Accept", "application/json");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    APISettings.Credentials);
+                client.AddDefaultHeader(
+                    "Accept",
+                    "application/json");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = _FileSystem.ReadAllText(APISettings.AuthPayloadLocation);
 
@@ -63,16 +70,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Post
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -81,15 +101,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return auth;
@@ -104,47 +132,72 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user",
+                string url = BuildURL(
+                    "/user",
                     ignoreQuery: !includeDeleted);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     users = JsonConvert.DeserializeObject<List<UserModel>>(response.Content) ?? [];
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Users Returned: {users.Count}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Users Returned: {users.Count}");
                 }
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return users;
@@ -161,25 +214,39 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             {
                 string url = BuildURL("/statistic/dashboard");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -188,15 +255,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return dashboardStatistics;
@@ -211,28 +286,43 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/auditHistory",
+                string url = BuildURL(
+                    "/auditHistory",
                     queryParameters: queryParameters);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -241,15 +331,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return pagedAuditHistory;
@@ -265,15 +363,22 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user",
+                string url = BuildURL(
+                    "/user",
                     ignoreQuery: true);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(user);
 
@@ -281,16 +386,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Post
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
@@ -309,18 +427,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (createdUser, apiResponse);
+            return (
+                createdUser,
+                apiResponse
+            );
         }
 
         /// <summary>
@@ -332,29 +461,44 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user",
+                string url = BuildURL(
+                    "/user",
                     userId,
                     ignoreQuery: true);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Delete
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -363,15 +507,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return deleted;
@@ -386,29 +538,44 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/user",
+                string url = BuildURL(
+                    "/user",
                     userId,
                     ignoreQuery: true);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -417,15 +584,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return user;
@@ -434,35 +609,51 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the configuration entity from the API.
         /// </summary>
-        public async Task<T?> GetConfigurationEntity<T>(string entity,
+        public async Task<T?> GetConfigurationEntity<T>(
+            string entity,
             int entityId)
         {
             T? entityObject = default;
 
             try
             {
-                string url = BuildURL($"/configuration/{entity}",
+                string url = BuildURL(
+                    $"/configuration/{entity}",
                     entityId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -471,15 +662,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        "Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return entityObject;
@@ -488,35 +687,51 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the statistics for the logs from the API.
         /// </summary>
-        public async Task<SharedStatisticsModel?> GetLogStatistics(string entity,
+        public async Task<SharedStatisticsModel?> GetLogStatistics(
+            string entity,
             int entityId)
         {
             SharedStatisticsModel? sharedStatistics = null;
 
             try
             {
-                string url = BuildURL($"/statistic/{entity}",
+                string url = BuildURL(
+                    $"/statistic/{entity}",
                     entityId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -525,15 +740,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return sharedStatistics;
@@ -548,47 +771,72 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/usersettings",
+                string url = BuildURL(
+                    "/usersettings",
                     userId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     userSettings = JsonConvert.DeserializeObject<List<UserSettingModel>>(response.Content) ?? [];
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"User Settings Returned: {userSettings.Select(us => us.Settings.Count).Sum()}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"User Settings Returned: {userSettings.Select(us => us.Settings.Count).Sum()}");
                 }
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return userSettings;
@@ -597,7 +845,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the paged configuration object from the API.
         /// </summary>
-        public async Task<T?> GetPagedConfiguration<T>(string entity,
+        public async Task<T?> GetPagedConfiguration<T>(
+            string entity,
             List<KeyValuePair<string, object>>? queryParameters = null,
             bool ignoreQuery = true)
         {
@@ -605,29 +854,44 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL($"/configuration/{entity}",
+                string url = BuildURL(
+                    $"/configuration/{entity}",
                     queryParameters: queryParameters,
                     ignoreQuery: ignoreQuery);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -636,15 +900,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return pagedObject;
@@ -653,24 +925,32 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns updated user from the API.
         /// </summary>
-        public async Task<(UserModel?, ResponseModel?)> UpdateUser(int userId,
-            UserRequestModel user)
+        public async Task<(UserModel?, ResponseModel?)> UpdateUser(
+            int userId,
+            UserUpdateRequestModel user)
         {
             UserModel? updatedUser = null;
             ResponseModel? apiResponse = null;
 
             try
             {
-                string url = BuildURL("/user",
+                string url = BuildURL(
+                    "/user",
                     userId,
                     ignoreQuery: true);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(user);
 
@@ -678,16 +958,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Patch
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -706,18 +999,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (updatedUser, apiResponse);
+            return (
+                updatedUser,
+                apiResponse
+            );
         }
 
         /// <summary>
@@ -732,12 +1036,18 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             {
                 string url = BuildURL("/usersettings");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(userSetting);
 
@@ -745,16 +1055,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Post
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
@@ -773,24 +1096,36 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (createdUserSetting, apiResponse);
+            return (
+                createdUserSetting,
+                apiResponse
+            );
         }
 
         /// <summary>
         /// Returns updated user setting from the API.
         /// </summary>
-        public async Task<(SettingModel?, ResponseModel?)> UpdateUserSetting(int userSettingId,
+        public async Task<(SettingModel?, ResponseModel?)> UpdateUserSetting(
+            int userSettingId,
             UserSettingUpdateRequestModel updateUserSetting)
         {
             SettingModel? updatedUserSetting = null;
@@ -798,15 +1133,22 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/usersettings",
+                string url = BuildURL(
+                    "/usersettings",
                     userSettingId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(updateUserSetting);
 
@@ -814,16 +1156,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Patch
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -842,18 +1197,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (updatedUserSetting, apiResponse);
+            return (
+                updatedUserSetting,
+                apiResponse
+            );
         }
 
         /// <summary>
@@ -867,44 +1233,68 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             {
                 string url = BuildURL("/serverstatus/serverinformation");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
                     servers = JsonConvert.DeserializeObject<List<ServerInformationModel>>(response.Content) ?? [];
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Servers Returned: {servers.Count}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Servers Returned: {servers.Count}");
                 }
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return servers;
@@ -922,12 +1312,18 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             {
                 string url = BuildURL("/serverstatus/serverinformation");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(server);
 
@@ -935,16 +1331,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Post
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
@@ -963,24 +1372,36 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (createdServer, apiResponse);
+            return (
+                createdServer,
+                apiResponse
+            );
         }
 
         /// <summary>
         /// Returns the updated server from the API.
         /// </summary>
-        public async Task<(ServerInformationModel?, ResponseModel?)> UpdateServer(int serverId,
+        public async Task<(ServerInformationModel?, ResponseModel?)> UpdateServer(
+            int serverId,
             ServerUpdateRequestModel server)
         {
             ServerInformationModel? updatedServer = null;
@@ -988,15 +1409,22 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/serverstatus/serverinformation",
+                string url = BuildURL(
+                    "/serverstatus/serverinformation",
                     serverId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(server);
 
@@ -1004,16 +1432,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Patch
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1032,18 +1473,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (updatedServer, apiResponse);
+            return (
+                updatedServer,
+                apiResponse
+            );
         }
 
         /// <summary>
@@ -1055,28 +1507,43 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/serverstatus/serverinformation",
+                string url = BuildURL(
+                    "/serverstatus/serverinformation",
                     serverId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1085,15 +1552,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return server;
@@ -1108,28 +1583,43 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/statistic/server",
+                string url = BuildURL(
+                    "/statistic/server",
                     serverId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1138,15 +1628,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return serverStatistics;
@@ -1163,25 +1661,39 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             {
                 string url = BuildURL("/configuration");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1190,15 +1702,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return configuration;
@@ -1207,7 +1727,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the new configuration entity from the API.
         /// </summary>
-        public async Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(string entity,
+        public async Task<(T1?, ResponseModel?)> CreateConfigurationEntity<T1, T2>(
+            string entity,
             T2 entityObject,
             List<KeyValuePair<string, object>>? queryParameters = null)
         {
@@ -1216,15 +1737,22 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL($"/configuration/{entity}",
+                string url = BuildURL(
+                    $"/configuration/{entity}",
                     queryParameters: queryParameters);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(entityObject);
 
@@ -1232,16 +1760,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Post
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Created && response.Content != null)
                 {
@@ -1260,52 +1801,79 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (createdEntity, apiResponse);
+            return (
+                createdEntity,
+                apiResponse
+            );
         }
 
         /// <summary>
         /// Returns whether the enityt was deleted in the API.
         /// </summary>
-        public async Task<bool> DeleteConfigurationEntity(string entity,
+        public async Task<bool> DeleteConfigurationEntity(
+            string entity,
             int entityId)
         {
             bool deleted = false;
 
             try
             {
-                string url = BuildURL($"/configuration/{entity}",
+                string url = BuildURL(
+                    $"/configuration/{entity}",
                     entityId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Delete
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1314,15 +1882,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return deleted;
@@ -1331,7 +1907,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the updated configuration entity from the API.
         /// </summary>
-        public async Task<(T1?, ResponseModel?)> UpdateConfigurationEntity<T1, T2>(string entity,
+        public async Task<(T1?, ResponseModel?)> UpdateConfigurationEntity<T1, T2>(
+            string entity,
             int entityId,
             T2 entityObject)
         {
@@ -1340,15 +1917,22 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL($"/configuration/{entity}",
+                string url = BuildURL(
+                    $"/configuration/{entity}",
                     entityId);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 string body = JsonConvert.SerializeObject(entityObject);
 
@@ -1356,16 +1940,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                 {
                     Method = Method.Patch
                 };
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                request.AddParameter(
+                    "application/json",
+                    body,
+                    ParameterType.RequestBody);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Request Body: {body}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Request Body: {body}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1384,18 +1981,29 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
-            return (updatedEntity, apiResponse);
+            return (
+                updatedEntity,
+                apiResponse
+            );
         }
 
         /// <summary>
@@ -1409,25 +2017,39 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             {
                 string url = BuildURL("/statistic/error");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1436,15 +2058,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return errorStatistics;
@@ -1459,28 +2089,43 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/errorlog",
+                string url = BuildURL(
+                    "/errorlog",
                     queryParameters: queryParameters);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1489,15 +2134,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return pagedErrorLog;
@@ -1512,29 +2165,44 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/errorlog",
+                string url = BuildURL(
+                    "/errorlog",
                     errorId,
                     ignoreQuery: true);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1543,15 +2211,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return error;
@@ -1566,29 +2242,44 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                string url = BuildURL("/audithistory",
+                string url = BuildURL(
+                    "/audithistory",
                     auditId,
                     ignoreQuery: true);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"URL: {url}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
 
                 RestClient client = new(url);
-                client.AddDefaultHeader("Authorization", $"Bearer {BearerToken}");
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Client");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
 
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Configured Rest Request");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Sending Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
 
                 RestResponse response = await client.ExecuteAsync(request);
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Code: {response.StatusCode}");
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Response Message: {response.Content ?? "No Response Content"}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
@@ -1597,15 +2288,23 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.ErrorException != null)
                 {
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Error: {response.ErrorException.Message}");
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
                 }
             }
 
             catch (Exception ex)
             {
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ex.Message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
             }
 
             return auditHistory;
@@ -1614,7 +2313,8 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the API url.
         /// </summary>
-        private string BuildURL(string endpoint,
+        private string BuildURL(
+            string endpoint,
             object? entityId = null,
             List<KeyValuePair<string, object>>? queryParameters = null,
             bool ignoreQuery = false)

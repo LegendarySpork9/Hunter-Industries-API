@@ -25,7 +25,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public AuditHistoryService(ILoggerService _logger,
+        public AuditHistoryService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database,
@@ -41,7 +42,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Logs the call made to the database.
         /// </summary>
-        public async Task<(bool, int)> LogRequest(string ipAddress,
+        public async Task<(bool, int)> LogRequest(
+            string ipAddress,
             int endpointId,
             int endpointVersionId,
             int methodId,
@@ -50,11 +52,14 @@ namespace HunterIndustriesAPI.Services
             string applicationName = null,
             string[] parameters = null)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), endpointVersionId.ToString(), methodId.ToString(), statusId.ToString(), username, applicationName, ParameterFunction.FormatParameters(parameters) })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.LogRequest called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpointId.ToString(), endpointVersionId.ToString(), methodId.ToString(), statusId.ToString(), username, applicationName, ParameterFunction.FormatParameters(parameters) })}.");
 
             bool logged = false;
             int auditId = 0;
-            string formattedParameters = ParameterFunction.FormatParameters(parameters,
+            string formattedParameters = ParameterFunction.FormatParameters(
+                parameters,
                 true);
 
             try
@@ -72,14 +77,20 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@applicationName", SqlDbType.VarChar) { Value = (object)applicationName ?? DBNull.Value }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                (object result, Exception ex) = await _Database.ExecuteScalar(
+                    sql,
                     sqlParameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run AuditHistoryService.LogRequest.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (result != null)
@@ -92,24 +103,36 @@ namespace HunterIndustriesAPI.Services
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run AuditHistoryService.LogRequest.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogRequest returned {logged} | {auditId}.");
-            return (logged, auditId);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.LogRequest returned {logged} | {auditId}.");
+            return (
+                logged,
+                auditId);
         }
 
         /// <summary>
         /// Logs any authorisation calls made to the database.
         /// </summary>
-        public async Task LogLoginAttempt(int auditId,
+        public async Task LogLoginAttempt(
+            int auditId,
             bool isSuccessful,
             string username = null,
             string password = null,
             string phrase = null)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.LogLoginAttempt called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.LogLoginAttempt called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), isSuccessful.ToString(), username, password, phrase })}.");
 
             try
             {
@@ -123,29 +146,41 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@isSuccessful", SqlDbType.Bit) { Value = isSuccessful }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
                     sqlParameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run AuditHistoryService.LogLoginAttempt.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run AuditHistoryService.LogLoginAttempt.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
         }
 
         /// <summary>
         /// Returns all audit history records that match the parameters.
         /// </summary>
-        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(int auditId,
+        public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(
+            int auditId,
             string ipAddress,
             string endpoint,
             string username,
@@ -155,7 +190,9 @@ namespace HunterIndustriesAPI.Services
             int pageSize,
             int pageNumber)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<AuditHistoryRecord> auditHistories = new List<AuditHistoryRecord>();
             int totalRecords = 0;
@@ -216,78 +253,88 @@ order by AH.AuditID desc
 offset (@pageSize * (@pageNumber - 1)) rows
 fetch next @pageSize rows only";
 
-                (List<AuditHistoryRecord> results, Exception ex) = await _Database.Query(sql, reader =>
-                {
-                    AuditHistoryRecord auditHistory = new AuditHistoryRecord()
+                (List<AuditHistoryRecord> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader =>
                     {
-                        Id = reader.GetInt32(0),
-                        IPAddress = reader.GetString(1),
-                        Endpoint = reader.GetString(4),
-                        EndpointVersion = reader.GetString(5),
-                        Method = reader.GetString(6),
-                        Status = reader.GetString(7),
-                        OccuredAt = DateTime.SpecifyKind(reader.GetDateTime(8), DateTimeKind.Utc),
-                        Paramaters = Array.Empty<string>()
-                    };
-
-                    if (!reader.IsDBNull(9))
-                    {
-                        auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(9));
-                    }
-
-                    if (!reader.IsDBNull(2))
-                    {
-                        auditHistory.Username = reader.GetString(2);
-                    }
-
-                    if (!reader.IsDBNull(3))
-                    {
-                        auditHistory.Application = reader.GetString(3);
-                    }
-
-                    LoginAttemptRecord loginAttempt = null;
-
-                    if (!reader.IsDBNull(10))
-                    {
-                        loginAttempt = new LoginAttemptRecord()
+                        AuditHistoryRecord auditHistory = new AuditHistoryRecord()
                         {
-                            Id = reader.GetInt32(10),
-                            IsSuccessful = reader.GetBoolean(13)
+                            Id = reader.GetInt32(0),
+                            IPAddress = reader.GetString(1),
+                            Endpoint = reader.GetString(4),
+                            EndpointVersion = reader.GetString(5),
+                            Method = reader.GetString(6),
+                            Status = reader.GetString(7),
+                            OccuredAt = DateTime.SpecifyKind(
+                                reader.GetDateTime(8),
+                                DateTimeKind.Utc),
+                            Paramaters = Array.Empty<string>()
                         };
 
-                        if (!reader.IsDBNull(11))
+                        if (!reader.IsDBNull(9))
                         {
-                            loginAttempt.Username = reader.GetString(11);
+                            auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(9));
                         }
 
-                        if (!reader.IsDBNull(12))
+                        if (!reader.IsDBNull(2))
                         {
-                            loginAttempt.Phrase = reader.GetString(12);
+                            auditHistory.Username = reader.GetString(2);
                         }
-                    }
 
-                    auditHistory.LoginAttempt = loginAttempt;
-                    auditHistory.Change = new List<ChangeRecord>();
-
-                    if (!reader.IsDBNull(14))
-                    {
-                        auditHistory.Change.Add(new ChangeRecord()
+                        if (!reader.IsDBNull(3))
                         {
-                            Id = reader.GetInt32(14),
-                            Field = reader.GetString(15),
-                            OldValue = reader.GetString(16),
-                            NewValue = reader.GetString(17),
-                        });
-                    }
+                            auditHistory.Application = reader.GetString(3);
+                        }
 
-                    return auditHistory;
-                }, parameterList.ToArray());
+                        LoginAttemptRecord loginAttempt = null;
+
+                        if (!reader.IsDBNull(10))
+                        {
+                            loginAttempt = new LoginAttemptRecord()
+                            {
+                                Id = reader.GetInt32(10),
+                                IsSuccessful = reader.GetBoolean(13)
+                            };
+
+                            if (!reader.IsDBNull(11))
+                            {
+                                loginAttempt.Username = reader.GetString(11);
+                            }
+
+                            if (!reader.IsDBNull(12))
+                            {
+                                loginAttempt.Phrase = reader.GetString(12);
+                            }
+                        }
+
+                        auditHistory.LoginAttempt = loginAttempt;
+                        auditHistory.Change = new List<ChangeRecord>();
+
+                        if (!reader.IsDBNull(14))
+                        {
+                            auditHistory.Change.Add(new ChangeRecord()
+                            {
+                                Id = reader.GetInt32(14),
+                                Field = reader.GetString(15),
+                                OldValue = reader.GetString(16),
+                                NewValue = reader.GetString(17),
+                            });
+                        }
+
+                        return auditHistory;
+                    },
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run AuditHistoryService.GetAuditHistory.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 AuditHistoryRecord current = null;
@@ -320,7 +367,8 @@ fetch next @pageSize rows only";
                     auditHistories.Add(current);
                 }
 
-                totalRecords = await GetTotalAuditHistory(ipAddress,
+                totalRecords = await GetTotalAuditHistory(
+                    ipAddress,
                     endpoint,
                     username,
                     application,
@@ -331,25 +379,37 @@ fetch next @pageSize rows only";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run AuditHistoryService.GetAuditHistory.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetAuditHistory returned {auditHistories.Count} records | {totalRecords} total records.");
-            return (auditHistories, totalRecords);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.GetAuditHistory returned {auditHistories.Count} records | {totalRecords} total records.");
+            return (
+                auditHistories,
+                totalRecords);
         }
 
         /// <summary>
         /// Returns the number of audit history records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalAuditHistory(string ipAddress,
+        private async Task<int> GetTotalAuditHistory(
+            string ipAddress,
             string endpoint,
             string username,
             string application,
             DateTime fromDate,
             DateTime toDate)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, username, application, fromDate.ToString(), toDate.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.GetTotalAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, username, application, fromDate.ToString(), toDate.ToString() })}.");
 
             int totalRecords = 0;
 
@@ -394,14 +454,21 @@ fetch next @pageSize rows only";
                     parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
                 }
 
-                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0),
+                (int result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => reader.GetInt32(0),
                     parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run AuditHistoryService.GetTotalAuditHistory.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 totalRecords = result;
@@ -410,11 +477,18 @@ fetch next @pageSize rows only";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run AuditHistoryService.GetTotalAuditHistory.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"AuditHistoryService.GetTotalAuditHistory returned {totalRecords}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.GetTotalAuditHistory returned {totalRecords}.");
             return totalRecords;
         }
     }

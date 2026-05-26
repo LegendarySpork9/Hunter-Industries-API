@@ -17,12 +17,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestExtractVersionFromRequestV10()
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://api.hunter-industries.co.uk/api/v1.0/user"));
+            HttpRequestMessage request = new(
+                HttpMethod.Get,
+                new Uri("https://api.hunter-industries.co.uk/api/v1.0/user"));
 
             string expected = "1.0";
             string actual = AuditHistoryFunction.ExtractVersionFromRequest(request);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -31,12 +35,16 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestExtractVersionFromRequestV11()
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://api.hunter-industries.co.uk/api/v1.1/user"));
+            HttpRequestMessage request = new(
+                HttpMethod.Get,
+                new Uri("https://api.hunter-industries.co.uk/api/v1.1/user"));
 
             string expected = "1.1";
             string actual = AuditHistoryFunction.ExtractVersionFromRequest(request);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -45,7 +53,9 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestExtractVersionFromRequestNoVersion()
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://api.hunter-industries.co.uk/api/user"));
+            HttpRequestMessage request = new(
+                HttpMethod.Get,
+                new Uri("https://api.hunter-industries.co.uk/api/user"));
 
             string actual = AuditHistoryFunction.ExtractVersionFromRequest(request);
 

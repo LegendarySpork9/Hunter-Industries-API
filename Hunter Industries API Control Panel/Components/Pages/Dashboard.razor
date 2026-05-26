@@ -1,10 +1,8 @@
 @page "/"
-@using HunterIndustriesAPIControlPanel.Converters
-@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>Dashboard</PageTitle>
 
-@if (Statistics == null)
+@if (IsLoading && RecentActivity == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -18,50 +16,60 @@ else
     <!-- Row 1: KPI Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Applications"
-                Value="@Statistics.Metrics.Applications.ToString()"
+            <KPICard
+                Title="Applications"
+                Value="@Statistics?.Metrics.Applications.ToString()"
                 Icon="&#9783;"
                 IconColour="#20c997"
                 Trend="@("")" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Active Users"
-                Value="@Statistics.Metrics.Users.ToString()"
+            <KPICard
+                Title="Active Users"
+                Value="@Statistics?.Metrics.Users.ToString()"
                 Icon="&#9823;"
                 IconColour="#28a745"
                 Trend="@("")" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Calls This Month"
-                Value="@Statistics.Metrics.Calls.ThisMonth.ToString()"
+            <KPICard
+                Title="Calls This Month"
+                Value="@Statistics?.Metrics.Calls.ThisMonth.ToString()"
                 Icon="&#9978;"
                 IconColour="#17a2b8"
-                Trend="@GetTrend(Statistics.Metrics.Calls.ThisMonth,
-                    Statistics.Metrics.Calls.LastMonth)" />
+                Trend="@GetTrend(
+                    Statistics?.Metrics.Calls.ThisMonth ?? 0,
+                    Statistics?.Metrics.Calls.LastMonth ?? 0)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Login Attempts This Month"
-                Value="@Statistics.Metrics.LoginAttempts.ThisMonth.ToString()"
+            <KPICard
+                Title="Login Attempts This Month"
+                Value="@Statistics?.Metrics.LoginAttempts.ThisMonth.ToString()"
                 Icon="&#9919;"
                 IconColour="#ffc107"
-                Trend="@GetTrend(Statistics.Metrics.LoginAttempts.ThisMonth,
-                    Statistics.Metrics.LoginAttempts.LastMonth)" />
+                Trend="@GetTrend(
+                    Statistics?.Metrics.LoginAttempts.ThisMonth ?? 0,
+                    Statistics?.Metrics.LoginAttempts.LastMonth ?? 0)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Changes This Month"
-                Value="@Statistics.Metrics.Changes.ThisMonth.ToString()"
+            <KPICard
+                Title="Changes This Month"
+                Value="@Statistics?.Metrics.Changes.ThisMonth.ToString()"
                 Icon="&#9998;"
                 IconColour="#6f42c1"
-                Trend="@GetTrend(Statistics.Metrics.Changes.ThisMonth,
-                    Statistics.Metrics.Changes.LastMonth)" />
+                Trend="@GetTrend(
+                    Statistics?.Metrics.Changes.ThisMonth ?? 0,
+                    Statistics?.Metrics.Changes.LastMonth ?? 0)" />
         </div>
         <div class="col-md-4 col-xl-2">
-            <KPICard Title="Errors This Month"
-                Value="@Statistics.Metrics.Errors.ThisMonth.ToString()"
+            <KPICard
+                Title="Errors This Month"
+                Value="@Statistics?.Metrics.Errors.ThisMonth.ToString()"
                 Icon="&#9888;"
                 IconColour="#dc3545"
-                Trend="@GetTrend(Statistics.Metrics.Errors.ThisMonth,
-                    Statistics.Metrics.Errors.LastMonth)"
+                Trend="@GetTrend(
+                    Statistics?.Metrics.Errors.ThisMonth ?? 0,
+                    Statistics?.Metrics.Errors.LastMonth ?? 0)"
                 IsError="true" />
         </div>
     </div>
@@ -72,47 +80,61 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">API Traffic Over Time (This Month)</h6>
-                    <RadzenChart Style="height: 280px;">
-                        <RadzenAreaSeries Data="@Statistics.ApiTraffic"
-                            CategoryProperty="Day"
-                            ValueProperty="SuccessfulCalls"
-                            Title="Successful"
-                            Fill="rgba(40, 167, 69, 0.3)"
-                            Stroke="rgb(40, 167, 69)">
-                            <TooltipTemplate Context="data">
-                                @{ APITrafficModel traffic = (APITrafficModel)data; }
-                                <div>
-                                    <strong>@traffic.Day</strong><br />
-                                    Successful: @traffic.SuccessfulCalls<br />
-                                    Failed: @traffic.UnsuccessfulCalls
-                                </div>
-                            </TooltipTemplate>
-                        </RadzenAreaSeries>
-                        <RadzenAreaSeries Data="@Statistics.ApiTraffic"
-                            CategoryProperty="Day"
-                            ValueProperty="UnsuccessfulCalls"
-                            Title="Failed"
-                            Fill="rgba(220, 53, 69, 0.3)"
-                            Stroke="rgb(220, 53, 69)">
-                            <TooltipTemplate Context="data">
-                                @{
-                                    APITrafficModel traffic = (APITrafficModel)data;
-                                }
-                                <div>
-                                    <strong>@traffic.Day</strong><br />
-                                    Successful: @traffic.SuccessfulCalls<br />
-                                    Failed: @traffic.UnsuccessfulCalls
-                                </div>
-                            </TooltipTemplate>
-                        </RadzenAreaSeries>
-                        <RadzenCategoryAxis Formatter="@FormatTrafficDay" />
-                        <RadzenValueAxis>
-                            <RadzenGridLines Visible="true"
-                                Stroke="#555" />
-                        </RadzenValueAxis>
-                        <RadzenLegend Visible="true"
-                            Position="LegendPosition.Bottom" />
-                    </RadzenChart>
+                    @if (Statistics?.ApiTraffic.Count > 0)
+                    {
+                        <RadzenChart Style="height: 280px;">
+                            <RadzenAreaSeries
+                                Data="@Statistics.ApiTraffic"
+                                CategoryProperty="Day"
+                                ValueProperty="SuccessfulCalls"
+                                Title="Successful"
+                                Fill="rgba(40, 167, 69, 0.3)"
+                                Stroke="rgb(40, 167, 69)">
+                                <TooltipTemplate Context="data">
+                                    @{
+                                        APITrafficModel traffic = (APITrafficModel)data;
+                                    }
+                                    <div>
+                                        <strong>@traffic.Day</strong><br />
+                                        Successful: @traffic.SuccessfulCalls<br />
+                                        Failed: @traffic.UnsuccessfulCalls
+                                    </div>
+                                </TooltipTemplate>
+                            </RadzenAreaSeries>
+                            <RadzenAreaSeries 
+                                Data="@Statistics.ApiTraffic"
+                                CategoryProperty="Day"
+                                ValueProperty="UnsuccessfulCalls"
+                                Title="Failed"
+                                Fill="rgba(220, 53, 69, 0.3)"
+                                Stroke="rgb(220, 53, 69)">
+                                <TooltipTemplate Context="data">
+                                    @{
+                                        APITrafficModel traffic = (APITrafficModel)data;
+                                    }
+                                    <div>
+                                        <strong>@traffic.Day</strong><br />
+                                        Successful: @traffic.SuccessfulCalls<br />
+                                        Failed: @traffic.UnsuccessfulCalls
+                                    </div>
+                                </TooltipTemplate>
+                            </RadzenAreaSeries>
+                            <RadzenCategoryAxis Formatter="@FormatTrafficDay" />
+                            <RadzenValueAxis>
+                                <RadzenGridLines 
+                                    Visible="true"
+                                    Stroke="#555" />
+                            </RadzenValueAxis>
+                            <RadzenLegend
+                                Visible="true"
+                                Position="LegendPosition.Bottom" />
+                        </RadzenChart>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
                 </div>
             </div>
         </div>
@@ -120,49 +142,59 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Errors by IP Address &amp; Summary (This Month)</h6>
-                    <RadzenChart Style="height: 280px;">
-                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> group in ErrorsByIPGrouped)
-                        {
-                            <RadzenStackedBarSeries Data="@group.Value"
-                                CategoryProperty="Label"
-                                ValueProperty="Value"
-                                Title="@group.Key"
-                                StrokeWidth="0"
-                                Fill="@ErrorColours[group.Key]">
-                                <TooltipTemplate Context="data">
-                                    @{
-                                        (string Label, int Value) error = data;
-                                        IEnumerable<MultiGroupedErrorModel> groupedErrors = Statistics!.Errors.Where(e => e.IpAddress == error.Label);
-                                        int totalErrors = groupedErrors.Sum(e => e.Errors);
-                                    }
-                                    <div>
-                                        <strong>@error.Label (@totalErrors)</strong>
-                                        @foreach (MultiGroupedErrorModel row in groupedErrors)
-                                        {
-                                            <div>@ErrorConverter.ExtractClassMethod(row.Summary): @row.Errors</div>
+                    @if (ErrorsByIPGrouped.Count > 0)
+                    {
+                        <RadzenChart Style="height: 280px;">
+                            @foreach (KeyValuePair<string, List<ChartDataPointModel>> group in ErrorsByIPGrouped)
+                            {
+                                <RadzenStackedBarSeries
+                                    Data="@group.Value"
+                                    CategoryProperty="Label"
+                                    ValueProperty="Value"
+                                    Title="@group.Key"
+                                    StrokeWidth="0"
+                                    Fill="@ErrorColours[group.Key]">
+                                    <TooltipTemplate Context="data">
+                                        @{
+                                            ChartDataPointModel error = (ChartDataPointModel)data;
+                                            IEnumerable<MultiGroupedErrorModel> groupedErrors = Statistics!.Errors.Where(e => e.IpAddress == error.Label);
+                                            int totalErrors = groupedErrors.Sum(e => e.Errors);
                                         }
-                                    </div>
-                                </TooltipTemplate>
-                            </RadzenStackedBarSeries>
-                        }
-                        <RadzenCategoryAxis />
-                        <RadzenValueAxis>
-                            <RadzenGridLines Visible="true"
-                                Stroke="#555" />
-                        </RadzenValueAxis>
-                        <RadzenLegend Visible="false" />
-                    </RadzenChart>
-                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> item in ErrorsByIPGrouped)
-                        {
-                            string colour = ErrorColours[item.Key];
+                                        <div>
+                                            <strong>@error.Label (@totalErrors)</strong>
+                                            @foreach (MultiGroupedErrorModel row in groupedErrors)
+                                            {
+                                                <div>@ErrorFunction.ExtractClassMethod(row.Summary): @row.Errors</div>
+                                            }
+                                        </div>
+                                    </TooltipTemplate>
+                                </RadzenStackedBarSeries>
+                            }
+                            <RadzenCategoryAxis />
+                            <RadzenValueAxis>
+                                <RadzenGridLines
+                                    Visible="true"
+                                    Stroke="#555" />
+                            </RadzenValueAxis>
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @foreach (KeyValuePair<string, List<ChartDataPointModel>> item in ErrorsByIPGrouped)
+                            {
+                                string colour = ErrorColours[item.Key];
 
-                            <span class="text-muted">
-                                <span class="legend-dot" style="background:@colour;"></span>
-                                @item.Key
-                            </span>
-                        }
-                    </div>
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Key
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
                 </div>
             </div>
         </div>
@@ -174,11 +206,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint (This Month)</h6>
-                    @if (Statistics.EndpointCalls.Count > 0)
+                    @if (Statistics?.EndpointCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.EndpointCalls"
+                            <RadzenDonutSeries
+                                Data="@Statistics.EndpointCalls"
                                 CategoryProperty="Endpoint"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -212,11 +245,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method (This Month)</h6>
-                    @if (Statistics.MethodCalls.Count > 0)
+                    @if (Statistics?.MethodCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.MethodCalls"
+                            <RadzenDonutSeries
+                                Data="@Statistics.MethodCalls"
                                 CategoryProperty="Method"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -250,11 +284,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code (This Month)</h6>
-                    @if (Statistics.StatusCalls.Count > 0)
+                    @if (Statistics?.StatusCalls.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.StatusCalls"
+                            <RadzenDonutSeries
+                                Data="@Statistics.StatusCalls"
                                 CategoryProperty="Status"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -288,11 +323,12 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field (This Month)</h6>
-                    @if (Statistics.Changes.Count > 0)
+                    @if (Statistics?.Changes.Count > 0)
                     {
                         <RadzenChart Style="height: 160px;">
                             <RadzenChartTooltipOptions Visible="false" />
-                            <RadzenDonutSeries Data="@Statistics.Changes"
+                            <RadzenDonutSeries
+                                Data="@Statistics.Changes"
                                 CategoryProperty="Field"
                                 ValueProperty="Calls"
                                 InnerRadius="40"
@@ -330,47 +366,57 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Login Attempts by Username &amp; Application (This Month)</h6>
-                    <RadzenChart Style="height: 250px;">
-                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> group in LoginAttemptsByApp)
-                        {
-                            <RadzenStackedBarSeries Data="@group.Value"
-                                CategoryProperty="Label"
-                                ValueProperty="Value"
-                                Title="@group.Key"
-                                StrokeWidth="0"
-                                Fill="@LoginAttemptColours[group.Key]">
-                                <TooltipTemplate Context="data">
-                                    @{
-                                        (string Label, int Value) login = data;
-                                    }
-                                    <div>
-                                        <strong>@login.Label</strong>
-                                        @foreach (LoginAttemptStatModel row in Statistics!.LoginAttempts.Where(l => l.Username == login.Label))
-                                        {
-                                            <div>@row.Application: @row.TotalAttempts (Successful: @row.SuccessfulAttempts | Unsuccessful: @row.UnsuccessfulAttempts)</div>
+                    @if (LoginAttemptsByApp.Count > 0)
+                    {
+                        <RadzenChart Style="height: 250px;">
+                            @foreach (KeyValuePair<string, List<ChartDataPointModel>> group in LoginAttemptsByApp)
+                            {
+                                <RadzenStackedBarSeries
+                                    Data="@group.Value"
+                                    CategoryProperty="Label"
+                                    ValueProperty="Value"
+                                    Title="@group.Key"
+                                    StrokeWidth="0"
+                                    Fill="@LoginAttemptColours[group.Key]">
+                                    <TooltipTemplate Context="data">
+                                        @{
+                                            ChartDataPointModel login = (ChartDataPointModel)data;
                                         }
-                                    </div>
-                                </TooltipTemplate>
-                            </RadzenStackedBarSeries>
-                        }
-                        <RadzenCategoryAxis />
-                        <RadzenValueAxis>
-                            <RadzenGridLines Visible="true"
-                                Stroke="#555" />
-                        </RadzenValueAxis>
-                        <RadzenLegend Visible="false" />
-                    </RadzenChart>
-                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @foreach (KeyValuePair<string, List<(string Label, int Value)>> item in LoginAttemptsByApp)
-                        {
-                            string colour = LoginAttemptColours[item.Key];
+                                        <div>
+                                            <strong>@login.Label</strong>
+                                            @foreach (LoginAttemptStatModel row in Statistics!.LoginAttempts.Where(l => l.Username == login.Label))
+                                            {
+                                                <div>@row.Application: @row.TotalAttempts (Successful: @row.SuccessfulAttempts | Unsuccessful: @row.UnsuccessfulAttempts)</div>
+                                            }
+                                        </div>
+                                    </TooltipTemplate>
+                                </RadzenStackedBarSeries>
+                            }
+                            <RadzenCategoryAxis />
+                            <RadzenValueAxis>
+                                <RadzenGridLines
+                                    Visible="true"
+                                    Stroke="#555" />
+                            </RadzenValueAxis>
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @foreach (KeyValuePair<string, List<ChartDataPointModel>> item in LoginAttemptsByApp)
+                            {
+                                string colour = LoginAttemptColours[item.Key];
 
-                            <span class="text-muted">
-                                <span class="legend-dot" style="background:@colour;"></span>
-                                @item.Key
-                            </span>
-                        }
-                    </div>
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Key
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
                 </div>
             </div>
         </div>
@@ -378,33 +424,44 @@ else
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Server Health Overview (This Month)</h6>
-                    <RadzenChart Style="height: 250px;">
-                        <RadzenChartTooltipOptions Visible="false" />
-                        <RadzenBarSeries Data="@Statistics.ServerHealth"
-                            CategoryProperty="Name"
-                            ValueProperty="Uptime"
-                            Title="Uptime %" />
-                        <RadzenCategoryAxis />
-                        <RadzenValueAxis Min="0"
-                            Max="100"
-                            Step="20" >
-                            <RadzenGridLines Visible="true"
-                                Stroke="#555" />
-                        </RadzenValueAxis>
-                        <RadzenLegend Visible="false" />
-                    </RadzenChart>
-                    <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
-                        @for (int x = 0; x < Statistics.ServerHealth.Count; x++)
-                        {
-                            DashboardServerHealthModel item = Statistics.ServerHealth[x];
-                            string colour = ServerHealthColours[x % ServerHealthColours.Length];
+                    @if (Statistics?.ServerHealth.Count > 0)
+                    {
+                        <RadzenChart Style="height: 250px;">
+                            <RadzenChartTooltipOptions Visible="false" />
+                            <RadzenBarSeries
+                                Data="@Statistics.ServerHealth"
+                                CategoryProperty="Name"
+                                ValueProperty="Uptime"
+                                Title="Uptime %" />
+                            <RadzenCategoryAxis />
+                            <RadzenValueAxis
+                                Min="0"
+                                Max="100"
+                                Step="20">
+                                <RadzenGridLines
+                                    Visible="true"
+                                    Stroke="#555" />
+                            </RadzenValueAxis>
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @for (int x = 0; x < Statistics.ServerHealth.Count; x++)
+                            {
+                                DashboardServerHealthModel item = Statistics.ServerHealth[x];
+                                string colour = ServerHealthColours[x % ServerHealthColours.Length];
 
-                            <span class="text-muted">
-                                <span class="legend-dot" style="background:@colour;"></span>
-                                @item.Name (@item.Uptime.ToString("0.00")%)
-                            </span>
-                        }
-                    </div>
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Name (@item.Uptime.ToString("0.00")%)
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
                 </div>
             </div>
         </div>
@@ -416,18 +473,26 @@ else
             <div class="card card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Latest Activity</h6>
-                    <div class="d-flex flex-column gap-2">
-                        @foreach (var entry in RecentActivity)
-                        {
-                            <a href="/audit-history/@entry.Id" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
-                                <span class="badge activity-method-badge @GraphConverter.GetMethodBadgeClass(entry.Method)">@entry.Method</span>
-                                <span class="flex-grow-1 activity-endpoint">@entry.Endpoint</span>
-                                <span class="badge activity-status @GraphConverter.GetStatusBadgeClass(entry.Status)">@entry.Status</span>
-                                <span class="text-muted activity-ip">@entry.IpAddress</span>
-                                <span class="text-muted activity-time">@GetRelativeTime(entry.OccuredAt)</span>
-                            </a>
-                        }
-                    </div>
+                    @if (RecentActivity != null)
+                    {
+                        <div class="d-flex flex-column gap-2">
+                            @foreach (var entry in RecentActivity)
+                            {
+                                <a href="/audit-history/@entry.Id" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
+                                    <span class="badge activity-method-badge @GraphConverter.GetMethodBadgeClass(entry.Method)">@entry.Method</span>
+                                    <span class="flex-grow-1 activity-endpoint">@entry.Endpoint</span>
+                                    <span class="badge activity-status @GraphConverter.GetStatusBadgeClass(entry.Status)">@entry.Status</span>
+                                    <span class="text-muted activity-ip">@entry.IpAddress</span>
+                                    <span class="text-muted activity-time">@GetRelativeTime(entry.OccuredAt)</span>
+                                </a>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
                 </div>
             </div>
         </div>

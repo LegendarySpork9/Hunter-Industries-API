@@ -23,10 +23,18 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Logs the given message to the log file.
         /// </summary>
-        public void LogMessage(string level, string message, string summary = null)
+        public void LogMessage(
+            string level,
+            string message,
+            string summary = null)
         {
-            LoggerService _logger = new(IPAddress, "Logs");
-            _logger.LogMessage(level, message, summary);
+            LoggerService _logger = new(
+                IPAddress,
+                "Logs");
+            _logger.LogMessage(
+                level,
+                message,
+                summary);
         }
     }
 }

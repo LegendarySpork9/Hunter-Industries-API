@@ -8,12 +8,12 @@ namespace HunterIndustriesAPI.Tests.API.Services
     [TestClass]
     public class ModelValidationServiceTest
     {
-        private ModelValidationService _service;
+        private ModelValidationService _Service;
 
         [TestInitialize]
         public void Setup()
         {
-            _service = new ModelValidationService();
+            _Service = new();
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidNullModel()
         {
-            bool actual = _service.IsValid(null);
+            bool actual = _Service.IsValid(null);
 
             Assert.IsFalse(actual);
         }
@@ -33,9 +33,11 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidAllPropertiesValid()
         {
-            TestModelTwoStrings model = new TestModelTwoStrings { Name = "Test", Value = "Data" };
+            TestModelTwoStrings model = new() { Name = "Test", Value = "Data" };
 
-            bool actual = _service.IsValid(model, allRequired: true);
+            bool actual = _Service.IsValid(
+                model,
+                allRequired: true);
 
             Assert.IsTrue(actual);
         }
@@ -46,9 +48,11 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidOnePropertyValidNotAllRequired()
         {
-            TestModelTwoStrings model = new TestModelTwoStrings { Name = "Test", Value = null };
+            TestModelTwoStrings model = new() { Name = "Test", Value = null };
 
-            bool actual = _service.IsValid(model, allRequired: false);
+            bool actual = _Service.IsValid(
+                model,
+                allRequired: false);
 
             Assert.IsTrue(actual);
         }
@@ -59,9 +63,11 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidOnePropertyNullAllRequired()
         {
-            TestModelTwoStrings model = new TestModelTwoStrings { Name = "Test", Value = null };
+            TestModelTwoStrings model = new() { Name = "Test", Value = null };
 
-            bool actual = _service.IsValid(model, allRequired: true);
+            bool actual = _Service.IsValid(
+                model,
+                allRequired: true);
 
             Assert.IsFalse(actual);
         }
@@ -72,9 +78,12 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidIgnoreProperties()
         {
-            TestModelTwoStrings model = new TestModelTwoStrings { Name = "Test", Value = null };
+            TestModelTwoStrings model = new() { Name = "Test", Value = null };
 
-            bool actual = _service.IsValid(model, allRequired: true, ignoreProperties: new string[] { "Value" });
+            bool actual = _Service.IsValid(
+                model,
+                allRequired: true,
+                ignoreProperties: ["Value"]);
 
             Assert.IsTrue(actual);
         }
@@ -85,9 +94,12 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidPropertiesAllowedNulls()
         {
-            TestModelTwoStrings model = new TestModelTwoStrings { Name = "Test", Value = null };
+            TestModelTwoStrings model = new() { Name = "Test", Value = null };
 
-            bool actual = _service.IsValid(model, allRequired: true, propertiesAllowedNulls: new string[] { "Value" });
+            bool actual = _Service.IsValid(
+                model,
+                allRequired: true,
+                propertiesAllowedNulls: ["Value"]);
 
             Assert.IsTrue(actual);
         }
@@ -98,9 +110,9 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidIntProperty()
         {
-            TestModelInt model = new TestModelInt { Count = 5 };
+            TestModelInt model = new() { Count = 5 };
 
-            bool actual = _service.IsValid(model);
+            bool actual = _Service.IsValid(model);
 
             Assert.IsTrue(actual);
         }
@@ -111,9 +123,9 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidBoolProperty()
         {
-            TestModelBool model = new TestModelBool { IsActive = true };
+            TestModelBool model = new() { IsActive = true };
 
-            bool actual = _service.IsValid(model);
+            bool actual = _Service.IsValid(model);
 
             Assert.IsTrue(actual);
         }
@@ -124,9 +136,11 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidEmptyStringAllRequired()
         {
-            TestModelTwoStrings model = new TestModelTwoStrings { Name = "", Value = "" };
+            TestModelTwoStrings model = new() { Name = "", Value = "" };
 
-            bool actual = _service.IsValid(model, allRequired: true);
+            bool actual = _Service.IsValid(
+                model,
+                allRequired: true);
 
             Assert.IsFalse(actual);
         }
@@ -137,9 +151,9 @@ namespace HunterIndustriesAPI.Tests.API.Services
         [TestMethod]
         public void TestIsValidListProperty()
         {
-            TestModelList model = new TestModelList { Items = new List<string> { "Item1", "Item2" } };
+            TestModelList model = new() { Items = ["Item1", "Item2"] };
 
-            bool actual = _service.IsValid(model);
+            bool actual = _Service.IsValid(model);
 
             Assert.IsTrue(actual);
         }

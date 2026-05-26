@@ -38,7 +38,8 @@ namespace HunterIndustriesAPI.Controllers
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public StatisticController(ILoggerService _logger,
+        public StatisticController(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
             IDatabaseOptions _options,
@@ -68,12 +69,14 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetDashboard()
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
                 _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger,
+            StatisticService _statisticService = new StatisticService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database);
@@ -82,9 +85,12 @@ namespace HunterIndustriesAPI.Controllers
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Dashboard (Get) endpoint called.");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -96,28 +102,36 @@ namespace HunterIndustriesAPI.Controllers
             TopBarStatRecord topBarStatsRecord = records[0] as TopBarStatRecord;
 
             records = await _statisticService.GetDashboardStatistic("apiTraffic");
-            List<APITrafficRecord> apiTrafficRecords = records.Cast<APITrafficRecord>().ToList();
+            List<APITrafficRecord> apiTrafficRecords = records.Cast<APITrafficRecord>()
+                .ToList();
 
             records = await _statisticService.GetDashboardStatistic("errors");
-            List<IPAndSummaryErrorRecord> errorRecords = records.Cast<IPAndSummaryErrorRecord>().ToList();
+            List<IPAndSummaryErrorRecord> errorRecords = records.Cast<IPAndSummaryErrorRecord>()
+                .ToList();
 
             records = await _statisticService.GetSharedStatistic("endpointCalls");
-            List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>().ToList();
+            List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>()
+                .ToList();
 
             records = await _statisticService.GetSharedStatistic("methodCalls");
-            List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>().ToList();
+            List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>()
+                .ToList();
 
             records = await _statisticService.GetSharedStatistic("statusCalls");
-            List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>().ToList();
+            List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>()
+                .ToList();
 
             records = await _statisticService.GetSharedStatistic("changeCalls");
-            List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>().ToList();
+            List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>()
+                .ToList();
 
             records = await _statisticService.GetDashboardStatistic("loginAttempts");
-            List<LoginAttemptStatisticRecord> loginAttemptRecords = records.Cast<LoginAttemptStatisticRecord>().ToList();
+            List<LoginAttemptStatisticRecord> loginAttemptRecords = records.Cast<LoginAttemptStatisticRecord>()
+                .ToList();
 
             records = await _statisticService.GetDashboardStatistic("serverHealth");
-            List<Objects.Statistics.Dashboard.ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<Objects.Statistics.Dashboard.ServerHealthOverviewRecord>().ToList();
+            List<Objects.Statistics.Dashboard.ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<Objects.Statistics.Dashboard.ServerHealthOverviewRecord>()
+                .ToList();
 
             List<Objects.Statistics.Dashboard.ServerHealthOverviewRecord> serverHealthRecords = serverHealthUptimeRecords.GroupBy(u => u.ServerId)
                 .Select(g => new Objects.Statistics.Dashboard.ServerHealthOverviewRecord
@@ -144,8 +158,12 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Dashboard (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
 
         /// <summary>
@@ -166,12 +184,14 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetServer(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
                 _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger,
+            StatisticService _statisticService = new StatisticService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database);
@@ -180,40 +200,58 @@ namespace HunterIndustriesAPI.Controllers
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Server (Get) endpoint called called with the following parameters \"{id}\".");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                new string[] { id.ToString() });
+                new string[] 
+                { 
+                    id.ToString() 
+                });
 
-            List<object> records = await _statisticService.GetServerStatistic("componentAlerts",
+            List<object> records = await _statisticService.GetServerStatistic(
+                "componentAlerts",
                 id);
-            List<AlertComponentRecord> alertComponentRecords = records.Cast<AlertComponentRecord>().ToList();
+            List<AlertComponentRecord> alertComponentRecords = records.Cast<AlertComponentRecord>()
+                .ToList();
 
-            records = await _statisticService.GetServerStatistic("statusAlerts",
+            records = await _statisticService.GetServerStatistic(
+                "statusAlerts",
                 id);
-            List<AlertStatusRecord> alertStatusRecords = records.Cast<AlertStatusRecord>().ToList();
+            List<AlertStatusRecord> alertStatusRecords = records.Cast<AlertStatusRecord>()
+                .ToList();
 
-            records = await _statisticService.GetServerStatistic("lastComponentEvents",
+            records = await _statisticService.GetServerStatistic(
+                "lastComponentEvents",
                 id);
-            List<EventComponentRecord> latestEventComponentRecords = records.Cast<EventComponentRecord>().ToList();
+            List<EventComponentRecord> latestEventComponentRecords = records.Cast<EventComponentRecord>()
+                .ToList();
 
-            records = await _statisticService.GetServerStatistic("serverHealth",
+            records = await _statisticService.GetServerStatistic(
+                "serverHealth",
                 id);
-            List<Objects.Statistics.Server.ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<Objects.Statistics.Server.ServerHealthOverviewRecord>().ToList();
+            List<Objects.Statistics.Server.ServerHealthOverviewRecord> serverHealthUptimeRecords = records.Cast<Objects.Statistics.Server.ServerHealthOverviewRecord>()
+                .ToList();
 
-            records = await _statisticService.GetServerStatistic("recentAlerts",
+            records = await _statisticService.GetServerStatistic(
+                "recentAlerts",
                 id);
-            List<RecentAlertRecord> recentAlertRecords = records.Cast<RecentAlertRecord>().ToList();
+            List<RecentAlertRecord> recentAlertRecords = records.Cast<RecentAlertRecord>()
+                .ToList();
 
-            records = await _statisticService.GetServerStatistic("recentEvents",
+            records = await _statisticService.GetServerStatistic(
+                "recentEvents",
                 id);
-            List<EventComponentRecord> recentEventRecords = records.Cast<EventComponentRecord>().ToList();
+            List<EventComponentRecord> recentEventRecords = records.Cast<EventComponentRecord>()
+                .ToList();
 
             ResponseModel response = new ResponseModel()
             {
@@ -229,8 +267,12 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Server (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
 
         /// <summary>
@@ -250,12 +292,14 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetError()
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
                 _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger,
+            StatisticService _statisticService = new StatisticService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database);
@@ -264,9 +308,12 @@ namespace HunterIndustriesAPI.Controllers
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Error (Get) endpoint called.");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -275,13 +322,16 @@ namespace HunterIndustriesAPI.Controllers
                 applicationName);
 
             List<object> records = await _statisticService.GetErrorStatistic("errorsOverTime");
-            List<ErrorOverTimeRecord> errorOverTimeRecords = records.Cast<ErrorOverTimeRecord>().ToList();
+            List<ErrorOverTimeRecord> errorOverTimeRecords = records.Cast<ErrorOverTimeRecord>()
+                .ToList();
 
             records = await _statisticService.GetErrorStatistic("ipErrors");
-            List<IPErrorRecord> ipErrorRecords = records.Cast<IPErrorRecord>().ToList();
+            List<IPErrorRecord> ipErrorRecords = records.Cast<IPErrorRecord>()
+                .ToList();
 
             records = await _statisticService.GetErrorStatistic("summaryErrors");
-            List<SummaryErrorRecord> summaryErrorRecords = records.Cast<SummaryErrorRecord>().ToList();
+            List<SummaryErrorRecord> summaryErrorRecords = records.Cast<SummaryErrorRecord>()
+                .ToList();
 
             ResponseModel response = new ResponseModel()
             {
@@ -294,8 +344,12 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Error (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
 
         /// <summary>
@@ -316,12 +370,14 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetApplication(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
                 _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger,
+            StatisticService _statisticService = new StatisticService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database);
@@ -330,36 +386,50 @@ namespace HunterIndustriesAPI.Controllers
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Application (Get) endpoint called with the following parameters \"{id}\".");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                new string[] { id.ToString() });
+                new string[] 
+                { 
+                    id.ToString() 
+                });
 
-            List<object> records = await _statisticService.GetSharedStatistic("endpointCalls",
+            List<object> records = await _statisticService.GetSharedStatistic(
+                "endpointCalls",
                 "application",
                 id);
-            List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>().ToList();
+            List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>()
+                .ToList();
 
-            records = await _statisticService.GetSharedStatistic("methodCalls",
+            records = await _statisticService.GetSharedStatistic(
+                "methodCalls",
                 "application",
                 id);
-            List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>().ToList();
+            List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>()
+                .ToList();
 
-            records = await _statisticService.GetSharedStatistic("statusCalls",
+            records = await _statisticService.GetSharedStatistic(
+                "statusCalls",
                 "application",
                 id);
-            List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>().ToList();
+            List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>()
+                .ToList();
 
-            records = await _statisticService.GetSharedStatistic("changeCalls",
+            records = await _statisticService.GetSharedStatistic(
+                "changeCalls",
                 "application",
                 id);
-            List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>().ToList();
+            List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>()
+                .ToList();
 
             ResponseModel response = new ResponseModel()
             {
@@ -373,8 +443,12 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic Application (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
 
         /// <summary>
@@ -395,12 +469,14 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetUser(int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger,
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
                 _Clock);
-            StatisticService _statisticService = new StatisticService(_Logger,
+            StatisticService _statisticService = new StatisticService(
+                _Logger,
                 _FileSystem,
                 _Options,
                 _Database);
@@ -409,36 +485,50 @@ namespace HunterIndustriesAPI.Controllers
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic User (Get) endpoint called with the following parameters \"{id}\".");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                new string[] { id.ToString() });
+                new string[] 
+                { 
+                    id.ToString() 
+                });
 
-            List<object> records = await _statisticService.GetSharedStatistic("endpointCalls",
+            List<object> records = await _statisticService.GetSharedStatistic(
+                "endpointCalls",
                 "user",
                 id);
-            List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>().ToList();
+            List<EndpointCallRecord> endpointCallRecords = records.Cast<EndpointCallRecord>()
+                .ToList();
 
-            records = await _statisticService.GetSharedStatistic("methodCalls",
+            records = await _statisticService.GetSharedStatistic(
+                "methodCalls",
                 "user",
                 id);
-            List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>().ToList();
+            List<MethodCallRecord> methodCallRecords = records.Cast<MethodCallRecord>()
+                .ToList();
 
-            records = await _statisticService.GetSharedStatistic("statusCalls",
+            records = await _statisticService.GetSharedStatistic(
+                "statusCalls",
                 "user",
                 id);
-            List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>().ToList();
+            List<StatusCallRecord> statusCallRecords = records.Cast<StatusCallRecord>()
+                .ToList();
 
-            records = await _statisticService.GetSharedStatistic("changeCalls",
+            records = await _statisticService.GetSharedStatistic(
+                "changeCalls",
                 "user",
                 id);
-            List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>().ToList();
+            List<ChangeCallRecord> changeRecords = records.Cast<ChangeCallRecord>()
+                .ToList();
 
             ResponseModel response = new ResponseModel()
             {
@@ -452,8 +542,12 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Statistic (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Statistic User (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
     }
 }

@@ -18,7 +18,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = string.Empty;
             string actual = APIConverter.GetQuery("/trombone");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -30,7 +32,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "?includeDeleted=true";
             string actual = APIConverter.GetQuery("/user");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -42,7 +46,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
             string expected = "?includeUsed=false";
             string actual = APIConverter.GetQuery("/configuration/authorisation");
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion

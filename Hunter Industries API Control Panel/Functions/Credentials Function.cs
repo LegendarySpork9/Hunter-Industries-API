@@ -16,7 +16,9 @@ namespace HunterIndustriesAPIControlPanel.Functions
             const string prefix = "Basic ";
             string? credentials = apiSettings?.Credentials;
 
-            if (!string.IsNullOrWhiteSpace(credentials) && credentials.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(credentials) && credentials.StartsWith(
+                prefix,
+                StringComparison.OrdinalIgnoreCase))
             {
                 string encoded = credentials[prefix.Length..].Trim();
 

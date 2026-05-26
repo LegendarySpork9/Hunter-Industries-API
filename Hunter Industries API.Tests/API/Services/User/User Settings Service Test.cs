@@ -16,15 +16,17 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
     [TestClass]
     public class UserSettingsServiceTest
     {
-        private readonly Mock<ILoggerService> _MockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _MockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _MockOptions = new Mock<IDatabaseOptions>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("select 1");
-            _MockOptions.Setup(o => o.SQLFiles).Returns(@"C:\SQL");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("select 1");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns(@"C:\SQL");
         }
 
         #region GetUserSettings
@@ -35,16 +37,34 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUserSettings()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, int, string, string)> { ("TestApp", 1, "Theme", "Dark"), ("TestApp", 2, "Language", "English") }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [("TestApp", 1, "Theme", "Dark")],
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<UserSettingRecord> actual = await service.GetUserSettings(1, null);
+            List<UserSettingRecord> actual = await service.GetUserSettings(
+                1,
+                null);
 
-            Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual("TestApp", actual[0].Application);
-            Assert.AreEqual(2, actual[0].Settings.Count);
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                "TestApp",
+                actual[0].Application);
+            Assert.AreEqual(
+                2,
+                actual[0].Settings.Count);
         }
 
         /// <summary>
@@ -53,14 +73,28 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUserSettingsEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<(string, int, string, string)>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            List<UserSettingRecord> actual = await service.GetUserSettings(1, null);
+            List<UserSettingRecord> actual = await service.GetUserSettings(
+                1,
+                null);
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         #endregion
@@ -73,16 +107,32 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUserSetting()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, SettingRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new SettingRecord { Id = 1, Name = "Theme", Value = "Dark" }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, SettingRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    new SettingRecord { Id = 1, Name = "Theme", Value = "Dark" },
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             SettingRecord actual = await service.GetUserSetting(1);
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("Theme", actual.Name);
-            Assert.AreEqual("Dark", actual.Value);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "Theme",
+                actual.Name);
+            Assert.AreEqual(
+                "Dark",
+                actual.Value);
         }
 
         /// <summary>
@@ -91,14 +141,26 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUserSettingEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.QuerySingle(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, SettingRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, SettingRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    null,
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             SettingRecord actual = await service.GetUserSetting(1);
 
-            Assert.AreEqual(0, actual.Id);
+            Assert.AreEqual(
+                0,
+                actual.Id);
         }
 
         #endregion
@@ -111,12 +173,25 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingExists()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [1],
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.UserSettingExists(0, "TestApp", "Theme");
+            bool actual = await service.UserSettingExists(
+                0,
+                "TestApp",
+                "Theme");
 
             Assert.IsTrue(actual);
         }
@@ -127,12 +202,25 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingExistsNot()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.UserSettingExists(0, "TestApp", "Theme");
+            bool actual = await service.UserSettingExists(
+                0,
+                "TestApp",
+                "Theme");
 
             Assert.IsFalse(actual);
         }
@@ -147,10 +235,20 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingExistsId()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int> { 1 }, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [1],
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserSettingExists(1);
 
@@ -163,10 +261,20 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingExistsIdNot()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, int>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<int>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             bool actual = await service.UserSettingExists(1);
 
@@ -183,10 +291,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingAdded()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             (bool actual, int id) = await service.UserSettingAdded(new UserSettingsModel
             {
@@ -205,10 +322,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingAddedFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns(((object)null, (Exception)null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)null,
+                    (Exception)null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             (bool actual, int id) = await service.UserSettingAdded(new UserSettingsModel
             {
@@ -231,12 +357,23 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingUpdated()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.UserSettingUpdated(1, "Light");
+            bool actual = await service.UserSettingUpdated(
+                1,
+                "Light");
 
             Assert.IsTrue(actual);
         }
@@ -247,12 +384,23 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestUserSettingUpdatedFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Execute(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((0, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
 
-            UserSettingsService service = new UserSettingsService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            UserSettingsService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
-            bool actual = await service.UserSettingUpdated(1, "Light");
+            bool actual = await service.UserSettingUpdated(
+                1,
+                "Light");
 
             Assert.IsFalse(actual);
         }

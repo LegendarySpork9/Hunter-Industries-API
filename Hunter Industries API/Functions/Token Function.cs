@@ -40,7 +40,8 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Returns whether the details passed are valid.
         /// </summary>
-        public static bool IsValidUser(string[] usernames,
+        public static bool IsValidUser(
+            string[] usernames,
             string[] passwords,
             string[] phrases,
             string usernameInput,

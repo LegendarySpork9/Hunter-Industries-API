@@ -12,8 +12,8 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
     [TestClass]
     public class ConfigurationFunctionTest
     {
-        private readonly Mock<IFileSystem> _mockFileSystem = new Mock<IFileSystem>();
-        private readonly APISettingsModel _apiSettings = new APISettingsModel { AuthPayloadLocation = "C:\\auth.json" };
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly APISettingsModel _ApiSettings = new() { AuthPayloadLocation = "C:\\auth.json" };
 
         #region GetControlPanelApplication
 
@@ -23,25 +23,30 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestGetControlPanelApplication()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("{\"phrase\":\"TestPhrase\"}");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("{\"phrase\":\"TestPhrase\"}");
 
-            ConfigurationFunction function = new ConfigurationFunction(_mockFileSystem.Object, _apiSettings);
+            ConfigurationFunction function = new(
+                _MockFileSystem.Object,
+                _ApiSettings);
 
-            List<ApplicationModel> applications = new List<ApplicationModel>
-            {
+            List<ApplicationModel> applications =
+            [
                 new ApplicationModel
                 {
                     Id = 1,
                     Name = "Control Panel",
                     Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                    Settings = new List<ApplicationSettingModel>(),
+                    Settings = [],
                     IsDeleted = false
                 }
-            };
+            ];
 
             string actual = function.GetControlPanelApplication(applications);
 
-            Assert.AreEqual("Control Panel", actual);
+            Assert.AreEqual(
+                "Control Panel",
+                actual);
         }
 
         /// <summary>
@@ -50,25 +55,30 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestGetControlPanelApplicationNotFound()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("{\"phrase\":\"OtherPhrase\"}");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("{\"phrase\":\"OtherPhrase\"}");
 
-            ConfigurationFunction function = new ConfigurationFunction(_mockFileSystem.Object, _apiSettings);
+            ConfigurationFunction function = new(
+                _MockFileSystem.Object,
+                _ApiSettings);
 
-            List<ApplicationModel> applications = new List<ApplicationModel>
-            {
+            List<ApplicationModel> applications =
+            [
                 new ApplicationModel
                 {
                     Id = 1,
                     Name = "Control Panel",
                     Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                    Settings = new List<ApplicationSettingModel>(),
+                    Settings = [],
                     IsDeleted = false
                 }
-            };
+            ];
 
             string actual = function.GetControlPanelApplication(applications);
 
-            Assert.AreEqual("Application Not Found", actual);
+            Assert.AreEqual(
+                "Application Not Found",
+                actual);
         }
 
         #endregion
@@ -81,16 +91,19 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestIsControlPanelApplication()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("{\"phrase\":\"TestPhrase\"}");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("{\"phrase\":\"TestPhrase\"}");
 
-            ConfigurationFunction function = new ConfigurationFunction(_mockFileSystem.Object, _apiSettings);
+            ConfigurationFunction function = new(
+                _MockFileSystem.Object,
+                _ApiSettings);
 
-            ApplicationModel application = new ApplicationModel
+            ApplicationModel application = new()
             {
                 Id = 1,
                 Name = "Control Panel",
                 Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                Settings = new List<ApplicationSettingModel>(),
+                Settings = [],
                 IsDeleted = false
             };
 
@@ -105,16 +118,19 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestIsControlPanelApplicationFalse()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("{\"phrase\":\"OtherPhrase\"}");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("{\"phrase\":\"OtherPhrase\"}");
 
-            ConfigurationFunction function = new ConfigurationFunction(_mockFileSystem.Object, _apiSettings);
+            ConfigurationFunction function = new(
+                _MockFileSystem.Object,
+                _ApiSettings);
 
-            ApplicationModel application = new ApplicationModel
+            ApplicationModel application = new()
             {
                 Id = 1,
                 Name = "Control Panel",
                 Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
-                Settings = new List<ApplicationSettingModel>(),
+                Settings = [],
                 IsDeleted = false
             };
 
@@ -133,9 +149,12 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestIsControlPanelAuthorisation()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("{\"phrase\":\"TestPhrase\"}");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("{\"phrase\":\"TestPhrase\"}");
 
-            ConfigurationFunction function = new ConfigurationFunction(_mockFileSystem.Object, _apiSettings);
+            ConfigurationFunction function = new(
+                _MockFileSystem.Object,
+                _ApiSettings);
 
             bool actual = function.IsControlPanelAuthorisation("TestPhrase");
 
@@ -148,9 +167,12 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         [TestMethod]
         public void TestIsControlPanelAuthorisationFalse()
         {
-            _mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("{\"phrase\":\"OtherPhrase\"}");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("{\"phrase\":\"OtherPhrase\"}");
 
-            ConfigurationFunction function = new ConfigurationFunction(_mockFileSystem.Object, _apiSettings);
+            ConfigurationFunction function = new(
+                _MockFileSystem.Object,
+                _ApiSettings);
 
             bool actual = function.IsControlPanelAuthorisation("TestPhrase");
 

@@ -26,7 +26,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public ServerInformationService(ILoggerService _logger,
+        public ServerInformationService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -42,7 +43,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<List<ServerInformationRecord>> GetServers(bool isActive)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers called with the parameter \"{isActive}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.GetServers called with the parameter \"{isActive}\".");
 
             List<ServerInformationRecord> servers = new List<ServerInformationRecord>();
 
@@ -57,42 +60,50 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     parameterList.Add(new SqlParameter("@isActive", SqlDbType.Bit) { Value = isActive });
                 }
 
-                (List<ServerInformationRecord> results, Exception ex) = await _Database.Query(sql, reader =>
-                {
-                    DowntimeRecord downtime = null;
-
-                    if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
+                (List<ServerInformationRecord> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader =>
                     {
-                        downtime = new DowntimeRecord()
+                        DowntimeRecord downtime = null;
+
+                        if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                         {
-                            Time = reader.GetString(7),
-                            Duration = reader.GetInt32(8)
+                            downtime = new DowntimeRecord()
+                            {
+                                Time = reader.GetString(7),
+                                Duration = reader.GetInt32(8)
+                            };
+                        }
+
+                        return new ServerInformationRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            Name = reader.GetString(1),
+                            HostName = reader.GetString(2),
+                            Game = reader.GetString(3),
+                            GameVersion = reader.GetString(4),
+                            Connection = new ConnectionRecord()
+                            {
+                                IPAddress = reader.GetString(5),
+                                Port = reader.GetInt32(6),
+                            },
+                            Downtime = downtime,
+                            EventInterval = reader.GetInt32(9),
+                            IsActive = reader.GetBoolean(10)
                         };
-                    }
-
-                    return new ServerInformationRecord()
-                    {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        HostName = reader.GetString(2),
-                        Game = reader.GetString(3),
-                        GameVersion = reader.GetString(4),
-                        Connection = new ConnectionRecord()
-                        {
-                            IPAddress = reader.GetString(5),
-                            Port = reader.GetInt32(6),
-                        },
-                        Downtime = downtime,
-                        EventInterval = reader.GetInt32(9),
-                        IsActive = reader.GetBoolean(10)
-                    };
-                }, parameterList.ToArray());
+                    },
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerInformationService.GetServers.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 servers = results;
@@ -101,11 +112,18 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerInformationService.GetServers.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServers returned {servers.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.GetServers returned {servers.Count} records.");
             return servers;
         }
 
@@ -114,7 +132,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<ServerInformationRecord> GetServer(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer called with the parameter \"{id}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.GetServer called with the parameter \"{id}\".");
 
             ServerInformationRecord server = new ServerInformationRecord();
 
@@ -128,42 +148,50 @@ where ServerInformationId = @serverId";
                     new SqlParameter("@serverId", SqlDbType.Int) { Value = id }
                 };
 
-                (ServerInformationRecord result, Exception ex) = await _Database.QuerySingle(sql, reader =>
-                {
-                    DowntimeRecord downtime = null;
-
-                    if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
+                (ServerInformationRecord result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader =>
                     {
-                        downtime = new DowntimeRecord()
+                        DowntimeRecord downtime = null;
+
+                        if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                         {
-                            Time = reader.GetString(7),
-                            Duration = reader.GetInt32(8)
+                            downtime = new DowntimeRecord()
+                            {
+                                Time = reader.GetString(7),
+                                Duration = reader.GetInt32(8)
+                            };
+                        }
+
+                        return new ServerInformationRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            Name = reader.GetString(1),
+                            HostName = reader.GetString(2),
+                            Game = reader.GetString(3),
+                            GameVersion = reader.GetString(4),
+                            Connection = new ConnectionRecord()
+                            {
+                                IPAddress = reader.GetString(5),
+                                Port = reader.GetInt32(6),
+                            },
+                            Downtime = downtime,
+                            EventInterval = reader.GetInt32(9),
+                            IsActive = reader.GetBoolean(10)
                         };
-                    }
-
-                    return new ServerInformationRecord()
-                    {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        HostName = reader.GetString(2),
-                        Game = reader.GetString(3),
-                        GameVersion = reader.GetString(4),
-                        Connection = new ConnectionRecord()
-                        {
-                            IPAddress = reader.GetString(5),
-                            Port = reader.GetInt32(6),
-                        },
-                        Downtime = downtime,
-                        EventInterval = reader.GetInt32(9),
-                        IsActive = reader.GetBoolean(10)
-                    };
-                }, parameters);
+                    },
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerInformationService.GetServer.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 server = result;
@@ -172,8 +200,13 @@ where ServerInformationId = @serverId";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerInformationService.GetServer.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
             int serverId = 0;
@@ -183,7 +216,9 @@ where ServerInformationId = @serverId";
                 serverId = server.Id;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.GetServer returned {serverId}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.GetServer returned {serverId}.");
             return server;
         }
 
@@ -192,7 +227,9 @@ where ServerInformationId = @serverId";
         /// </summary>
         public async Task<bool> ServerExists(string name)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameter \"{name}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerExists called with the parameter \"{name}\".");
 
             bool exists = false;
 
@@ -206,14 +243,21 @@ where ServerInformation.[Name] = @name";
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = name }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0),
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerInformationService.ServerExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -225,11 +269,18 @@ where ServerInformation.[Name] = @name";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerInformationService.ServerExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerExists returned {exists}.");
             return exists;
         }
 
@@ -238,7 +289,9 @@ where ServerInformation.[Name] = @name";
         /// </summary>
         public async Task<bool> ServerExists(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists called with the parameter \"{id}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerExists called with the parameter \"{id}\".");
 
             bool exists = false;
 
@@ -252,14 +305,21 @@ where ServerInformationId = @serverId";
                     new SqlParameter("@serverId", SqlDbType.Int) { Value = id }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0),
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerInformationService.ServerExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -271,11 +331,18 @@ where ServerInformationId = @serverId";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerInformationService.ServerExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerExists returned {exists}.");
             return exists;
         }
 
@@ -284,7 +351,9 @@ where ServerInformationId = @serverId";
         /// </summary>
         public async Task<(bool, int)> ServerAdded(ServerInformationModel server)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded called with the parameters {ParameterFunction.FormatParameters(server)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerAdded called with the parameters {ParameterFunction.FormatParameters(server)}.");
 
             bool added = true;
             int serverId = 0;
@@ -305,14 +374,20 @@ where ServerInformationId = @serverId";
                     new SqlParameter("@duration", SqlDbType.Int) { Value = (object)server.Duration ?? DBNull.Value }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                (object result, Exception ex) = await _Database.ExecuteScalar(
+                    sql,
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerInformationService.ServerAdded.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
 
                     added = false;
                 }
@@ -331,25 +406,37 @@ where ServerInformationId = @serverId";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerInformationService.ServerAdded.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error, 
+                    ex.ToString(),
+                    message);
 
                 added = false;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerAdded returned {added}.");
-            return (added, serverId);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerAdded returned {added}.");
+            return (
+                added,
+                serverId);
         }
 
         /// <summary>
         /// Updates the details of the server.
         /// </summary>
-        public async Task<bool> ServerUpdated(int id,
+        public async Task<bool> ServerUpdated(
+            int id,
             ServerUpdateModel server)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerUpdated called with the parameters \"{id}\", {ParameterFunction.FormatParameters(server)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerUpdated called with the parameters \"{id}\", {ParameterFunction.FormatParameters(server)}.");
 
-            bool updated = true;
+            bool updated = false;
 
             try
             {
@@ -447,7 +534,14 @@ left join Downtime D with (nolock) on D.[Time] = @time
                     }
                 }
 
-                List<string> sqlLines = sql.Split(new[] { Environment.NewLine, "\n", "\r\n" }, StringSplitOptions.None).ToList();
+                List<string> sqlLines = sql.Split(new[]
+                {
+                    Environment.NewLine,
+                    "\n",
+                    "\r\n"
+                },
+                StringSplitOptions.None)
+                    .ToList();
                 string lastSet = sqlLines.LastOrDefault(s => s.Contains(','));
 
                 if (lastSet != null)
@@ -456,32 +550,47 @@ left join Downtime D with (nolock) on D.[Time] = @time
                     sqlLines[index] = sqlLines[index].Replace(",", "");
                 }
 
-                sql = string.Join(Environment.NewLine, sqlLines);
+                sql = string.Join(
+                    Environment.NewLine,
+                    sqlLines);
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
                     parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerInformationService.ServerUpdated.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                if (rowsAffected != 1)
+                if (rowsAffected == 1)
                 {
-                    updated = false;
+                    updated = true;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerInformationService.ServerUpdated.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerInformationService.ServerUpdated returned {updated}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.ServerUpdated returned {updated}.");
             return updated;
         }
     }

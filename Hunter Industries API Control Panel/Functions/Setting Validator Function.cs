@@ -10,7 +10,8 @@ namespace HunterIndustriesAPIControlPanel.Functions
         /// <summary>
         /// Returns a list of validation errors for the supplied application's settings.
         /// </summary>
-        public static List<string> ValidateApplicationSettings(ApplicationModel application,
+        public static List<string> ValidateApplicationSettings(
+            ApplicationModel application,
             UserSettingModel? currentUserSettings,
             List<UserSettingRequestModel> pendingNewSettings)
         {
@@ -38,10 +39,14 @@ namespace HunterIndustriesAPIControlPanel.Functions
         /// <summary>
         /// Returns whether the value can be converted to the specified type.
         /// </summary>
-        public static bool TryConvert(string typeName,
+        public static bool TryConvert(
+            string typeName,
             string value)
         {
-            Type? resolvedType = Type.GetType($"System.{typeName}", false, true);
+            Type? resolvedType = Type.GetType(
+                $"System.{typeName}",
+                false,
+                true);
 
             if (resolvedType == null)
             {
@@ -50,7 +55,8 @@ namespace HunterIndustriesAPIControlPanel.Functions
 
             try
             {
-                return TypeDescriptor.GetConverter(resolvedType).IsValid(value);
+                return TypeDescriptor.GetConverter(resolvedType)
+                    .IsValid(value);
             }
 
             catch

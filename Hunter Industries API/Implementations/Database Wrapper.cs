@@ -25,7 +25,8 @@ namespace HunterIndustriesAPI.Implementations
         /// <summary>
         /// Returns a list of the given model from the database.
         /// </summary>
-        public async Task<(List<T>, Exception)> Query<T>(string sql,
+        public async Task<(List<T>, Exception)> Query<T>(
+            string sql,
             Func<SqlDataReader, T> map,
             params SqlParameter[] parameters)
         {
@@ -64,7 +65,8 @@ namespace HunterIndustriesAPI.Implementations
         /// <summary>
         /// Returns the given field from the database.
         /// </summary>
-        public async Task<(T, Exception)> QuerySingle<T>(string sql,
+        public async Task<(T, Exception)> QuerySingle<T>(
+            string sql,
             Func<SqlDataReader, T> map,
             params SqlParameter[] parameters)
         {
@@ -103,7 +105,8 @@ namespace HunterIndustriesAPI.Implementations
         /// <summary>
         /// Returns the result of the execution for given query.
         /// </summary>
-        public async Task<(int, Exception)> Execute(string sql,
+        public async Task<(int, Exception)> Execute(
+            string sql,
             params SqlParameter[] parameters)
         {
             int result = -1;
@@ -135,7 +138,8 @@ namespace HunterIndustriesAPI.Implementations
         /// <summary>
         /// Returns the result of the execution for given query.
         /// </summary>
-        public async Task<(object, Exception)> ExecuteScalar(string sql,
+        public async Task<(object, Exception)> ExecuteScalar(
+            string sql,
             params SqlParameter[] parameters)
         {
             object result = null;

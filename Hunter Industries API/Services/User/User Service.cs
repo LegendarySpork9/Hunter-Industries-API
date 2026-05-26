@@ -26,7 +26,8 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public UserService(ILoggerService _logger,
+        public UserService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -40,11 +41,14 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns all user records that match the parameters.
         /// </summary>
-        public async Task<List<UserRecord>> GetUsers(int id,
+        public async Task<List<UserRecord>> GetUsers(
+            int id,
             string username,
             bool includeDeleted = false)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUsers called with the parameters \"{id}\", \"{username}\", \"{includeDeleted}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetUsers called with the parameters \"{id}\", \"{username}\", \"{includeDeleted}\".");
 
             List<UserRecord> users = new List<UserRecord>();
 
@@ -70,17 +74,25 @@ namespace HunterIndustriesAPI.Services.User
                     sql += "\nand IsDeleted = 0";
                 }
 
-                (List<(int, string, string, bool)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetInt32(0),
-                    reader.GetString(1),
-                    reader.GetString(2),
-                    reader.GetBoolean(3)),
+                (List<(int, string, string, bool)> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => (
+                        reader.GetInt32(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetBoolean(3)),
                     parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserService.GetUsers.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 foreach (var result in results)
@@ -101,11 +113,18 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.GetUsers.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUsers returned {users.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetUsers returned {users.Count} records.");
             return users;
         }
 
@@ -114,7 +133,9 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserExists(string username)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameter \"{username}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserExists called with the parameter \"{username}\".");
 
             bool exists = false;
 
@@ -128,14 +149,21 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@username", SqlDbType.VarChar) { Value = username }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0),
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserService.UserExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -147,11 +175,18 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.UserExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserExists returned {exists}.");
             return exists;
         }
 
@@ -160,7 +195,9 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserExists(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists called with the parameter \"{id}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserExists called with the parameter \"{id}\".");
 
             bool exists = false;
 
@@ -174,14 +211,21 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0),
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserService.UserExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -193,21 +237,31 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.UserExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserExists returned {exists}.");
             return exists;
         }
 
         /// <summary>
         /// Creates the user.
         /// </summary>
-        public async Task<(bool, int)> UserCreated(string username,
+        public async Task<(bool, int)> UserCreated(
+            string username,
             string password)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserCreated called with the parameters \"{username}\", \"{HashFunction.HashString(password)}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserCreated called with the parameters \"{username}\", \"{HashFunction.HashString(password)}\".");
 
             bool created = true;
             int userId = 0;
@@ -221,14 +275,20 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@password", SqlDbType.VarChar) { Value = HashFunction.HashString(password) }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                (object result, Exception ex) = await _Database.ExecuteScalar(
+                    sql,
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserService.UserCreated.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
 
                     created = false;
                 }
@@ -247,23 +307,35 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.UserCreated.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
 
                 created = false;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserCreated returned {created}.");
-            return (created, userId);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserCreated returned {created}.");
+            return (
+                created,
+                userId);
         }
 
         /// <summary>
         /// Creates the user scopes.
         /// </summary>
-        public async Task<bool> UserScopeCreated(int id,
+        public async Task<bool> UserScopeCreated(
+            int id,
             List<string> scopes)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated called with the parameters \"{id}\", {ParameterFunction.FormatListParameters(scopes, false) }.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserScopeCreated called with the parameters \"{id}\", {ParameterFunction.FormatListParameters(scopes, false) }.");
 
             bool created = true;
 
@@ -279,14 +351,20 @@ namespace HunterIndustriesAPI.Services.User
                         new SqlParameter("@scope", SqlDbType.VarChar) { Value = scope }
                     };
 
-                    (object result, Exception ex) = await _Database.ExecuteScalar(sql,
+                    (object result, Exception ex) = await _Database.ExecuteScalar(
+                        sql,
                         parameters);
 
                     if (ex != null)
                     {
                         string message = "An error occured when trying to run UserService.UserScopeCreated.";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                           ex.ToString(),
+                           message);
                     }
 
                     if (result == null)
@@ -299,23 +377,33 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.UserScopeCreated.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
 
                 created = false;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeCreated returned {created}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserScopeCreated returned {created}.");
             return created;
         }
 
         /// <summary>
         /// Gets the scopes assigned to the user.
         /// </summary>
-        public async Task<List<string>> GetUserScopes(int id = 0,
+        public async Task<List<string>> GetUserScopes(
+            int id = 0,
             string username = null)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUserScopes called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetUserScopes called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username })}.");
 
             List<string> scopes = new List<string>();
 
@@ -336,14 +424,21 @@ namespace HunterIndustriesAPI.Services.User
                     parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
-                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(0),
+                (List<string> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetString(0),
                     parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserService.GetUserScopes.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 scopes = results;
@@ -352,25 +447,35 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.GetUserScopes.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.GetUserScopes returned {scopes.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetUserScopes returned {scopes.Count} records.");
             return scopes;
         }
 
         /// <summary>
         /// Updates the details of the given user.
         /// </summary>
-        public async Task<bool> UserUpdated(int id,
+        public async Task<bool> UserUpdated(
+            int id,
             string username,
             string password,
             List<KeyValuePair<string, string>> scopes)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username, password, ParameterFunction.FormatListParameters(scopes, true) })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), username, password, ParameterFunction.FormatListParameters(scopes, true) })}.");
 
-            bool updated = true;
+            bool updated = false;
 
             if (!string.IsNullOrWhiteSpace(username) || !string.IsNullOrWhiteSpace(password))
             {
@@ -414,56 +519,70 @@ namespace HunterIndustriesAPI.Services.User
                         parameterList.Add(new SqlParameter("@password", SqlDbType.VarChar) { Value = password });
                     }
 
-                    (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                    (int rowsAffected, Exception ex) = await _Database.Execute(
+                        sql,
                         parameterList.ToArray());
 
                     if (ex != null)
                     {
                         string message = "An error occured when trying to run UserService.UserUpdated.";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-
-                        updated = false;
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
                     }
 
-                    if (rowsAffected != 1)
+                    if (rowsAffected == 1)
                     {
-                        updated = false;
+                        updated = true;
                     }
                 }
 
                 catch (Exception ex)
                 {
                     string message = "An error occured when trying to run UserService.UserUpdated.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-
-                    updated = false;
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
             }
 
-            updated = await UserScopeCreated(id,
+            updated = await UserScopeCreated(
+                id,
                 scopes.Where(c => c.Key == "Add")
                 .Select(c => c.Value)
                 .ToList());
-            updated = await UserScopeDeleted(id,
+            updated = await UserScopeDeleted(
+                id,
                 scopes.Where(c => c.Key == "Remove")
                 .Select(c => c.Value)
                 .ToList());
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserUpdated returned {updated}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserUpdated returned {updated}.");
             return updated;
         }
 
         /// <summary>
         /// Deletes the user scopes.
         /// </summary>
-        private async Task<bool> UserScopeDeleted(int id,
+        private async Task<bool> UserScopeDeleted(
+            int id,
             List<string> scopes)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeDeleted called with the parameters \"{id}\", {ParameterFunction.FormatListParameters(scopes, false)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserScopeDeleted called with the parameters \"{id}\", {ParameterFunction.FormatListParameters(scopes, false)}.");
 
-            bool deleted = true;
+            bool deleted = false;
 
             try
             {
@@ -477,19 +596,25 @@ namespace HunterIndustriesAPI.Services.User
                         new SqlParameter("@scope", SqlDbType.VarChar) { Value = scope }
                     };
 
-                    (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                    (int rowsAffected, Exception ex) = await _Database.Execute(
+                        sql,
                         parameters);
 
                     if (ex != null)
                     {
                         string message = "An error occured when trying to run UserService.UserScopeDeleted.";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                        _Logger.LogMessage(
+                           StandardValues.LoggerValues.Warning,
+                           message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
                     }
 
-                    if (rowsAffected != 1)
+                    if (rowsAffected == 1)
                     {
-                        deleted = false;
+                        deleted = true;
                     }
                 }
             }
@@ -497,13 +622,18 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.UserScopeDeleted.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-
-                deleted = false;
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserScopeDeleted returned {deleted}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserScopeDeleted returned {deleted}.");
             return deleted;
         }
 
@@ -512,9 +642,11 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<bool> UserDeleted(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserDeleted called with the parameter \"{id}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserDeleted called with the parameter \"{id}\".");
 
-            bool deleted = true;
+            bool deleted = false;
 
             try
             {
@@ -524,32 +656,43 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@userID", SqlDbType.Int) { Value = id }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql,
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
                     parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserService.UserDeleted.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                if (rowsAffected != 1)
+                if (rowsAffected == 1)
                 {
-                    deleted = false;
+                    deleted = true;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserService.UserDeleted.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
-
-                deleted = false;
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserService.UserDeleted returned {deleted}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.UserDeleted returned {deleted}.");
             return deleted;
         }
     }

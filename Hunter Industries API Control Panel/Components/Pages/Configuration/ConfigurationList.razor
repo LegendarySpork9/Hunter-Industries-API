@@ -1,5 +1,4 @@
 @page "/configuration/{Entity}"
-@using HunterIndustriesAPIControlPanel.Models.Responses.Related
 
 <PageTitle>@DisplayName Configuration</PageTitle>
 
@@ -12,7 +11,7 @@
     <button class="btn btn-primary" @onclick="OpenCreateModal">Create @Entity</button>
 </div>
 
-@if (Records == null)
+@if (IsLoading && Records == null)
 {
     <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-light" role="status">
@@ -24,33 +23,40 @@
 else
 {
     <!-- Results -->
-    <RadzenDataGrid Data="@Records?.Entries"
+    <RadzenDataGrid
+        Data="@Records?.Entries"
         TItem="ConfigurationListObjectModel"
         AllowSorting="false">
         <Columns>
-            <RadzenDataGridColumn TItem="ConfigurationListObjectModel"
+            <RadzenDataGridColumn
+                TItem="ConfigurationListObjectModel"
                 Property="Id"
                 Title="ID" />
-            <RadzenDataGridColumn TItem="ConfigurationListObjectModel"
+            <RadzenDataGridColumn
+                TItem="ConfigurationListObjectModel"
                 Property="Name"
                 Title="Value" />
-            <RadzenDataGridColumn TItem="ConfigurationListObjectModel"
+            <RadzenDataGridColumn
+                TItem="ConfigurationListObjectModel"
                 Title="Status">
                 <Template Context="configurationObject">
                     @if (configurationObject.IsDeleted)
                     {
-                        <StatusBadge Text="Deleted"
+                        <StatusBadge
+                            Text="Deleted"
                             Type="deleted" />
                     }
 
                     else
                     {
-                        <StatusBadge Text="Active"
+                        <StatusBadge
+                            Text="Active"
                             Type="active" />
                     }
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="ConfigurationListObjectModel"
+            <RadzenDataGridColumn
+                TItem="ConfigurationListObjectModel"
                 Title="Actions"
                 Width="160px"
                 Sortable="false"
@@ -208,10 +214,11 @@ else
         </div>
     }
 
-    <ConfirmDialog IsVisible="ShowDeleteConfirm"
-                   Title="@($"Delete {DisplayName}")"
-                   Message="@($"Are you sure you want to delete {DisplayName} '{EntityToDelete?.Name}'?")"
-                   ConfirmText="Delete"
-                   OnConfirm="DeleteConfiguration"
-                   OnCancel="CancelDelete" />
+    <ConfirmDialog
+        IsVisible="ShowDeleteConfirm"
+        Title="@($"Delete {DisplayName}")"
+        Message="@($"Are you sure you want to delete {DisplayName} '{EntityToDelete?.Name}'?")"
+        ConfirmText="Delete"
+        OnConfirm="DeleteConfiguration"
+        OnCancel="CancelDelete" />
 }

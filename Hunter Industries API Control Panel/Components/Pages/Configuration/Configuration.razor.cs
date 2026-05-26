@@ -16,7 +16,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
         private ConfigurationModel? ConfigurationObjects { get; set; }
 
-        private bool LoadingData = true;
+        private bool IsLoading;
+
         private readonly Dictionary<string, (string DisplayName, string Icon)> ConfigTypes = [];
 
         /// <summary>
@@ -24,7 +25,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Configuration Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Configuration Page");
+
+            IsLoading = true;
 
             ConfigurationObjects = await APIService.GetConfiguration();
 
@@ -50,7 +55,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 }
             }
 
-            LoadingData = false;
+            IsLoading = false;
         }
     }
 }

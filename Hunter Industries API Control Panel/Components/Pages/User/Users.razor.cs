@@ -3,7 +3,7 @@ using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Functions;
 using HunterIndustriesAPIControlPanel.Models;
-using HunterIndustriesAPIControlPanel.Models.Requests;
+using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
@@ -16,22 +16,26 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
         [Inject]
-        private APIService APIService { get; set; } = default!;
-        [Inject]
         private NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private APIService APIService { get; set; } = default!;
         [Inject]
         private APISettingsModel APISettings { get; set; } = default!;
 
         private RadzenDataGrid<UserModel> UserGrid = new();
-        private List<UserModel> UserRecords = [];
+        private List<UserModel>? UserRecords;
+
+        private bool IsLoading;
+        private bool ShowCreateModal;
+        private bool ShowDeleteConfirm;
+
+        private string ErrorMessage = string.Empty;
 
         private List<string> AvailableScopes = [];
         private string ControlPanelUsername = string.Empty;
-        private bool ShowCreateModal;
-        private bool ShowDeleteConfirm;
-        private bool IsLoading;
-        private string ErrorMessage = string.Empty;
-        private UserRequestModel? UserToCreate;
+        private string NewUserUsername = string.Empty;
+        private string NewUserPassword = string.Empty;
+        private List<string> NewUserScopes = [];
         private UserModel? UserToDelete;
 
         /// <summary>
@@ -39,7 +43,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, "Opened Users Page");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Opened Users Page");
+
+            IsLoading = true;
 
             UserRecords = await APIService.GetUsers(true);
 
@@ -48,10 +56,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 List<string> scopes = [.. UserRecords.SelectMany(u => u.Scopes)];
                 AvailableScopes = [.. scopes.Distinct()];
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Available Scope(s): {AvailableScopes.Count}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Available Scope(s): {AvailableScopes.Count}");
             }
 
             ControlPanelUsername = CredentialsFunction.GetCredentialsUsername(APISettings);
+
+            IsLoading = false;
         }
 
         /// <summary>
@@ -59,14 +71,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private void OpenCreateModal()
         {
-            UserToCreate = new()
-            {
-                Scopes = []
-            };
+            NewUserUsername = string.Empty;
+            NewUserPassword = string.Empty;
+            NewUserScopes = [];
             ErrorMessage = string.Empty;
             ShowCreateModal = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened New User Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Opened New User Modal");
         }
 
         /// <summary>
@@ -76,30 +89,34 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         {
             ShowCreateModal = false;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed New User Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Closed New User Modal");
         }
 
         /// <summary>
         /// Changes whether the scope is enabled.
         /// </summary>
-        private void ToggleScope(string scope,
+        private void ToggleScope(
+            string scope,
             bool isChecked)
         {
-            if (UserToCreate != null && UserToCreate.Scopes != null)
+            if (isChecked && !NewUserScopes.Contains(scope))
             {
-                if (isChecked && !UserToCreate.Scopes.Contains(scope))
-                {
-                    UserToCreate.Scopes.Add(scope);
+                NewUserScopes.Add(scope);
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Added Scope: {scope}");
-                }
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Added Scope: {scope}");
+            }
 
-                else if (!isChecked)
-                {
-                    UserToCreate.Scopes.Remove(scope);
+            else if (!isChecked)
+            {
+                NewUserScopes.Remove(scope);
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"Removed Scope: {scope}");
-                }
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Removed Scope: {scope}");
             }
         }
 
@@ -108,62 +125,68 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task CreateUser()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Create User Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Create User Clicked");
 
             IsLoading = true;
             bool success = false;
             ErrorMessage = string.Empty;
 
-            if (UserToCreate != null)
+            if (string.IsNullOrWhiteSpace(NewUserUsername) || string.IsNullOrWhiteSpace(NewUserPassword))
             {
-                if (string.IsNullOrWhiteSpace(UserToCreate.Username) || string.IsNullOrWhiteSpace(UserToCreate.Password))
+                ErrorMessage = "Username and password are required.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
+                IsLoading = false;
+                return;
+            }
+
+            if (NewUserScopes.Count == 0)
+            {
+                ErrorMessage = "At least one valid scope is required.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
+                IsLoading = false;
+                return;
+            }
+
+            UserRequestModel userCreate = new()
+            {
+                Username = NewUserUsername,
+                Password = NewUserPassword,
+                Scopes = NewUserScopes
+            };
+
+            UserModel? existingUser = UserRecords.Find(u => u.Username == userCreate.Username && u.IsDeleted == false);
+
+            if (existingUser == null)
+            {
+                (UserModel? newUser, ResponseModel? apiResponse) = await APIService.CreateUser(userCreate);
+
+                if (newUser != null)
                 {
-                    ErrorMessage = "Username and password are required.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                    IsLoading = false;
-                    return;
-                }
-
-                if (UserToCreate.Scopes != null && UserToCreate.Scopes.Count == 0)
-                {
-                    ErrorMessage = "At least one valid scope is required.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                    IsLoading = false;
-                    return;
-                }
-
-                UserModel? existingUser = UserRecords.Find(u => u.Username == UserToCreate.Username && u.IsDeleted == false);
-
-                if (existingUser == null)
-                {
-                    (UserModel? newUser, ResponseModel? apiResponse) = await APIService.CreateUser(UserToCreate);
-
-                    if (newUser != null)
-                    {
-                        UserRecords.Add(newUser);
-                        success = true;
-                    }
-
-                    else
-                    {
-                        ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                    }
+                    UserRecords.Add(newUser);
+                    success = true;
                 }
 
                 else
                 {
-                    ErrorMessage = "A user with that username already exists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
-                    IsLoading = false;
-                    return;
+                    ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
                 }
             }
 
             else
             {
-                ErrorMessage = "The UserToCreate model is null.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, ErrorMessage);
+                ErrorMessage = "A user with that username already exists.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
                 IsLoading = false;
                 return;
             }
@@ -204,7 +227,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             UserToDelete = user;
             ShowDeleteConfirm = true;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Opened Delete Confirmation Modal");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Opened Delete Confirmation Modal");
         }
 
         /// <summary>
@@ -212,7 +237,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
         /// </summary>
         private async Task DeleteUser()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Delete User Clicked");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Delete User Clicked");
 
             if (UserToDelete != null)
             {
@@ -237,7 +264,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ShowDeleteConfirm = false;
             UserToDelete = null;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, "Closed Delete Confirmation Model");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Closed Delete Confirmation Model");
         }
     }
 }

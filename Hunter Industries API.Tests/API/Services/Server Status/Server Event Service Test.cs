@@ -16,15 +16,17 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
     [TestClass]
     public class ServerEventServiceTest
     {
-        private readonly Mock<ILoggerService> _MockLogger = new Mock<ILoggerService>();
-        private readonly Mock<IFileSystem> _MockFileSystem = new Mock<IFileSystem>();
-        private readonly Mock<IDatabaseOptions> _MockOptions = new Mock<IDatabaseOptions>();
+        private readonly Mock<ILoggerService> _MockLogger = new();
+        private readonly Mock<IFileSystem> _MockFileSystem = new();
+        private readonly Mock<IDatabaseOptions> _MockOptions = new();
 
         [TestInitialize]
         public void Setup()
         {
-            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>())).Returns("select 1");
-            _MockOptions.Setup(o => o.SQLFiles).Returns(@"C:\SQL");
+            _MockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
+                .Returns("select 1");
+            _MockOptions.Setup(o => o.SQLFiles)
+                .Returns(@"C:\SQL");
         }
 
         #region GetServerEvents
@@ -35,34 +37,51 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestGetServerEvents()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerEventRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerEventRecord>
-                {
-                    new ServerEventRecord
-                    {
-                        EventId = 1,
-                        Component = "CPU",
-                        Status = "Online",
-                        DateOccured = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-                        Server = new RelatedServerRecord
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerEventRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new ServerEventRecord
                         {
-                            Id = 1,
-                            Name = "Test",
-                            HostName = "TestServer",
-                            Game = "TestGame",
-                            GameVersion = "1.0"
+                            EventId = 1,
+                            Component = "CPU",
+                            Status = "Online",
+                            DateOccured = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
+                            Server = new RelatedServerRecord
+                            {
+                                Id = 1,
+                                Name = "Test",
+                                HostName = "TestServer",
+                                Game = "TestGame",
+                                GameVersion = "1.0"
+                            }
                         }
-                    }
-                }, null));
+                    ],
+                    null));
 
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerEventService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<ServerEventRecord> actual = await service.GetServerEvents("CPU");
 
-            Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual("CPU", actual[0].Component);
-            Assert.AreEqual("Online", actual[0].Status);
-            Assert.AreEqual("Test", actual[0].Server.Name);
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                "CPU",
+                actual[0].Component);
+            Assert.AreEqual(
+                "Online",
+                actual[0].Status);
+            Assert.AreEqual(
+                "Test",
+                actual[0].Server.Name);
         }
 
         /// <summary>
@@ -71,14 +90,26 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestGetServerEventsEmpty()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.Query(It.IsAny<string>(), It.IsAny<Func<SqlDataReader, ServerEventRecord>>(), It.IsAny<SqlParameter[]>()).Result).Returns((new List<ServerEventRecord>(), null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerEventRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    null));
 
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerEventService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             List<ServerEventRecord> actual = await service.GetServerEvents("CPU");
 
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         #endregion
@@ -91,10 +122,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestLogServerEvent()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((1, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
 
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerEventService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             (bool logged, int eventId) = await service.LogServerEvent(new ServerEventModel
             {
@@ -108,7 +148,9 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
             });
 
             Assert.IsTrue(logged);
-            Assert.AreEqual(1, eventId);
+            Assert.AreEqual(
+                1,
+                eventId);
         }
 
         /// <summary>
@@ -117,10 +159,19 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         [TestMethod]
         public async Task TestLogServerEventFailed()
         {
-            Mock<IDatabase> _mockDatabase = new Mock<IDatabase>();
-            _mockDatabase.Setup(d => d.ExecuteScalar(It.IsAny<string>(), It.IsAny<SqlParameter[]>()).Result).Returns((null, null));
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    null,
+                    null));
 
-            ServerEventService service = new ServerEventService(_MockLogger.Object, _MockFileSystem.Object, _MockOptions.Object, _mockDatabase.Object);
+            ServerEventService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
 
             (bool logged, int eventId) = await service.LogServerEvent(new ServerEventModel
             {
@@ -134,7 +185,9 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
             });
 
             Assert.IsFalse(logged);
-            Assert.AreEqual(0, eventId);
+            Assert.AreEqual(
+                0,
+                eventId);
         }
 
         #endregion

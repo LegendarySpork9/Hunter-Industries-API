@@ -23,15 +23,21 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Value = (string)null
             };
             SqlParameter[] parameters =
-            {
+            [
                 new SqlParameter("@name", "Test"),
                 new SqlParameter("@value", "SomeValue")
-            };
+            ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
+            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+                model,
+                parameters);
 
-            Assert.AreEqual(1, actual.Length);
-            Assert.AreEqual("@name", actual[0].ParameterName);
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "@name",
+                actual[0].ParameterName);
         }
 
         /// <summary>
@@ -46,14 +52,18 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Value = "Present"
             };
             SqlParameter[] parameters =
-            {
+            [
                 new SqlParameter("@name", "Test"),
                 new SqlParameter("@value", "Present")
-            };
+            ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
+            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+                model,
+                parameters);
 
-            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual(
+                2,
+                actual.Length);
         }
 
         /// <summary>
@@ -68,14 +78,18 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Value = (string)null
             };
             SqlParameter[] parameters =
-            {
+            [
                 new SqlParameter("@name", "Test"),
                 new SqlParameter("@value", "SomeValue")
-            };
+            ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
+            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+                model,
+                parameters);
 
-            Assert.AreEqual(0, actual.Length);
+            Assert.AreEqual(
+                0,
+                actual.Length);
         }
 
         /// <summary>
@@ -87,9 +101,13 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             object model = new { };
             SqlParameter[] parameters = Array.Empty<SqlParameter>();
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
+            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+                model,
+                parameters);
 
-            Assert.AreEqual(0, actual.Length);
+            Assert.AreEqual(
+                0,
+                actual.Length);
         }
 
         /// <summary>
@@ -105,17 +123,25 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Third = "C"
             };
             SqlParameter[] parameters =
-            {
+            [
                 new SqlParameter("@first", "A"),
                 new SqlParameter("@second", "B"),
                 new SqlParameter("@third", "C")
-            };
+            ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(model, parameters);
+            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+                model,
+                parameters);
 
-            Assert.AreEqual(2, actual.Length);
-            Assert.AreEqual("@first", actual[0].ParameterName);
-            Assert.AreEqual("@third", actual[1].ParameterName);
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "@first",
+                actual[0].ParameterName);
+            Assert.AreEqual(
+                "@third",
+                actual[1].ParameterName);
         }
 
         #endregion
@@ -133,24 +159,28 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Name = "Test",
                 Value = (string)null
             };
-            string sql = string.Join(Environment.NewLine, new[]
-            {
+            string sql = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where Name = @name",
                 "and Value = @value"
-            });
+            ]);
 
-            string actual = ConfigurationFunction.CleanSQL(model, sql);
+            string actual = ConfigurationFunction.CleanSQL(
+                model,
+                sql);
 
-            string expected = string.Join(Environment.NewLine, new[]
-            {
+            string expected = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where Name = @name"
-            });
+            ]);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -164,17 +194,21 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Name = "Test",
                 Value = "Present"
             };
-            string sql = string.Join(Environment.NewLine, new[]
-            {
+            string sql = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where Name = @name",
                 "and Value = @value"
-            });
+            ]);
 
-            string actual = ConfigurationFunction.CleanSQL(model, sql);
+            string actual = ConfigurationFunction.CleanSQL(
+                model,
+                sql);
 
-            Assert.AreEqual(sql, actual);
+            Assert.AreEqual(
+                sql,
+                actual);
         }
 
         /// <summary>
@@ -188,24 +222,28 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Name = (string)null,
                 Value = "Present"
             };
-            string sql = string.Join(Environment.NewLine, new[]
-            {
+            string sql = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where Name = @name",
                 "and Value = @value"
-            });
+            ]);
 
-            string actual = ConfigurationFunction.CleanSQL(model, sql);
+            string actual = ConfigurationFunction.CleanSQL(
+                model,
+                sql);
 
-            string expected = string.Join(Environment.NewLine, new[]
-            {
+            string expected = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where Value = @value"
-            });
+            ]);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -215,16 +253,20 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         public void TestCleanSQLEmptyModelLeavesUnchanged()
         {
             object model = new { };
-            string sql = string.Join(Environment.NewLine, new[]
-            {
+            string sql = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where Id = 1"
-            });
+            ]);
 
-            string actual = ConfigurationFunction.CleanSQL(model, sql);
+            string actual = ConfigurationFunction.CleanSQL(
+                model,
+                sql);
 
-            Assert.AreEqual(sql, actual);
+            Assert.AreEqual(
+                sql,
+                actual);
         }
 
         /// <summary>
@@ -239,26 +281,30 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Second = (string)null,
                 Third = "C"
             };
-            string sql = string.Join(Environment.NewLine, new[]
-            {
+            string sql = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where First = @first",
                 "and Second = @second",
                 "and Third = @third"
-            });
+            ]);
 
-            string actual = ConfigurationFunction.CleanSQL(model, sql);
+            string actual = ConfigurationFunction.CleanSQL(
+                model,
+                sql);
 
-            string expected = string.Join(Environment.NewLine, new[]
-            {
+            string expected = string.Join(Environment.NewLine,
+            [
                 "select *",
                 "from Table with (nolock)",
                 "where First = @first",
                 "and Third = @third"
-            });
+            ]);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -272,24 +318,28 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Name = "Test",
                 Value = (string)null
             };
-            string sql = string.Join(Environment.NewLine, new[]
-            {
+            string sql = string.Join(Environment.NewLine,
+            [
                 "update Table",
                 "set [Name] = @name,",
                 "[Value] = @value",
                 "where Id = @id"
-            });
+            ]);
 
-            string actual = ConfigurationFunction.CleanSQL(model, sql);
+            string actual = ConfigurationFunction.CleanSQL(
+                model,
+                sql);
 
-            string expected = string.Join(Environment.NewLine, new[]
-            {
+            string expected = string.Join(Environment.NewLine,
+            [
                 "update Table",
                 "set [Name] = @name",
                 "where Id = @id"
-            });
+            ]);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         /// <summary>
@@ -304,26 +354,30 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 Type = "String",
                 Value = (string)null
             };
-            string sql = string.Join(Environment.NewLine, new[]
-            {
+            string sql = string.Join(Environment.NewLine,
+            [
                 "update Table set",
                 "[Name] = @name,",
                 "[Type] = @type,",
                 "[Value] = @value",
                 "where Id = @id"
-            });
+            ]);
 
-            string actual = ConfigurationFunction.CleanSQL(model, sql);
+            string actual = ConfigurationFunction.CleanSQL(
+                model,
+                sql);
 
-            string expected = string.Join(Environment.NewLine, new[]
-            {
+            string expected = string.Join(Environment.NewLine,
+            [
                 "update Table set",
                 "[Name] = @name,",
                 "[Type] = @type",
                 "where Id = @id"
-            });
+            ]);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(
+                expected,
+                actual);
         }
 
         #endregion

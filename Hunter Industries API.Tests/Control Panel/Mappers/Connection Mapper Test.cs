@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
         [TestMethod]
         public void TestToListObject()
         {
-            ConnectionModel connection = new ConnectionModel
+            ConnectionModel connection = new()
             {
                 Id = 1,
                 IPAddress = "192.168.1.1",
@@ -25,9 +25,14 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Mappers
 
             ConfigurationListObjectModel actual = connection.ToListObject();
 
-            Assert.AreEqual(1, actual.Id);
-            Assert.AreEqual("192.168.1.1:8080", actual.Name);
-            Assert.AreEqual(false, actual.IsDeleted);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "192.168.1.1:8080",
+                actual.Name);
+            Assert.IsFalse(
+                actual.IsDeleted);
         }
     }
 }
