@@ -50,7 +50,9 @@ namespace HunterIndustriesAPI.Services
             int statusId,
             string username = null,
             string applicationName = null,
-            string[] parameters = null)
+            string[] parameters = null,
+            string requestBody = null,
+            string responseBody = null)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
@@ -73,6 +75,8 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@methodID", SqlDbType.Int) { Value = methodId },
                     new SqlParameter("@statusID", SqlDbType.Int) { Value = statusId },
                     new SqlParameter("@parameters", SqlDbType.VarChar) { Value = (object)formattedParameters ?? DBNull.Value },
+                    new SqlParameter("@requestBody", SqlDbType.VarChar) { Value = (object)requestBody ?? DBNull.Value },
+                    new SqlParameter("@responseBody", SqlDbType.VarChar) { Value = (object)responseBody ?? DBNull.Value },
                     new SqlParameter("@username", SqlDbType.VarChar) { Value = (object)username ?? DBNull.Value },
                     new SqlParameter("@applicationName", SqlDbType.VarChar) { Value = (object)applicationName ?? DBNull.Value }
                 };
@@ -276,6 +280,16 @@ fetch next @pageSize rows only";
                             auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(9));
                         }
 
+                        if (!reader.IsDBNull(10))
+                        {
+                            auditHistory.RequestBody = reader.GetString(10);
+                        }
+
+                        if (!reader.IsDBNull(11))
+                        {
+                            auditHistory.ResponseBody = reader.GetString(11);
+                        }
+
                         if (!reader.IsDBNull(2))
                         {
                             auditHistory.Username = reader.GetString(2);
@@ -288,36 +302,36 @@ fetch next @pageSize rows only";
 
                         LoginAttemptRecord loginAttempt = null;
 
-                        if (!reader.IsDBNull(10))
+                        if (!reader.IsDBNull(12))
                         {
                             loginAttempt = new LoginAttemptRecord()
                             {
-                                Id = reader.GetInt32(10),
-                                IsSuccessful = reader.GetBoolean(13)
+                                Id = reader.GetInt32(12),
+                                IsSuccessful = reader.GetBoolean(15)
                             };
 
-                            if (!reader.IsDBNull(11))
+                            if (!reader.IsDBNull(13))
                             {
-                                loginAttempt.Username = reader.GetString(11);
+                                loginAttempt.Username = reader.GetString(13);
                             }
 
-                            if (!reader.IsDBNull(12))
+                            if (!reader.IsDBNull(14))
                             {
-                                loginAttempt.Phrase = reader.GetString(12);
+                                loginAttempt.Phrase = reader.GetString(14);
                             }
                         }
 
                         auditHistory.LoginAttempt = loginAttempt;
                         auditHistory.Change = new List<ChangeRecord>();
 
-                        if (!reader.IsDBNull(14))
+                        if (!reader.IsDBNull(16))
                         {
                             auditHistory.Change.Add(new ChangeRecord()
                             {
-                                Id = reader.GetInt32(14),
-                                Field = reader.GetString(15),
-                                OldValue = reader.GetString(16),
-                                NewValue = reader.GetString(17),
+                                Id = reader.GetInt32(16),
+                                Field = reader.GetString(17),
+                                OldValue = reader.GetString(18),
+                                NewValue = reader.GetString(19),
                             });
                         }
 

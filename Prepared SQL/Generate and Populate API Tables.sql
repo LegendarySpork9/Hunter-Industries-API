@@ -79,7 +79,9 @@ CREATE TABLE [dbo].[AuditHistory](
 	[StatusId] [int] NOT NULL,
 	[IPAddress] [varchar](15) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
-	[Parameters] [varchar](max) NULL
+	[Parameters] [varchar](max) NULL,
+	[RequestBody] [varchar](max) NULL,
+	[ResponseBody] [varchar](max) NULL
  CONSTRAINT [PK_AuditHistory] PRIMARY KEY CLUSTERED 
 (
 	[AuditId] ASC

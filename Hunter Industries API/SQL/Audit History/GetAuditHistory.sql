@@ -9,6 +9,8 @@
 	SC.[Value] as StatusCode,
 	AH.DateOccured,
 	[Parameters],
+	AH.RequestBody,
+	AH.ResponseBody,
 	AttemptId,
 	AU.Username as AttemptUsername,
 	Phrase,

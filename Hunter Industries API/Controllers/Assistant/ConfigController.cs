@@ -95,20 +95,8 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 StandardValues.LoggerValues.Info, 
                 $"Assistant Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                AuditHistoryConverter.GetEndpointId("assistant/config"), 
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                AuditHistoryConverter.GetMethodId("GET"), 
-                AuditHistoryConverter.GetStatusId("OK"), 
-                username, 
-                applicationName, 
-                ParameterFunction.FormatParameters(
-                    null, 
-                    filters));
-
             var result = await _configService.GetAssistantConfig(
-                filters.AssistantName, 
+                filters.AssistantName,
                 filters.AssistantId);
             List<AssistantConfiguration> assistantConfigurations = result.Item1;
 
@@ -123,11 +111,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/config"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("OK"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    null,
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.OK, 
+                    HttpStatusCode.OK,
                     response.Data);
             }
 
@@ -143,11 +145,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("assistant/config"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                ParameterFunction.FormatParameters(
+                    null,
+                    filters),
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.OK, 
+                HttpStatusCode.OK,
                 response.Data);
         }
 
@@ -205,19 +221,9 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 $"Assistant Configuration (Post) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(
-                request, 
+                request,
                 true))
             {
-                await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                    AuditHistoryConverter.GetEndpointId("assistant/config"), 
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                    AuditHistoryConverter.GetMethodId("POST"), 
-                    AuditHistoryConverter.GetStatusId("BadRequest"),
-                    username, 
-                    applicationName, 
-                    null);
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -227,30 +233,30 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/config"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    null,
+                    ResponseFunction.GetModelJSON(request),
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     response.Data);
             }
 
             if (await _configService.AssistantExists(
-                request.AssistantName, 
+                request.AssistantName,
                 request.IdNumber))
             {
-                await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                    AuditHistoryConverter.GetEndpointId("assistant/config"), 
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                    AuditHistoryConverter.GetMethodId("POST"), 
-                    AuditHistoryConverter.GetStatusId("OK"), 
-                    username, 
-                    applicationName, 
-                    ParameterFunction.FormatParameters(
-                        null, 
-                        request));
-
                 response = new ResponseModel()
                 {
                     StatusCode = 200,
@@ -260,32 +266,32 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/config"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("OK"),
+                    username,
+                    applicationName,
+                    null,
+                    ResponseFunction.GetModelJSON(request),
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.OK, 
+                    HttpStatusCode.OK,
                     response.Data);
             }
 
             if (!await _configService.AssistantConfigCreated(
-                request.AssistantName, 
-                request.IdNumber, 
-                request.AssignedUser, 
+                request.AssistantName,
+                request.IdNumber,
+                request.AssignedUser,
                 request.HostName))
             {
-                await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                    AuditHistoryConverter.GetEndpointId("assistant/config"), 
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                    AuditHistoryConverter.GetMethodId("POST"), 
-                    AuditHistoryConverter.GetStatusId("InternalServerError"), 
-                    username, 
-                    applicationName, 
-                    ParameterFunction.FormatParameters(
-                        null, 
-                        request));
-
                 response = new ResponseModel()
                 {
                     Data = new
@@ -294,25 +300,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/config"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    null,
+                    ResponseFunction.GetModelJSON(request),
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.InternalServerError, 
+                    HttpStatusCode.InternalServerError,
                     response.Data);
             }
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                AuditHistoryConverter.GetEndpointId("assistant/config"), 
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                AuditHistoryConverter.GetMethodId("POST"), 
-                AuditHistoryConverter.GetStatusId("Created"), 
-                username, 
-                applicationName, 
-                ParameterFunction.FormatParameters(
-                    null, 
-                    request));
 
             string version = await _configService.GetMostRecentVersion();
 
@@ -330,11 +336,23 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("assistant/config"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("POST"),
+                AuditHistoryConverter.GetStatusId("Created"),
+                username,
+                applicationName,
+                null,
+                ResponseFunction.GetModelJSON(request),
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.Created, 
+                HttpStatusCode.Created,
                 response.Data);
         }
     }

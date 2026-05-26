@@ -96,21 +96,9 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 $"Assistant Version (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(
-                filters, 
+                filters,
                 true))
             {
-                await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                    AuditHistoryConverter.GetEndpointId("assistant/version"), 
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                    AuditHistoryConverter.GetMethodId("PATCH"), 
-                    AuditHistoryConverter.GetStatusId("BadRequest"), 
-                    username, 
-                    applicationName, 
-                    ParameterFunction.FormatParameters(
-                        null, 
-                        filters));
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -120,28 +108,30 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/version"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    null,
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Version (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     response.Data);
             }
 
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                AuditHistoryConverter.GetEndpointId("assistant/version"), 
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                AuditHistoryConverter.GetMethodId("GET"), 
-                AuditHistoryConverter.GetStatusId("OK"), 
-                username, 
-                applicationName, 
-                ParameterFunction.FormatParameters(
-                    null, 
-                    filters));
-
             VersionResponseModel versionResponse = await _versionService.GetAssistantVersion(
-                filters.AssistantName, 
+                filters.AssistantName,
                 filters.AssistantId);
 
             if (versionResponse == new VersionResponseModel())
@@ -155,11 +145,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/version"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("OK"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    null,
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Version (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.OK, 
+                    HttpStatusCode.OK,
                     response.Data);
             }
 
@@ -169,11 +173,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 Data = versionResponse
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("assistant/version"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                ParameterFunction.FormatParameters(
+                    null,
+                    filters),
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Version (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.OK, 
+                HttpStatusCode.OK,
                 response.Data);
         }
 
@@ -242,45 +260,9 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 $"Assistant Version (Patch) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}, {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(
-                filters, 
+                filters,
                 true))
             {
-                if (request == null)
-                {
-                    await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                        AuditHistoryConverter.GetEndpointId("assistant/version"), 
-                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                        AuditHistoryConverter.GetMethodId("PATCH"), 
-                        AuditHistoryConverter.GetStatusId("BadRequest"),
-                        username, 
-                        applicationName, 
-                        new string[] 
-                        { 
-                            filters.AssistantName, 
-                            filters.AssistantId, 
-                            null 
-                        });
-                }
-
-                else
-                {
-                    await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                        AuditHistoryConverter.GetEndpointId("assistant/version"), 
-                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                        AuditHistoryConverter.GetMethodId("PATCH"), 
-                        AuditHistoryConverter.GetStatusId("BadRequest"),
-                        username, 
-                        applicationName, 
-                        new string[] 
-                        { 
-                            filters.AssistantName, 
-                            filters.AssistantId, 
-                            request.Version 
-                        });
-                }
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -290,11 +272,41 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                if (request == null)
+                {
+                    await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("assistant/version"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("PATCH"),
+                        AuditHistoryConverter.GetStatusId("BadRequest"),
+                        username,
+                        applicationName,
+                        null,
+                        null,
+                        ResponseFunction.GetModelJSON(response.Data));
+                }
+
+                else
+                {
+                    await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("assistant/version"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("PATCH"),
+                        AuditHistoryConverter.GetStatusId("BadRequest"),
+                        username,
+                        applicationName,
+                        null,
+                        ResponseFunction.GetModelJSON(request),
+                        ResponseFunction.GetModelJSON(response.Data));
+                }
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Version (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     response.Data);
             }
 
@@ -307,33 +319,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     filters.AssistantId);
 
                 if (await _versionService.AssistantVersionUpdated(
-                    filters.AssistantName, 
-                    filters.AssistantId, 
+                    filters.AssistantName,
+                    filters.AssistantId,
                     request.Version))
                 {
-                    (bool, int) audit = await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                        AuditHistoryConverter.GetEndpointId("assistant/version"), 
-                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                        AuditHistoryConverter.GetMethodId("PATCH"), 
-                        AuditHistoryConverter.GetStatusId("OK"),
-                        username, 
-                        applicationName, 
-                        new string[] 
-                        { 
-                            filters.AssistantName, 
-                            filters.AssistantId, 
-                            request.Version 
-                        });
-
-                    if (request.Version != versionResponse.Version)
-                    {
-                        await _changeService.LogChange(
-                            audit.Item2, 
-                            "Version", 
-                            versionResponse.Version, 
-                            request.Version);
-                    }
+                    string oldVersion = versionResponse.Version;
 
                     versionResponse.Version = request.Version;
 
@@ -343,28 +333,34 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                         Data = versionResponse
                     };
 
+                    (bool, int) audit = await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("assistant/version"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("PATCH"),
+                        AuditHistoryConverter.GetStatusId("OK"),
+                        username,
+                        applicationName,
+                        null,
+                        ResponseFunction.GetModelJSON(request),
+                        ResponseFunction.GetModelJSON(response.Data));
+
+                    if (request.Version != oldVersion)
+                    {
+                        await _changeService.LogChange(
+                            audit.Item2,
+                            "Version",
+                            oldVersion,
+                            request.Version);
+                    }
+
                     _Logger.LogMessage(
-                        StandardValues.LoggerValues.Info, 
+                        StandardValues.LoggerValues.Info,
                         $"Assistant Version (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                     return Content(
-                        HttpStatusCode.OK, 
+                        HttpStatusCode.OK,
                         response.Data);
                 }
-
-                await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                    AuditHistoryConverter.GetEndpointId("assistant/version"), 
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                    AuditHistoryConverter.GetMethodId("PATCH"),
-                    AuditHistoryConverter.GetStatusId("InternalServerError"), 
-                    username, 
-                    applicationName, 
-                    new string[] 
-                    { 
-                        filters.AssistantName, 
-                        filters.AssistantId, 
-                        request.Version 
-                    });
 
                 response = new ResponseModel()
                 {
@@ -375,28 +371,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/version"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    null,
+                    ResponseFunction.GetModelJSON(request),
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Version (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.InternalServerError, 
+                    HttpStatusCode.InternalServerError,
                     response.Data);
             }
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                AuditHistoryConverter.GetEndpointId("assistant/version"), 
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                AuditHistoryConverter.GetMethodId("PATCH"), 
-                AuditHistoryConverter.GetStatusId("NotFound"),
-                username, 
-                applicationName, 
-                new string[] 
-                { 
-                    filters.AssistantName, 
-                    filters.AssistantId, 
-                    request.Version 
-                });
 
             response = new ResponseModel()
             {
@@ -407,11 +400,23 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("assistant/version"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("PATCH"),
+                AuditHistoryConverter.GetStatusId("NotFound"),
+                username,
+                applicationName,
+                null,
+                ResponseFunction.GetModelJSON(request),
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Version (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.NotFound, 
+                HttpStatusCode.NotFound,
                 response.Data);
         }
     }

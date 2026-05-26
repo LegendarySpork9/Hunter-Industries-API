@@ -96,21 +96,9 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 $"Assistant Deletion (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(
-                filters, 
+                filters,
                 true))
             {
-                await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                    AuditHistoryConverter.GetEndpointId("assistant/deletion"), 
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                    AuditHistoryConverter.GetMethodId("PATCH"), 
-                    AuditHistoryConverter.GetStatusId("BadRequest"), 
-                    username, 
-                    applicationName, 
-                    ParameterFunction.FormatParameters(
-                        null, 
-                        filters));
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -120,28 +108,30 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    null,
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     response.Data);
             }
 
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                AuditHistoryConverter.GetEndpointId("assistant/deletion"), 
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                AuditHistoryConverter.GetMethodId("GET"), 
-                AuditHistoryConverter.GetStatusId("OK"), 
-                username, 
-                applicationName, 
-                ParameterFunction.FormatParameters(
-                    null, 
-                    filters));
-
             DeletionResponseModel deletionResponse = await _deletionService.GetAssistantDeletion(
-                filters.AssistantName, 
+                filters.AssistantName,
                 filters.AssistantId);
 
             if (deletionResponse == new DeletionResponseModel())
@@ -155,11 +145,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("OK"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    null,
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.OK, 
+                    HttpStatusCode.OK,
                     response.Data);
             }
 
@@ -169,11 +173,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 Data = deletionResponse
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                ParameterFunction.FormatParameters(
+                    null,
+                    filters),
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Deletion (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.OK, 
+                HttpStatusCode.OK,
                 response.Data);
         }
 
@@ -242,45 +260,9 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 $"Assistant Deletion (Patch) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}, {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(
-                filters, 
+                filters,
                 true))
             {
-                if (request == null)
-                {
-                    await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                        AuditHistoryConverter.GetEndpointId("assistant/deletion"), 
-                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                        AuditHistoryConverter.GetMethodId("PATCH"), 
-                        AuditHistoryConverter.GetStatusId("BadRequest"),
-                        username, 
-                        applicationName, 
-                        new string[] 
-                        { 
-                            filters.AssistantName, 
-                            filters.AssistantId, 
-                            null 
-                        });
-                }
-
-                else
-                {
-                    await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                        AuditHistoryConverter.GetEndpointId("assistant/deletion"), 
-                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                        AuditHistoryConverter.GetMethodId("PATCH"), 
-                        AuditHistoryConverter.GetStatusId("BadRequest"),
-                        username, 
-                        applicationName, 
-                        new string[] 
-                        { 
-                            filters.AssistantName, 
-                            filters.AssistantId, 
-                            request.Deletion.ToString() 
-                        });
-                }
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -290,11 +272,41 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                if (request == null)
+                {
+                    await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("PATCH"),
+                        AuditHistoryConverter.GetStatusId("BadRequest"),
+                        username,
+                        applicationName,
+                        null,
+                        null,
+                        ResponseFunction.GetModelJSON(response.Data));
+                }
+
+                else
+                {
+                    await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("PATCH"),
+                        AuditHistoryConverter.GetStatusId("BadRequest"),
+                        username,
+                        applicationName,
+                        null,
+                        ResponseFunction.GetModelJSON(request),
+                        ResponseFunction.GetModelJSON(response.Data));
+                }
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     response.Data);
             }
 
@@ -307,33 +319,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     filters.AssistantId);
 
                 if (await _deletionService.AssistantDeletionUpdated(
-                    filters.AssistantName, 
-                    filters.AssistantId, 
+                    filters.AssistantName,
+                    filters.AssistantId,
                     bool.Parse(request.Deletion.ToString())))
                 {
-                    (bool, int) audit = await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                        AuditHistoryConverter.GetEndpointId("assistant/deletion"), 
-                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                        AuditHistoryConverter.GetMethodId("PATCH"), 
-                        AuditHistoryConverter.GetStatusId("OK"),
-                        username, 
-                        applicationName, 
-                        new string[] 
-                        { 
-                            filters.AssistantName, 
-                            filters.AssistantId, 
-                            request.Deletion.ToString() 
-                        });
-
-                    if (request.Deletion != deletionResponse.Deletion)
-                    {
-                        await _changeService.LogChange(
-                            audit.Item2, 
-                            "Deletion", 
-                            deletionResponse.Deletion.ToString(), 
-                            request.Deletion.ToString());
-                    }
+                    bool oldDeletion = deletionResponse.Deletion;
 
                     deletionResponse.Deletion = request.Deletion;
 
@@ -343,28 +333,34 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                         Data = deletionResponse
                     };
 
+                    (bool, int) audit = await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("PATCH"),
+                        AuditHistoryConverter.GetStatusId("OK"),
+                        username,
+                        applicationName,
+                        null,
+                        ResponseFunction.GetModelJSON(request),
+                        ResponseFunction.GetModelJSON(response.Data));
+
+                    if (request.Deletion != oldDeletion)
+                    {
+                        await _changeService.LogChange(
+                            audit.Item2,
+                            "Deletion",
+                            oldDeletion.ToString(),
+                            request.Deletion.ToString());
+                    }
+
                     _Logger.LogMessage(
-                        StandardValues.LoggerValues.Info, 
+                        StandardValues.LoggerValues.Info,
                         $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                     return Content(
-                        HttpStatusCode.OK, 
+                        HttpStatusCode.OK,
                         response.Data);
                 }
-
-                await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                    AuditHistoryConverter.GetEndpointId("assistant/deletion"), 
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                    AuditHistoryConverter.GetMethodId("PATCH"),
-                    AuditHistoryConverter.GetStatusId("InternalServerError"), 
-                    username, 
-                    applicationName, 
-                    new string[] 
-                    { 
-                        filters.AssistantName, 
-                        filters.AssistantId, 
-                        request.Deletion.ToString() 
-                    });
 
                 response = new ResponseModel()
                 {
@@ -375,28 +371,25 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     }
                 };
 
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    null,
+                    ResponseFunction.GetModelJSON(request),
+                    ResponseFunction.GetModelJSON(response.Data));
+
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.InternalServerError, 
+                    HttpStatusCode.InternalServerError,
                     response.Data);
             }
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), 
-                AuditHistoryConverter.GetEndpointId("assistant/deletion"), 
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)), 
-                AuditHistoryConverter.GetMethodId("PATCH"), 
-                AuditHistoryConverter.GetStatusId("NotFound"),
-                username, 
-                applicationName, 
-                new string[] 
-                { 
-                    filters.AssistantName, 
-                    filters.AssistantId, 
-                    request.Deletion.ToString() 
-                });
 
             response = new ResponseModel()
             {
@@ -407,11 +400,23 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 }
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("assistant/deletion"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("PATCH"),
+                AuditHistoryConverter.GetStatusId("NotFound"),
+                username,
+                applicationName,
+                null,
+                ResponseFunction.GetModelJSON(request),
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Deletion (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.NotFound, 
+                HttpStatusCode.NotFound,
                 response.Data);
         }
     }

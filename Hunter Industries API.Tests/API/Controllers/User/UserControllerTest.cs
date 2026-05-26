@@ -390,7 +390,9 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.User
                 Password = "NewPassword"
             };
 
-            IHttpActionResult actionResult = await controller.Patch(1, body);
+            IHttpActionResult actionResult = await controller.Patch(
+                1,
+                body);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(

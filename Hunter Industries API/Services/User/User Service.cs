@@ -554,16 +554,26 @@ namespace HunterIndustriesAPI.Services.User
                 }
             }
 
-            updated = await UserScopeCreated(
-                id,
-                scopes.Where(c => c.Key == "Add")
+            List<string> scopesToAdd = scopes.Where(c => c.Key == "Add")
                 .Select(c => c.Value)
-                .ToList());
-            updated = await UserScopeDeleted(
-                id,
-                scopes.Where(c => c.Key == "Remove")
+                .ToList();
+            List<string> scopesToRemove = scopes.Where(c => c.Key == "Remove")
                 .Select(c => c.Value)
-                .ToList());
+                .ToList();
+
+            if (scopesToAdd.Count > 0)
+            {
+                updated = await UserScopeCreated(
+                    id,
+                    scopesToAdd);
+            }
+
+            if (scopesToRemove.Count > 0)
+            {
+                updated = await UserScopeDeleted(
+                    id,
+                    scopesToRemove);
+            }
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,

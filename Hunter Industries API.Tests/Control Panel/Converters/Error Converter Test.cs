@@ -7,7 +7,6 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
     [TestClass]
     public class ErrorConverterTest
     {
-        #region ExtractClassMethod
 
         /// <summary>
         /// Tests whether the ExtractClassMethod method returns the class.method notation from a summary.
@@ -51,6 +50,5 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
                 actual);
         }
 
-        #endregion
     }
 }

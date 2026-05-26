@@ -86,17 +86,8 @@ namespace HunterIndustriesAPI.Controllers
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Statistic Dashboard (Get) endpoint called.");
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                AuditHistoryConverter.GetEndpointId("statistic"),
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                AuditHistoryConverter.GetMethodId("GET"),
-                AuditHistoryConverter.GetStatusId("OK"),
-                username,
-                applicationName);
 
             List<object> records = await _statisticService.GetDashboardStatistic("topBarStats");
             TopBarStatRecord topBarStatsRecord = records[0] as TopBarStatRecord;
@@ -158,6 +149,18 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                null,
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info, 
                 $"Statistic Dashboard (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
@@ -201,21 +204,8 @@ namespace HunterIndustriesAPI.Controllers
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Statistic Server (Get) endpoint called called with the following parameters \"{id}\".");
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                AuditHistoryConverter.GetEndpointId("statistic"),
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                AuditHistoryConverter.GetMethodId("GET"),
-                AuditHistoryConverter.GetStatusId("OK"),
-                username,
-                applicationName,
-                new string[] 
-                { 
-                    id.ToString() 
-                });
 
             List<object> records = await _statisticService.GetServerStatistic(
                 "componentAlerts",
@@ -267,6 +257,21 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Id: {id}"
+                },
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
+
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info, 
                 $"Statistic Server (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
@@ -309,17 +314,8 @@ namespace HunterIndustriesAPI.Controllers
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Statistic Error (Get) endpoint called.");
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                AuditHistoryConverter.GetEndpointId("statistic"),
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                AuditHistoryConverter.GetMethodId("GET"),
-                AuditHistoryConverter.GetStatusId("OK"),
-                username,
-                applicationName);
 
             List<object> records = await _statisticService.GetErrorStatistic("errorsOverTime");
             List<ErrorOverTimeRecord> errorOverTimeRecords = records.Cast<ErrorOverTimeRecord>()
@@ -343,6 +339,18 @@ namespace HunterIndustriesAPI.Controllers
                     SummaryErrors = summaryErrorRecords
                 }
             };
+
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                null,
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info, 
@@ -387,21 +395,8 @@ namespace HunterIndustriesAPI.Controllers
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Statistic Application (Get) endpoint called with the following parameters \"{id}\".");
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                AuditHistoryConverter.GetEndpointId("statistic"),
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                AuditHistoryConverter.GetMethodId("GET"),
-                AuditHistoryConverter.GetStatusId("OK"),
-                username,
-                applicationName,
-                new string[] 
-                { 
-                    id.ToString() 
-                });
 
             List<object> records = await _statisticService.GetSharedStatistic(
                 "endpointCalls",
@@ -442,6 +437,21 @@ namespace HunterIndustriesAPI.Controllers
                     Changes = changeRecords
                 }
             };
+
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Id: {id}"
+                },
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info, 
@@ -486,21 +496,8 @@ namespace HunterIndustriesAPI.Controllers
             string applicationName = ClaimFunction.GetApplicationName(principal);
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Statistic User (Get) endpoint called with the following parameters \"{id}\".");
-
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                AuditHistoryConverter.GetEndpointId("statistic"),
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                AuditHistoryConverter.GetMethodId("GET"),
-                AuditHistoryConverter.GetStatusId("OK"),
-                username,
-                applicationName,
-                new string[] 
-                { 
-                    id.ToString() 
-                });
 
             List<object> records = await _statisticService.GetSharedStatistic(
                 "endpointCalls",
@@ -541,6 +538,21 @@ namespace HunterIndustriesAPI.Controllers
                     Changes = changeRecords
                 }
             };
+
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("statistic"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Id: {id}"
+                },
+                null,
+                ResponseFunction.GetModelJSON(response.Data));
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info, 

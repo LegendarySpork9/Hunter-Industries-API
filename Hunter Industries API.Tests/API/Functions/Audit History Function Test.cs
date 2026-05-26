@@ -9,7 +9,6 @@ namespace HunterIndustriesAPI.Tests.API.Functions
     [TestClass]
     public class AuditHistoryFunctionTest
     {
-        #region ExtractVersionFromRequest
 
         /// <summary>
         /// Tests whether the ExtractVersionFromRequest method returns "1.0" when given a v1.0 URL.
@@ -62,6 +61,5 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             Assert.IsNull(actual);
         }
 
-        #endregion
     }
 }

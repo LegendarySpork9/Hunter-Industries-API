@@ -1,6 +1,7 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace HunterIndustriesAPI.Tests.API.Functions
@@ -230,7 +231,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersObject()
         {
-            string expected = "\"Test\", \"1\"";
+            string expected = "\"Name: Test\", \"Value: 1\"";
             object model = new { Name = "Test", Value = 1 };
             string actual = ParameterFunction.FormatParameters(model);
 
@@ -245,7 +246,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersObjectNullProperty()
         {
-            string expected = "\"null\"";
+            string expected = "\"Name: null\"";
             object model = new { Name = (string)null };
             string actual = ParameterFunction.FormatParameters(model);
 
@@ -260,7 +261,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersObjectList()
         {
-            string expected = "\"a\", \"b\"";
+            string expected = "\"Items: a\", \"Items: b\"";
             object model = new { Items = new List<string> { "a", "b" } };
             string actual = ParameterFunction.FormatParameters(model);
 
@@ -275,7 +276,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         [TestMethod]
         public void TestFormatParametersObjectPassword()
         {
-            string expected = "\"e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb\"";
+            string expected = "\"Password: e6c83b282aeb2e022844595721cc00bbda47cb24537c1779f9bb84f04039e1676e6ba8573e588da1052510e3aa0a32a9e55879ae22b0c2d62136fc0a3e85f8bb\"";
             object model = new { Password = "Password" };
             string actual = ParameterFunction.FormatParameters(model);
 
@@ -529,6 +530,62 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             Assert.AreEqual(
                 "Test",
                 actual[0]);
+        }
+
+        #endregion
+
+        #region SerialiseRequestBody
+
+        /// <summary>
+        /// Tests whether the SerialiseRequestBody method returns null when given a null model.
+        /// </summary>
+        [TestMethod]
+        public void TestSerialiseRequestBodyNull()
+        {
+            string actual = ParameterFunction.SerialiseRequestBody(null);
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the SerialiseRequestBody method returns formatted JSON when given a model.
+        /// </summary>
+        [TestMethod]
+        public void TestSerialiseRequestBody()
+        {
+            object model = new { Name = "Test", Value = 1 };
+            string actual = ParameterFunction.SerialiseRequestBody(model);
+
+            JObject parsed = JObject.Parse(actual);
+
+            Assert.AreEqual(
+                "Test",
+                parsed["Name"].ToString());
+            Assert.AreEqual(
+                1,
+                parsed["Value"].Value<int>());
+        }
+
+        /// <summary>
+        /// Tests whether the SerialiseRequestBody method hashes password properties.
+        /// </summary>
+        [TestMethod]
+        public void TestSerialiseRequestBodyPassword()
+        {
+            object model = new { Username = "Admin", Password = "Password" };
+            string actual = ParameterFunction.SerialiseRequestBody(model);
+
+            JObject parsed = JObject.Parse(actual);
+
+            Assert.AreEqual(
+                "Admin",
+                parsed["Username"].ToString());
+            Assert.AreNotEqual(
+                "Password",
+                parsed["Password"].ToString());
+            Assert.AreEqual(
+                128,
+                parsed["Password"].ToString().Length);
         }
 
         #endregion

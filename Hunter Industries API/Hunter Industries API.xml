@@ -1199,6 +1199,11 @@
             Converts the list into a SQL friendly format.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.SerialiseRequestBody(System.Object)">
+            <summary>
+            Serialises the model to JSON with password fields hashed.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Functions.ParameterFunction.FormatParameters(System.Object,System.String[])">
             <summary>
             Converts the model into a string array.
@@ -2921,6 +2926,16 @@
             Any filters or body input attached to the call.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.RequestBody">
+            <summary>
+            The JSON request body sent to the endpoint.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.ResponseBody">
+            <summary>
+            The JSON response body returned by the endpoint.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Objects.AuditHistoryRecord.LoginAttempt">
             <summary>
             The login attempt record.
@@ -3515,7 +3530,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String,System.String[])">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogRequest(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String,System.String[],System.String,System.String)">
             <summary>
             Logs the call made to the database.
             </summary>

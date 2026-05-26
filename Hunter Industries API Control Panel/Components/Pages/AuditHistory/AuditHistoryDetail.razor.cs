@@ -4,6 +4,10 @@ using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
 {
@@ -35,6 +39,75 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
             AuditHistory = await APIService.GetAuditHistory(Id);
 
             IsLoading = false;
+        }
+
+        /// <summary>
+        /// Returns a syntax-highlighted HTML representation of the JSON string.
+        /// </summary>
+        private static MarkupString FormatJson(string json)
+        {
+            try
+            {
+                JToken token = JToken.Parse(json);
+                json = token.ToString(Formatting.Indented);
+            }
+
+            catch (JsonReaderException)
+            {
+
+            }
+
+            StringBuilder sb = new();
+
+            string pattern = @"(""[^""\\]*(?:\\.[^""\\]*)*"")\s*:|""[^""\\]*(?:\\.[^""\\]*)*""|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{}\[\]:,]";
+
+            foreach (Match match in Regex.Matches(json, pattern))
+            {
+                string token = match.Value;
+
+                if (token.EndsWith(':') && token.StartsWith('\"'))
+                {
+                    string key = token[..^1];
+                    sb.Append($"<span style=\"color:#9CDCFE\">{System.Net.WebUtility.HtmlEncode(key)}</span>");
+                    sb.Append("<span style=\"color:#D4D4D4\">:</span>");
+                }
+
+                else if (token.StartsWith('\"'))
+                {
+                    sb.Append($"<span style=\"color:#CE9178\">{System.Net.WebUtility.HtmlEncode(token)}</span>");
+                }
+
+                else if (token == "true" || token == "false")
+                {
+                    sb.Append($"<span style=\"color:#569CD6\">{token}</span>");
+                }
+
+                else if (token == "null")
+                {
+                    sb.Append($"<span style=\"color:#808080\">{token}</span>");
+                }
+
+                else if (char.IsDigit(token[0]) || token[0] == '-')
+                {
+                    sb.Append($"<span style=\"color:#B5CEA8\">{token}</span>");
+                }
+
+                else
+                {
+                    sb.Append($"<span style=\"color:#D4D4D4\">{token}</span>");
+                }
+
+                int endPos = match.Index + match.Length;
+                int nextMatchStart = match.NextMatch().Success ? match.NextMatch().Index : json.Length;
+                string whitespace = json[endPos..nextMatchStart];
+
+                if (!string.IsNullOrEmpty(whitespace))
+                {
+                    sb.Append(System.Net.WebUtility.HtmlEncode(whitespace));
+                }
+            }
+
+            return new MarkupString(sb.ToString());
         }
     }
 }

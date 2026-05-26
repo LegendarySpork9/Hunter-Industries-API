@@ -18,6 +18,8 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses
         public required string Status { get; set; }
         public required DateTime OccuredAt { get; set; }
         public required string[] Paramaters { get; set; }
+        public string? RequestBody { get; set; }
+        public string? ResponseBody { get; set; }
         public LoginAttemptModel? LoginAttempt { get; set; }
         public List<ChangeModel>? Change { get; set; }
     }

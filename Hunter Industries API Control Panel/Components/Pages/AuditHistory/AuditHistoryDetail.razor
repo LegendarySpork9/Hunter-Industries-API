@@ -82,6 +82,42 @@ else
             </div>
         </div>
 
+        <!-- Request Body -->
+        <div class="card mb-4 card-rounded">
+            <div class="card-header">
+                <h6 class="mb-0">Request Body</h6>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrWhiteSpace(AuditHistory.RequestBody))
+                {
+                    <pre class="json-display mb-0">@FormatJson(AuditHistory.RequestBody)</pre>
+                }
+
+                else
+                {
+                    <span class="text-muted">None</span>
+                }
+            </div>
+        </div>
+
+        <!-- Response Body -->
+        <div class="card mb-4 card-rounded">
+            <div class="card-header">
+                <h6 class="mb-0">Response Body</h6>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrWhiteSpace(AuditHistory.ResponseBody))
+                {
+                    <pre class="json-display mb-0">@FormatJson(AuditHistory.ResponseBody)</pre>
+                }
+
+                else
+                {
+                    <span class="text-muted">None</span>
+                }
+            </div>
+        </div>
+
         <!-- Login Attempt -->
         @if (AuditHistory.LoginAttempt != null)
         {

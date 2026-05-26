@@ -43,7 +43,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                     It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [("TestApp", 1, "Theme", "Dark")],
+                    [("TestApp", 1, "Theme", "Dark"), ("TestApp", 2, "Language", "English")],
                     null));
 
             UserSettingsService service = new(

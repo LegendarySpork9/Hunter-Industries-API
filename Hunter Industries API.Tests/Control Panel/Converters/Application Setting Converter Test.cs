@@ -7,7 +7,6 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
     [TestClass]
     public class ApplicationSettingConverterTest
     {
-        #region GetDataType
 
         /// <summary>
         /// Tests whether the GetDataType method returns the input when given an unknown type.
@@ -163,6 +162,5 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
                 actual);
         }
 
-        #endregion
     }
 }

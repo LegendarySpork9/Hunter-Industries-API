@@ -13,3 +13,13 @@
 .text-new-value {
     color: #28a745;
 }
+
+.json-display {
+    background: #1e1e1e;
+    border-radius: 6px;
+    padding: 16px;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    color: #D4D4D4;
+}

@@ -10,7 +10,6 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
     [TestClass]
     public class CredentialsFunctionTest
     {
-        #region GetCredentialsUsername
 
         /// <summary>
         /// Tests whether the GetCredentialsUsername method returns the username from valid credentials.
@@ -103,6 +102,5 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
                 actual);
         }
 
-        #endregion
     }
 }

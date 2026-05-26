@@ -191,24 +191,22 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         public async Task TestGetServer()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [
-                        new ServerInformationRecord
-                        {
-                            Id = 1,
-                            Name = "Test",
-                            HostName = "TestServer",
-                            Game = "TestGame",
-                            GameVersion = "1.0",
-                            Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
-                            Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
-                            IsActive = true
-                        }
-                    ],
+                    new ServerInformationRecord
+                    {
+                        Id = 1,
+                        Name = "Test",
+                        HostName = "TestServer",
+                        Game = "TestGame",
+                        GameVersion = "1.0",
+                        Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
+                        Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
+                        IsActive = true
+                    },
                     null));
 
             ServerInformationService service = new(
@@ -237,13 +235,13 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
         public async Task TestGetServerEmpty()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [],
-                    null));
+                    (ServerInformationRecord)null,
+                    (Exception)null));
 
             ServerInformationService service = new(
                 _MockLogger.Object,

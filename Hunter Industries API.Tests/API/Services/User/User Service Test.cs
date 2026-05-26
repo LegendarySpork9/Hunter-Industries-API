@@ -49,7 +49,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                     It.IsAny<Func<SqlDataReader, string>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    ["User"],
+                    ["User", "Assistant API"],
                     null));
 
             UserService service = new(
@@ -360,7 +360,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                     It.IsAny<Func<SqlDataReader, string>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    ["User"],
+                    ["User", "Assistant API"],
                     null));
 
             UserService service = new(

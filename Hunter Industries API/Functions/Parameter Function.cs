@@ -1,5 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Functions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -147,24 +149,24 @@ namespace HunterIndustriesAPI.Functions
                         {
                             foreach (object item in list)
                             {
-                                formattedParameters += $"\"{item}\", ";
+                                formattedParameters += $"\"{property.Name}: {item}\", ";
                             }
                         }
 
                         else if (property.Name == "Password")
                         {
-                            formattedParameters += $"\"{HashFunction.HashString(value.ToString())}\", ";
+                            formattedParameters += $"\"{property.Name}: {HashFunction.HashString(value.ToString())}\", ";
                         }
 
                         else
                         {
-                            formattedParameters += $"\"{value}\", ";
+                            formattedParameters += $"\"{property.Name}: {value}\", ";
                         }
                     }
 
                     else
                     {
-                        formattedParameters += "\"null\", ";
+                        formattedParameters += $"\"{property.Name}: null\", ";
                     }
                 }
             }
@@ -254,6 +256,30 @@ namespace HunterIndustriesAPI.Functions
             }
 
             return formattedParameters;
+        }
+
+        /// <summary>
+        /// Serialises the model to JSON with password fields hashed.
+        /// </summary>
+        public static string SerialiseRequestBody(object model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            JObject jObject = JObject.FromObject(model);
+
+            foreach (JProperty property in jObject.Properties())
+            {
+                if (property.Name.Equals("Password", StringComparison.OrdinalIgnoreCase) &&
+                    property.Value.Type == JTokenType.String)
+                {
+                    property.Value = HashFunction.HashString(property.Value.ToString());
+                }
+            }
+
+            return jObject.ToString(Formatting.Indented);
         }
 
         /// <summary>

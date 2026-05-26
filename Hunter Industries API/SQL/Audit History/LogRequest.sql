@@ -1,4 +1,4 @@
-﻿insert into AuditHistory (IPAddress, EndpointId, EndpointVersionId, MethodId, StatusId, DateOccured, [Parameters], UserId, ApplicationId)
+﻿insert into AuditHistory (IPAddress, EndpointId, EndpointVersionId, MethodId, StatusId, DateOccured, [Parameters], RequestBody, ResponseBody, UserId, ApplicationId)
 output inserted.AuditId
 select
 	@ipAddress,
@@ -8,6 +8,8 @@ select
 	@statusId,
 	GETUTCDATE(),
 	@parameters,
+	@requestBody,
+	@responseBody,
 	AU.UserId,
 	A.ApplicationId
 from (select 1 as Dummy) D

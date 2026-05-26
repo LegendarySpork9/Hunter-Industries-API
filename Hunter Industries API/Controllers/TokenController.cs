@@ -11,6 +11,7 @@ using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.User;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using HunterIndustriesAPICommon.Functions;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.Swagger.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -109,19 +110,6 @@ namespace HunterIndustriesAPI.Controllers
                 true,
                 validationIgnore))
             {
-                auditId = (await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                    AuditHistoryConverter.GetEndpointId("token"),
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                    AuditHistoryConverter.GetMethodId("POST"),
-                    AuditHistoryConverter.GetStatusId("BadRequest"),
-                    null,
-                    null,
-                    ParameterFunction.FormatParameters(
-                        null,
-                        request))
-                    ).Item2;
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -130,6 +118,23 @@ namespace HunterIndustriesAPI.Controllers
                         error = "Invalid request, check the following. A body is provided with the 'Phrase' tag and the authorisation header is present."
                     }
                 };
+
+                auditId = (await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("token"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    null,
+                    null,
+                    new string[]
+                    {
+                        $"Username: {request.Username}",
+                        $"Password: {HashFunction.HashString(request.Password)}"
+                    },
+                    ParameterFunction.SerialiseRequestBody(request),
+                    ResponseFunction.GetModelJSON(response.Data))
+                    ).Item2;
 
                 await _auditHistoryService.LogLoginAttempt(
                     auditId,
@@ -163,22 +168,6 @@ namespace HunterIndustriesAPI.Controllers
                 request,
                 true))
             {
-                auditId = (await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                    AuditHistoryConverter.GetEndpointId("token"),
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                    AuditHistoryConverter.GetMethodId("POST"),
-                    AuditHistoryConverter.GetStatusId("BadRequest"),
-                    null,
-                    null,
-                    new string[] 
-                    { 
-                        request.Username, 
-                        request.Password, 
-                        request.Phrase 
-                    })
-                    ).Item2;
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -187,6 +176,23 @@ namespace HunterIndustriesAPI.Controllers
                         error = "Invalid or malformed basic authentication header."
                     }
                 };
+
+                auditId = (await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("token"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    null,
+                    null,
+                    new string[]
+                    {
+                        $"Username: {request.Username}",
+                        $"Password: {HashFunction.HashString(request.Password)}"
+                    },
+                    ParameterFunction.SerialiseRequestBody(request),
+                    ResponseFunction.GetModelJSON(response.Data))
+                    ).Item2;
 
                 await _auditHistoryService.LogLoginAttempt(
                     auditId,
@@ -233,22 +239,6 @@ namespace HunterIndustriesAPI.Controllers
                     signingCredentials: creds
                 ));
 
-                auditId = (await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                    AuditHistoryConverter.GetEndpointId("token"),
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                    AuditHistoryConverter.GetMethodId("POST"),
-                    AuditHistoryConverter.GetStatusId("OK"),
-                    null,
-                    null,
-                    new string[] 
-                    { 
-                        request.Username, 
-                        request.Password, 
-                        request.Phrase 
-                    })
-                    ).Item2;
-
                 response = new ResponseModel()
                 {
                     StatusCode = 200,
@@ -267,6 +257,23 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
+                auditId = (await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("token"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("OK"),
+                    null,
+                    null,
+                    new string[]
+                    {
+                        $"Username: {request.Username}",
+                        $"Password: {HashFunction.HashString(request.Password)}"
+                    },
+                    ParameterFunction.SerialiseRequestBody(request),
+                    ResponseFunction.GetModelJSON(response.Data))
+                    ).Item2;
+
                 await _auditHistoryService.LogLoginAttempt(
                     auditId,
                     true,
@@ -281,22 +288,6 @@ namespace HunterIndustriesAPI.Controllers
                     response.Data);
             }
 
-            auditId = (await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                AuditHistoryConverter.GetEndpointId("token"),
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                AuditHistoryConverter.GetMethodId("POST"),
-                AuditHistoryConverter.GetStatusId("Unauthorized"),
-                null,
-                null,
-                new string[] 
-                { 
-                    request.Username, 
-                    request.Password, 
-                    request.Phrase 
-                })
-                ).Item2;
-
             response = new ResponseModel()
             {
                 StatusCode = 401,
@@ -305,6 +296,23 @@ namespace HunterIndustriesAPI.Controllers
                     error = "Invalid credentials or phrase provided."
                 }
             };
+
+            auditId = (await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("token"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("POST"),
+                AuditHistoryConverter.GetStatusId("Unauthorized"),
+                null,
+                null,
+                new string[]
+                {
+                    $"Username: {request.Username}",
+                    $"Password: {HashFunction.HashString(request.Password)}"
+                },
+                ParameterFunction.SerialiseRequestBody(request),
+                ResponseFunction.GetModelJSON(response.Data))
+                ).Item2;
 
             await _auditHistoryService.LogLoginAttempt(
                 auditId,

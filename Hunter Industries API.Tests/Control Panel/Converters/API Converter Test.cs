@@ -7,7 +7,6 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
     [TestClass]
     public class APIConverterTest
     {
-        #region GetQuery
 
         /// <summary>
         /// Tests whether the GetQuery method returns an empty string when given any value.
@@ -51,6 +50,5 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
                 actual);
         }
 
-        #endregion
     }
 }

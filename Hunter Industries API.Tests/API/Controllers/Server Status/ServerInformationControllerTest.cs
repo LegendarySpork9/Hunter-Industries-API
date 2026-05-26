@@ -253,31 +253,32 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 .Returns((
                     1,
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.SetupSequence(d => d.Query(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, int>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
+                    [],
+                    (Exception)null))
+                .Returns((
                     [1],
-                    null));
-            mockDatabase.Setup(d => d.Query(
+                    (Exception)null));
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, ServerInformationRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [
-                        new ServerInformationRecord
-                        {
-                            Id = 1,
-                            Name = "Test",
-                            HostName = "TestServer",
-                            Game = "Minecraft",
-                            GameVersion = "1.7.10",
-                            Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
-                            Downtime = new DowntimeRecord { Time = "02:00:00", Duration = 60 },
-                            IsActive = false
-                        }
-                    ],
+                    new ServerInformationRecord
+                    {
+                        Id = 1,
+                        Name = "Test",
+                        HostName = "TestServer",
+                        Game = "Minecraft",
+                        GameVersion = "1.7.10",
+                        Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
+                        Downtime = new DowntimeRecord { Time = "02:00:00", Duration = 60 },
+                        IsActive = false
+                    },
                     null));
             mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
@@ -341,7 +342,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
 
             IHttpActionResult actionResult = await controller.Patch(
                 1,
-                new ServerUpdateModel());
+                null);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(
