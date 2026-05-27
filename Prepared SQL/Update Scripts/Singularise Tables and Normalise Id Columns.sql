@@ -12,7 +12,7 @@ GO
 
 SET NOCOUNT ON;
 
-DECLARE @WhatIf bit = 1;   -- flip to 0 to actually apply changes
+DECLARE @WhatIf bit = 0;   -- flip to 0 to actually apply changes
 
 DECLARE @sql       nvarchar(max);
 DECLARE @oldName   sysname;
@@ -102,9 +102,12 @@ END
 
 CLOSE column_cursor;
 DEALLOCATE column_cursor;
+
+IF @WhatIf = 0
+BEGIN
+    INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
+    VALUES ('2.0.0', 'Singularise Tables and Normalise Id Columns', GETUTCDATE())
+
+    PRINT('Added VersionHistory Record')
+END
 GO
-
-INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
-VALUES ('2.0.0', 'Singularise Tables and Normalise Id Columns', GETUTCDATE())
-
-PRINT('Added VersionHistory Record')
