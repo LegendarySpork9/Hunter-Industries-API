@@ -3540,7 +3540,7 @@
             Logs any authorisation calls made to the database.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.Int32,System.String,System.String,System.String,System.String,System.DateTime,System.DateTime,System.Int32,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistory(System.String,System.String,System.String,System.String,System.DateTime,System.DateTime,System.Int32,System.Int32)">
             <summary>
             Returns all audit history records that match the parameters.
             </summary>
@@ -3548,6 +3548,21 @@
         <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetTotalAuditHistory(System.String,System.String,System.String,System.String,System.DateTime,System.DateTime)">
             <summary>
             Returns the number of audit history records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistoryId(System.Int32)">
+            <summary>
+            Returns the audit history record that matches the id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistoryLoginAttempt(System.Int32)">
+            <summary>
+            Returns the login attempt record attached to the audit history record that matches the id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistoryChanges(System.Int32)">
+            <summary>
+            Returns the change records attached to the audit history record that matches the id.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ChangeService">

@@ -486,7 +486,7 @@ namespace HunterIndustriesAPI.Services.User
                     if (string.IsNullOrEmpty(username))
                     {
                         sql = sql.Replace(@"
-    Username = @username,", "");
+	Username = @username,", "");
                     }
 
                     if (string.IsNullOrEmpty(password))

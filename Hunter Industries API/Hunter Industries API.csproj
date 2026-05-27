@@ -502,6 +502,10 @@
     <Content Include="SQL\Assistant\Location\GetAssistantLocation.sql" />
     <Content Include="SQL\Assistant\Version\AssistantVersionUpdated.sql" />
     <Content Include="SQL\Assistant\Version\GetAssistantVersion.sql" />
+    <Content Include="SQL\Audit History\GetAuditHistoryId.sql" />
+    <Content Include="SQL\Audit History\GetAuditHistoryRecord.sql" />
+    <Content Include="SQL\Audit History\GetAuditHistoryLoginAttempt.sql" />
+    <Content Include="SQL\Audit History\GetAuditHistoryChanges.sql" />
     <Content Include="SQL\Audit History\GetAuditHistory.sql" />
     <Content Include="SQL\Audit History\GetTotalAuditHistory.sql" />
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />

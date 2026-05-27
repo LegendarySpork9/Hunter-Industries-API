@@ -184,7 +184,6 @@ namespace HunterIndustriesAPI.Services
         /// Returns all audit history records that match the parameters.
         /// </summary>
         public async Task<(List<AuditHistoryRecord>, int)> GetAuditHistory(
-            int auditId,
             string ipAddress,
             string endpoint,
             string username,
@@ -196,7 +195,7 @@ namespace HunterIndustriesAPI.Services
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { auditId.ToString(), ipAddress, endpoint, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+                $"AuditHistoryService.GetAuditHistory called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, endpoint, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<AuditHistoryRecord> auditHistories = new List<AuditHistoryRecord>();
             int totalRecords = 0;
@@ -209,13 +208,7 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
                     new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
-
-                if (auditId != 0)
-                {
-                    sql += "\nand AH.AuditID = @auditId";
-                    parameterList.Add(new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId });
-                }
-
+                
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
                     sql += "\nand AH.IPAddress = @ipAddress";
@@ -271,24 +264,8 @@ fetch next @pageSize rows only";
                             Status = reader.GetString(7),
                             OccuredAt = DateTime.SpecifyKind(
                                 reader.GetDateTime(8),
-                                DateTimeKind.Utc),
-                            Paramaters = Array.Empty<string>()
+                                DateTimeKind.Utc)
                         };
-
-                        if (!reader.IsDBNull(9))
-                        {
-                            auditHistory.Paramaters = ParameterFunction.FormatParameters(reader.GetString(9));
-                        }
-
-                        if (!reader.IsDBNull(10))
-                        {
-                            auditHistory.RequestBody = reader.GetString(10);
-                        }
-
-                        if (!reader.IsDBNull(11))
-                        {
-                            auditHistory.ResponseBody = reader.GetString(11);
-                        }
 
                         if (!reader.IsDBNull(2))
                         {
@@ -298,41 +275,6 @@ fetch next @pageSize rows only";
                         if (!reader.IsDBNull(3))
                         {
                             auditHistory.Application = reader.GetString(3);
-                        }
-
-                        LoginAttemptRecord loginAttempt = null;
-
-                        if (!reader.IsDBNull(12))
-                        {
-                            loginAttempt = new LoginAttemptRecord()
-                            {
-                                Id = reader.GetInt32(12),
-                                IsSuccessful = reader.GetBoolean(15)
-                            };
-
-                            if (!reader.IsDBNull(13))
-                            {
-                                loginAttempt.Username = reader.GetString(13);
-                            }
-
-                            if (!reader.IsDBNull(14))
-                            {
-                                loginAttempt.Phrase = reader.GetString(14);
-                            }
-                        }
-
-                        auditHistory.LoginAttempt = loginAttempt;
-                        auditHistory.Change = new List<ChangeRecord>();
-
-                        if (!reader.IsDBNull(16))
-                        {
-                            auditHistory.Change.Add(new ChangeRecord()
-                            {
-                                Id = reader.GetInt32(16),
-                                Field = reader.GetString(17),
-                                OldValue = reader.GetString(18),
-                                NewValue = reader.GetString(19),
-                            });
                         }
 
                         return auditHistory;
@@ -351,34 +293,9 @@ fetch next @pageSize rows only";
                         message);
                 }
 
-                AuditHistoryRecord current = null;
-                List<ChangeRecord> changes = new List<ChangeRecord>();
-
-                foreach (AuditHistoryRecord record in results)
+                if (results.Count > 0)
                 {
-                    if (current != null && record.Id == current.Id)
-                    {
-                        changes.AddRange(record.Change);
-                    }
-
-                    else
-                    {
-                        if (current != null)
-                        {
-                            current.Change = changes;
-                            auditHistories.Add(current);
-                            changes = new List<ChangeRecord>();
-                        }
-
-                        current = record;
-                        changes = new List<ChangeRecord>(record.Change);
-                    }
-                }
-
-                if (current != null)
-                {
-                    current.Change = changes;
-                    auditHistories.Add(current);
+                    auditHistories.AddRange(results);
                 }
 
                 totalRecords = await GetTotalAuditHistory(
@@ -504,6 +421,282 @@ fetch next @pageSize rows only";
                 StandardValues.LoggerValues.Debug,
                 $"AuditHistoryService.GetTotalAuditHistory returned {totalRecords}.");
             return totalRecords;
+        }
+
+        /// <summary>
+        /// Returns the audit history record that matches the id.
+        /// </summary>
+        public async Task<AuditHistoryRecord> GetAuditHistoryId(int auditId)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.GetAuditHistoryId called with the parameters \"{auditId}\".");
+
+            AuditHistoryRecord auditHistory = null;
+
+            try
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
+                };
+
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryRecord.sql");
+
+                (AuditHistoryRecord result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader =>
+                    {
+                        AuditHistoryRecord audit = new AuditHistoryRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            IPAddress = reader.GetString(1),
+                            Endpoint = reader.GetString(4),
+                            EndpointVersion = reader.GetString(5),
+                            Method = reader.GetString(6),
+                            Status = reader.GetString(7),
+                            OccuredAt = DateTime.SpecifyKind(
+                                reader.GetDateTime(8),
+                                DateTimeKind.Utc),
+                            Paramaters = Array.Empty<string>()
+                        };
+
+                        if (!reader.IsDBNull(9))
+                        {
+                            audit.Paramaters = ParameterFunction.FormatParameters(reader.GetString(9));
+                        }
+
+                        if (!reader.IsDBNull(10))
+                        {
+                            audit.RequestBody = reader.GetString(10);
+                        }
+
+                        if (!reader.IsDBNull(11))
+                        {
+                            audit.ResponseBody = reader.GetString(11);
+                        }
+
+                        if (!reader.IsDBNull(2))
+                        {
+                            audit.Username = reader.GetString(2);
+                        }
+
+                        if (!reader.IsDBNull(3))
+                        {
+                            audit.Application = reader.GetString(3);
+                        }
+
+                        return audit;
+                    },
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryId.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                auditHistory = result;
+                auditHistory.LoginAttempt = await GetAuditHistoryLoginAttempt(auditId);
+                auditHistory.Change = await GetAuditHistoryChanges(auditId);
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryId.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (auditHistory != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"AuditHistoryService.GetAuditHistoryId returned 1 record");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"AuditHistoryService.GetAuditHistoryId returned 0 records");
+            }
+
+            return auditHistory;
+        }
+
+        /// <summary>
+        /// Returns the login attempt record attached to the audit history record that matches the id.
+        /// </summary>
+        private async Task<LoginAttemptRecord> GetAuditHistoryLoginAttempt(int auditId)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.GetAuditHistoryLoginAttempt called with the parameters \"{auditId}\".");
+
+            LoginAttemptRecord loginAttempt = null;
+
+            try
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
+                };
+
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryLoginAttempt.sql");
+
+                (LoginAttemptRecord result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader =>
+                    {
+                        LoginAttemptRecord attempt = new LoginAttemptRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            IsSuccessful = reader.GetBoolean(3)
+                        };
+
+                        if (!reader.IsDBNull(1))
+                        {
+                            attempt.Username = reader.GetString(1);
+                        }
+
+                        if (!reader.IsDBNull(2))
+                        {
+                            attempt.Phrase = reader.GetString(2);
+                        }
+
+                        return attempt;
+                    },
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryLoginAttempt.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                loginAttempt = result;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryLoginAttempt.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (loginAttempt != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"AuditHistoryService.GetAuditHistoryLoginAttempt returned 1 record");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"AuditHistoryService.GetAuditHistoryLoginAttempt returned 0 records");
+            }
+
+            return loginAttempt;
+        }
+
+        /// <summary>
+        /// Returns the change records attached to the audit history record that matches the id.
+        /// </summary>
+        private async Task<List<ChangeRecord>> GetAuditHistoryChanges(int auditId)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.GetAuditHistoryChanges called with the parameters \"{auditId}\".");
+
+            List<ChangeRecord> changes = new List<ChangeRecord>();
+
+            try
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
+                };
+
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryChanges.sql");
+
+                (List<ChangeRecord> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => new ChangeRecord()
+                    {
+                        Id = reader.GetInt32(0),
+                        Field = reader.GetString(1),
+                        OldValue = reader.GetString(2),
+                        NewValue = reader.GetString(3)
+                    },
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryChanges.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                changes = results;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryChanges.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (changes != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"AuditHistoryService.GetAuditHistoryChanges returned 1 record");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"AuditHistoryService.GetAuditHistoryChanges returned 0 records");
+            }
+
+            return changes;
         }
     }
 }

@@ -620,7 +620,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     response.Data);
             }
 
-            if (await _userService.UserExists(request.Username))
+            if (request.Username != null && await _userService.UserExists(request.Username))
             {
                 response = new ResponseModel()
                 {

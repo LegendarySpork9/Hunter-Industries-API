@@ -20,6 +20,10 @@
     padding: 16px;
     font-family: 'Cascadia Code', 'Consolas', monospace;
     font-size: 0.85rem;
-    overflow-x: auto;
     color: #D4D4D4;
+    max-height: 500px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
 }

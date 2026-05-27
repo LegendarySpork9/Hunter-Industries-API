@@ -428,4 +428,24 @@ IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.0.0')
 	VALUES ('2.0.0', 'Database Upgrade 2.0.0', GETUTCDATE())
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.AuditHistory') AND name = 'RequestBody')
+BEGIN
+	ALTER TABLE AuditHistory ADD [RequestBody] [varchar](max) NULL
+
+	PRINT('Added RequestBody Field to AuditHistory Table')
+END
+ELSE
+	PRINT('RequestBody Field Already Exists on AuditHistory Table')
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.AuditHistory') AND name = 'ResponseBody')
+BEGIN
+	ALTER TABLE AuditHistory ADD [ResponseBody] [varchar](max) NULL
+
+	PRINT('Added ResponseBody Field to AuditHistory Table')
+END
+ELSE
+	PRINT('ResponseBody Field Already Exists on AuditHistory Table')
+GO
+
 PRINT('Added VersionHistory Record')

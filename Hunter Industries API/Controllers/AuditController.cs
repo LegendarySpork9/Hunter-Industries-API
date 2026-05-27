@@ -130,7 +130,6 @@ namespace HunterIndustriesAPI.Controllers
             }
 
             (List<AuditHistoryRecord> auditHistories, int totalRecords) = await _auditHistoryService.GetAuditHistory(
-                0,
                 filters.IPAddress,
                 filters.Endpoint,
                 filters.Username,
@@ -246,18 +245,9 @@ namespace HunterIndustriesAPI.Controllers
                 StandardValues.LoggerValues.Info, 
                 $"Audit History endpoint called with the following parameter \"{id}\".");
 
-            List<AuditHistoryRecord> auditHistories = (await _auditHistoryService.GetAuditHistory(
-                id,
-                null,
-                null,
-                null,
-                null,
-                _Clock.DefaultDate,
-                _Clock.DefaultDate,
-                25,
-                1)).Item1;
+            AuditHistoryRecord auditHistory = await _auditHistoryService.GetAuditHistoryId(id);
 
-            if (auditHistories.Count == 0)
+            if (auditHistory == null)
             {
                 response = new ResponseModel()
                 {
@@ -294,7 +284,7 @@ namespace HunterIndustriesAPI.Controllers
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = auditHistories[0]
+                Data = auditHistory
             };
 
             await _auditHistoryService.LogRequest(
