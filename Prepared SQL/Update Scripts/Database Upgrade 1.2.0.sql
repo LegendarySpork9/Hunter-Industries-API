@@ -158,10 +158,3 @@ END
 ELSE
 	PRINT('FK_ServerInformation_Downtime Already Exists')
 GO
-
-IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '1.2.0')
-	INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
-	VALUES ('1.2.0', GETUTCDATE())
-GO
-
-PRINT('Added VersionHistory Record')

@@ -458,10 +458,3 @@ IF NOT EXISTS (SELECT * FROM [dbo].[Scope] WHERE [Value] = 'Server Status API')
 GO
 
 PRINT('Added New Scope')
-
-IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '1.1.0')
-	INSERT INTO VersionHistory(ReleaseVersion, DateUpdated)
-	VALUES ('1.1.0', GETUTCDATE())
-GO
-
-PRINT('Added VersionHistory Record')
