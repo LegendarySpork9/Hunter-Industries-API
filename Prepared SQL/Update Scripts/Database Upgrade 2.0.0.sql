@@ -423,11 +423,6 @@ ELSE
 	PRINT('StatusCode Table Already Updated')
 GO
 
-IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.0.0')
-	INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
-	VALUES ('2.0.0', 'Database Upgrade 2.0.0', GETUTCDATE())
-GO
-
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.AuditHistory') AND name = 'RequestBody')
 BEGIN
 	ALTER TABLE AuditHistory ADD [RequestBody] [varchar](max) NULL
@@ -449,3 +444,8 @@ ELSE
 GO
 
 PRINT('Added VersionHistory Record')
+
+IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.0.0')
+	INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
+	VALUES ('2.0.0', 'Database Upgrade 2.0.0', GETUTCDATE())
+GO
