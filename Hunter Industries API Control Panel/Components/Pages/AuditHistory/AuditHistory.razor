@@ -84,7 +84,7 @@ else
             </RadzenDataGridColumn>
             <RadzenDataGridColumn
                     TItem="AuditHistoryModel"
-                    Title="Date"
+                    Title="Date (UTC)"
                     Width="190px">
                 <Template Context="record">
                     @record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")

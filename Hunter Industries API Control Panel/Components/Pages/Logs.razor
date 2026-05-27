@@ -228,7 +228,8 @@ else
             <RadzenDataGridColumn
                 TItem="AuditHistoryModel"
                 Property="Id"
-                Title="ID" />
+                Title="ID"
+                Width="100px" />
             <RadzenDataGridColumn
                 TItem="AuditHistoryModel"
                 Property="IpAddress"
@@ -255,8 +256,8 @@ else
             </RadzenDataGridColumn>
             <RadzenDataGridColumn
                 TItem="AuditHistoryModel"
-                Title="Date"
-                Width="170px">
+                Title="Date (UTC)"
+                Width="190px">
                 <Template Context="record">
                     @record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")
                 </Template>

@@ -254,7 +254,7 @@ else
                                         <tr>
                                             <th class="table-header">Component</th>
                                             <th class="table-header">Status</th>
-                                            <th class="table-header">Date</th>
+                                            <th class="table-header">Date (UTC)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -322,7 +322,7 @@ else
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn
                                 TItem="RecentAlertModel"
-                                Title="Date">
+                                Title="Date (UTC)">
                                 <Template Context="alert">
                                     @alert.AlertDate.ToString("dd MMM yyyy HH:mm")
                                 </Template>
@@ -358,7 +358,7 @@ else
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn
                                 TItem="ServerEventModel"
-                                Title="Date">
+                                Title="Date (UTC)">
                                 <Template Context="serverEvent">
                                     @serverEvent.DateOccured.ToString("dd MMM yyyy HH:mm")
                                 </Template>

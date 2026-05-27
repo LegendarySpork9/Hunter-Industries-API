@@ -341,13 +341,10 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.User
                 .Returns((
                     "1",
                     null));
-            mockDatabase.SetupSequence(d => d.Query(
+            mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, int>>(),
                     It.IsAny<SqlParameter[]>()).Result)
-                .Returns((
-                    [],
-                    (Exception)null))
                 .Returns((
                     [1],
                     (Exception)null));

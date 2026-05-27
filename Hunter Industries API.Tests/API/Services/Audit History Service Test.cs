@@ -187,7 +187,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
                 _MockClock.Object);
 
             (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(
-                0,
                 null,
                 null,
                 null,
@@ -243,7 +242,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
                 _MockClock.Object);
 
             (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(
-                0,
                 null,
                 null,
                 null,
@@ -259,6 +257,122 @@ namespace HunterIndustriesAPI.Tests.API.Services
             Assert.AreEqual(
                 0,
                 totalRecords);
+        }
+
+        #endregion
+
+        #region GetAuditHistoryId
+
+        /// <summary>
+        /// Checks whether the GetAuditHistoryId method returns the correct record with login attempt and changes.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetAuditHistoryId()
+        {
+            AuditHistoryRecord record = new()
+            {
+                Id = 1,
+                IPAddress = "127.0.0.1",
+                Endpoint = "token",
+                EndpointVersion = "v1.0",
+                Method = "POST",
+                Status = "OK",
+                OccuredAt = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc),
+                Paramaters = []
+            };
+
+            LoginAttemptRecord loginAttempt = new()
+            {
+                Id = 1,
+                Username = "admin",
+                IsSuccessful = true
+            };
+
+            List<ChangeRecord> changes =
+            [
+                new ChangeRecord
+                {
+                    Id = 1,
+                    Field = "Username",
+                    OldValue = "admin",
+                    NewValue = "superadmin"
+                }
+            ];
+
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    record,
+                    (Exception)null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, LoginAttemptRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    loginAttempt,
+                    (Exception)null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ChangeRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    changes,
+                    (Exception)null));
+
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
+
+            AuditHistoryRecord actual = await service.GetAuditHistoryId(1);
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "127.0.0.1",
+                actual.IPAddress);
+            Assert.IsNotNull(actual.LoginAttempt);
+            Assert.AreEqual(
+                "admin",
+                actual.LoginAttempt.Username);
+            Assert.IsNotNull(actual.Change);
+            Assert.AreEqual(
+                1,
+                actual.Change.Count);
+        }
+
+        /// <summary>
+        /// Checks whether the GetAuditHistoryId method returns null when the database returns no result.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetAuditHistoryIdNotFound()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (AuditHistoryRecord)null,
+                    (Exception)null));
+
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
+
+            AuditHistoryRecord actual = await service.GetAuditHistoryId(999);
+
+            Assert.IsNull(actual);
         }
 
         #endregion

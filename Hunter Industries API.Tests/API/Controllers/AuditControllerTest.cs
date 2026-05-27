@@ -182,21 +182,19 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         [TestMethod]
         public async Task TestGetById()
         {
-            List<AuditHistoryRecord> records =
-            [
-                new AuditHistoryRecord
-                {
-                    Id = 1,
-                    IPAddress = "127.0.0.1",
-                    Endpoint = "token",
-                    Method = "POST",
-                    Status = "OK",
-                    OccuredAt = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-                    Paramaters = [],
-                    LoginAttempt = null,
-                    Change = []
-                }
-            ];
+            AuditHistoryRecord record = new()
+            {
+                Id = 1,
+                IPAddress = "127.0.0.1",
+                Endpoint = "token",
+                EndpointVersion = "v1.0",
+                Method = "POST",
+                Status = "OK",
+                OccuredAt = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc),
+                Paramaters = [],
+                LoginAttempt = null,
+                Change = []
+            };
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.ExecuteScalar(
@@ -205,20 +203,27 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    records,
-                    null));
+                    record,
+                    (Exception)null));
             mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<Func<SqlDataReader, LoginAttemptRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    1,
-                    null));
+                    (LoginAttemptRecord)null,
+                    (Exception)null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ChangeRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    new List<ChangeRecord>(),
+                    (Exception)null));
 
             AuditController controller = new(
                 _MockLogger.Object,
@@ -243,13 +248,11 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         }
 
         /// <summary>
-        /// Checks whether the Get by id method returns a 200 status code with an info message when no record is found.
+        /// Checks whether the Get by id method returns a 200 status code with an error message when no record is found.
         /// </summary>
         [TestMethod]
         public async Task TestGetByIdEmpty()
         {
-            List<AuditHistoryRecord> records = [];
-
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.ExecuteScalar(
                     It.IsAny<string>(),
@@ -257,20 +260,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    records,
-                    null));
-            mockDatabase.Setup(d => d.QuerySingle(
-                    It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, int>>(),
-                    It.IsAny<SqlParameter[]>()).Result)
-                .Returns((
-                    0,
-                    null));
+                    (AuditHistoryRecord)null,
+                    (Exception)null));
 
             AuditController controller = new(
                 _MockLogger.Object,

@@ -1,11 +1,11 @@
-// Copyright © - Unpublished - Toby Hunter
+// Copyright (c) - Unpublished - Toby Hunter
 using HunterIndustriesAPIControlPanel.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
+namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
 {
     [TestClass]
-    public class ErrorConverterTest
+    public class ErrorFunctionTest
     {
 
         /// <summary>

@@ -205,6 +205,20 @@ namespace HunterIndustriesAPI.Tests.API.Converters
                 actual);
         }
 
+        /// <summary>
+        /// Tests whether the GetEndpointId method returns 14 when given "statistic".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointIdStatistic()
+        {
+            int expected = 14;
+            int actual = AuditHistoryConverter.GetEndpointId("statistic");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
         #endregion
 
         #region GetEndpointVersionId

@@ -63,7 +63,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
                     $"Summary Error Colour(s): {SummaryErrorColours.Length}");
 
                 DateTime now = _Clock.UtcNow;
-                int startyear = new DateTime(now.Year, now.Month, 1).AddMonths(-11).Year;
+                int startyear = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc).AddMonths(-11).Year;
                 int endYear = now.Year;
 
                 ErrorYearRange = startyear == endYear ? $"{startyear}" : $"{startyear} → {endYear}";
