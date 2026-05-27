@@ -35,7 +35,11 @@
     <ProjectReference Include="..\Hunter Industries API Control Panel\Hunter Industries API Control Panel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <ProjectReference Include="..\Hunter Industries API Common\Hunter Industries API Common.csproj" SetTargetFramework="TargetFramework=netstandard2.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net472'">
     <ProjectReference Include="..\Hunter Industries API Common\Hunter Industries API Common.csproj" />
   </ItemGroup>
 
