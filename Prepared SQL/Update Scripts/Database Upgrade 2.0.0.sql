@@ -30,9 +30,12 @@ PRINT('Removed "Status" from Component Names')
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.ServerInformation') AND name = 'Name')
-BEGIN
 	ALTER TABLE ServerInformation ADD [Name] [varchar](255) NULL
+GO
 
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.ServerInformation') AND name = 'Name')
+   AND EXISTS (SELECT * FROM ServerInformation WHERE [Name] IS NULL)
+BEGIN
 	UPDATE ServerInformation SET [Name] = 'Replace Me'
 
 	ALTER TABLE ServerInformation ALTER COLUMN [Name] [varchar](255) NOT NULL
@@ -78,9 +81,12 @@ IF NOT EXISTS (SELECT * FROM [dbo].[EndpointVersion] WHERE [Value] = 'v1.1')
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.AuditHistory') AND name = 'EndpointVersionId')
-BEGIN
 	ALTER TABLE AuditHistory ADD EndpointVersionId [int] NULL
+GO
 
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.AuditHistory') AND name = 'EndpointVersionId')
+   AND EXISTS (SELECT * FROM AuditHistory WHERE EndpointVersionId IS NULL)
+BEGIN
 	UPDATE AuditHistory SET EndpointVersionId = CASE
 	WHEN EndpointId = 1 THEN 1
 	WHEN EndpointId = 2 THEN 1
@@ -326,9 +332,12 @@ ELSE
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.Downtime') AND name = 'Duration')
-BEGIN
 	ALTER TABLE Downtime ADD [Duration] [int] NULL
+GO
 
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.Downtime') AND name = 'Duration')
+   AND EXISTS (SELECT * FROM Downtime WHERE [Duration] IS NULL)
+BEGIN
 	UPDATE Downtime SET Duration = 0
 
 	ALTER TABLE Downtime ALTER COLUMN [Duration] [int] NOT NULL
