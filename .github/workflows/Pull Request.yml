@@ -49,8 +49,11 @@ jobs:
     - name: Build .NET Control Panel project
       run: dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release --no-restore
 
-    - name: Build test project
-      run: dotnet build "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-restore
+    - name: Build test project (net472)
+      run: msbuild.exe "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" /p:Configuration=Release /p:TargetFramework=net472
+
+    - name: Build test project (net10.0)
+      run: dotnet build "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-restore --framework net10.0
 
     - name: Run tests
       run: dotnet test "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-build --logger "trx"
