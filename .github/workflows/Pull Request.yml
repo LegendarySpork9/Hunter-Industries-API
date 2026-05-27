@@ -44,7 +44,11 @@ jobs:
       run: dotnet build "Hunter Industries API Common/Hunter Industries API Common.csproj" --configuration Release --no-restore
 
     - name: Build .NET Framework projects
-      run: msbuild.exe "Hunter Industries API/Hunter Industries API.csproj" /p:configuration="Release"
+      shell: pwsh
+      run: |
+        $installPath = vswhere -latest -property installationPath
+        $vsToolsPath = "$installPath\MSBuild\Microsoft\VisualStudio\v17.0"
+        msbuild.exe "Hunter Industries API/Hunter Industries API.csproj" /p:configuration="Release" /p:VSToolsPath="$vsToolsPath"
 
     - name: Build .NET Control Panel project
       run: dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release --no-restore
