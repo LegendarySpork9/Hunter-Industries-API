@@ -2319,7 +2319,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
             List<KeyValuePair<string, object>>? queryParameters = null,
             bool ignoreQuery = false)
         {
-            string url = $"{APISettings.BaseURL}/{APISettings.Version}{endpoint}";
+            string url = $"{APISettings.BaseURL}{endpoint}";
             string query = APIConverter.GetQuery(endpoint);
 
             if (entityId != null)
