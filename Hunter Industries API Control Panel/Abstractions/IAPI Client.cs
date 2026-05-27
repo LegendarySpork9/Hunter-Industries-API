@@ -11,7 +11,7 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
     /// </summary>
     public interface IAPIClient
     {
-        public void SetBearerToken(string bearerToken);
+        void SetBearerToken(string bearerToken);
         Task<AuthenticationModel?> Authorise();
         Task<List<UserModel>> GetUsers(bool includeDeleted);
         Task<DashboardStatisticsModel?> GetDashboardStatistics();
