@@ -5,6 +5,7 @@ using HunterIndustriesAPIControlPanel.Components.Shared;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
+using System.Security.Cryptography;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
@@ -40,6 +41,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private int PageSize = 25;
         private int PageNumber = 1;
 
+        private string PageParameters = string.Empty;
         private string[] MethodColours = [];
         private string[] StatusColours = [];
         private string[] EndpointColours = [];
@@ -95,6 +97,9 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
                 $"Entity Id: {EntityId}");
+
+            Uri page = new(Navigation.Uri);
+            PageParameters = $"[{page.Query.Replace("?", "")}]";
 
             await LoadSummary();
             await LoadData();

@@ -21,9 +21,16 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         [Parameter]
         public int Id { get; set; }
 
+        [SupplyParameterFromQuery(Name = "fromPage")]
+        public string? QueryFromPage { get; set; }
+        [SupplyParameterFromQuery(Name = "fromPageParams")]
+        public string? QueryFromPageParameters { get; set; }
+
         private AuditHistoryModel? AuditHistory;
 
         private bool IsLoading;
+
+        private string ReturnURL = "/audit-history";
 
         /// <summary>
         /// Loads the data.
@@ -36,6 +43,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
 
             IsLoading = true;
 
+            if (!string.IsNullOrWhiteSpace(QueryFromPage))
+            {
+                ReturnURL = $"/{QueryFromPage}";
+
+                if (QueryFromPage == "dashboard")
+                {
+                    ReturnURL = "/";
+                }
+
+                if (!string.IsNullOrWhiteSpace(QueryFromPageParameters))
+                {
+                    ReturnURL += $"?{QueryFromPageParameters.Replace("[", "")
+                        .Replace("]", "")}";
+                }
+            }
+
             AuditHistory = await APIService.GetAuditHistory(Id);
 
             IsLoading = false;
@@ -46,6 +69,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         /// </summary>
         private static MarkupString FormatJson(string json)
         {
+            const int maxLength = 100000;
+
             try
             {
                 JToken token = JToken.Parse(json);
@@ -55,6 +80,12 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
             catch (JsonReaderException)
             {
 
+            }
+
+            if (json.Length > maxLength)
+            {
+                string truncated = json[..maxLength];
+                return new MarkupString($"{System.Net.WebUtility.HtmlEncode(truncated)}\n\n<span style=\"color:#808080\">... truncated ({json.Length:N0} characters total)</span>");
             }
 
             StringBuilder sb = new();

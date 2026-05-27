@@ -223,7 +223,7 @@ namespace HunterIndustriesAPI.Services
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    sql += "\nand AU2.Username = @username";
+                    sql += "\nand AU.Username = @username";
                     parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
                 }
 
@@ -441,7 +441,7 @@ fetch next @pageSize rows only";
                     new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
                 };
 
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryRecord.sql");
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryId.sql");
 
                 (AuditHistoryRecord result, Exception ex) = await _Database.QuerySingle(
                     sql,

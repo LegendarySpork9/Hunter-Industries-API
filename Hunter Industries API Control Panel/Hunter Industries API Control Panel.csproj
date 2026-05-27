@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Hunter Industries API Common\Hunter Industries API Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
 </Project>

@@ -222,7 +222,7 @@ else
         Data="@AuditLogs?.Entries"
         TItem="AuditHistoryModel"
         AllowSorting="false"
-        RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}"))"
+        RowClick="@(args => Navigation.NavigateTo($"/audit-history/{args.Data.Id}?fromPage=logs&fromPageParams={PageParameters}"))"
         Style="cursor: pointer;">
         <Columns>
             <RadzenDataGridColumn

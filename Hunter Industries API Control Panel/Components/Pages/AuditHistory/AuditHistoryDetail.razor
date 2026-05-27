@@ -3,7 +3,20 @@
 <PageTitle>Audit Record</PageTitle>
 
 <div class="mb-3">
-    <a href="/audit-history" class="btn btn-outline-light btn-sm">&larr; Back to Audit History</a>
+    @if (QueryFromPage == "dashboard")
+    {
+        <a href=@ReturnURL class="btn btn-outline-light btn-sm">&larr; Back to Dashboard</a>
+    }
+
+    else if (QueryFromPage == "logs")
+    {
+        <a href=@ReturnURL class="btn btn-outline-light btn-sm">&larr; Back to Logs</a>
+    }
+
+    else
+    {
+        <a href=@ReturnURL class="btn btn-outline-light btn-sm">&larr; Back to Audit History</a>
+    }
 </div>
 
 @if (IsLoading)

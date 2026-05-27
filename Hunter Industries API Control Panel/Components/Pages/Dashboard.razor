@@ -478,7 +478,7 @@ else
                         <div class="d-flex flex-column gap-2">
                             @foreach (var entry in RecentActivity)
                             {
-                                <a href="/audit-history/@entry.Id" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
+                                <a href="/audit-history/@entry.Id?fromPage=dashboard" class="activity-feed-item d-flex align-items-center gap-3 text-decoration-none">
                                     <span class="badge activity-method-badge @GraphConverter.GetMethodBadgeClass(entry.Method)">@entry.Method</span>
                                     <span class="flex-grow-1 activity-endpoint">@entry.Endpoint</span>
                                     <span class="badge activity-status @GraphConverter.GetStatusBadgeClass(entry.Status)">@entry.Status</span>
