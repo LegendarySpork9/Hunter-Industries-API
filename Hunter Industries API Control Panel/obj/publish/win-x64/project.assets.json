@@ -129,6 +129,129 @@
           "bin/placeholder/Hunter Industries API Common.dll": {}
         }
       }
+    },
+    "net10.0/win-x64": {
+      "log4net/3.3.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Configuration.ConfigurationManager": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/log4net.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/log4net.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.App.Internal.Assets/10.0.5": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.AspNetCore.App.Internal.Assets.props": {},
+          "buildTransitive/Microsoft.AspNetCore.App.Internal.Assets.targets": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Microsoft.AspNetCore.App.Internal.Assets.targets": {}
+        }
+      },
+      "Newtonsoft.Json/13.0.4": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Radzen.Blazor/7.4.3": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Radzen.Blazor.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Radzen.Blazor.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/Radzen.Blazor.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Radzen.Blazor.props": {}
+        }
+      },
+      "RestSharp/114.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/RestSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/RestSharp.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Configuration.ConfigurationManager/4.5.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Security.Cryptography.ProtectedData": "4.5.0",
+          "System.Security.Permissions": "4.5.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/System.Configuration.ConfigurationManager.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Configuration.ConfigurationManager.dll": {}
+        }
+      },
+      "System.Security.Cryptography.ProtectedData/4.5.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.0/_._": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {}
+        }
+      },
+      "System.Security.Permissions/4.5.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.0/System.Security.Permissions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Security.Permissions.dll": {}
+        }
+      },
+      "Hunter Industries API Common/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "log4net": "3.3.0"
+        },
+        "compile": {
+          "bin/placeholder/Hunter Industries API Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Hunter Industries API Common.dll": {}
+        }
+      }
     }
   },
   "libraries": {
@@ -388,8 +511,7 @@
       "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.5",
       "Newtonsoft.Json >= 13.0.4",
       "Radzen.Blazor >= 7.*",
-      "RestSharp >= 114.0.0",
-      "log4net >= 3.3.0"
+      "RestSharp >= 114.0.0"
     ]
   },
   "packageFolders": {
@@ -403,7 +525,7 @@
       "projectName": "HunterIndustriesAPIControlPanel",
       "projectPath": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
       "packagesPath": "C:\\Users\\tobyh\\.nuget\\packages\\",
-      "outputPath": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\obj\\",
+      "outputPath": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\obj\\publish\\win-x64\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Program Files\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -464,10 +586,6 @@
           "RestSharp": {
             "target": "Package",
             "version": "[114.0.0, )"
-          },
-          "log4net": {
-            "target": "Package",
-            "version": "[3.3.0, )"
           }
         },
         "imports": [
@@ -904,6 +1022,11 @@
           "System.Xml.XPath": "(,4.3.32767]",
           "System.Xml.XPath.XDocument": "(,5.0.32767]"
         }
+      }
+    },
+    "runtimes": {
+      "win-x64": {
+        "#import": []
       }
     }
   }
