@@ -95,7 +95,6 @@ namespace HunterIndustriesAPIControlPanel
                 StandardValues.LoggerValues.Debug,
                 "Configured Antiforgery");
 
-            app.UseStaticFiles();
             app.MapStaticAssets();
 
             _logger.LogMessage(
