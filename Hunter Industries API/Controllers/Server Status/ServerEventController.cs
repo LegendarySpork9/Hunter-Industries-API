@@ -314,7 +314,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 StatusCode = 201,
                 Data = new ServerEventRecord()
                 {
-                    EventId = serverEventId,
+                    Id = serverEventId,
                     Component = request.Component,
                     Status = request.Status,
                     DateOccured = _Clock.UtcNow,

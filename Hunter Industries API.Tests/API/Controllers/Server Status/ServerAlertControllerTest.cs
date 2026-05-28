@@ -70,7 +70,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                     [
                         new ServerAlertRecord
                         {
-                            AlertId = 1,
+                            Id = 1,
                             Reporter = "System",
                             Component = "CPU",
                             ComponentStatus = "Critical",
@@ -189,7 +189,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 .Returns((
                     new ServerAlertRecord
                     {
-                        AlertId = 1,
+                        Id = 1,
                         Reporter = "System",
                         Component = "CPU",
                         ComponentStatus = "Critical",
@@ -452,7 +452,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 .Returns((
                     new ServerAlertRecord
                     {
-                        AlertId = 1,
+                        Id = 1,
                         Reporter = "System",
                         Component = "CPU",
                         ComponentStatus = "Critical",

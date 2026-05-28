@@ -75,7 +75,7 @@ namespace HunterIndustriesAPI.Mappings
         {
             RecentAlertRecord recentAlert = new RecentAlertRecord
             {
-                AlertId = reader.GetInt32(0),
+                Id = reader.GetInt32(0),
                 Reporter = reader.GetString(1),
                 Component = reader.GetString(2),
                 ComponentStatus = reader.GetString(3),

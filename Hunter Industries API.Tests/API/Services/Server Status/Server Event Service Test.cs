@@ -46,7 +46,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                     [
                         new ServerEventRecord
                         {
-                            EventId = 1,
+                            Id = 1,
                             Component = "CPU",
                             Status = "Online",
                             DateOccured = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),

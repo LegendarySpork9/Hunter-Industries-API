@@ -6,7 +6,7 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses.Related
     /// </summary>
     public class RecentAlertModel
     {
-        public required int AlertId { get; set; }
+        public required int Id { get; set; }
         public required string Reporter { get; set; }
         public required string Component { get; set; }
         public required string ComponentStatus { get; set; }

@@ -60,7 +60,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     sql,
                     reader => new ServerEventRecord()
                     {
-                        EventId = reader.GetInt32(0),
+                        Id = reader.GetInt32(0),
                         Component = reader.GetString(1),
                         Status = reader.GetString(2),
                         DateOccured = DateTime.SpecifyKind(

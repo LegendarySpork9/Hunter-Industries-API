@@ -46,7 +46,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                     [
                         new ServerAlertRecord
                         {
-                            AlertId = 1,
+                            Id = 1,
                             Reporter = "System",
                             Component = "CPU",
                             ComponentStatus = "Critical",
@@ -86,7 +86,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 alerts.Count);
             Assert.AreEqual(
                 1,
-                alerts[0].AlertId);
+                alerts[0].Id);
             Assert.AreEqual(
                 "System",
                 alerts[0].Reporter);
@@ -156,7 +156,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 .Returns((
                     new ServerAlertRecord
                     {
-                        AlertId = 1,
+                        Id = 1,
                         Reporter = "System",
                         Component = "CPU",
                         ComponentStatus = "Critical",
@@ -182,7 +182,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
 
             Assert.AreEqual(
                 1,
-                actual.AlertId);
+                actual.Id);
             Assert.AreEqual(
                 "System",
                 actual.Reporter);
@@ -222,7 +222,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
 
             Assert.AreEqual(
                 0,
-                actual.AlertId);
+                actual.Id);
         }
 
         #endregion

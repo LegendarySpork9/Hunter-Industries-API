@@ -10,7 +10,7 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// <summary>
         /// The id number of the alert.
         /// </summary>
-        public int AlertId { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// The name of the reporter.
         /// </summary>

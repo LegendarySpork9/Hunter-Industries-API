@@ -443,7 +443,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 StatusCode = 201,
                 Data = new ServerAlertRecord()
                 {
-                    AlertId = serverAlertId,
+                    Id = serverAlertId,
                     Reporter = request.Reporter,
                     Component = request.Component,
                     ComponentStatus = request.ComponentStatus,

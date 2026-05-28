@@ -64,7 +64,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     sql,
                     reader => new ServerAlertRecord()
                     {
-                        AlertId = reader.GetInt32(0),
+                        Id = reader.GetInt32(0),
                         Reporter = reader.GetString(1),
                         Component = reader.GetString(2),
                         ComponentStatus = reader.GetString(3),
@@ -142,7 +142,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     sql,
                     reader => new ServerAlertRecord()
                     {
-                        AlertId = reader.GetInt32(0),
+                        Id = reader.GetInt32(0),
                         Reporter = reader.GetString(1),
                         Component = reader.GetString(2),
                         ComponentStatus = reader.GetString(3),
@@ -195,7 +195,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             if (serverAlert != null)
             {
-                alertId = serverAlert.AlertId;
+                alertId = serverAlert.Id;
             }
 
             _Logger.LogMessage(

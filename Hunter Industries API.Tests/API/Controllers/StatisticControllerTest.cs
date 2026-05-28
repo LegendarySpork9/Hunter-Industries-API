@@ -259,7 +259,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                     [
                         new RecentAlertRecord
                         {
-                            AlertId = 1,
+                            Id = 1,
                             Reporter = "System",
                             Component = "CPU",
                             ComponentStatus = "Critical",

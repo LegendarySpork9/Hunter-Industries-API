@@ -1279,7 +1279,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                 [
                     new RecentAlertModel
                     {
-                        AlertId = 1,
+                        Id = 1,
                         Reporter = "System",
                         Component = "CPU",
                         ComponentStatus = "Online",
