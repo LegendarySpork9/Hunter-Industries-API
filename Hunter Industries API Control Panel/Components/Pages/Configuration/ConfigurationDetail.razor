@@ -52,7 +52,7 @@ else
                             <div class="col-md-6">
                                 <label class="form-label">Phrase</label>
                                 <select class="form-control" @bind="EditAppPhrase" disabled="@IsDeleted">
-                                    <option value="" disabled selected>Select an option</option>
+                                    <option value="@Application?.Authorisation.Phrase" disabled selected>@Application?.Authorisation.Phrase</option>
                                     @foreach (string phrase in Phrases)
                                     {
                                         <option value="@phrase">@phrase</option>
