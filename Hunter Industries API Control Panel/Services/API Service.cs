@@ -790,7 +790,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
-                $"Updating user, {user.Username}, in API");
+                $"Updating user, {userId}, in API");
 
             if (ExpiryTime < _Clock.UtcNow)
             {
@@ -824,14 +824,14 @@ namespace HunterIndustriesAPIControlPanel.Services
                             updatedUser.Scopes)}");
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
-                        $"Updated user, {user.Username}, in API");
+                        $"Updated user, {userId}, in API");
                 }
 
                 else
                 {
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
-                        $"Failed to update user, {user.Username}, in API");
+                        $"Failed to update user, {userId}, in API");
                 }
             }
 
@@ -845,7 +845,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     ex.ToString());
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Info,
-                    $"Failed to update user, {user.Username}, in API");
+                    $"Failed to update user, {userId}, in API");
             }
 
             return (
@@ -1141,7 +1141,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
-                $"Updating server, {server.Name}, in API");
+                $"Updating server, {serverId}, in API");
 
             if (ExpiryTime < _Clock.UtcNow)
             {
@@ -1199,14 +1199,14 @@ namespace HunterIndustriesAPIControlPanel.Services
                         $"Server Active: {updatedServer.IsActive}");
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
-                        $"Updated server, {server.Name}, in API");
+                        $"Updated server, {serverId}, in API");
                 }
 
                 else
                 {
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
-                        $"Failed to update server, {server.Name}, in API");
+                        $"Failed to update server, {serverId}, in API");
                 }
             }
 
@@ -1220,7 +1220,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     ex.ToString());
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Info,
-                    $"Failed to update server, {server.Name}, in API");
+                    $"Failed to update server, {serverId}, in API");
             }
 
             return (
