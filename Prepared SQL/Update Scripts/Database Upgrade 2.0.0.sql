@@ -452,24 +452,39 @@ ELSE
 	PRINT('ResponseBody Field Already Exists on AuditHistory Table')
 GO
 
-ALTER TABLE [AuditHistory] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.AuditHistory') AND name = 'IPAddress' AND max_length <> 50)
+BEGIN
+	ALTER TABLE [AuditHistory] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
 
-PRINT('Changed IPAddress Field to varchar(50) in AuditHistory Table')
+	PRINT('Changed IPAddress Field to varchar(50) in AuditHistory Table')
+END
+ELSE
+	PRINT('IPAddress Field Already varchar(50) in AuditHistory Table')
 GO
 
-ALTER TABLE [ErrorLog] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.ErrorLog') AND name = 'IPAddress' AND max_length <> 50)
+BEGIN
+	ALTER TABLE [ErrorLog] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
 
-PRINT('Changed IPAddress Field to varchar(50) in ErrorLog Table')
+	PRINT('Changed IPAddress Field to varchar(50) in ErrorLog Table')
+END
+ELSE
+	PRINT('IPAddress Field Already varchar(50) in ErrorLog Table')
 GO
 
-ALTER TABLE [Location] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.Location') AND name = 'IPAddress' AND max_length <> 50)
+BEGIN
+	ALTER TABLE [Location] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
 
-PRINT('Changed IPAddress Field to varchar(50) in Location Table')
+	PRINT('Changed IPAddress Field to varchar(50) in Location Table')
+END
+ELSE
+	PRINT('IPAddress Field Already varchar(50) in Location Table')
 GO
-
-PRINT('Added VersionHistory Record')
 
 IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.0.0')
 	INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
 	VALUES ('2.0.0', 'Database Upgrade 2.0.0', GETUTCDATE())
 GO
+
+PRINT('Added VersionHistory Record')
