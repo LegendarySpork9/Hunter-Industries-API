@@ -406,6 +406,34 @@ ELSE
 	PRINT('UserSettingsId Already Renamed on All Tables')
 GO
 
+IF EXISTS (SELECT * FROM sys.columns WHERE name = 'ServerAlertsId')
+BEGIN
+	DECLARE @AlertTableName NVARCHAR(256)
+	DECLARE @AlertSQL NVARCHAR(MAX)
+
+	DECLARE alert_cursor CURSOR FOR
+		SELECT OBJECT_NAME(object_id)
+		FROM sys.columns
+		WHERE name = 'ServerAlertsId'
+
+	OPEN alert_cursor
+	FETCH NEXT FROM alert_cursor INTO @AlertTableName
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SET @AlertSQL = 'EXEC sp_rename ''' + @AlertTableName + '.ServerAlertsId'', ''ServerAlertId'', ''COLUMN'''
+		EXEC sp_executesql @AlertSQL
+		PRINT('Renamed ' + @AlertTableName + '.ServerAlertsId to ServerAlertId')
+		FETCH NEXT FROM alert_cursor INTO @AlertTableName
+	END
+
+	CLOSE alert_cursor
+	DEALLOCATE alert_cursor
+END
+ELSE
+	PRINT('ServerAlertsId Already Renamed on All Tables')
+GO
+
 IF NOT EXISTS (SELECT * FROM [dbo].[StatusCode] WHERE [Value] = '204 No Content')
 BEGIN
 	BEGIN TRANSACTION;
