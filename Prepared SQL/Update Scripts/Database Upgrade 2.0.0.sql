@@ -485,6 +485,6 @@ GO
 IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.0.0')
 	INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
 	VALUES ('2.0.0', 'Database Upgrade 2.0.0', GETUTCDATE())
-GO
 
-PRINT('Added VersionHistory Record')
+	PRINT('Added VersionHistory Record')
+GO
