@@ -77,7 +77,7 @@ CREATE TABLE [dbo].[AuditHistory](
 	[EndpointVersionId] [int] NOT NULL,
 	[MethodId] [int] NOT NULL,
 	[StatusId] [int] NOT NULL,
-	[IPAddress] [varchar](15) NOT NULL,
+	[IPAddress] [varchar](50) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
 	[Parameters] [varchar](max) NULL,
 	[RequestBody] [varchar](max) NULL,
@@ -163,7 +163,7 @@ GO
 CREATE TABLE [dbo].[ErrorLog](
 	[ErrorId] [int] IDENTITY(1,1) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
-	[IPAddress] [varchar](15) NOT NULL,
+	[IPAddress] [varchar](50) NOT NULL,
 	[Summary] [varchar](255) NOT NULL,
 	[Message] [varchar](max) NOT NULL
  CONSTRAINT [PK_ErrorLog] PRIMARY KEY CLUSTERED 
@@ -333,7 +333,7 @@ GO
 CREATE TABLE [dbo].[Location](
 	[LocationId] [int] IDENTITY(1,1) NOT NULL,
 	[HostName] [varchar](100) NOT NULL,
-	[IPAddress] [varchar](15) NOT NULL
+	[IPAddress] [varchar](50) NOT NULL
  CONSTRAINT [PK_Location] PRIMARY KEY CLUSTERED 
 (
 	[LocationId] ASC

@@ -51,7 +51,7 @@ else
                     <div class="col-md-4">
                         <label class="form-label">Host Name</label>
                         <select class="form-control" @bind="EditHostName">
-                            <option value="" disabled selected>Select an option</option>
+                            <option value="@EditHostName" disabled selected>@EditHostName</option>
                             @foreach (string hostName in HostNames)
                             {
                                 <option value="@hostName">@hostName</option>
@@ -61,7 +61,7 @@ else
                     <div class="col-md-4">
                         <label class="form-label">Game</label>
                         <select class="form-control" @bind="EditGame">
-                            <option value="" disabled selected>Select an option</option>
+                            <option value="@EditGame" disabled selected>@EditGame</option>
                             @foreach (string game in Games)
                             {
                                 <option value="@game">@game</option>
@@ -71,7 +71,7 @@ else
                     <div class="col-md-3">
                         <label class="form-label">Connection</label>
                         <select class="form-control" @bind="EditConnection">
-                            <option value="" disabled selected>Select an option</option>
+                            <option value="@EditConnection" disabled selected>@EditConnection</option>
                             @foreach (string connection in Connections)
                             {
                                 <option value="@connection">@connection</option>
@@ -81,11 +81,17 @@ else
                     <div class="col-md-3">
                         <label class="form-label">Downtime</label>
                         <select class="form-control" @bind="EditDowntime">
-                            <option value="" disabled selected>Select an option</option>
                             @if (Server.Downtime != null)
                             {
+                                <option value="@EditDowntime" disabled selected>@EditDowntime</option>
                                 <option value="No Downtime">No Downtime</option>
                             }
+
+                            else
+                            {
+                                <option value="" disabled selected>Select an option</option>
+                            }
+
                             @foreach (string downtime in Downtimes)
                             {
                                 <option value="@downtime">@downtime</option>

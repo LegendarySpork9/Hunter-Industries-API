@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {
       "log4net/3.3.0": {
@@ -18,7 +18,7 @@
           }
         }
       },
-      "Microsoft.AspNetCore.App.Internal.Assets/10.0.5": {
+      "Microsoft.AspNetCore.App.Internal.Assets/10.0.8": {
         "type": "package",
         "build": {
           "build/Microsoft.AspNetCore.App.Internal.Assets.props": {},
@@ -151,10 +151,10 @@
         "package-icon.png"
       ]
     },
-    "Microsoft.AspNetCore.App.Internal.Assets/10.0.5": {
-      "sha512": "Oxw9Ps1/nd6c/EMCAI13AeJFEqXezAvCEOshMjUWmL7LeGirHJNzytR2e/3jINYg0j2TmPvNUowGHf+gp8zDSQ==",
+    "Microsoft.AspNetCore.App.Internal.Assets/10.0.8": {
+      "sha512": "v6KocthydFtUHBIRI29YsOHKOgsqcQubkNywVOxiYr4GSDSv+XO/AeyMJywlX+1tGUTGdydu/X7V+Tzeq4SsoA==",
       "type": "package",
-      "path": "microsoft.aspnetcore.app.internal.assets/10.0.5",
+      "path": "microsoft.aspnetcore.app.internal.assets/10.0.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -170,7 +170,7 @@
         "build/Microsoft.AspNetCore.App.Internal.Assets.targets",
         "buildMultiTargeting/Microsoft.AspNetCore.App.Internal.Assets.targets",
         "buildTransitive/Microsoft.AspNetCore.App.Internal.Assets.targets",
-        "microsoft.aspnetcore.app.internal.assets.10.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.app.internal.assets.10.0.8.nupkg.sha512",
         "microsoft.aspnetcore.app.internal.assets.nuspec"
       ]
     },
@@ -385,7 +385,7 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "Hunter Industries API Common >= 1.0.0",
-      "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.5",
+      "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.8",
       "Newtonsoft.Json >= 13.0.4",
       "Radzen.Blazor >= 7.*",
       "RestSharp >= 114.0.0",
@@ -393,23 +393,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tobyh\\.nuget\\packages\\": {},
-    "D:\\Program Files\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\TobyH\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
+      "projectUniqueName": "C:\\Users\\TobyH\\OneDrive - Nurtur Limited\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
       "projectName": "HunterIndustriesAPIControlPanel",
-      "projectPath": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
-      "packagesPath": "C:\\Users\\tobyh\\.nuget\\packages\\",
-      "outputPath": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\obj\\",
+      "projectPath": "C:\\Users\\TobyH\\OneDrive - Nurtur Limited\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
+      "packagesPath": "C:\\Users\\TobyH\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\TobyH\\OneDrive - Nurtur Limited\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Program Files\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\tobyh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\TobyH\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -418,15 +418,16 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://tfs.briefyourmarket.com/BYM2020/_packaging/BYMNuget/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Common\\Hunter Industries API Common.csproj": {
-              "projectPath": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Common\\Hunter Industries API Common.csproj"
+            "C:\\Users\\TobyH\\OneDrive - Nurtur Limited\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Common\\Hunter Industries API Common.csproj": {
+              "projectPath": "C:\\Users\\TobyH\\OneDrive - Nurtur Limited\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Common\\Hunter Industries API Common.csproj"
             }
           }
         }
@@ -441,16 +442,17 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.AspNetCore.App.Internal.Assets": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[10.0.5, )",
+            "version": "[10.0.8, )",
             "autoReferenced": true
           },
           "Newtonsoft.Json": {
@@ -489,7 +491,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

@@ -452,6 +452,21 @@ ELSE
 	PRINT('ResponseBody Field Already Exists on AuditHistory Table')
 GO
 
+ALTER TABLE [AuditHistory] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
+
+PRINT('Changed IPAddress Field to varchar(50) in AuditHistory Table')
+GO
+
+ALTER TABLE [ErrorLog] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
+
+PRINT('Changed IPAddress Field to varchar(50) in ErrorLog Table')
+GO
+
+ALTER TABLE [Location] ALTER COLUMN [IPAddress] [varchar](50) NOT NULL
+
+PRINT('Changed IPAddress Field to varchar(50) in Location Table')
+GO
+
 PRINT('Added VersionHistory Record')
 
 IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.0.0')
