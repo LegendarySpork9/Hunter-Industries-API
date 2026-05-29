@@ -378,14 +378,32 @@ ELSE
 	PRINT('ScriptName Field Already Exists on VersionHistory Table')
 GO
 
-IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.ServerAlert') AND name = 'UserSettingsId')
+IF EXISTS (SELECT * FROM sys.columns WHERE name = 'UserSettingsId')
 BEGIN
-	EXEC sp_rename 'ServerAlert.UserSettingsId', 'UserSettingId', 'COLUMN'
+	DECLARE @TableName NVARCHAR(256)
+	DECLARE @SQL NVARCHAR(MAX)
 
-	PRINT('Renamed ServerAlert.UserSettingsId to ServerAlert.UserSettingId')
+	DECLARE column_cursor CURSOR FOR
+		SELECT OBJECT_NAME(object_id)
+		FROM sys.columns
+		WHERE name = 'UserSettingsId'
+
+	OPEN column_cursor
+	FETCH NEXT FROM column_cursor INTO @TableName
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SET @SQL = 'EXEC sp_rename ''' + @TableName + '.UserSettingsId'', ''UserSettingId'', ''COLUMN'''
+		EXEC sp_executesql @SQL
+		PRINT('Renamed ' + @TableName + '.UserSettingsId to UserSettingId')
+		FETCH NEXT FROM column_cursor INTO @TableName
+	END
+
+	CLOSE column_cursor
+	DEALLOCATE column_cursor
 END
 ELSE
-	PRINT('ServerAlert.UserSettingsId Already Renamed')
+	PRINT('UserSettingsId Already Renamed on All Tables')
 GO
 
 IF NOT EXISTS (SELECT * FROM [dbo].[StatusCode] WHERE [Value] = '204 No Content')
