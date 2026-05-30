@@ -112,8 +112,21 @@ else
                 UserSettingModel? userSetting = UserSettings.FirstOrDefault(s => s.Application == application.Name);
         
                 <div class="card mb-3 card-rounded">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">@application.Name</h6>
+                        @if (application.IsDeleted)
+                        {
+                            <StatusBadge
+                                Text="Deleted"
+                                Type="deleted" />
+                        }
+
+                        else
+                        {
+                            <StatusBadge
+                                Text="Active"
+                                Type="active" />
+                        }
                     </div>
                     <div class="card-body">
                         <table class="table table-sm mb-2 table-fixed">
@@ -143,7 +156,7 @@ else
                                         <td>
                                             @if (setting != null)
                                             {
-                                                <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" disabled="@User.IsDeleted" />
+                                                <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" disabled="@application.IsDeleted || @User.IsDeleted" />
                                             }
 
                                             else if (!User.IsDeleted && IsAddingSetting(application.Name,
@@ -158,7 +171,7 @@ else
                                                 </div>
                                             }
 
-                                            else if (!User.IsDeleted)
+                                            else if (!User.IsDeleted && !application.IsDeleted)
                                             {
                                                 <button class="btn btn-outline-light btn-sm" @onclick="() => StartAddSetting(application.Name,
                                                     applicationSetting.Name)">Add</button>
@@ -173,7 +186,7 @@ else
                                 }
                             </tbody>
                         </table>
-                        @if (!User.IsDeleted)
+                        @if (!User.IsDeleted && !application.IsDeleted)
                         {
                             <button type="submit" class="btn btn-primary btn-sm" disabled="@IsSettingLoading.Item2" @onclick="() => SaveSettings(application.Name,
                                 userSetting)">

@@ -96,8 +96,6 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 }
             }
 
-            Applications.RemoveAll(a => a.IsDeleted);
-
             List<UserModel> users = await APIService.GetUsers(true);
 
             if (users.Count > 0)
@@ -127,6 +125,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                     Value = s.Value
                 })]
             })];
+
+            Applications.RemoveAll(a => a.IsDeleted && !UnchangedUserSettings.Any(uus => uus.Application == a.Name));
 
             ControlPanelUsername = CredentialsFunction.GetCredentialsUsername(APISettings);
 

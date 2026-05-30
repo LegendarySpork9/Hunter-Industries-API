@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "Y7BBf1HG04Y=",
+  "dgSpecHash": "EnwtYuJUwDo=",
   "success": true,
   "projectFilePath": "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Control Panel\\Hunter Industries API Control Panel.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tobyh\\.nuget\\packages\\log4net\\3.3.0\\log4net.3.3.0.nupkg.sha512",
-    "C:\\Users\\tobyh\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.5\\microsoft.aspnetcore.app.internal.assets.10.0.5.nupkg.sha512",
+    "C:\\Users\\tobyh\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.8\\microsoft.aspnetcore.app.internal.assets.10.0.8.nupkg.sha512",
     "C:\\Users\\tobyh\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512",
     "C:\\Users\\tobyh\\.nuget\\packages\\radzen.blazor\\7.4.3\\radzen.blazor.7.4.3.nupkg.sha512",
     "C:\\Users\\tobyh\\.nuget\\packages\\restsharp\\114.0.0\\restsharp.114.0.0.nupkg.sha512",

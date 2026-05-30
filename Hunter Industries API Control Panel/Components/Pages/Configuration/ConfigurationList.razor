@@ -81,6 +81,16 @@ else
                             </button>
                         }
                     }
+
+                    else
+                    {
+                        @if (Entity == "application")
+                        {
+                            <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToLogs(entity.Id)" @onclick:stopPropagation="true" title="Logs">
+                                &#128203;
+                            </button>
+                        }
+                    }
                 </Template>
             </RadzenDataGridColumn>
         </Columns>

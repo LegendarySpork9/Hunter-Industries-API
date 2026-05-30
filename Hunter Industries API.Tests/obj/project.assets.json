@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    ".NETFramework,Version=v4.7.2": {
+    "net472": {
       "Castle.Core/5.1.1": {
         "type": "package",
         "frameworkAssemblies": [
@@ -4147,7 +4147,17 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETFramework,Version=v4.7.2": [
+    "net10.0": [
+      "Hunter Industries API Common >= 1.0.0",
+      "HunterIndustriesAPIControlPanel >= 1.0.0",
+      "MSTest.TestAdapter >= 3.8.3",
+      "MSTest.TestFramework >= 3.8.3",
+      "Microsoft.NET.Test.Sdk >= 17.14.1",
+      "Moq >= 4.20.72",
+      "Newtonsoft.Json >= 13.0.4",
+      "Newtonsoft.Json.Bson >= 1.0.2"
+    ],
+    "net472": [
       "Hunter Industries API >= 1.0.0",
       "Hunter Industries API Common >= 1.0.0",
       "MSTest.TestAdapter >= 3.8.3",
@@ -4162,16 +4172,6 @@
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 2.1.1",
       "Microsoft.NET.Test.Sdk >= 17.14.1",
       "Microsoft.Web.Infrastructure >= 2.0.1",
-      "Moq >= 4.20.72",
-      "Newtonsoft.Json >= 13.0.4",
-      "Newtonsoft.Json.Bson >= 1.0.2"
-    ],
-    "net10.0": [
-      "Hunter Industries API Common >= 1.0.0",
-      "HunterIndustriesAPIControlPanel >= 1.0.0",
-      "MSTest.TestAdapter >= 3.8.3",
-      "MSTest.TestFramework >= 3.8.3",
-      "Microsoft.NET.Test.Sdk >= 17.14.1",
       "Moq >= 4.20.72",
       "Newtonsoft.Json >= 13.0.4",
       "Newtonsoft.Json.Bson >= 1.0.2"
@@ -4210,6 +4210,7 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
             "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Common\\Hunter Industries API Common.csproj": {
@@ -4221,6 +4222,7 @@
           }
         },
         "net472": {
+          "framework": "net472",
           "targetAlias": "net472",
           "projectReferences": {
             "D:\\System Folders\\Documents\\GitHub\\Hunter-Industries-API\\Hunter Industries API Common\\Hunter Industries API Common.csproj": {
@@ -4242,10 +4244,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "MSTest.TestAdapter": {
@@ -4289,7 +4292,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -4566,6 +4569,7 @@
         }
       },
       "net472": {
+        "framework": "net472",
         "targetAlias": "net472",
         "dependencies": {
           "MSTest.TestAdapter": {
@@ -4629,7 +4633,7 @@
             "version": "[1.0.2, )"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300\\RuntimeIdentifierGraph.json"
       }
     }
   }
