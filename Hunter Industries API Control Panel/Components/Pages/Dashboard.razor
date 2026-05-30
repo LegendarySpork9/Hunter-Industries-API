@@ -15,7 +15,7 @@ else
 {
     <!-- Row 1: KPI Cards -->
     <div class="row g-3 mb-4">
-        <div class="col-md-4 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <KPICard
                 Title="Applications"
                 Value="@Statistics?.Metrics.Applications.ToString()"
@@ -23,7 +23,7 @@ else
                 IconColour="#20c997"
                 Trend="@("")" />
         </div>
-        <div class="col-md-4 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <KPICard
                 Title="Active Users"
                 Value="@Statistics?.Metrics.Users.ToString()"
@@ -31,7 +31,7 @@ else
                 IconColour="#28a745"
                 Trend="@("")" />
         </div>
-        <div class="col-md-4 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <KPICard
                 Title="Calls This Month"
                 Value="@Statistics?.Metrics.Calls.ThisMonth.ToString()"
@@ -41,7 +41,7 @@ else
                     Statistics?.Metrics.Calls.ThisMonth ?? 0,
                     Statistics?.Metrics.Calls.LastMonth ?? 0)" />
         </div>
-        <div class="col-md-4 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <KPICard
                 Title="Login Attempts This Month"
                 Value="@Statistics?.Metrics.LoginAttempts.ThisMonth.ToString()"
@@ -51,7 +51,7 @@ else
                     Statistics?.Metrics.LoginAttempts.ThisMonth ?? 0,
                     Statistics?.Metrics.LoginAttempts.LastMonth ?? 0)" />
         </div>
-        <div class="col-md-4 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <KPICard
                 Title="Changes This Month"
                 Value="@Statistics?.Metrics.Changes.ThisMonth.ToString()"
@@ -61,7 +61,7 @@ else
                     Statistics?.Metrics.Changes.ThisMonth ?? 0,
                     Statistics?.Metrics.Changes.LastMonth ?? 0)" />
         </div>
-        <div class="col-md-4 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <KPICard
                 Title="Errors This Month"
                 Value="@Statistics?.Metrics.Errors.ThisMonth.ToString()"
@@ -202,7 +202,7 @@ else
 
     <!-- Row 3: Donut Charts -->
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Endpoint (This Month)</h6>
@@ -241,7 +241,7 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Method (This Month)</h6>
@@ -280,7 +280,7 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Calls by Status Code (This Month)</h6>
@@ -319,7 +319,7 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card h-100 card-rounded">
                 <div class="card-body">
                     <h6 class="card-title text-muted mb-3">Changes by Field (This Month)</h6>

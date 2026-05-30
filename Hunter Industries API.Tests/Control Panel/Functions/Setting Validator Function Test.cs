@@ -114,6 +114,40 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Functions
         }
 
         /// <summary>
+        /// Tests whether the ValidateApplicationSettings method skips deleted settings.
+        /// </summary>
+        [TestMethod]
+        public void TestValidateApplicationSettingsSkipsDeletedSettings()
+        {
+            ApplicationModel application = new()
+            {
+                Id = 1,
+                Name = "TestApp",
+                Authorisation = new AuthorisationModel { Id = 1, Phrase = "TestPhrase", IsDeleted = false },
+                Settings =
+                [
+                    new ApplicationSettingModel { Id = 1, Name = "Theme", Type = "String", Required = true, IsDeleted = false },
+                    new ApplicationSettingModel { Id = 2, Name = "OldSetting", Type = "String", Required = true, IsDeleted = true }
+                ],
+                IsDeleted = false
+            };
+
+            List<UserSettingRequestModel> pendingSettings =
+            [
+                new UserSettingRequestModel { UserId = 1, Application = "TestApp", SettingName = "Theme", SettingValue = "Dark" }
+            ];
+
+            List<string> errors = SettingValidatorFunction.ValidateApplicationSettings(
+                application,
+                null,
+                pendingSettings);
+
+            Assert.AreEqual(
+                0,
+                errors.Count);
+        }
+
+        /// <summary>
         /// Tests whether the ValidateApplicationSettings method uses existing user settings as fallback.
         /// </summary>
         [TestMethod]

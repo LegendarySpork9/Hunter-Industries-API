@@ -107,7 +107,7 @@ else
         <h5 class="mb-3">Application Settings</h5>
         @foreach (ApplicationModel application in Applications)
         {
-            if (application.Settings.Count > 0)
+            if (application.Settings.Any(s => !s.IsDeleted))
             {
                 UserSettingModel? userSetting = UserSettings.FirstOrDefault(s => s.Application == application.Name);
         
@@ -129,7 +129,8 @@ else
                         }
                     </div>
                     <div class="card-body">
-                        <table class="table table-sm mb-2 table-fixed">
+                        <div class="table-scroll-wrapper">
+                        <table class="table table-sm mb-2">
                             <colgroup>
                                 <col class="col-setting-name" />
                                 <col class="col-setting-type" />
@@ -145,10 +146,10 @@ else
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (ApplicationSettingModel applicationSetting in application.Settings)
+                                @foreach (ApplicationSettingModel applicationSetting in application.Settings.Where(s => !s.IsDeleted))
                                 {
                                     SettingModel? setting = userSetting?.Settings.FirstOrDefault(s => s.Name == applicationSetting.Name);
-                                
+
                                     <tr>
                                         <td class="text-light-grey">@applicationSetting.Name</td>
                                         <td class="text-light-grey">@ApplicationSettingConverter.GetDataType(applicationSetting.Type)</td>
@@ -156,7 +157,7 @@ else
                                         <td>
                                             @if (setting != null)
                                             {
-                                                <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" disabled="@application.IsDeleted || @User.IsDeleted" />
+                                                <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" disabled="@(application.IsDeleted || User.IsDeleted)" />
                                             }
 
                                             else if (!User.IsDeleted && IsAddingSetting(application.Name,
@@ -186,6 +187,7 @@ else
                                 }
                             </tbody>
                         </table>
+                        </div>
                         @if (!User.IsDeleted && !application.IsDeleted)
                         {
                             <button type="submit" class="btn btn-primary btn-sm" disabled="@IsSettingLoading.Item2" @onclick="() => SaveSettings(application.Name,

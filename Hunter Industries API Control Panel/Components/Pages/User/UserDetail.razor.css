@@ -2,24 +2,24 @@
     border-radius: 8px;
 }
 
-.table-fixed {
-    table-layout: fixed;
-}
-
 .col-setting-name {
-    width: 20%;
+    width: 200px;
+    min-width: 200px;
 }
 
 .col-setting-type {
-    width: 10%;
+    width: 120px;
+    min-width: 120px;
 }
 
 .col-setting-required {
-    width: 10%;
+    width: 120px;
+    min-width: 120px;
 }
 
 .col-setting-value {
-    width: 60%;
+    width: 300px;
+    min-width: 300px;
 }
 
 .text-light-grey {

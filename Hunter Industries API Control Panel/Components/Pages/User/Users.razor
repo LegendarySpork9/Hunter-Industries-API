@@ -38,10 +38,12 @@ else
             <RadzenDataGridColumn
                 TItem="UserModel"
                 Property="Username"
-                Title="Username" />
+                Title="Username"
+                MinWidth="150px" />
             <RadzenDataGridColumn
                 TItem="UserModel"
                 Title="Scopes"
+                MinWidth="200px"
                 Sortable="false"
                 Filterable="false">
                 <Template Context="user">

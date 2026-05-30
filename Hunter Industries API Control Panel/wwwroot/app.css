@@ -351,9 +351,16 @@ h1:focus {
     overflow-y: auto;
 }
 
+/* Table scroll wrapper */
+.table-scroll-wrapper {
+    overflow-x: auto;
+}
+
 /* Page header */
 .page-header {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
@@ -363,4 +370,5 @@ h1:focus {
     margin-bottom: 0;
     font-size: 1.75rem;
 }
+
 

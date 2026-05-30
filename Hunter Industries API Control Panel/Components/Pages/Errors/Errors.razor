@@ -142,11 +142,11 @@ else
                     <label class="form-label">To Date</label>
                     <input type="date" class="form-control" @bind="FilterToDate" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label">IP Address</label>
                     <input type="text" class="form-control" @bind="FilterIPAddress" placeholder="e.g. 192.168.1.100" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Summary</label>
                     <input type="text" class="form-control" @bind="FilterSummary" placeholder="Search by summary..." />
                 </div>
@@ -159,41 +159,44 @@ else
     </div>
 
     <!-- Error List -->
-    <RadzenDataGrid
-        Data="@ErrorLog?.Entries"
-        TItem="ErrorModel"
-        AllowSorting="false"
-        RowClick="@(args => Navigation.NavigateTo($"/errors/{args.Data.Id}"))"
-        Style="cursor: pointer;">
-        <Columns>
-            <RadzenDataGridColumn
-                TItem="ErrorModel"
-                Property="Id"
-                Title="ID"
-                Width="100px" />
-            <RadzenDataGridColumn
-                TItem="ErrorModel"
-                Title="Date (UTC)"
-                Width="190px">
-                <Template Context="error">
-                    @error.DateOccured.ToString("dd MMM yyyy HH:mm:ss")
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn
-                TItem="ErrorModel"
-                Property="IPAddress"
-                Title="IP Address"
-                Width="320px" />
-            <RadzenDataGridColumn
-                TItem="ErrorModel"
-                Property="Summary"
-                Title="Summary">
-            </RadzenDataGridColumn>
-        </Columns>
-    </RadzenDataGrid>
+    <div class="table-scroll-wrapper">
+        <RadzenDataGrid
+            Data="@ErrorLog?.Entries"
+            TItem="ErrorModel"
+            AllowSorting="false"
+            RowClick="@(args => Navigation.NavigateTo($"/errors/{args.Data.Id}"))"
+            Style="cursor: pointer;">
+            <Columns>
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Property="Id"
+                    Title="ID"
+                    Width="100px" />
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Title="Date (UTC)"
+                    Width="190px">
+                    <Template Context="error">
+                        @error.DateOccured.ToString("dd MMM yyyy HH:mm:ss")
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Property="IPAddress"
+                    Title="IP Address"
+                    Width="200px" />
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Property="Summary"
+                    Title="Summary"
+                    MinWidth="250px">
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
 
     <!-- Pagination -->
-    <div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
         <div class="text-muted">
             @if (ErrorLog?.TotalCount > 0)
             {
@@ -205,7 +208,7 @@ else
                 <span>No records found</span>
             }
         </div>
-        <div class="d-flex gap-2 align-items-center">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
             <select class="form-select form-select-sm page-size-select" disabled="@IsLoading" @bind="PageSize" @bind:after="ApplyFilters">
                 <option value="10">10</option>
                 <option value="25">25</option>

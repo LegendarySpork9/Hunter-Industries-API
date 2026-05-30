@@ -17,24 +17,51 @@
 .activity-method-badge {
     width: 60px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .activity-endpoint {
     font-size: 0.9rem;
     color: #D7D7D7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .activity-status {
     font-size: 0.75rem;
+    flex-shrink: 0;
 }
 
 .activity-ip {
     font-size: 0.8rem;
-    min-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .activity-time {
     font-size: 0.75rem;
-    min-width: 100px;
     text-align: right;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .activity-feed-item {
+        flex-wrap: wrap;
+    }
+
+    .activity-endpoint {
+        width: 100%;
+        order: 2;
+    }
+
+    .activity-ip {
+        font-size: 0.7rem;
+    }
+
+    .activity-time {
+        font-size: 0.7rem;
+        margin-left: auto;
+    }
 }

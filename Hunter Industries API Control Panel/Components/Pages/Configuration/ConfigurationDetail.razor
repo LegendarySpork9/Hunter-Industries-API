@@ -150,7 +150,8 @@ else
 
                         @if (Application?.Settings.Count > 0)
                         {
-                            <table class="table table-sm table-fixed">
+                            <div class="table-scroll-wrapper">
+                            <table class="table table-sm">
                                 <colgroup>
                                     <col class="col-name" />
                                     <col class="col-type" />
@@ -223,6 +224,7 @@ else
                                     }
                                 </tbody>
                             </table>
+                            </div>
                         }
 
                         else

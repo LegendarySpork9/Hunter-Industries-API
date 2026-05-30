@@ -11,26 +11,27 @@
     border-color: #555;
 }
 
-.table-fixed {
-    table-layout: fixed;
-}
-
 .col-name {
-    width: 30%;
+    width: 200px;
+    min-width: 200px;
 }
 
 .col-type {
-    width: 30%;
+    width: 200px;
+    min-width: 200px;
 }
 
 .col-required {
-    width: 15%;
+    width: 100px;
+    min-width: 100px;
 }
 
 .col-status {
-    width: 10%;
+    width: 100px;
+    min-width: 100px;
 }
 
 .col-actions {
-    width: 15%;
+    width: 200px;
+    min-width: 200px;
 }

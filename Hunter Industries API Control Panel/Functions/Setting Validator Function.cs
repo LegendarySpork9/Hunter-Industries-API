@@ -17,7 +17,7 @@ namespace HunterIndustriesAPIControlPanel.Functions
         {
             List<string> errors = [];
 
-            foreach (ApplicationSettingModel applicationSetting in application.Settings)
+            foreach (ApplicationSettingModel applicationSetting in application.Settings.Where(s => !s.IsDeleted))
             {
                 string? value = pendingNewSettings.FirstOrDefault(ns => ns.SettingName == applicationSetting.Name)?.SettingValue ?? currentUserSettings?.Settings.FirstOrDefault(s => s.Name == applicationSetting.Name)?.Value;
 
