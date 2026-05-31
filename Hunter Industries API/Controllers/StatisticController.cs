@@ -372,7 +372,7 @@ namespace HunterIndustriesAPI.Controllers
         /// <param name="id">The id number of the application.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Statistic.Read")]
         [VersionedRoute("statistic/application/{id:int}", "2.0")]
-        [SwaggerOperation("GetStatisticDashboard")]
+        [SwaggerOperation("GetStatisticApplication")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(SharedStatResponseModel), Description = "Returns the statistics for the application page.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -473,7 +473,7 @@ namespace HunterIndustriesAPI.Controllers
         /// <param name="id">The id number of the user.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Statistic.Read")]
         [VersionedRoute("statistic/user/{id:int}", "2.0")]
-        [SwaggerOperation("GetStatisticDashboard")]
+        [SwaggerOperation("GetStatisticUser")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(SharedStatResponseModel), Description = "Returns the statistics for the user page.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]

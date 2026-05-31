@@ -239,6 +239,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         }
 
         /// <summary>
+        /// Returns a shortened IP address for chart axis labels.
+        /// </summary>
+        private static string FormatIPAddress(object value)
+        {
+            string label = value?.ToString() ?? string.Empty;
+
+            if (label.Length > 15)
+            {
+                label = label[..15] + "…";
+            }
+
+            return label;
+        }
+
+        /// <summary>
         /// Returns the traffic day label or blank if the axis is being thinned out.
         /// </summary>
         private string FormatTrafficDay(object value)
