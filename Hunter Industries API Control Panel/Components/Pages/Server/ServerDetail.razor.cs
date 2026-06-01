@@ -67,23 +67,23 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 EditDowntime = Server.Downtime == null ? string.Empty : $"{Server.Downtime.Time} ({Server.Downtime.Duration})";
                 EditEventInterval = Server.EventInterval;
                 EditIsActive = Server.IsActive;
+
+                List<MachineModel> machines = await GetMachines();
+                HostNames.AddRange(machines.Where(m => !m.IsDeleted && m.HostName != Server.HostName)
+                    .Select(m => m.HostName));
+
+                List<GameModel> games = await GetGames();
+                Games.AddRange(games.Where(g => !g.IsDeleted && g.Name != Server.Name && g.Version != Server.GameVersion)
+                    .Select(g => $"{g.Name} ({g.Version})"));
+
+                List<ConnectionModel> connections = await GetConnections();
+                Connections.AddRange(connections.Where(c => !c.IsDeleted && c.IPAddress != Server.Connection.IpAddress && c.Port != Server.Connection.Port)
+                    .Select(c => $"{c.IPAddress}:{c.Port}"));
+
+                List<DowntimeModel> downtimes = await GetDowntimes();
+                Downtimes.AddRange(downtimes.Where(d => !d.IsDeleted && d.Time != Server.Downtime?.Time && d.Duration != Server.Downtime?.Duration)
+                    .Select(d => $"{d.Time} ({d.Duration})"));
             }
-
-            List<MachineModel> machines = await GetMachines();
-            HostNames.AddRange(machines.Where(m => !m.IsDeleted)
-                .Select(m => m.HostName));
-
-            List<GameModel> games = await GetGames();
-            Games.AddRange(games.Where(g => !g.IsDeleted)
-                .Select(g => $"{g.Name} ({g.Version})"));
-
-            List<ConnectionModel> connections = await GetConnections();
-            Connections.AddRange(connections.Where(c => !c.IsDeleted)
-                .Select(c => $"{c.IPAddress}:{c.Port}"));
-
-            List<DowntimeModel> downtimes = await GetDowntimes();
-            Downtimes.AddRange(downtimes.Where(d => !d.IsDeleted)
-                .Select(d => $"{d.Time} ({d.Duration})"));
 
             Statistics = await APIService.GetServerStatistics(Id);
 

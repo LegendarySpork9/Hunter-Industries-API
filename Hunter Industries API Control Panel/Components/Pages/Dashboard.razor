@@ -90,6 +90,9 @@ else
                                 Title="Successful"
                                 Fill="rgba(40, 167, 69, 0.3)"
                                 Stroke="rgb(40, 167, 69)">
+                                <ChildContent>
+                                    <RadzenMarkers MarkerType="MarkerType.Circle" Size="5" />
+                                </ChildContent>
                                 <TooltipTemplate Context="data">
                                     @{
                                         APITrafficModel traffic = (APITrafficModel)data;
@@ -101,13 +104,16 @@ else
                                     </div>
                                 </TooltipTemplate>
                             </RadzenAreaSeries>
-                            <RadzenAreaSeries 
+                            <RadzenAreaSeries
                                 Data="@Statistics.ApiTraffic"
                                 CategoryProperty="Day"
                                 ValueProperty="UnsuccessfulCalls"
                                 Title="Failed"
                                 Fill="rgba(220, 53, 69, 0.3)"
                                 Stroke="rgb(220, 53, 69)">
+                                <ChildContent>
+                                    <RadzenMarkers MarkerType="MarkerType.Circle" Size="5" />
+                                </ChildContent>
                                 <TooltipTemplate Context="data">
                                     @{
                                         APITrafficModel traffic = (APITrafficModel)data;
@@ -121,7 +127,7 @@ else
                             </RadzenAreaSeries>
                             <RadzenCategoryAxis Formatter="@FormatTrafficDay" />
                             <RadzenValueAxis>
-                                <RadzenGridLines 
+                                <RadzenGridLines
                                     Visible="true"
                                     Stroke="#555" />
                             </RadzenValueAxis>

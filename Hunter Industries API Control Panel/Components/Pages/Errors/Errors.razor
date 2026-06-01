@@ -31,7 +31,11 @@ else
                                 CategoryProperty="Month"
                                 ValueProperty="Errors"
                                 Title="Errors"
-                                Stroke="rgb(220, 53, 69)" />
+                                Stroke="rgb(220, 53, 69)">
+                                <ChildContent>
+                                    <RadzenMarkers MarkerType="MarkerType.Circle" Size="5" />
+                                </ChildContent>
+                            </RadzenLineSeries>
                             <RadzenCategoryAxis />
                             <RadzenValueAxis>
                                 <RadzenGridLines
@@ -184,7 +188,7 @@ else
                     TItem="ErrorModel"
                     Property="IPAddress"
                     Title="IP Address"
-                    Width="200px" />
+                    Width="320px" />
                 <RadzenDataGridColumn
                     TItem="ErrorModel"
                     Property="Summary"

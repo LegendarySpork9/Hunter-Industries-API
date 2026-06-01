@@ -164,9 +164,10 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                         IsDeleted = s.IsDeleted
                     })];
                     IsControlPanelApplication = _configurationFunction.IsControlPanelApplication(Application);
-                }
 
-                Phrases = await GetPhrases();
+                    Phrases = await GetPhrases();
+                    Phrases.Remove(Application.Authorisation.Phrase);
+                }
             }
 
             else if (Entity == "authorisation")

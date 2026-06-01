@@ -145,6 +145,9 @@ else
                             Title="Uptime"
                             Fill="#4472C4"
                             Stroke="#4472C4">
+                            <ChildContent>
+                                <RadzenMarkers MarkerType="MarkerType.Circle" Size="5" />
+                            </ChildContent>
                             <TooltipTemplate Context="data">
                                 @{
                                     ServerHealthModel health = (ServerHealthModel)data;
