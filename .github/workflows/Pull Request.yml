@@ -79,13 +79,13 @@ jobs:
       run: echo "value=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
 
     - name: Upload API Artefact
-    - uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: HunterIndustriesAPI_${{ steps.timestamp.outputs.value }}
         path: ./artifacts/HunterIndustriesAPI
 
     - name: Upload Control Panel Artefact
-    - uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: HunterIndustriesAPIControlPanel_${{ steps.timestamp.outputs.value }}
         path: ./artifacts/HunterIndustriesAPIControlPanel
