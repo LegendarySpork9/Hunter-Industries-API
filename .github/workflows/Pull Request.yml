@@ -57,3 +57,35 @@ jobs:
 
     - name: Run tests
       run: dotnet test "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-build --logger "trx"
+
+    - name: Publish API (.NET Framework)
+      run: >
+        msbuild.exe "Hunter Industries API/Hunter Industries API.csproj"
+        /p:Configuration=Release
+        /p:DeployOnBuild=true
+        /p:WebPublishMethod=FileSystem
+        /p:publishUrl=${{ github.workspace }}/artifacts/HunterIndustriesAPI
+        /p:DeleteExistingFiles=true
+
+    - name: Publish Control Panel (.NET 10)
+      run: >
+        dotnet publish
+        "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj"
+        -c Release
+        -o ./artifacts/HunterIndustriesAPIControlPanel
+
+    - name: Set Build Timestamp
+      id: timestamp
+      run: echo "value=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
+
+    - name: Upload API Artefact
+    - uses: actions/upload-artifact@v4
+      with:
+        name: HunterIndustriesAPI_${{ steps.timestamp.outputs.value }}
+        path: ./artifacts/HunterIndustriesAPI
+
+    - name: Upload Control Panel Artefact
+    - uses: actions/upload-artifact@v4
+      with:
+        name: HunterIndustriesAPIControlPanel_${{ steps.timestamp.outputs.value }}
+        path: ./artifacts/HunterIndustriesAPIControlPanel
