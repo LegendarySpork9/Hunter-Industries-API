@@ -64,7 +64,7 @@ jobs:
         /p:Configuration=Release
         /p:DeployOnBuild=true
         /p:WebPublishMethod=FileSystem
-        /p:publishUrl=${{ github.workspace }}/artifacts/HunterIndustriesAPI
+        /p:publishUrl=%GITHUB_WORKSPACE%\artifacts\HunterIndustriesAPI
         /p:DeleteExistingFiles=true
 
     - name: Publish Control Panel (.NET 10)
@@ -76,6 +76,7 @@ jobs:
 
     - name: Set Build Timestamp
       id: timestamp
+      shell: bash
       run: echo "value=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
 
     - name: Upload API Artefact
