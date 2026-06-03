@@ -63,8 +63,9 @@ jobs:
         msbuild.exe "Hunter Industries API/Hunter Industries API.csproj"
         /p:Configuration=Release
         /p:DeployOnBuild=true
+        /p:DeployTarget=WebPublish
         /p:WebPublishMethod=FileSystem
-        /p:publishUrl=%GITHUB_WORKSPACE%\artifacts\HunterIndustriesAPI
+        /p:publishUrl=${{ github.workspace }}\artifacts\HunterIndustriesAPI
         /p:DeleteExistingFiles=true
 
     - name: Publish Control Panel (.NET 10)
