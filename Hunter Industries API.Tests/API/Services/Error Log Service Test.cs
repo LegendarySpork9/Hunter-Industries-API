@@ -75,7 +75,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
                 _MockClock.Object);
 
             (List<ErrorLogRecord> actual, int totalRecords) = await service.GetErrorLog(
-                0,
                 null,
                 null,
                 new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -132,7 +131,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
                 _MockClock.Object);
 
             (List<ErrorLogRecord> actual, int totalRecords) = await service.GetErrorLog(
-                0,
                 null,
                 null,
                 new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -146,6 +144,81 @@ namespace HunterIndustriesAPI.Tests.API.Services
             Assert.AreEqual(
                 0,
                 totalRecords);
+        }
+
+        /// <summary>
+        /// Checks whether the GetErrorLogId method returns the correct record.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetErrorLogId()
+        {
+            ErrorLogRecord expected = new ErrorLogRecord
+            {
+                Id = 1,
+                DateOccured = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                IPAddress = "127.0.0.1",
+                Summary = "This is an error.",
+                Message = "This is a detailed error trace."
+            };
+
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    expected,
+                    (Exception)null));
+
+            ErrorLogService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
+
+            ErrorLogRecord actual = await service.GetErrorLogId(1);
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "127.0.0.1",
+                actual.IPAddress);
+            Assert.AreEqual(
+                "This is an error.",
+                actual.Summary);
+            Assert.AreEqual(
+                "This is a detailed error trace.",
+                actual.Message);
+        }
+
+        /// <summary>
+        /// Checks whether the GetErrorLogId method returns null when the database returns no results.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetErrorLogIdEmpty()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (ErrorLogRecord)null,
+                    (Exception)null));
+
+            ErrorLogService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object);
+
+            ErrorLogRecord actual = await service.GetErrorLogId(1);
+
+            Assert.IsNull(actual);
         }
     }
 }

@@ -43,7 +43,6 @@ namespace HunterIndustriesAPI.Services
         /// Returns all error log records that match the parameters.
         /// </summary>
         public async Task<(List<ErrorLogRecord>, int)> GetErrorLog(
-            int errorId,
             string ipAddress,
             string summary,
             DateTime fromDate,
@@ -53,7 +52,7 @@ namespace HunterIndustriesAPI.Services
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"ErrorLogService.GetErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { errorId.ToString(), ipAddress, summary, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+                $"ErrorLogService.GetErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, summary, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<ErrorLogRecord> errorLogs = new List<ErrorLogRecord>();
             int totalRecords = 0;
@@ -66,12 +65,6 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
                     new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
-
-                if (errorId != 0)
-                {
-                    sql += "\nand errorId = @errorId";
-                    parameterList.Add(new SqlParameter("@errorId", SqlDbType.Int) { Value = errorId });
-                }
 
                 if (!string.IsNullOrEmpty(ipAddress))
                 {
@@ -243,6 +236,89 @@ fetch next @pageSize rows only";
                 StandardValues.LoggerValues.Debug,
                 $"ErrorLogService.GetTotalErrorLog returned {totalRecords}.");
             return totalRecords;
+        }
+
+        /// <summary>
+        /// Returns the error log record that matches the id.
+        /// </summary>
+        public async Task<ErrorLogRecord> GetErrorLogId(int errorId)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ErrorLogService.GetErrorLogId called with the parameters \"{errorId}\".");
+
+            ErrorLogRecord error = null;
+
+            try
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@errorId", SqlDbType.Int) { Value = errorId }
+                };
+
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Error Log\GetErrorLogId.sql");
+
+                (ErrorLogRecord result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader =>
+                    {
+                        ErrorLogRecord errorLog = new ErrorLogRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            DateOccured = DateTime.SpecifyKind(
+                                reader.GetDateTime(1),
+                                DateTimeKind.Utc),
+                            IPAddress = reader.GetString(2),
+                            Summary = reader.GetString(3),
+                            Message = reader.GetString(4)
+                        };
+
+                        return errorLog;
+                    },
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ErrorLogService.GetErrorLogId.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                error = result;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ErrorLogService.GetErrorLogId.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (error != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"ErrorLogService.GetErrorLogId returned 1 record");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"ErrorLogService.GetErrorLogId returned 0 records");
+            }
+
+            return error;
         }
     }
 }

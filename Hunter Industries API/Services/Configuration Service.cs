@@ -43,7 +43,6 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<(List<object>, int)> GetRecords(
             string entity,
-            int id,
             int? parentEntityId = null,
             bool includeUsed = true,
             int pageSize = 0,
@@ -51,7 +50,7 @@ namespace HunterIndustriesAPI.Services
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"ConfigurationService.GetRecords called with the parameters {ParameterFunction.FormatParameters(new string[] { entity, id.ToString(), parentEntityId.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+                $"ConfigurationService.GetRecords called with the parameters {ParameterFunction.FormatParameters(new string[] { entity, parentEntityId.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<object> records = new List<object>();
             int totalRecords = 0;
@@ -69,14 +68,7 @@ where [Application].ApplicationId is null
 and Authorisation.IsDeleted = 0";
                 }
 
-                if (id != 0)
-                {
-                    sql += ConfigurationConverter.GetSQLFilterId(entity);
-                    parameters = ConfigurationConverter.GetParametersGetSingle(entity,
-                        id);
-                }
-
-                else if (parentEntityId.HasValue && entity == "applicationSetting")
+                if (parentEntityId.HasValue && entity == "applicationSetting")
                 {
                     sql += @"
 where ApplicationId = @applicationId";
@@ -154,10 +146,7 @@ where ApplicationId = @applicationId";
                         records = results;
                     }
 
-                    if (id == 0)
-                    {
-                        totalRecords = await GetTotalRecord(entity);
-                    }
+                    totalRecords = await GetTotalRecord(entity);
                 }
             }
 
@@ -232,6 +221,82 @@ where ApplicationId = @applicationId";
                 StandardValues.LoggerValues.Debug,
                 $"ConfigurationService.GetTotalRecord returned {totalRecords}.");
             return totalRecords;
+        }
+
+        /// <summary>
+        /// Returns the record that matches the id.
+        /// </summary>
+        public async Task<object> GetRecord(
+            string entity,
+            int id)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ConfigurationService.GetRecord called with the parameters {ParameterFunction.FormatParameters(new string[] { entity, id.ToString() })}.");
+
+            object record = new object();
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLGet(entity)}");
+                sql += ConfigurationConverter.GetSQLFilterId(entity);
+
+                SqlParameter[] parameters = ConfigurationConverter.GetParametersGetSingle(
+                    entity,
+                    id);
+
+                Func<IDataReader, object> dataReaderMappings = ConfigurationConverter.GetDataReaderMappings(entity);
+
+                if (dataReaderMappings != null)
+                {
+                    (object result, Exception ex) = await _Database.QuerySingle(
+                        sql,
+                        dataReaderMappings,
+                        parameters);
+
+                    if (ex != null)
+                    {
+                        string message = "An error occured when trying to run ConfigurationService.GetRecord.";
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
+                    }
+
+                    record = result;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ConfigurationService.GetRecord.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (record != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"ConfigurationService.GetRecord returned 1 record");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"ConfigurationService.GetRecord returned 0 records");
+            }
+
+            return record;
         }
 
         /// <summary>

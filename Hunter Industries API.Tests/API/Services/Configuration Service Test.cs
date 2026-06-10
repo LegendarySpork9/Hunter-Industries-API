@@ -71,7 +71,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             (List<object> actual, int totalRecords) = await service.GetRecords(
                 "component",
-                0,
                 null,
                 true,
                 10,
@@ -120,7 +119,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             (List<object> actual, int totalRecords) = await service.GetRecords(
                 "component",
-                0,
                 null,
                 true,
                 10,
@@ -128,49 +126,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             Assert.AreEqual(
                 0,
-                actual.Count);
-            Assert.AreEqual(
-                0,
-                totalRecords);
-        }
-
-        /// <summary>
-        /// Checks whether the GetRecords method returns a single record when an id is provided.
-        /// </summary>
-        [TestMethod]
-        public async Task TestGetRecordsById()
-        {
-            List<object> records =
-            [
-                new ComponentRecord
-                {
-                    Id = 1,
-                    Name = "TestComponent",
-                    IsDeleted = false
-                }
-            ];
-
-            Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.Query(
-                    It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, object>>(),
-                    It.IsAny<SqlParameter[]>()).Result)
-                .Returns((
-                    records,
-                    null));
-
-            ConfigurationService service = new(
-                _MockLogger.Object,
-                _MockFileSystem.Object,
-                _MockOptions.Object,
-                mockDatabase.Object);
-
-            (List<object> actual, int totalRecords) = await service.GetRecords(
-                "component",
-                1);
-
-            Assert.AreEqual(
-                1,
                 actual.Count);
             Assert.AreEqual(
                 0,
@@ -231,7 +186,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             (List<object> actual, int totalRecords) = await service.GetRecords(
                 "application",
-                0,
                 null,
                 true,
                 10,
@@ -299,7 +253,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             (List<object> actual, int totalRecords) = await service.GetRecords(
                 "application",
-                0,
                 null,
                 true,
                 10,
@@ -349,7 +302,6 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
             (List<object> actual, int totalRecords) = await service.GetRecords(
                 "applicationSetting",
-                0,
                 1);
 
             Assert.AreEqual(
@@ -358,6 +310,74 @@ namespace HunterIndustriesAPI.Tests.API.Services
             Assert.AreEqual(
                 0,
                 totalRecords);
+        }
+
+        #endregion
+
+        #region GetRecord
+
+        /// <summary>
+        /// Checks whether the GetRecord method returns a single record when found.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetRecord()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)new ComponentRecord
+                    {
+                        Id = 1,
+                        Name = "TestComponent",
+                        IsDeleted = false
+                    },
+                    (Exception)null));
+
+            ConfigurationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            object actual = await service.GetRecord(
+                "component",
+                1);
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(
+                "TestComponent",
+                ((ComponentRecord)actual).Name);
+        }
+
+        /// <summary>
+        /// Checks whether the GetRecord method returns null when no record is found.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetRecordEmpty()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)null,
+                    (Exception)null));
+
+            ConfigurationService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            object actual = await service.GetRecord(
+                "component",
+                1);
+
+            Assert.IsNull(actual);
         }
 
         #endregion
