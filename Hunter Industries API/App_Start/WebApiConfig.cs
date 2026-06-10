@@ -3,6 +3,8 @@ using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Implementations;
 using HunterIndustriesAPI.Models;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Implementations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;

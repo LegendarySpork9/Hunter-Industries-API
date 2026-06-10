@@ -36,8 +36,12 @@ namespace HunterIndustriesAPI.Filters
             {
                 if (factory is VersionedRouteAttribute versioned)
                 {
-                    int minIndex = Array.IndexOf(VersionedRouteAttribute.ApiVersions, versioned.MinVersion);
-                    int maxIndex = Array.IndexOf(VersionedRouteAttribute.ApiVersions, versioned.MaxVersion);
+                    int minIndex = Array.IndexOf(
+                        VersionedRouteAttribute.ApiVersions, 
+                        versioned.MinVersion);
+                    int maxIndex = Array.IndexOf(
+                        VersionedRouteAttribute.ApiVersions, 
+                        versioned.MaxVersion);
 
                     for (int i = minIndex; i <= maxIndex; i++)
                     {

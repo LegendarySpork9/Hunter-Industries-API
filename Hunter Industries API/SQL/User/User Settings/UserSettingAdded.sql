@@ -7,4 +7,4 @@ select
 	@value
 from APIUser AU with (nolock)
 join [Application] A with (nolock) on A.[Name] = @application
-where AU.Username = @username
+where AU.UserId = @userId

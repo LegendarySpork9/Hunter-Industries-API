@@ -118,25 +118,33 @@ fetch next @pageSize rows only";
             switch (entity)
             {
                 case "application": return @"
-where [Name] = @name";
+where [Name] = @name
+and IsDeleted = 0";
                 case "applicationSetting": return @"
 where ApplicationId = @applicationId
-and [Name] = @name";
+and [Name] = @name
+and IsDeleted = 0";
                 case "authorisation": return @"
-where Phrase = @phrase";
+where Phrase = @phrase
+and IsDeleted = 0";
                 case "component": return @"
-where [Name] = @name";
+where [Name] = @name
+and IsDeleted = 0";
                 case "connection": return @"
 where IPAddress = @ipAddress
-and [Port] = @port";
+and [Port] = @port
+and IsDeleted = 0";
                 case "downtime": return @"
 where Time = @time
-and Duration = @duration";
+and Duration = @duration
+and IsDeleted = 0";
                 case "game": return @"
 where [Name] = @name
-and [Version] = @version";
+and [Version] = @version
+and IsDeleted = 0";
                 case "machine": return @"
-where HostName = @hostName";
+where HostName = @hostName
+and IsDeleted = 0";
                 default: return "Unknown.sql";
             }
         }
@@ -232,7 +240,10 @@ where MachineId = @machineId";
         /// <summary>
         /// Returns the parameters for the paginated Getx sql.
         /// </summary>
-        public static SqlParameter[] GetParametersGet(string entity, int pageSize, int pageNumber)
+        public static SqlParameter[] GetParametersGet(
+            string entity, 
+            int pageSize, 
+            int pageNumber)
         {
             switch (entity)
             {
@@ -285,7 +296,9 @@ where MachineId = @machineId";
         /// <summary>
         /// Returns the parameters for the Getx sql.
         /// </summary>
-        public static SqlParameter[] GetParametersGetSingle(string entity, int entityId)
+        public static SqlParameter[] GetParametersGetSingle(
+            string entity, 
+            int entityId)
         {
             switch (entity)
             {
@@ -336,7 +349,10 @@ where MachineId = @machineId";
         /// <summary>
         /// Returns the parameters for the xExists sql.
         /// </summary>
-        public static SqlParameter[] GetParameterExists(string entity, object record, int? parentEntityId = null)
+        public static SqlParameter[] GetParameterExists(
+            string entity, 
+            object record, 
+            int? parentEntityId = null)
         {
             switch (entity)
             {
@@ -407,7 +423,9 @@ where MachineId = @machineId";
         /// <summary>
         /// Returns the parameters for the xExists sql.
         /// </summary>
-        public static SqlParameter[] GetParameterExists(string entity, int entityId)
+        public static SqlParameter[] GetParameterExists(
+            string entity, 
+            int entityId)
         {
             switch (entity)
             {
@@ -458,7 +476,10 @@ where MachineId = @machineId";
         /// <summary>
         /// Returns the parameters for the Createx sql.
         /// </summary>
-        public static SqlParameter[] GetParametersCreate(string entity, object record, int? parentEntityId = null)
+        public static SqlParameter[] GetParametersCreate(
+            string entity, 
+            object record, 
+            int? parentEntityId = null)
         {
             switch (entity)
             {
@@ -532,7 +553,10 @@ where MachineId = @machineId";
         /// <summary>
         /// Returns the parameters for the xUpdated sql.
         /// </summary>
-        public static SqlParameter[] GetParametersUpdated(string entity, object record, int entityId)
+        public static SqlParameter[] GetParametersUpdated(
+            string entity, 
+            object record, 
+            int entityId)
         {
             switch (entity)
             {
@@ -634,7 +658,9 @@ where MachineId = @machineId";
         /// <summary>
         /// Returns the request model in the correct format.
         /// </summary>
-        public static object GetRequestObject(string entity, object request)
+        public static object GetRequestObject(
+            string entity, 
+            object request)
         {
             switch (entity)
             {

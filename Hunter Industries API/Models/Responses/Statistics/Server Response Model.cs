@@ -21,6 +21,10 @@ namespace HunterIndustriesAPI.Models.Responses.Statistics
         /// </summary>
         public List<EventComponentRecord> LatestEvents { get; set; }
         /// <summary>
+        /// The server health records.
+        /// </summary>
+        public List<ServerHealthOverviewRecord> ServerHealth { get; set; }
+        /// <summary>
         /// The recent alert records.
         /// </summary>
         public List<RecentAlertRecord> RecentAlerts { get; set; }

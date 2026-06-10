@@ -1,0 +1,31 @@
+.card-rounded {
+    border-radius: 8px;
+}
+
+.col-setting-name {
+    width: 200px;
+    min-width: 200px;
+}
+
+.col-setting-type {
+    width: 120px;
+    min-width: 120px;
+}
+
+.col-setting-required {
+    width: 120px;
+    min-width: 120px;
+}
+
+.col-setting-value {
+    width: 300px;
+    min-width: 300px;
+}
+
+.text-light-grey {
+    color: #D7D7D7;
+}
+
+.setting-input {
+    max-width: 300px;
+}

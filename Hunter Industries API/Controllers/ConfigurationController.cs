@@ -3,8 +3,11 @@ using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Services;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
@@ -33,7 +36,8 @@ namespace HunterIndustriesAPI.Controllers
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public ConfigurationController(ILoggerService _logger,
+        public ConfigurationController(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabase _database,
             IDatabaseOptions _options,
@@ -63,7 +67,12 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get()
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -71,10 +80,9 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called.");
-
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, null);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Configuration (Get) endpoint called.");
 
             response = new ResponseModel()
             {
@@ -95,8 +103,24 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("configuration"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                null,
+                requestBody: null,
+                responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK, 
+                response.Data);
         }
 
         /// <summary>
@@ -114,12 +138,27 @@ namespace HunterIndustriesAPI.Controllers
         [VersionedRoute("configuration/{entity}", "2.0")]
         [SwaggerOperation("GetConfigurationList")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ConfigurationResponseModel>), Description = "Returns the item(s) matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Get(string entity, [FromUri] int pageSize = 25, [FromUri] int pageNumber = 1, [FromUri] int entityId = 0)
+        public async Task<IHttpActionResult> Get(
+            string entity,
+            [FromUri] ConfigurationFilterModel filters,
+            [FromUri] int entityId = 0)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            ConfigurationService _configurationService = new ConfigurationService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            ConfigurationService _configurationService = new ConfigurationService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
+            ModelValidationService _modelValidator = new ModelValidationService();
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -127,7 +166,52 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            if (filters == null)
+            {
+                filters = new ConfigurationFilterModel();
+            }
+
+            if (filters.PageSize > 200)
+            {
+                filters.PageSize = 200;
+            }
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, entityId.ToString() })}, {ParameterFunction.FormatParameters(filters)}.");
+
+            if (!_modelValidator.IsValid(filters))
+            {
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "Invalid or no filters provided."
+                    }
+                };
+
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    requestBody: null,
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest,
+                    response.Data);
+            }
 
             int? parentEntityId = null;
 
@@ -136,29 +220,53 @@ namespace HunterIndustriesAPI.Controllers
                 parentEntityId = entityId;
             }
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, new string[] { entity, entityId.ToString(), pageSize.ToString(), pageNumber.ToString() });
-
-            var result = await _configurationService.GetRecords(entity, 0, parentEntityId, pageSize, pageNumber);
-            List<object> records = result.Item1;
+            (List<object> records, int totalRecords) = await _configurationService.GetRecords(
+                entity,
+                0,
+                parentEntityId,
+                filters.IncludeUsed,
+                filters.PageSize,
+                filters.PageNumber);
 
             if (records.Count == 0)
             {
                 response = new ResponseModel()
                 {
-                    StatusCode = 200,
+                    StatusCode = 204,
                     Data = new
                     {
                         information = "No data returned by given parameters."
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.OK, response.Data);
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("NoContent"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"EntityId: {entityId}",
+                        $"IncludeUsed: {filters.IncludeUsed}",
+                        $"PageSize: {filters.PageSize}",
+                        $"PageNumber: {filters.PageNumber}"
+                    },
+                    requestBody: null,
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.OK,
+                    response.Data);
             }
 
-            int totalRecords = result.Item2;
-            int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)pageSize);
+            int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
 
             response = new ResponseModel()
             {
@@ -167,15 +275,38 @@ namespace HunterIndustriesAPI.Controllers
                 {
                     Entries = records,
                     EntryCount = records.Count,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
+                    PageNumber = filters.PageNumber,
+                    PageSize = filters.PageSize,
                     TotalPageCount = totalPages,
                     TotalCount = totalRecords
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("configuration"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Entity: {entity}",
+                    $"EntityId: {entityId}",
+                    $"IncludeUsed: {filters.IncludeUsed}",
+                    $"PageSize: {filters.PageSize}",
+                    $"PageNumber: {filters.PageNumber}"
+                },
+                requestBody: null,
+                responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK,
+                response.Data);
         }
 
         /// <summary>
@@ -193,12 +324,24 @@ namespace HunterIndustriesAPI.Controllers
         [VersionedRoute("configuration/{entity}/{id:int}", "2.0")]
         [SwaggerOperation("GetConfigurationById")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(object), Description = "Returns the item matching the given id.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Get(string entity, int id)
+        public async Task<IHttpActionResult> Get(
+            string entity,
+            int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            ConfigurationService _configurationService = new ConfigurationService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            ConfigurationService _configurationService = new ConfigurationService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -206,26 +349,47 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { entity, id.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Configuration (Get) endpoint called with the following parameters \"{entity}\", \"{id}\".");
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("GET"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, new string[] { entity, id.ToString() });
-
-            List<object> records = (await _configurationService.GetRecords(entity, id)).Item1;
+            List<object> records = (await _configurationService.GetRecords(
+                entity,
+                id)).Item1;
 
             if (records.Count == 0)
             {
                 response = new ResponseModel()
                 {
-                    StatusCode = 200,
+                    StatusCode = 204,
                     Data = new
                     {
                         information = "No data returned by given parameters."
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.OK, response.Data);
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("NoContent"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"Id: {id}"
+                    },
+                    requestBody: null,
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.OK,
+                    response.Data);
             }
 
             response = new ResponseModel()
@@ -234,8 +398,28 @@ namespace HunterIndustriesAPI.Controllers
                 Data = records[0]
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.OK, response.Data);
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("configuration"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Entity: {entity}",
+                    $"Id: {id}"
+                },
+                requestBody: null,
+                responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Configuration (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK,
+                response.Data);
         }
 
         /// <summary>
@@ -262,11 +446,23 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Post(string entity, [FromBody, Required] object request, [FromUri] int entityId = 0)
+        public async Task<IHttpActionResult> Post(
+            string entity,
+            [FromBody, Required] object request,
+            [FromUri] int entityId = 0)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
-            ConfigurationService _configurationService = new ConfigurationService(_Logger, _FileSystem, _Options, _Database);
+            ConfigurationService _configurationService = new ConfigurationService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -281,16 +477,19 @@ namespace HunterIndustriesAPI.Controllers
 
             else
             {
-                request = ConfigurationConverter.GetRequestObject(entity, request);
+                request = ConfigurationConverter.GetRequestObject(
+                    entity,
+                    request);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Post) endpoint called with the following parameters \"{entity}\", \"{entityId}\", {ParameterFunction.FormatParameters(request)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Configuration (Post) endpoint called with the following parameters \"{entity}\", \"{entityId}\", {ParameterFunction.FormatParameters(request)}.");
 
-            if (!_modelValidator.IsValid(request, true))
+            if (!_modelValidator.IsValid(
+                request,
+                true))
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("BadRequest"),
-                    username, applicationName, null);
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -300,8 +499,28 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.BadRequest, response.Data);
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"EntityId: {entityId}"
+                    },
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest,
+                    response.Data);
             }
 
             int? parentEntityId = null;
@@ -311,11 +530,11 @@ namespace HunterIndustriesAPI.Controllers
                 parentEntityId = entityId;
             }
 
-            if (await _configurationService.RecordExists(entity, request, parentEntityId))
+            if (await _configurationService.RecordExists(
+                entity,
+                request,
+                parentEntityId))
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("OK"),
-                    username, applicationName, ParameterFunction.FormatParameters(request, new string[] { entity, entityId.ToString() }));
-
                 response = new ResponseModel()
                 {
                     StatusCode = 200,
@@ -325,17 +544,37 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.OK, response.Data);
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("OK"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"EntityId: {entityId}"
+                    },
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.OK,
+                    response.Data);
             }
 
-            (bool created, int id) = await _configurationService.RecordCreated(entity, request, parentEntityId);
+            (bool created, int id) = await _configurationService.RecordCreated(
+                entity,
+                request,
+                parentEntityId);
 
             if (!created)
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"),
-                    username, applicationName, ParameterFunction.FormatParameters(request, new string[] { entity, entityId.ToString() }));
-
                 response = new ResponseModel()
                 {
                     Data = new
@@ -344,32 +583,67 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.InternalServerError, response.Data);
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"EntityId: {entityId}"
+                    },
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.InternalServerError,
+                    response.Data);
             }
 
-            List<object> records = (await _configurationService.GetRecords(entity, id)).Item1;
+            List<object> records = (await _configurationService.GetRecords(
+                entity,
+                id)).Item1;
 
             if (records.Count == 0)
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("InternalServerError"),
-                    username, applicationName, ParameterFunction.FormatParameters(request, new string[] { entity, entityId.ToString() }));
-
                 response = new ResponseModel()
                 {
                     Data = new
                     {
-                        error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
+                        error = "The new record could not be found. Please raise this with the time the error occured so it can be investigated."
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.InternalServerError, response.Data);
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"EntityId: {entityId}"
+                    },
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.InternalServerError,
+                    response.Data);
             }
-
-
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("POST"), AuditHistoryConverter.GetStatusID("Created"),
-                username, applicationName, ParameterFunction.FormatParameters(request, new string[] { entity, entityId.ToString() }));
 
             response = new ResponseModel()
             {
@@ -377,8 +651,28 @@ namespace HunterIndustriesAPI.Controllers
                 Data = records[0]
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.Created, response.Data);
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("configuration"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("POST"),
+                AuditHistoryConverter.GetStatusId("Created"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Entity: {entity}",
+                    $"EntityId: {entityId}"
+                },
+                requestBody: ParameterFunction.SerialiseRequestBody(request),
+                responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Configuration (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.Created,
+                response.Data);
         }
 
         /// <summary>
@@ -404,12 +698,28 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no record was found matching the id.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Patch(string entity, int id, [FromBody, Required] object request)
+        public async Task<IHttpActionResult> Patch(
+            string entity,
+            int id,
+            [FromBody, Required] object request)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
             ModelValidationService _modelValidator = new ModelValidationService();
-            ConfigurationService _configurationService = new ConfigurationService(_Logger, _FileSystem, _Options, _Database);
-            ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
+            ConfigurationService _configurationService = new ConfigurationService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
+            ChangeService _changeService = new ChangeService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -424,16 +734,17 @@ namespace HunterIndustriesAPI.Controllers
 
             else
             {
-                request = ConfigurationConverter.GetRequestObject(entity, request);
+                request = ConfigurationConverter.GetRequestObject(
+                    entity,
+                    request);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Patch) endpoint called with the following parameters \"{entity}\", \"{id}\", {ParameterFunction.FormatParameters(request)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Configuration (Patch) endpoint called with the following parameters \"{entity}\", \"{id}\", {ParameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request))
             {
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("BadRequest"),
-                    username, applicationName, null);
-
                 response = new ResponseModel()
                 {
                     StatusCode = 400,
@@ -443,20 +754,71 @@ namespace HunterIndustriesAPI.Controllers
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.BadRequest, response.Data);
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"Id: {id}"
+                    },
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest,
+                    response.Data);
             }
 
-            if (await _configurationService.RecordExists(entity, id))
+            if (await _configurationService.RecordExists(
+                entity,
+                id))
             {
-                object record = (await _configurationService.GetRecords(entity, id)).Item1[0];
+                object record = (await _configurationService.GetRecords(
+                    entity,
+                    id)).Item1[0];
 
-                if (await _configurationService.RecordUpdated(entity, id, request))
+                if (await _configurationService.RecordUpdated(
+                    entity,
+                    id,
+                    request))
                 {
-                    (bool, int) audit = await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("OK"),
-                        username, applicationName, ParameterFunction.FormatParameters(request, new string[] { entity, id.ToString() }));
+                    PropertyInfo[] requestProperties = request.GetType()
+                        .GetProperties();
 
-                    PropertyInfo[] requestProperties = request.GetType().GetProperties();
+                    object updatedRecord = (await _configurationService.GetRecords(
+                        entity,
+                        id)).Item1[0];
+
+                    response = new ResponseModel()
+                    {
+                        StatusCode = 200,
+                        Data = updatedRecord
+                    };
+
+                    (bool, int) audit = await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("configuration"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("PATCH"),
+                        AuditHistoryConverter.GetStatusId("OK"),
+                        username,
+                        applicationName,
+                        new string[]
+                        {
+                            $"Entity: {entity}",
+                            $"Id: {id}"
+                        },
+                        requestBody: ParameterFunction.SerialiseRequestBody(request),
+                        responseBody: ResponseFunction.GetModelJSON(response.Data));
 
                     foreach (PropertyInfo prop in requestProperties)
                     {
@@ -467,7 +829,8 @@ namespace HunterIndustriesAPI.Controllers
                             continue;
                         }
 
-                        PropertyInfo recordProp = record.GetType().GetProperty(prop.Name);
+                        PropertyInfo recordProp = record.GetType()
+                            .GetProperty(prop.Name);
 
                         if (recordProp == null)
                         {
@@ -475,44 +838,59 @@ namespace HunterIndustriesAPI.Controllers
                         }
 
                         string newString = newValue.ToString();
-                        string oldString = recordProp.GetValue(record)?.ToString() ?? string.Empty;
+                        string oldString = recordProp.GetValue(record)?
+                            .ToString() ?? string.Empty;
 
                         if (newString != oldString)
                         {
-                            await _changeService.LogChange(audit.Item2, prop.Name, oldString, newString);
+                            await _changeService.LogChange(
+                                audit.Item2,
+                                prop.Name,
+                                oldString,
+                                newString);
                         }
                     }
 
-                    object updatedRecord = (await _configurationService.GetRecords(entity, id)).Item1[0];
-
-                    response = new ResponseModel()
-                    {
-                        StatusCode = 200,
-                        Data = updatedRecord
-                    };
-
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                    return Content(HttpStatusCode.OK, response.Data);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                    return Content(
+                        HttpStatusCode.OK,
+                        response.Data);
                 }
-
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("InternalServerError"),
-                    username, applicationName, ParameterFunction.FormatParameters(request, new string[] { entity, id.ToString() }));
 
                 response = new ResponseModel()
                 {
                     StatusCode = 500,
                     Data = new
                     {
-                        error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
+                        error = "An error occured when running an update statement. Please raise this with the time the error occured so it can be investigated."
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.InternalServerError, response.Data);
-            }
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("PATCH"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"Id: {id}"
+                    },
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("PATCH"), AuditHistoryConverter.GetStatusID("NotFound"),
-                username, applicationName, ParameterFunction.FormatParameters(request, new string[] { entity, id.ToString() }));
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.InternalServerError,
+                    response.Data);
+            }
 
             response = new ResponseModel()
             {
@@ -523,8 +901,28 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.NotFound, response.Data);
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("configuration"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("PATCH"),
+                AuditHistoryConverter.GetStatusId("NotFound"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Entity: {entity}",
+                    $"Id: {id}"
+                },
+                requestBody: ParameterFunction.SerialiseRequestBody(request),
+                responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Configuration (Patch) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.NotFound,
+                response.Data);
         }
 
         /// <summary>
@@ -544,11 +942,26 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.NotFound, Type = typeof(ResponseModel), Description = "If no record was found matching the id.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Delete(string entity, int id)
+        public async Task<IHttpActionResult> Delete(
+            string entity,
+            int id)
         {
-            AuditHistoryService _auditHistoryService = new AuditHistoryService(_Logger, _FileSystem, _Options, _Database, _Clock);
-            ConfigurationService _configurationService = new ConfigurationService(_Logger, _FileSystem, _Options, _Database);
-            ChangeService _changeService = new ChangeService(_Logger, _FileSystem, _Options, _Database);
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+            ConfigurationService _configurationService = new ConfigurationService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
+            ChangeService _changeService = new ChangeService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
@@ -556,17 +969,18 @@ namespace HunterIndustriesAPI.Controllers
 
             ResponseModel response;
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Delete) endpoint called with the following parameters \"{entity}\", \"{id}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info, 
+                $"Configuration (Delete) endpoint called with the following parameters \"{entity}\", \"{id}\".");
 
-            if (await _configurationService.RecordExists(entity, id))
+            if (await _configurationService.RecordExists(
+                entity,
+                id))
             {
-                if (await _configurationService.RecordDeleted(entity, id))
+                if (await _configurationService.RecordDeleted(
+                    entity,
+                    id))
                 {
-                    (bool, int) audit = await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("DELETE"), AuditHistoryConverter.GetStatusID("OK"),
-                        username, applicationName, new string[] { entity, id.ToString() });
-
-                    await _changeService.LogChange(audit.Item2, "IsDeleted", "0", "1");
-
                     response = new ResponseModel()
                     {
                         StatusCode = 200,
@@ -576,28 +990,68 @@ namespace HunterIndustriesAPI.Controllers
                         }
                     };
 
-                    _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Delete) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                    return Content(HttpStatusCode.OK, response.Data);
-                }
+                    (bool, int) audit = await _auditHistoryService.LogRequest(
+                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        AuditHistoryConverter.GetEndpointId("configuration"),
+                        AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                        AuditHistoryConverter.GetMethodId("DELETE"),
+                        AuditHistoryConverter.GetStatusId("OK"),
+                        username,
+                        applicationName,
+                        new string[]
+                        {
+                            $"Entity: {entity}",
+                            $"Id: {id}"
+                        },
+                        requestBody: null,
+                        responseBody: ResponseFunction.GetModelJSON(response.Data));
 
-                await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("DELETE"),
-                        AuditHistoryConverter.GetStatusID("InternalServerError"), username, applicationName, new string[] { entity, id.ToString() });
+                    await _changeService.LogChange(
+                        audit.Item2,
+                        "IsDeleted",
+                        "0",
+                        "1");
+
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        $"Configuration (Delete) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                    return Content(
+                        HttpStatusCode.OK,
+                        response.Data);
+                }
 
                 response = new ResponseModel()
                 {
                     StatusCode = 500,
                     Data = new
                     {
-                        error = "An error occured when running an insert statement. Please raise this with the time the error occured so it can be investigated."
+                        error = "An error occured when running a delete statement. Please raise this with the time the error occured so it can be investigated."
                     }
                 };
 
-                _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Delete) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(HttpStatusCode.InternalServerError, response.Data);
-            }
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("configuration"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("DELETE"),
+                    AuditHistoryConverter.GetStatusId("InternalServerError"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Entity: {entity}",
+                        $"Id: {id}"
+                    },
+                    requestBody: null,
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
 
-            await _auditHistoryService.LogRequest(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)), AuditHistoryConverter.GetEndpointID("configuration"), AuditHistoryConverter.GetEndpointVersionID(AuditHistoryFunction.ExtractVersionFromRequest(Request)), AuditHistoryConverter.GetMethodID("DELETE"), AuditHistoryConverter.GetStatusID("NotFound"),
-                username, applicationName, new string[] { entity, id.ToString() });
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Configuration (Delete) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.InternalServerError,
+                    response.Data);
+            }
 
             response = new ResponseModel()
             {
@@ -608,8 +1062,28 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Info, $"Configuration (Delete) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-            return Content(HttpStatusCode.NotFound, response.Data);
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("configuration"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("DELETE"),
+                AuditHistoryConverter.GetStatusId("NotFound"),
+                username,
+                applicationName,
+                new string[]
+                {
+                    $"Entity: {entity}",
+                    $"Id: {id}"
+                },
+                requestBody: null,
+                responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Configuration (Delete) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.NotFound,
+                response.Data);
         }
     }
 }

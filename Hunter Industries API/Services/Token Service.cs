@@ -1,7 +1,7 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,7 +26,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public TokenService(ILoggerService _logger,
+        public TokenService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database,
@@ -57,7 +58,9 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<(string[], string[])> GetUsers()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetUsers called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"TokenService.GetUsers called.");
 
             string[] usernames = Array.Empty<string>();
             string[] passwords = Array.Empty<string>();
@@ -65,28 +68,49 @@ namespace HunterIndustriesAPI.Services
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetUsers.SQL");
-                (List<(string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetString(1)));
+                (List<(string, string)> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => (
+                        reader.GetString(0),
+                        reader.GetString(1)
+                    ));
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run TokenService.GetUsers.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                usernames = results.Select(r => r.Item1).ToArray();
-                passwords = results.Select(r => r.Item2).ToArray();
+                usernames = results.Select(r => r.Item1)
+                    .ToArray();
+                passwords = results.Select(r => r.Item2)
+                    .ToArray();
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run TokenService.GetUsers.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetUsers returned {usernames.Length} usernames | {passwords.Length} passwords.");
-            return (usernames, passwords);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"TokenService.GetUsers returned {usernames.Length} usernames | {passwords.Length} passwords.");
+            return (
+                usernames,
+                passwords);
         }
 
         /// <summary>
@@ -94,20 +118,29 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<string[]> GetAuthorisationPhrases()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetAuthorisationPhrases called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"TokenService.GetAuthorisationPhrases called.");
 
             string[] phrases = Array.Empty<string>();
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetAuthorisationPhrases.SQL");
-                (List<string> results, Exception ex) = await _Database.Query(sql, reader => reader.GetString(0));
+                (List<string> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetString(0));
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run TokenService.GetAuthorisationPhrases.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 phrases = results.ToArray();
@@ -116,11 +149,18 @@ namespace HunterIndustriesAPI.Services
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run TokenService.GetAuthorisationPhrases.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetAuthorisationPhrases returned {phrases.Length} phrases.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"TokenService.GetAuthorisationPhrases returned {phrases.Length} phrases.");
             return phrases;
         }
 
@@ -129,7 +169,9 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         private async Task<string> GetApplicationName(string phrase)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName called with the parameters {ParameterFunction.FormatParameters(new[] { phrase })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"TokenService.GetApplicationName called with the parameter \"{phrase}\".");
 
             string name = string.Empty;
 
@@ -141,13 +183,21 @@ namespace HunterIndustriesAPI.Services
                     new SqlParameter("@phrase", SqlDbType.VarChar) { Value = phrase }
                 };
 
-                (string result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetString(0), parameters);
+                (string result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => reader.GetString(0),
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run TokenService.GetApplicationName.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 name = result;
@@ -156,11 +206,18 @@ namespace HunterIndustriesAPI.Services
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run TokenService.GetApplicationName.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error, 
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"TokenService.GetApplicationName returned {name}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"TokenService.GetApplicationName returned {name}.");
             return name;
         }
     }

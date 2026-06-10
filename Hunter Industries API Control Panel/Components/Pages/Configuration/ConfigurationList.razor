@@ -1,0 +1,239 @@
+@page "/configuration/{Entity}"
+
+<PageTitle>@DisplayName Configuration</PageTitle>
+
+<div class="mb-3">
+    <a href="/configuration" class="btn btn-outline-light btn-sm">&larr; Back to Configuration</a>
+</div>
+
+<div class="page-header">
+    <h1>@DisplayName Configuration</h1>
+    <button class="btn btn-primary" @onclick="OpenCreateModal">Create @Entity</button>
+</div>
+
+@if (IsLoading && Records == null)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+
+else
+{
+    <!-- Results -->
+    <div class="table-scroll-wrapper">
+        <RadzenDataGrid
+            Data="@Records?.Entries"
+            TItem="ConfigurationListObjectModel"
+            AllowSorting="false">
+            <Columns>
+                <RadzenDataGridColumn
+                    TItem="ConfigurationListObjectModel"
+                    Property="Id"
+                    Title="ID"
+                    Width="80px" />
+                <RadzenDataGridColumn
+                    TItem="ConfigurationListObjectModel"
+                    Property="Name"
+                    Title="Value"
+                    MinWidth="200px" />
+                <RadzenDataGridColumn
+                    TItem="ConfigurationListObjectModel"
+                    Title="Status"
+                    Width="120px">
+                <Template Context="configurationObject">
+                    @if (configurationObject.IsDeleted)
+                    {
+                        <StatusBadge
+                            Text="Deleted"
+                            Type="deleted" />
+                    }
+
+                    else
+                    {
+                        <StatusBadge
+                            Text="Active"
+                            Type="active" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="ConfigurationListObjectModel"
+                Title="Actions"
+                Width="160px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="entity">
+                    @if (!entity.IsDeleted)
+                    {
+                        <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToEdit(entity.Id)" @onclick:stopPropagation="true" title="Edit">
+                            &#9998;
+                        </button>
+                        @if (Entity == "application")
+                        {
+                            <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToLogs(entity.Id)" @onclick:stopPropagation="true" title="Logs">
+                                &#128203;
+                            </button>
+                        }
+
+                        @if (entity.Name != ControlPanelApplication)
+                        {
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(entity)" @onclick:stopPropagation="true" title="Delete">
+                                &#128465;
+                            </button>
+                        }
+                    }
+
+                    else
+                    {
+                        @if (Entity == "application")
+                        {
+                            <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToLogs(entity.Id)" @onclick:stopPropagation="true" title="Logs">
+                                &#128203;
+                            </button>
+                        }
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+        <div class="text-muted">
+            Showing @((Records?.PageNumber - 1) * Records?.PageSize + 1)-@((Records?.PageNumber - 1) * Records?.PageSize + Records?.EntryCount)
+            of @Records?.TotalCount records
+        </div>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <select class="form-select form-select-sm page-size-select" @bind="PageSize" @bind:after="ApplyFilters">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber <= 1)" @onclick="PreviousPage">&laquo; Prev</button>
+            <span class="text-muted">Page @PageNumber of @Records?.TotalPageCount</span>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber >= Records?.TotalPageCount)" @onclick="NextPage">Next &raquo;</button>
+        </div>
+    </div>
+
+    <!-- Create Entity Modal -->
+    @if (ShowCreateModal)
+    {
+        <div class="modal fade show d-block modal-overlay" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create @Entity</h5>
+                        <button type="button" class="btn-close" @onclick="CloseCreateModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @switch (Entity)
+                        {
+                            case "application":
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" @bind="NewAppName" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phrase</label>
+                                    <select class="form-control" @bind="NewAppPhrase">
+                                        <option value="" disabled selected>Select an option</option>
+                                        @foreach (string phrase in Phrases)
+                                        {
+                                            <option value="@phrase">@phrase</option>
+                                        }
+                                    </select>
+                                </div>
+                                break;
+
+                            case "authorisation":
+                                <div class="mb-3">
+                                    <label class="form-label">Phrase</label>
+                                    <input type="text" class="form-control" @bind="NewAuthPhrase" />
+                                </div>
+                                break;
+
+                            case "component":
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" @bind="NewComponentName" />
+                                </div>
+                                break;
+
+                            case "connection":
+                                <div class="mb-3">
+                                    <label class="form-label">IP Address</label>
+                                    <input type="text" class="form-control" @bind="NewConnectionIP" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Port</label>
+                                    <input type="text" class="form-control" @bind="NewConnectionPort" />
+                                </div>
+                                break;
+
+                            case "downtime":
+                                <div class="mb-3">
+                                    <label class="form-label">Time</label>
+                                    <input type="text" class="form-control" @bind="NewDowntimeTime" placeholder="HH:mm:ss" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Duration (seconds)</label>
+                                    <input type="text" class="form-control" @bind="NewDowntimeDuration" />
+                                </div>
+                                break;
+
+                            case "game":
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" @bind="NewGameName" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Version</label>
+                                    <input type="text" class="form-control" @bind="NewGameVersion" />
+                                </div>
+                                break;
+
+                            case "machine":
+                                <div class="mb-3">
+                                    <label class="form-label">Host Name</label>
+                                    <input type="text" class="form-control" @bind="NewMachineHostName" />
+                                </div>
+                                break;
+                        }
+
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <div class="alert alert-danger py-2">@ErrorMessage</div>
+                        }
+
+                        @if (string.IsNullOrEmpty(ErrorMessage) && IsLoading)
+                        {
+                            <div class="text-success ms-2">Created @Entity successfully!</div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light btn-sm" @onclick="CloseCreateModal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm" disabled="@IsLoading" @onclick="CreateEntity">
+                            @if (IsLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            }
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <ConfirmDialog
+        IsVisible="ShowDeleteConfirm"
+        Title="@($"Delete {DisplayName}")"
+        Message="@($"Are you sure you want to delete {DisplayName} '{EntityToDelete?.Name}'?")"
+        ConfirmText="Delete"
+        OnConfirm="DeleteConfiguration"
+        OnCancel="CancelDelete" />
+}

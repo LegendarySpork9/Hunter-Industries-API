@@ -77,9 +77,11 @@ CREATE TABLE [dbo].[AuditHistory](
 	[EndpointVersionId] [int] NOT NULL,
 	[MethodId] [int] NOT NULL,
 	[StatusId] [int] NOT NULL,
-	[IPAddress] [varchar](15) NOT NULL,
+	[IPAddress] [varchar](50) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
-	[Parameters] [varchar](max) NULL
+	[Parameters] [varchar](max) NULL,
+	[RequestBody] [varchar](max) NULL,
+	[ResponseBody] [varchar](max) NULL
  CONSTRAINT [PK_AuditHistory] PRIMARY KEY CLUSTERED 
 (
 	[AuditId] ASC
@@ -161,7 +163,7 @@ GO
 CREATE TABLE [dbo].[ErrorLog](
 	[ErrorId] [int] IDENTITY(1,1) NOT NULL,
 	[DateOccured] [datetime] NOT NULL,
-	[IPAddress] [varchar](15) NOT NULL,
+	[IPAddress] [varchar](50) NOT NULL,
 	[Summary] [varchar](255) NOT NULL,
 	[Message] [varchar](max) NOT NULL
  CONSTRAINT [PK_ErrorLog] PRIMARY KEY CLUSTERED 
@@ -277,6 +279,7 @@ GO
 CREATE TABLE [dbo].[VersionHistory](
 	[VersionId] [int] IDENTITY(1,1) NOT NULL,
 	[ReleaseVersion] [varchar](11) NOT NULL,
+	[ScriptName] [varchar](255) NOT NULL,
 	[DateUpdated] [datetime] NOT NULL
  CONSTRAINT [PK_VersionHistory] PRIMARY KEY CLUSTERED 
 (
@@ -330,7 +333,7 @@ GO
 CREATE TABLE [dbo].[Location](
 	[LocationId] [int] IDENTITY(1,1) NOT NULL,
 	[HostName] [varchar](100) NOT NULL,
-	[IPAddress] [varchar](15) NOT NULL
+	[IPAddress] [varchar](50) NOT NULL
  CONSTRAINT [PK_Location] PRIMARY KEY CLUSTERED 
 (
 	[LocationId] ASC
@@ -504,7 +507,7 @@ GO
 CREATE TABLE [dbo].[ServerAlert](
 	[ServerAlertId] [int] IDENTITY(1,1) NOT NULL,
 	[ServerInformationId] [int] NOT NULL,
-	[UserSettingsId] [int] NOT NULL,
+	[UserSettingId] [int] NOT NULL,
 	[ComponentId] [int] NOT NULL,
 	[ComponentStatusId] [int] NOT NULL,
 	[AlertStatusId] [int] NOT NULL,
@@ -788,6 +791,8 @@ GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('200 OK')
 GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('201 Created')
+GO
+INSERT [dbo].[StatusCode] ([Value]) VALUES ('204 No Content')
 GO
 INSERT [dbo].[StatusCode] ([Value]) VALUES ('400 Bad Request')
 GO

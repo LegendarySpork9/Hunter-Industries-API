@@ -1,8 +1,9 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Responses.Assistant;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -22,7 +23,8 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public DeletionService(ILoggerService _logger,
+        public DeletionService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -36,9 +38,13 @@ namespace HunterIndustriesAPI.Services.Assistant
         /// <summary>
         /// Returns the deletion information about the given assistant.
         /// </summary>
-        public async Task<DeletionResponseModel> GetAssistantDeletion(string assistantName, string assistantId)
+        public async Task<DeletionResponseModel> GetAssistantDeletion(
+            string assistantName,
+            string assistantId)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"DeletionService.GetAssistantDeletion called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId })}.");
 
             DeletionResponseModel deletion = new DeletionResponseModel();
 
@@ -51,18 +57,26 @@ namespace HunterIndustriesAPI.Services.Assistant
                     new SqlParameter("@assistantID", SqlDbType.VarChar) { Value = assistantId }
                 };
 
-                (DeletionResponseModel result, Exception ex) = await _Database.QuerySingle(sql, reader => new DeletionResponseModel()
-                {
-                    AssistantName = reader.GetString(0),
-                    IdNumber = reader.GetString(1),
-                    Deletion = bool.Parse(reader.GetString(2))
-                }, parameters);
+                (DeletionResponseModel result, Exception ex) = await _Database.QuerySingle(
+                    sql, 
+                    reader => new DeletionResponseModel()
+                    {
+                        AssistantName = reader.GetString(0),
+                        IdNumber = reader.GetString(1),
+                        Deletion = bool.Parse(reader.GetString(2))
+                    },
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run DeletionService.GetAssistantDeletion.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (result != null)
@@ -74,22 +88,34 @@ namespace HunterIndustriesAPI.Services.Assistant
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run DeletionService.GetAssistantDeletion.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.GetAssistantDeletion returned {ParameterFunction.FormatParameters(deletion)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"DeletionService.GetAssistantDeletion returned {ParameterFunction.FormatParameters(deletion)}.");
             return deletion;
         }
 
         /// <summary>
         /// Updates the deletion status of the given assistant.
         /// </summary>
-        public async Task<bool> AssistantDeletionUpdated(string assistantName, string assistantId, bool deletion)
+        public async Task<bool> AssistantDeletionUpdated(
+            string assistantName,
+            string assistantId,
+            bool deletion)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, deletion.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"DeletionService.AssistantDeletionUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { assistantName, assistantId, deletion.ToString() })}.");
 
-            bool updated = true;
+            bool updated = false;
 
             try
             {
@@ -106,24 +132,36 @@ namespace HunterIndustriesAPI.Services.Assistant
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run DeletionService.AssistantDeletionUpdated.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                if (rowsAffected != 1)
+                if (rowsAffected == 1)
                 {
-                    updated = false;
+                    updated = true;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run DeletionService.AssistantDeletionUpdated.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"DeletionService.AssistantDeletionUpdated returned {updated}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"DeletionService.AssistantDeletionUpdated returned {updated}.");
             return updated;
         }
     }

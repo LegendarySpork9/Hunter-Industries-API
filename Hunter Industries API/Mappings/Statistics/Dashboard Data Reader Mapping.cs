@@ -57,21 +57,6 @@ namespace HunterIndustriesAPI.Mappings
         };
 
         /// <summary>
-        /// The SQL row to model mappings for the server health overview record.
-        /// </summary>
-        public static readonly Func<IDataReader, ServerHealthOverviewRecord> ServerHealthOverviewMapper = reader =>
-        {
-            ServerHealthOverviewRecord serverHealthOverview = new ServerHealthOverviewRecord()
-            {
-                ServerId = reader.GetInt32(0),
-                Events = reader.GetInt32(1),
-                Alerts = reader.GetInt32(2)
-            };
-
-            return serverHealthOverview;
-        };
-
-        /// <summary>
         /// The SQL row to model mappings for the uptime stat in the server health overview record.
         /// </summary>
         public static readonly Func<IDataReader, ServerHealthOverviewRecord> ServerHealthUptimeMapper = reader =>
@@ -80,7 +65,7 @@ namespace HunterIndustriesAPI.Mappings
             {
                 ServerId = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                Uptime = reader.GetFloat(2)
+                Uptime = reader.GetDecimal(3)
             };
 
             return serverHealthUptime;
@@ -95,10 +80,26 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Applications = reader.GetInt32(0),
                 Users = reader.GetInt32(1),
-                Calls = reader.GetInt32(2),
-                LoginAttempts = reader.GetInt32(3),
-                Changes = reader.GetInt32(4),
-                Errors = reader.GetInt32(5)
+                Calls = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(2),
+                    LastMonth = reader.GetInt32(3)
+                },
+                LoginAttempts = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(4),
+                    LastMonth = reader.GetInt32(5)
+                },
+                Changes = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(6),
+                    LastMonth = reader.GetInt32(7)
+                },
+                Errors = new MonthlyStatRecord
+                {
+                    ThisMonth = reader.GetInt32(8),
+                    LastMonth = reader.GetInt32(9)
+                }
             };
 
             return topBarStats;

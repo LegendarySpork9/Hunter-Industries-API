@@ -45,7 +45,9 @@ namespace HunterIndustriesAPI.Filters
 
                 if (typeof(ApiController).IsAssignableFrom(serviceType))
                 {
-                    return ActivatorUtilities.CreateInstance(_Provider, serviceType);
+                    return ActivatorUtilities.CreateInstance(
+                        _Provider, 
+                        serviceType);
                 }
 
                 return null;

@@ -1,7 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Services;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Services;
 using System.Web;
 
 namespace HunterIndustriesAPI.Implementations
@@ -13,10 +13,18 @@ namespace HunterIndustriesAPI.Implementations
         /// <summary>
         /// Logs the given message to the log file.
         /// </summary>
-        public void LogMessage(string level, string message, string summary = null)
+        public void LogMessage(
+            string level,
+            string message,
+            string summary = null)
         {
-            LoggerService _logger = new LoggerService(IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)));
-            _logger.LogMessage(level, message, summary);
+            LoggerService _logger = new LoggerService(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                "APILog");
+            _logger.LogMessage(
+                level,
+                message,
+                summary);
         }
     }
 }

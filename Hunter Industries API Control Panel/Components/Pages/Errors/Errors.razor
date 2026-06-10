@@ -1,0 +1,226 @@
+@page "/errors"
+
+<PageTitle>Errors</PageTitle>
+
+<div class="page-header">
+    <h1>Errors</h1>
+</div>
+
+@if (IsLoading && Statistics == null && ErrorLog == null)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+
+else
+{
+    <!-- Summary Charts -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Errors Over Time</h6>
+                    @if (Statistics != null && Statistics.Errors.Count > 0)
+                    {
+                        <RadzenChart Style="height: 200px; width">
+                            <RadzenLineSeries
+                                Data="@Statistics.Errors"
+                                CategoryProperty="Month"
+                                ValueProperty="Errors"
+                                Title="Errors"
+                                Stroke="rgb(220, 53, 69)">
+                                <ChildContent>
+                                    <RadzenMarkers MarkerType="MarkerType.Circle" Size="5" />
+                                </ChildContent>
+                            </RadzenLineSeries>
+                            <RadzenCategoryAxis />
+                            <RadzenValueAxis>
+                                <RadzenGridLines
+                                    Visible="true"
+                                    Stroke="#555" />
+                            </RadzenValueAxis>
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="text-center text-muted year-range">@ErrorYearRange</div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Errors by IP Address (This Month)</h6>
+                    @if (Statistics != null && Statistics.IPErrors.Count > 0)
+                    {
+                        <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
+                            <RadzenDonutSeries
+                                Data="@Statistics.IPErrors"
+                                CategoryProperty="IPAddress"
+                                ValueProperty="Errors"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@IPErrorColours"
+                                Strokes="@IPErrorColours" />
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @for (int x = 0; x < Statistics.IPErrors.Count; x++)
+                            {
+                                IPErrorModel item = Statistics.IPErrors[x];
+                                string colour = IPErrorColours[x % IPErrorColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.IPAddress (@item.Errors)
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Errors by Summary (This Month)</h6>
+                    @if (Statistics != null && Statistics.SummaryErrors.Count > 0)
+                    {
+                        <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
+                            <RadzenDonutSeries
+                                Data="@Statistics.SummaryErrors"
+                                CategoryProperty="Summary"
+                                ValueProperty="Errors"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@SummaryErrorColours"
+                                Strokes="@SummaryErrorColours" />
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @for (int x = 0; x < Statistics.SummaryErrors.Count; x++)
+                            {
+                                SummaryErrorModel item = Statistics.SummaryErrors[x];
+                                string colour = SummaryErrorColours[x % SummaryErrorColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @ErrorFunction.ExtractClassMethod(item.Summary) (@item.Errors)
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card mb-4 card-rounded">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-2">
+                    <label class="form-label">From Date</label>
+                    <input type="date" class="form-control" @bind="FilterFromDate" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To Date</label>
+                    <input type="date" class="form-control" @bind="FilterToDate" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">IP Address</label>
+                    <input type="text" class="form-control" @bind="FilterIPAddress" placeholder="e.g. 192.168.1.100" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Summary</label>
+                    <input type="text" class="form-control" @bind="FilterSummary" placeholder="Search by summary..." />
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" disabled="@IsLoading" @onclick="ApplyFilters">Apply</button>
+                    <button class="btn btn-outline-light btn-sm" disabled="@IsLoading" @onclick="ClearFilters">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error List -->
+    <div class="table-scroll-wrapper">
+        <RadzenDataGrid
+            Data="@ErrorLog?.Entries"
+            TItem="ErrorModel"
+            AllowSorting="false"
+            RowClick="@(args => Navigation.NavigateTo($"/errors/{args.Data.Id}"))"
+            Style="cursor: pointer;">
+            <Columns>
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Property="Id"
+                    Title="ID"
+                    Width="100px" />
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Title="Date (UTC)"
+                    Width="190px">
+                    <Template Context="error">
+                        @error.DateOccured.ToString("dd MMM yyyy HH:mm:ss")
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Property="IPAddress"
+                    Title="IP Address"
+                    Width="320px" />
+                <RadzenDataGridColumn
+                    TItem="ErrorModel"
+                    Property="Summary"
+                    Title="Summary"
+                    MinWidth="250px">
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+        <div class="text-muted">
+            @if (ErrorLog?.TotalCount > 0)
+            {
+                <span>Showing @((ErrorLog?.PageNumber - 1) * ErrorLog?.PageSize + 1)-@((ErrorLog?.PageNumber - 1) * ErrorLog?.PageSize + ErrorLog?.EntryCount) of @ErrorLog?.TotalCount records</span>
+            }
+
+            else
+            {
+                <span>No records found</span>
+            }
+        </div>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <select class="form-select form-select-sm page-size-select" disabled="@IsLoading" @bind="PageSize" @bind:after="ApplyFilters">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber <= 1 || IsLoading)" @onclick="PreviousPage">&laquo; Prev</button>
+            <span class="text-muted">Page @PageNumber of @ErrorLog?.TotalPageCount</span>
+            <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber >= ErrorLog?.TotalPageCount || IsLoading)" @onclick="NextPage">Next &raquo;</button>
+        </div>
+    </div>
+}

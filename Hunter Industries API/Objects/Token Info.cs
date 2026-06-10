@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Objects
         /// <summary>
         /// The scopes the token can access.
         /// </summary>
-        public IEnumerable<string> Scope { get; set; }
+        public IEnumerable<string> Scopes { get; set; }
         /// <summary>
         /// The date and time it was issued.
         /// </summary>

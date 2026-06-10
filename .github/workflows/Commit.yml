@@ -11,10 +11,31 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
 
     - name: Setup msbuild
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Install ASP.NET web workload
+      shell: pwsh
+      run: |
+        $vsWhere = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsInstaller = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe"
+        $installPath = & $vsWhere -latest -property installationPath
+        & $vsInstaller modify --installPath "$installPath" --add Microsoft.VisualStudio.Workload.NetWeb --includeRecommended --quiet --norestart --wait
+        if ($LASTEXITCODE -notin 0, 3010) { throw "VS workload install failed with exit code $LASTEXITCODE" }
+
+    - name: Restore NuGet packages
+      run: |
+        nuget restore "Hunter Industries API.sln"
+        dotnet restore "Hunter Industries API Common/Hunter Industries API Common.csproj"
+        dotnet restore "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj"
+        dotnet restore "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj"
 
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
@@ -22,6 +43,17 @@ jobs:
     - name: Create build directory
       run: mkdir _build
 
-    - name: Build solution
-      run: |
-        msbuild.exe "Hunter Industries API.sln" /p:configuration="Release"
+    - name: Build .NET Common project
+      run: dotnet build "Hunter Industries API Common/Hunter Industries API Common.csproj" --configuration Release --no-restore
+
+    - name: Build .NET Framework projects
+      run: msbuild.exe "Hunter Industries API/Hunter Industries API.csproj" /p:configuration="Release"
+
+    - name: Build .NET Control Panel project
+      run: dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release --no-restore
+
+    - name: Build test project (net472)
+      run: msbuild.exe "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" /p:Configuration=Release /p:TargetFramework=net472
+
+    - name: Build test project (net10.0)
+      run: dotnet build "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-restore --framework net10.0

@@ -12,20 +12,21 @@ namespace HunterIndustriesAPI.Filters.Document
         /// <summary>
         /// Sets the base URL on the Swagger UI and strips the version prefix from endpoint paths.
         /// </summary>
-        public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
+        public void Apply(
+            SwaggerDocument swaggerDoc,
+            SchemaRegistry schemaRegistry,
+            IApiExplorer apiExplorer)
         {
             string version = swaggerDoc.info.version;
             string versionPrefix = $"/{version}";
 
             swaggerDoc.basePath = "api.hunter-industries.co.uk";
 
-            var updatedPaths = new Dictionary<string, PathItem>();
+            Dictionary<string, PathItem> updatedPaths = new Dictionary<string, PathItem>();
 
-            foreach (var path in swaggerDoc.paths)
+            foreach (KeyValuePair<string, PathItem> path in swaggerDoc.paths)
             {
-                string newPath = path.Key.StartsWith(versionPrefix)
-                    ? path.Key.Substring(versionPrefix.Length)
-                    : path.Key;
+                string newPath = path.Key.StartsWith(versionPrefix) ? path.Key.Substring(versionPrefix.Length) : path.Key;
 
                 updatedPaths[newPath] = path.Value;
             }

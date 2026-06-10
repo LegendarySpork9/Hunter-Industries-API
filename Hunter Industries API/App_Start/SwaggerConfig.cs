@@ -38,16 +38,26 @@ namespace HunterIndustriesAPI
                                 for (int i = VersionedRouteAttribute.ApiVersions.Length - 1; i >= 0; i--)
                                 {
                                     string version = VersionedRouteAttribute.ApiVersions[i];
-                                    vc.Version($"v{version}", $"Hunter Industries API V{version}").Description("This is the OpenAPI documentation for the Hunter Industries API.").Contact(contact =>
+                                    vc.Version(
+                                        $"v{version}", 
+                                        $"Hunter Industries API V{version}").Description("This is the OpenAPI documentation for the Hunter Industries API.")
+                                            .Contact(contact =>
                                     {
                                         contact.Email("api@hunter-industries.co.uk");
                                     });
                                 }
                             });
 
-                        c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{thisAssembly.GetName().Name}.xml"));
+                        c.IncludeXmlComments(Path.Combine(
+                            AppDomain.CurrentDomain.BaseDirectory, 
+                            $"{thisAssembly.GetName().Name}.xml"));
 
-                        c.ApiKey("Bearer").Description("JWT authorization header using the Bearer scheme.").Name("Authorization").In("header");
+                        c.SchemaId(t => t.FullName);
+
+                        c.ApiKey("Bearer")
+                            .Description("JWT authorization header using the Bearer scheme.")
+                            .Name("Authorization")
+                            .In("header");
 
                         c.OperationFilter<RequiredParameterOperationFilter>();
                         c.OperationFilter<RequiredHeaderFilter>();
@@ -61,9 +71,15 @@ namespace HunterIndustriesAPI
                 .EnableSwaggerUi(c =>
                     {
                         c.DocumentTitle("Hunter Industries API");
-                        c.InjectStylesheet(thisAssembly, "HunterIndustriesAPI.CSS.Swagger.css");
-                        c.InjectJavaScript(thisAssembly, "HunterIndustriesAPI.JS.VersionSelector.js");
-                        c.InjectJavaScript(thisAssembly, "HunterIndustriesAPI.JS.GroupHeaders.js");
+                        c.InjectStylesheet(
+                            thisAssembly,
+                            "HunterIndustriesAPI.CSS.Swagger.css");
+                        c.InjectJavaScript(
+                            thisAssembly,
+                            "HunterIndustriesAPI.JS.VersionSelector.js");
+                        c.InjectJavaScript(
+                            thisAssembly, 
+                            "HunterIndustriesAPI.JS.GroupHeaders.js");
                         c.EnableDiscoveryUrlSelector();
                     });
         }

@@ -6,9 +6,9 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.User
     public class UserSettingsModel
     {
         /// <summary>
-        /// The name of the user.
+        /// The id of the user.
         /// </summary>
-        public string Username { get; set; }
+        public int UserId { get; set; }
         /// <summary>
         /// The application the settings relate to.
         /// </summary>

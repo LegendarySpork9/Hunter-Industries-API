@@ -1,0 +1,60 @@
+@page "/errors/{Id:int}"
+
+<PageTitle>Error Detail</PageTitle>
+
+<div class="mb-3">
+    <a href="/errors" class="btn btn-outline-light btn-sm">&larr; Back to Errors</a>
+</div>
+
+@if (IsLoading)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+
+else
+{
+    @if (Error == null)
+    {
+        <div class="alert alert-warning">Error record not found.</div>
+    }
+
+    else
+    {
+        <!-- Error Info -->
+        <div class="card mb-4 card-rounded">
+            <div class="card-header">
+                <h5 class="mb-0">Error #@Error.Id</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4" style="width: 190px;">
+                        <label class="form-label text-muted">Date (UTC)</label>
+                        <div>@Error.DateOccured.ToString("dd MMM yyyy HH:mm:ss")</div>
+                    </div>
+                    <div class="col-md-4" style="width: 320px;">
+                        <label class="form-label text-muted">IP Address</label>
+                        <div>@Error.IPAddress</div>
+                    </div>
+                    <div class="col-md-4" style="width: 60%;">
+                        <label class="form-label text-muted">Summary</label>
+                        <div>@Error.Summary</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Message -->
+        <div class="card mb-4 card-rounded">
+            <div class="card-header">
+                <h6 class="mb-0">Full Message</h6>
+            </div>
+            <div class="card-body">
+                <div class="code-block">@Error.Message</div>
+            </div>
+        </div>
+    }
+}

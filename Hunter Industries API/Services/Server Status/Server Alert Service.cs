@@ -1,9 +1,10 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,7 +25,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public ServerAlertService(ILoggerService _logger,
+        public ServerAlertService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -38,9 +40,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns all server alert records that match the parameters.
         /// </summary>
-        public async Task<(List<ServerAlertRecord>, int)> GetServerAlerts(int pageSize, int pageNumber)
+        public async Task<(List<ServerAlertRecord>, int)> GetServerAlerts(
+            int pageSize,
+            int pageNumber)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlerts called with the parameters {ParameterFunction.FormatParameters(new string[] { pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.GetServerAlerts called with the parameters \"{pageSize}\", \"{pageNumber}\".");
 
             List<ServerAlertRecord> serverAlerts = new List<ServerAlertRecord>();
             int totalRecords = 0;
@@ -54,29 +60,39 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
 
-                (List<ServerAlertRecord> results, Exception ex) = await _Database.Query(sql, reader => new ServerAlertRecord()
-                {
-                    AlertId = reader.GetInt32(0),
-                    Reporter = reader.GetString(1),
-                    Component = reader.GetString(2),
-                    ComponentStatus = reader.GetString(3),
-                    AlertStatus = reader.GetString(4),
-                    AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
-                    Server = new RelatedServerRecord()
+                (List<ServerAlertRecord> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => new ServerAlertRecord()
                     {
-                        Id = reader.GetInt32(6),
-                        Name = reader.GetString(7),
-                        HostName = reader.GetString(8),
-                        Game = reader.GetString(9),
-                        GameVersion = reader.GetString(10)
-                    }
-                }, parameters);
+                        Id = reader.GetInt32(0),
+                        Reporter = reader.GetString(1),
+                        Component = reader.GetString(2),
+                        ComponentStatus = reader.GetString(3),
+                        AlertStatus = reader.GetString(4),
+                        AlertDate = DateTime.SpecifyKind(
+                            reader.GetDateTime(5),
+                            DateTimeKind.Utc),
+                        Server = new RelatedServerRecord()
+                        {
+                            Id = reader.GetInt32(6),
+                            Name = reader.GetString(7),
+                            HostName = reader.GetString(8),
+                            Game = reader.GetString(9),
+                            GameVersion = reader.GetString(10)
+                        }
+                    },
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerAlertService.GetServerAlerts.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 serverAlerts = results;
@@ -86,12 +102,21 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerAlertService.GetServerAlerts.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlerts returned {serverAlerts.Count} records | {totalRecords} total records.");
-            return (serverAlerts, totalRecords);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.GetServerAlerts returned {serverAlerts.Count} records | {totalRecords} total records.");
+            return (
+                serverAlerts,
+                totalRecords);
         }
 
         /// <summary>
@@ -99,7 +124,9 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         public async Task<ServerAlertRecord> GetServerAlert(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.GetServerAlert called with the parameter \"{id}\".");
 
             ServerAlertRecord serverAlert = new ServerAlertRecord();
 
@@ -111,29 +138,39 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
-                (ServerAlertRecord result, Exception ex) = await _Database.QuerySingle(sql, reader => new ServerAlertRecord()
-                {
-                    AlertId = reader.GetInt32(0),
-                    Reporter = reader.GetString(1),
-                    Component = reader.GetString(2),
-                    ComponentStatus = reader.GetString(3),
-                    AlertStatus = reader.GetString(4),
-                    AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc),
-                    Server = new RelatedServerRecord()
+                (ServerAlertRecord result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => new ServerAlertRecord()
                     {
-                        Id = reader.GetInt32(6),
-                        Name = reader.GetString(7),
-                        HostName = reader.GetString(8),
-                        Game = reader.GetString(9),
-                        GameVersion = reader.GetString(10)
-                    }
-                }, parameters);
+                        Id = reader.GetInt32(0),
+                        Reporter = reader.GetString(1),
+                        Component = reader.GetString(2),
+                        ComponentStatus = reader.GetString(3),
+                        AlertStatus = reader.GetString(4),
+                        AlertDate = DateTime.SpecifyKind(
+                            reader.GetDateTime(5),
+                            DateTimeKind.Utc),
+                        Server = new RelatedServerRecord()
+                        {
+                            Id = reader.GetInt32(6),
+                            Name = reader.GetString(7),
+                            HostName = reader.GetString(8),
+                            Game = reader.GetString(9),
+                            GameVersion = reader.GetString(10)
+                        }
+                    },
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerAlertService.GetServerAlert.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (result != null)
@@ -145,11 +182,25 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerAlertService.GetServerAlert.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetServerAlert returned {serverAlert.AlertId.ToString() ?? "0"}.");
+            int alertId = 0;
+
+            if (serverAlert != null)
+            {
+                alertId = serverAlert.Id;
+            }
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.GetServerAlert returned {alertId}.");
             return serverAlert;
         }
 
@@ -158,20 +209,29 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// </summary>
         private async Task<int> GetTotalServerAlerts()
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetTotalServerAlerts called.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.GetTotalServerAlerts called.");
 
             int totalRecords = 0;
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetTotalServerAlerts.sql");
-                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0));
+                (int result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => reader.GetInt32(0));
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerAlertService.GetTotalServerAlerts.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 totalRecords = result;
@@ -180,20 +240,31 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerAlertService.GetTotalServerAlerts.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.GetTotalServerAlerts returned {totalRecords}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.GetTotalServerAlerts returned {totalRecords}.");
             return totalRecords;
         }
 
         /// <summary>
         /// Logs the server alert.
         /// </summary>
-        public async Task<(bool, int)> LogServerAlert(ServerAlertModel serverAlert, string applicationName)
+        public async Task<(bool, int)> LogServerAlert(
+            ServerAlertModel serverAlert,
+            string applicationName)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert called with the parameters {ParameterFunction.FormatParameters(serverAlert)}, \"{applicationName}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.LogServerAlert called with the parameters {ParameterFunction.FormatParameters(serverAlert)}, \"{applicationName}\".");
 
             bool logged = true;
             int serverAlertId = 0;
@@ -211,13 +282,20 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     new SqlParameter("@application", SqlDbType.VarChar) { Value = applicationName }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(sql, parameters);
+                (object result, Exception ex) = await _Database.ExecuteScalar(
+                    sql,
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerAlertService.LogServerAlert.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
 
                     logged = false;
                 }
@@ -236,22 +314,35 @@ namespace HunterIndustriesAPI.Services.ServerStatus
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerAlertService.LogServerAlert.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
 
                 logged = false;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.LogServerAlert returned {logged}.");
-            return (logged, serverAlertId);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.LogServerAlert returned {logged}.");
+            return (
+                logged,
+                serverAlertId);
         }
 
         /// <summary>
         /// Returns whether a server alert exists with the given details.
         /// </summary>
-        public async Task<bool> ServerAlertExists(int serverId, string component)
+        public async Task<bool> ServerAlertExists(
+            int serverId,
+            string component)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters {ParameterFunction.FormatParameters(new string[] { serverId.ToString(), component })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.ServerAlertExists called with the parameters \"{serverId}\", {component}\".");
 
             bool exists = false;
 
@@ -269,13 +360,21 @@ and [Name] = @component";
                     new SqlParameter("@component", SqlDbType.VarChar) { Value = component }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -287,11 +386,18 @@ and [Name] = @component";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.ServerAlertExists returned {exists}.");
             return exists;
         }
 
@@ -300,7 +406,9 @@ and [Name] = @component";
         /// </summary>
         public async Task<bool> ServerAlertExists(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.ServerAlertExists called with the parameter \"{id}\".");
 
             bool exists = false;
 
@@ -314,13 +422,21 @@ and [Name] = @component";
                     new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -332,22 +448,33 @@ and [Name] = @component";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerAlertService.ServerAlertExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.ServerAlertExists returned {exists}.");
             return exists;
         }
 
         /// <summary>
         /// Updates the status of the server alert.
         /// </summary>
-        public async Task<bool> ServerAlertUpdated(int id, string value)
+        public async Task<bool> ServerAlertUpdated(
+            int id,
+            string value)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), value })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.ServerAlertUpdated called with the parameters \"{id}\", \"{value}\".");
 
-            bool updated = true;
+            bool updated = false;
 
             try
             {
@@ -358,29 +485,43 @@ and [Name] = @component";
                     new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ServerAlertService.ServerAlertUpdated.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                if (rowsAffected != 1)
+                if (rowsAffected == 1)
                 {
-                    updated = false;
+                    updated = true;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ServerAlertService.ServerAlertUpdated.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ServerAlertService.ServerAlertUpdated returned {updated}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerAlertService.ServerAlertUpdated returned {updated}.");
             return updated;
         }
     }

@@ -1,8 +1,9 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Objects;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,7 +25,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public ErrorLogService(ILoggerService _logger,
+        public ErrorLogService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database,
@@ -40,9 +42,18 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all error log records that match the parameters.
         /// </summary>
-        public async Task<(List<ErrorLogRecord>, int)> GetErrorLog(int errorId, string ipAddress, string summary, DateTime fromDate, int pageSize, int pageNumber)
+        public async Task<(List<ErrorLogRecord>, int)> GetErrorLog(
+            int errorId,
+            string ipAddress,
+            string summary,
+            DateTime fromDate,
+            DateTime toDate,
+            int pageSize,
+            int pageNumber)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { errorId.ToString(), ipAddress, summary, fromDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ErrorLogService.GetErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { errorId.ToString(), ipAddress, summary, fromDate.ToString(), toDate.ToString(), pageSize.ToString(), pageNumber.ToString() })}.");
 
             List<ErrorLogRecord> errorLogs = new List<ErrorLogRecord>();
             int totalRecords = 0;
@@ -80,54 +91,89 @@ namespace HunterIndustriesAPI.Services
                     parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
+                if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
+                {
+                    sql += "\nand DateOccured < cast(@toDate as datetime)";
+                    parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
+                }
+
                 sql += @"
 order by ErrorId desc
 offset (@pageSize * (@pageNumber - 1)) rows
 fetch next @pageSize rows only";
 
-                (List<ErrorLogRecord> results, Exception ex) = await _Database.Query(sql, reader =>
-                {
-                    ErrorLogRecord errorLog = new ErrorLogRecord()
+                (List<ErrorLogRecord> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader =>
                     {
-                        Id = reader.GetInt32(0),
-                        DateOccured = DateTime.SpecifyKind(reader.GetDateTime(1), DateTimeKind.Utc),
-                        IPAddress = reader.GetString(2),
-                        Summary = reader.GetString(3),
-                        Message = reader.GetString(4)
-                    };
+                        ErrorLogRecord errorLog = new ErrorLogRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            DateOccured = DateTime.SpecifyKind(
+                                reader.GetDateTime(1),
+                                DateTimeKind.Utc),
+                            IPAddress = reader.GetString(2),
+                            Summary = reader.GetString(3),
+                            Message = reader.GetString(4)
+                        };
 
-                    return errorLog;
-                }, parameterList.ToArray());
+                        return errorLog;
+                    },
+                    parameterList.ToArray());
 
                 errorLogs = results;
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ErrorLogService.GetErrorLog.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                totalRecords = await GetTotalErrorLog(ipAddress, summary, fromDate);
+                totalRecords = await GetTotalErrorLog(
+                    ipAddress,
+                    summary,
+                    fromDate,
+                    toDate);
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ErrorLogService.GetErrorLog.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetErrorLog returned {errorLogs.Count} records | {totalRecords} total records.");
-            return (errorLogs, totalRecords);
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ErrorLogService.GetErrorLog returned {errorLogs.Count} records | {totalRecords} total records.");
+            return (
+                errorLogs,
+                totalRecords);
         }
 
         /// <summary>
         /// Returns the number of error log records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalErrorLog(string ipAddress, string summary, DateTime fromDate)
+        private async Task<int> GetTotalErrorLog(
+            string ipAddress,
+            string summary,
+            DateTime fromDate,
+            DateTime toDate)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetTotalErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, summary, fromDate.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ErrorLogService.GetTotalErrorLog called with the parameters {ParameterFunction.FormatParameters(new string[] { ipAddress, summary, fromDate.ToString(), toDate.ToString() })}.");
 
             int totalRecords = 0;
 
@@ -154,13 +200,28 @@ fetch next @pageSize rows only";
                     parameterList.Add(new SqlParameter("@fromDate", SqlDbType.DateTime) { Value = fromDate });
                 }
 
-                (int result, Exception ex) = await _Database.QuerySingle(sql, reader => reader.GetInt32(0), parameterList.ToArray());
+
+                if (!string.IsNullOrEmpty(toDate.ToString()) && toDate != _Clock.DefaultDate)
+                {
+                    sql += "\nand DateOccured < cast(@toDate as datetime)";
+                    parameterList.Add(new SqlParameter("@toDate", SqlDbType.DateTime) { Value = toDate });
+                }
+
+                (int result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => reader.GetInt32(0),
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run ErrorLogService.GetTotalErrorLog.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 totalRecords = result;
@@ -169,11 +230,18 @@ fetch next @pageSize rows only";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run ErrorLogService.GetTotalErrorLog.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"ErrorLogService.GetTotalErrorLog returned {totalRecords}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ErrorLogService.GetTotalErrorLog returned {totalRecords}.");
             return totalRecords;
         }
     }

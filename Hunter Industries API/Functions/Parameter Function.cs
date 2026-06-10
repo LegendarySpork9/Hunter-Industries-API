@@ -1,4 +1,7 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Functions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +17,9 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the parameters from the stored SQL format to the output format or converts the model into a string array.
         /// </summary>
-        public static string[] FormatParameters(string parameters = null, object model = null)
+        public static string[] FormatParameters(
+            string parameters = null,
+            object model = null)
         {
             string[] formattedParameters = Array.Empty<string>();
 
@@ -28,14 +33,16 @@ namespace HunterIndustriesAPI.Functions
                     {
                         string param = parameter.Replace("\"", "");
 
-                        formattedParameters = formattedParameters.Append(param).ToArray();
+                        formattedParameters = formattedParameters.Append(param)
+                            .ToArray();
                     }
                 }
             }
 
             if (model != null)
             {
-                foreach (PropertyInfo property in model.GetType().GetProperties())
+                foreach (PropertyInfo property in model.GetType()
+                    .GetProperties())
                 {
                     if (property.GetValue(model) != null)
                     {
@@ -43,24 +50,30 @@ namespace HunterIndustriesAPI.Functions
                         {
                             foreach (object item in list)
                             {
-                                formattedParameters = formattedParameters.Append(item.ToString()).ToArray();
+                                formattedParameters = formattedParameters.Append(item.ToString())
+                                    .ToArray();
                             }
                         }
 
                         else if (property.Name == "Password")
                         {
-                            formattedParameters = formattedParameters.Append(HashFunction.HashString(property.GetValue(model).ToString())).ToArray();
+                            formattedParameters = formattedParameters.Append(HashFunction.HashString(property.GetValue(model)
+                                .ToString()))
+                                .ToArray();
                         }
 
                         else
                         {
-                            formattedParameters = formattedParameters.Append(property.GetValue(model).ToString()).ToArray();
+                            formattedParameters = formattedParameters.Append(property.GetValue(model)
+                                .ToString())
+                                .ToArray();
                         }
                     }
 
                     else
                     {
-                        formattedParameters = formattedParameters.Append("").ToArray();
+                        formattedParameters = formattedParameters.Append("")
+                            .ToArray();
                     }
                 }
             }
@@ -71,7 +84,9 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the parameters into a log/SQL friendly format.
         /// </summary>
-        public static string FormatParameters(string[] parameters = null, bool forSQL = false)
+        public static string FormatParameters(
+            string[] parameters = null,
+            bool forSQL = false)
         {
             string formattedParameters = null;
 
@@ -106,7 +121,9 @@ namespace HunterIndustriesAPI.Functions
 
             if (!string.IsNullOrWhiteSpace(formattedParameters))
             {
-                formattedParameters = formattedParameters.Trim().Remove(formattedParameters.LastIndexOf(",")).Replace("\"\"", "\"");
+                formattedParameters = formattedParameters.Trim()
+                    .Remove(formattedParameters.LastIndexOf(","))
+                    .Replace("\"\"", "\"");
             }
 
             return formattedParameters;
@@ -121,7 +138,8 @@ namespace HunterIndustriesAPI.Functions
 
             if (model != null)
             {
-                foreach (PropertyInfo property in model.GetType().GetProperties())
+                foreach (PropertyInfo property in model.GetType()
+                    .GetProperties())
                 {
                     object value = property.GetValue(model);
 
@@ -131,31 +149,32 @@ namespace HunterIndustriesAPI.Functions
                         {
                             foreach (object item in list)
                             {
-                                formattedParameters += $"\"{item}\", ";
+                                formattedParameters += $"\"{property.Name}: {item}\", ";
                             }
                         }
 
                         else if (property.Name == "Password")
                         {
-                            formattedParameters += $"\"{HashFunction.HashString(value.ToString())}\", ";
+                            formattedParameters += $"\"{property.Name}: {HashFunction.HashString(value.ToString())}\", ";
                         }
 
                         else
                         {
-                            formattedParameters += $"\"{value}\", ";
+                            formattedParameters += $"\"{property.Name}: {value}\", ";
                         }
                     }
 
                     else
                     {
-                        formattedParameters += "\"null\", ";
+                        formattedParameters += $"\"{property.Name}: null\", ";
                     }
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(formattedParameters))
             {
-                formattedParameters = formattedParameters.Trim().Remove(formattedParameters.LastIndexOf(","));
+                formattedParameters = formattedParameters.Trim()
+                    .Remove(formattedParameters.LastIndexOf(","));
             }
 
             return formattedParameters;
@@ -164,7 +183,9 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the list into a log friendly format.
         /// </summary>
-        public static string FormatListParameters(object listObject, bool isKeyPair)
+        public static string FormatListParameters(
+            object listObject,
+            bool isKeyPair)
         {
             string formattedParameters = string.Empty;
 
@@ -195,7 +216,8 @@ namespace HunterIndustriesAPI.Functions
 
             if (!string.IsNullOrWhiteSpace(formattedParameters))
             {
-                formattedParameters = formattedParameters.Trim().Remove(formattedParameters.LastIndexOf(","));
+                formattedParameters = formattedParameters.Trim()
+                    .Remove(formattedParameters.LastIndexOf(","));
             }
 
             return formattedParameters;
@@ -204,7 +226,9 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Converts the list into a SQL friendly format.
         /// </summary>
-        public static string FormatParameters(List<object> list, bool forAudit = false)
+        public static string FormatParameters(
+            List<object> list,
+            bool forAudit = false)
         {
             string formattedParameters = null;
 
@@ -226,16 +250,44 @@ namespace HunterIndustriesAPI.Functions
 
             if (!string.IsNullOrWhiteSpace(formattedParameters))
             {
-                formattedParameters = formattedParameters.Trim().Remove(formattedParameters.LastIndexOf(",")).Replace("\"\"", "\"");
+                formattedParameters = formattedParameters.Trim()
+                    .Remove(formattedParameters.LastIndexOf(","))
+                    .Replace("\"\"", "\"");
             }
 
             return formattedParameters;
         }
 
         /// <summary>
+        /// Serialises the model to JSON with password fields hashed.
+        /// </summary>
+        public static string SerialiseRequestBody(object model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            JObject jObject = JObject.FromObject(model);
+
+            foreach (JProperty property in jObject.Properties())
+            {
+                if (property.Name.Equals("Password", StringComparison.OrdinalIgnoreCase) &&
+                    property.Value.Type == JTokenType.String)
+                {
+                    property.Value = HashFunction.HashString(property.Value.ToString());
+                }
+            }
+
+            return jObject.ToString(Formatting.Indented);
+        }
+
+        /// <summary>
         /// Converts the model into a string array.
         /// </summary>
-        public static string[] FormatParameters(object model, string[] otherParameters)
+        public static string[] FormatParameters(
+            object model,
+            string[] otherParameters)
         {
             string[] parameters = otherParameters;
 
@@ -244,7 +296,8 @@ namespace HunterIndustriesAPI.Functions
                 return parameters;
             }
 
-            foreach (PropertyInfo property in model.GetType().GetProperties())
+            foreach (PropertyInfo property in model.GetType()
+                .GetProperties())
             {
                 if (property.GetValue(model) != null)
                 {
@@ -252,24 +305,30 @@ namespace HunterIndustriesAPI.Functions
                     {
                         foreach (object item in list)
                         {
-                            parameters = parameters.Append(item.ToString()).ToArray();
+                            parameters = parameters.Append(item.ToString())
+                                .ToArray();
                         }
                     }
 
                     else if (property.Name == "Password")
                     {
-                        parameters = parameters.Append(HashFunction.HashString(property.GetValue(model).ToString())).ToArray();
+                        parameters = parameters.Append(HashFunction.HashString(property.GetValue(model)
+                            .ToString()))
+                            .ToArray();
                     }
 
                     else
                     {
-                        parameters = parameters.Append(property.GetValue(model).ToString()).ToArray();
+                        parameters = parameters.Append(property.GetValue(model)
+                            .ToString())
+                            .ToArray();
                     }
                 }
 
                 else
                 {
-                    parameters = parameters.Append("").ToArray();
+                    parameters = parameters.Append("")
+                        .ToArray();
                 }
             }
 

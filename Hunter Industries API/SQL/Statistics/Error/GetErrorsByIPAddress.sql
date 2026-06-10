@@ -2,6 +2,7 @@ select
 	IPAddress,
 	count(*) as ErrorCount
 from ErrorLog with (nolock)
-where DateOccured >= dateadd(day, -30, getutcdate())
+where DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+and DateOccured < dateadd(day, 1, eomonth(getutcdate()))
 group by IPAddress
 order by ErrorCount desc

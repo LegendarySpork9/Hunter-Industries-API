@@ -1,7 +1,8 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
-using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,7 +23,8 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public StatisticService(ILoggerService _logger,
+        public StatisticService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -38,7 +40,9 @@ namespace HunterIndustriesAPI.Services
         /// </summary>
         public async Task<List<object>> GetDashboardStatistic(string part)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetDashboardStatistic called with the parameters \"{part}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetDashboardStatistic called with the parameter \"{part}\".");
 
             List<object> records = new List<object>();
 
@@ -49,13 +53,20 @@ namespace HunterIndustriesAPI.Services
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings);
+                    (List<object> results, Exception ex) = await _Database.Query(
+                        sql,
+                        dataReaderMappings);
 
                     if (ex != null)
                     {
                         string message = "An error occured when trying to run StatisticService.GetDashboardStatistic.";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
                     }
 
                     records = results;
@@ -65,27 +76,39 @@ namespace HunterIndustriesAPI.Services
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run StatisticService.GetDashboardStatistic.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetDashboardStatistic returned {records.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetDashboardStatistic returned {records.Count} records.");
             return records;
         }
 
         /// <summary>
         /// Returns all statistic records that match the parameters.
         /// </summary>
-        public async Task<List<object>> GetSharedStatistic(string part, string type = null, int id = 0)
+        public async Task<List<object>> GetSharedStatistic(
+            string part,
+            string type = null,
+            int id = 0)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetSharedStatistic called with the parameters {ParameterFunction.FormatParameters(new string[] { part, type, id.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetSharedStatistic called with the parameters \"{part}\", \"{type}\", \"{id}\".");
 
             List<object> records = new List<object>();
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Statistics\Shared\{StatisticsConverter.GetSQLShared(part)}");
-                SqlParameter[] parameters = Array.Empty< SqlParameter>();
+                SqlParameter[] parameters = Array.Empty<SqlParameter>();
 
                 if (!string.IsNullOrWhiteSpace(type))
                 {
@@ -116,13 +139,21 @@ and UserId = @userId";
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings, parameters);
+                    (List<object> results, Exception ex) = await _Database.Query(
+                        sql,
+                        dataReaderMappings,
+                        parameters);
 
                     if (ex != null)
                     {
                         string message = "An error occured when trying to run StatisticService.GetSharedStatistic.";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
                     }
 
                     records = results;
@@ -132,20 +163,31 @@ and UserId = @userId";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run StatisticService.GetSharedStatistic.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetSharedStatistic returned {records.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetSharedStatistic returned {records.Count} records.");
             return records;
         }
 
         /// <summary>
         /// Returns all statistic records that match the parameters.
         /// </summary>
-        public async Task<List<object>> GetServerStatistic(string part, int server)
+        public async Task<List<object>> GetServerStatistic(
+            string part,
+            int server)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetServerStatistic called with the parameters \"{part}\", \"{server}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetServerStatistic called with the parameters \"{part}\", \"{server}\".");
 
             List<object> records = new List<object>();
 
@@ -160,13 +202,21 @@ and UserId = @userId";
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings, parameters);
+                    (List<object> results, Exception ex) = await _Database.Query(
+                        sql,
+                        dataReaderMappings,
+                        parameters);
 
                     if (ex != null)
                     {
                         string message = "An error occured when trying to run StatisticService.GetServerStatistic.";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
                     }
 
                     records = results;
@@ -176,11 +226,18 @@ and UserId = @userId";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run StatisticService.GetServerStatistic.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetServerStatistic returned {records.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetServerStatistic returned {records.Count} records.");
             return records;
         }
 
@@ -189,7 +246,9 @@ and UserId = @userId";
         /// </summary>
         public async Task<List<object>> GetErrorStatistic(string part)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetErrorStatistic called with the parameters \"{part}\".");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetErrorStatistic called with the parameter \"{part}\".");
 
             List<object> records = new List<object>();
 
@@ -200,13 +259,20 @@ and UserId = @userId";
 
                 if (dataReaderMappings != null)
                 {
-                    (List<object> results, Exception ex) = await _Database.Query(sql, dataReaderMappings);
+                    (List<object> results, Exception ex) = await _Database.Query(
+                        sql,
+                        dataReaderMappings);
 
                     if (ex != null)
                     {
                         string message = "An error occured when trying to run StatisticService.GetErrorStatistic.";
-                        _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                        _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
                     }
 
                     records = results;
@@ -216,11 +282,18 @@ and UserId = @userId";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run StatisticService.GetErrorStatistic.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"StatisticService.GetErrorStatistic returned {records.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetErrorStatistic returned {records.Count} records.");
             return records;
         }
     }

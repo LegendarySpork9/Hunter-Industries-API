@@ -1,9 +1,10 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.User;
 using HunterIndustriesAPI.Objects.User;
+using HunterIndustriesAPICommon.Abstractions;
+using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,7 +25,8 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// </summary>
         // Sets the class's global variables.
-        public UserSettingsService(ILoggerService _logger,
+        public UserSettingsService(
+            ILoggerService _logger,
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database)
@@ -38,9 +40,13 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns all user settings that match the parameters.
         /// </summary>
-        public async Task<List<UserSettingRecord>> GetUserSettings(int id, string application)
+        public async Task<List<UserSettingRecord>> GetUserSettings(
+            int id,
+            string application)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSettings called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.GetUserSettings called with the parameters \"{id}\", \"{application}\".");
 
             List<UserSettingRecord> userSettings = new List<UserSettingRecord>();
 
@@ -63,16 +69,28 @@ namespace HunterIndustriesAPI.Services.User
                     parameterList.Add(new SqlParameter("@application", SqlDbType.VarChar) { Value = application });
                 }
 
-                (List<(string, int, string, string)> results, Exception ex) = await _Database.Query(sql, reader => (reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3)), parameterList.ToArray());
+                (List<(string, int, string, string)> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => (
+                        reader.GetString(0),
+                        reader.GetInt32(1),
+                        reader.GetString(2),
+                        reader.GetString(3)),
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserSettingsService.GetUserSettings.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                foreach (var result in results)
+                foreach ((string, int, string, string) result in results)
                 {
                     if (string.IsNullOrEmpty(currentApplication) || currentApplication != result.Item1)
                     {
@@ -85,7 +103,10 @@ namespace HunterIndustriesAPI.Services.User
                         {
                             userSettings.Add(tempRecord);
 
-                            tempRecord.Application = result.Item1;
+                            tempRecord = new UserSettingRecord
+                            {
+                                Application = result.Item1
+                            };
                             tempRecord.Settings.Clear();
                         }
 
@@ -109,11 +130,18 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserSettingsService.GetUserSettings.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSettings returned {userSettings.Count} records.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.GetUserSettings returned {userSettings.Count} records.");
             return userSettings;
         }
 
@@ -122,7 +150,9 @@ namespace HunterIndustriesAPI.Services.User
         /// </summary>
         public async Task<SettingRecord> GetUserSetting(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.GetUserSetting called with the parameters \"{id}\".");
 
             SettingRecord setting = new SettingRecord();
 
@@ -134,18 +164,26 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
-                (SettingRecord result, Exception ex) = await _Database.QuerySingle(sql, reader => new SettingRecord()
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    Value = reader.GetString(2)
-                }, parameters);
+                (SettingRecord result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => new SettingRecord()
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        Value = reader.GetString(2)
+                    },
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserSettingsService.GetUserSetting.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (result != null)
@@ -157,20 +195,32 @@ namespace HunterIndustriesAPI.Services.User
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserSettingsService.GetUserSetting.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.GetUserSetting returned record {setting.Id}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.GetUserSetting returned record {setting.Id}.");
             return setting;
         }
 
         /// <summary>
         /// Returns whether a user setting already exists with the given values.
         /// </summary>
-        public async Task<bool> UserSettingExists(string username, string application, string settingName)
+        public async Task<bool> UserSettingExists(
+            int userId,
+            string application,
+            string settingName)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { username, application, settingName })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingExists called with the parameters \"{userId}\", \"{application}\", \"{settingName}\".");
 
             bool exists = false;
 
@@ -178,12 +228,7 @@ namespace HunterIndustriesAPI.Services.User
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
                 sql += @"
-and UserId = (
-    select
-        UserId
-    from APIUser with (nolock)
-    where Username = @username
-)";
+and UserId = @userId";
                 sql += @"
 and ApplicationId = (
     select
@@ -196,18 +241,26 @@ and [Name] = @name";
 
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
+                    new SqlParameter("@userId", SqlDbType.Int) { Value = userId },
                     new SqlParameter("@application", SqlDbType.VarChar) { Value = application },
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = settingName }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserSettingsService.UserSettingExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -219,11 +272,18 @@ and [Name] = @name";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserSettingsService.UserSettingExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingExists returned {exists}.");
             return exists;
         }
 
@@ -232,7 +292,9 @@ and [Name] = @name";
         /// </summary>
         public async Task<bool> UserSettingExists(int id)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString() })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingExists called with the parameters \"{id}\".");
 
             bool exists = false;
 
@@ -246,13 +308,21 @@ and [Name] = @name";
                     new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
-                (List<int> results, Exception ex) = await _Database.Query(sql, reader => reader.GetInt32(0), parameters);
+                (List<int> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetInt32(0),
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserSettingsService.UserSettingExists.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
                 if (results.Count > 0)
@@ -264,72 +334,107 @@ and [Name] = @name";
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserSettingsService.UserSettingExists.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingExists returned {exists}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingExists returned {exists}.");
             return exists;
         }
 
         /// <summary>
         /// Adds the user setting.
         /// </summary>
-        public async Task<bool> UserSettingAdded(UserSettingsModel userSetting)
+        public async Task<(bool, int)> UserSettingAdded(UserSettingsModel userSetting)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded called with the parameters {ParameterFunction.FormatParameters(null, userSetting)}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingAdded called with the parameters {ParameterFunction.FormatParameters(userSetting)}.");
 
             bool added = true;
+            int settingId = 0;
 
             try
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingAdded.sql");
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@username", SqlDbType.VarChar) { Value = userSetting.Username },
+                    new SqlParameter("@userId", SqlDbType.Int) { Value = userSetting.UserId },
                     new SqlParameter("@application", SqlDbType.VarChar) { Value = userSetting.Application },
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = userSetting.SettingName },
                     new SqlParameter("@value", SqlDbType.VarChar) { Value = userSetting.SettingValue }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+                (object result, Exception ex) = await _Database.ExecuteScalar(
+                    sql,
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserSettingsService.UserSettingAdded.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
 
                     added = false;
                 }
 
-                if (rowsAffected != 1)
+                if (result == null)
                 {
                     added = false;
+                }
+
+                else
+                {
+                    settingId = int.Parse(result.ToString());
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserSettingsService.UserSettingAdded.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
 
                 added = false;
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingAdded returned {added}.");
-            return added;
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingAdded returned {added}.");
+            return (
+                added,
+                settingId);
         }
 
         /// <summary>
         /// Updates the value of the given setting.
         /// </summary>
-        public async Task<bool> UserSettingUpdated(int id, string value)
+        public async Task<bool> UserSettingUpdated(
+            int id,
+            string value)
         {
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated called with the parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), value })}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingUpdated called with the parameters \"{id}\", \"{value}\".");
 
-            bool updated = true;
+            bool updated = false;
 
             try
             {
@@ -340,29 +445,43 @@ and [Name] = @name";
                     new SqlParameter("@id", SqlDbType.Int) { Value = id }
                 };
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(sql, parameters);
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
+                    parameters);
 
                 if (ex != null)
                 {
                     string message = "An error occured when trying to run UserSettingsService.UserSettingUpdated.";
-                    _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                    _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                    _Logger.LogMessage(
+                       StandardValues.LoggerValues.Warning,
+                       message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
                 }
 
-                if (rowsAffected != 1)
+                if (rowsAffected == 1)
                 {
-                    updated = false;
+                    updated = true;
                 }
             }
 
             catch (Exception ex)
             {
                 string message = "An error occured when trying to run UserSettingsService.UserSettingUpdated.";
-                _Logger.LogMessage(StandardValues.LoggerValues.Warning, message);
-                _Logger.LogMessage(StandardValues.LoggerValues.Error, ex.ToString(), message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                   ex.ToString(),
+                   message);
             }
 
-            _Logger.LogMessage(StandardValues.LoggerValues.Debug, $"UserSettingsService.UserSettingUpdated returned {updated}.");
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserSettingsService.UserSettingUpdated returned {updated}.");
             return updated;
         }
     }

@@ -1,0 +1,164 @@
+@page "/users"
+
+<PageTitle>Users</PageTitle>
+
+<div class="page-header">
+    <h1>Users</h1>
+    <button class="btn btn-primary" @onclick="OpenCreateModal">Create User</button>
+</div>
+
+@if (IsLoading && UserRecords == null)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+
+else
+{
+    <RadzenDataGrid
+        @ref="UserGrid"
+        Data="@UserRecords"
+        TItem="UserModel"
+        AllowSorting="true"
+        AllowFiltering="true"
+        FilterMode="FilterMode.Simple"
+        PageSize="25"
+        AllowPaging="true">
+        <Columns>
+            <RadzenDataGridColumn
+                TItem="UserModel"
+                Property="Id"
+                Title="ID"
+                Width="80px"
+                Sortable="false"
+                Filterable="false" />
+            <RadzenDataGridColumn
+                TItem="UserModel"
+                Property="Username"
+                Title="Username"
+                MinWidth="150px" />
+            <RadzenDataGridColumn
+                TItem="UserModel"
+                Title="Scopes"
+                MinWidth="200px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="user">
+                    @foreach (string scope in user.Scopes)
+                    {
+                        <span class="badge bg-info text-dark me-1 scope-badge">@scope</span>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="UserModel"
+                Title="Status"
+                Width="120px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="user">
+                    @if (user.IsDeleted)
+                    {
+                        <StatusBadge
+                            Text="Deleted"
+                            Type="deleted" />
+                    }
+
+                    else
+                    {
+                        <StatusBadge
+                            Text="Active"
+                            Type="active" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="UserModel"
+                Title="Actions"
+                Width="160px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="user">
+                    <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToEdit(user.Id)" @onclick:stopPropagation="true" title="Edit">
+                        &#9998;
+                    </button>
+                    <button class="btn btn-sm btn-outline-light me-1" @onclick="() => NavigateToLogs(user.Id)" @onclick:stopPropagation="true" title="Logs">
+                        &#128203;
+                    </button>
+                    @if (!user.IsDeleted && user.Username != ControlPanelUsername)
+                    {
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(user)" @onclick:stopPropagation="true" title="Delete">
+                            &#128465;
+                        </button>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
+    <!-- Create User Modal -->
+    @if (ShowCreateModal)
+    {
+        <div class="modal fade show d-block modal-overlay" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create User</h5>
+                        <button type="button" class="btn-close" @onclick="CloseCreateModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" @bind="NewUserUsername" placeholder="Enter username" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" @bind="NewUserPassword" placeholder="Enter password" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Scopes</label>
+                            @foreach (string scope in AvailableScopes)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked="@NewUserScopes?.Contains(scope)" @onchange="(e) => ToggleScope(scope,
+                                        (bool)e.Value!)" />
+                                    <label class="form-check-label">@scope</label>
+                                </div>
+                            }
+                        </div>
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <div class="alert alert-danger py-2">@ErrorMessage</div>
+                        }
+
+                        @if (string.IsNullOrEmpty(ErrorMessage) && IsLoading)
+                        {
+                            <div class="text-success ms-2">Created user successfully!</div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light btn-sm" @onclick="CloseCreateModal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm" disabled="@IsLoading" @onclick="CreateUser">
+                            @if (IsLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            }
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <ConfirmDialog
+        IsVisible="ShowDeleteConfirm"
+        Title="Delete User"
+        Message="@($"Are you sure you want to delete user '{UserToDelete?.Username}'?")"
+        ConfirmText="Delete"
+        OnConfirm="DeleteUser"
+        OnCancel="CancelDelete" />
+}

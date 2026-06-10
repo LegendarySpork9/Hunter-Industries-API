@@ -17,7 +17,8 @@ left join (
 	left join APIUser AUS with (nolock) on LAS.UserId = AUS.UserId
 	left join Authorisation AuthS with (nolock) on LAS.PhraseId = AuthS.PhraseId
 	left join [Application] AppS with (nolock) on AuthS.PhraseId = AppS.PhraseId
-	where DateOccured >= dateadd(day, -30, getutcdate())
+	where DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+	and DateOccured < dateadd(day, 1, eomonth(getutcdate()))
 	and IsSuccessful = 1
 	group by Username, [Name]
 ) Successful on isnull(APIUser.Username, 'Unknown') = Successful.Username and isnull([Name], 'Unknown') = Successful.[Application]
@@ -30,7 +31,8 @@ left join (
 	left join APIUser AUS with (nolock) on LAS.UserId = AUS.UserId
 	left join Authorisation AuthS with (nolock) on LAS.PhraseId = AuthS.PhraseId
 	left join [Application] AppS with (nolock) on AuthS.PhraseId = AppS.PhraseId
-	where DateOccured >= dateadd(day, -30, getutcdate())
+	where DateOccured >= datefromparts(year(getutcdate()), month(getutcdate()), 1)
+	and DateOccured < dateadd(day, 1, eomonth(getutcdate()))
 	and IsSuccessful = 0
 	group by Username, [Name]
 ) Unsuccessful on isnull(APIUser.Username, 'Unknown') = Unsuccessful.Username and isnull([Name], 'Unknown') = Unsuccessful.[Application]

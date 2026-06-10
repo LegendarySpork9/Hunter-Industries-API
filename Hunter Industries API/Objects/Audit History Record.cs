@@ -49,6 +49,14 @@ namespace HunterIndustriesAPI.Objects
         /// </summary>
         public string[] Paramaters { get; set; } = null;
         /// <summary>
+        /// The JSON request body sent to the endpoint.
+        /// </summary>
+        public string RequestBody { get; set; }
+        /// <summary>
+        /// The JSON response body returned by the endpoint.
+        /// </summary>
+        public string ResponseBody { get; set; }
+        /// <summary>
         /// The login attempt record.
         /// </summary>
         public LoginAttemptRecord LoginAttempt { get; set; }

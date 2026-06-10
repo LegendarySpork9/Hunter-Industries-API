@@ -12,13 +12,17 @@ namespace HunterIndustriesAPI.Filters.Operation
         /// <summary>
         /// Makes a parameter required for the call on the Swagger UI.
         /// </summary>
-        public void Apply(Swashbuckle.Swagger.Operation operation, SchemaRegistry schemaRegistry, System.Web.Http.Description.ApiDescription apiDescription)
+        public void Apply(
+            Swashbuckle.Swagger.Operation operation,
+            SchemaRegistry schemaRegistry,
+            System.Web.Http.Description.ApiDescription apiDescription)
         {
-            var hasRequiredAttribute = apiDescription.ActionDescriptor.GetCustomAttributes<MakeFiltersRequiredAttribute>().Any();
+            bool hasRequiredAttribute = apiDescription.ActionDescriptor.GetCustomAttributes<MakeFiltersRequiredAttribute>()
+                .Any();
 
             if (hasRequiredAttribute)
             {
-                foreach (var parameter in operation.parameters)
+                foreach (Parameter parameter in operation.parameters)
                 {
                     if (parameter != null)
                     {

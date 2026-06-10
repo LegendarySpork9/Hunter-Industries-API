@@ -1,4 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
+using HunterIndustriesAPICommon.Functions;
 using System;
 using System.Text;
 
@@ -18,9 +19,9 @@ namespace HunterIndustriesAPI.Functions
 
             try
             {
-                var encodedCredentials = authHeaderValue.Replace("Basic ", string.Empty);
-                var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
-                var credentialsArray = decodedCredentials.Split(':');
+                string encodedCredentials = authHeaderValue.Replace("Basic ", string.Empty);
+                string decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
+                string[] credentialsArray = decodedCredentials.Split(':');
 
                 if (credentialsArray.Length == 2)
                 {
@@ -39,7 +40,13 @@ namespace HunterIndustriesAPI.Functions
         /// <summary>
         /// Returns whether the details passed are valid.
         /// </summary>
-        public static bool IsValidUser(string[] usernames, string[] passwords, string[] phrases, string usernameInput, string passwordInput, string phraseInput)
+        public static bool IsValidUser(
+            string[] usernames,
+            string[] passwords,
+            string[] phrases,
+            string usernameInput,
+            string passwordInput,
+            string phraseInput)
         {
             bool valid = false;
 

@@ -1,5 +1,4 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPI.Objects.Statistics.Error;
 using HunterIndustriesAPI.Objects.Statistics.Server;
 using System;
 using System.Data;
@@ -47,10 +46,26 @@ namespace HunterIndustriesAPI.Mappings
             {
                 Component = reader.GetString(0),
                 Status = reader.GetString(1),
-                DateOccured = DateTime.SpecifyKind(reader.GetDateTime(2), DateTimeKind.Utc)
+                DateOccured = DateTime.SpecifyKind(
+                    reader.GetDateTime(2),
+                    DateTimeKind.Utc)
             };
 
             return eventComponent;
+        };
+
+        /// <summary>
+        /// The SQL row to model mappings for the uptime stat in the server health overview record.
+        /// </summary>
+        public static readonly Func<IDataReader, ServerHealthOverviewRecord> ServerHealthUptimeMapper = reader =>
+        {
+            ServerHealthOverviewRecord serverHealthUptime = new ServerHealthOverviewRecord()
+            {
+                Day = reader.GetString(0),
+                Uptime = reader.GetDecimal(1)
+            };
+
+            return serverHealthUptime;
         };
 
         /// <summary>
@@ -60,12 +75,14 @@ namespace HunterIndustriesAPI.Mappings
         {
             RecentAlertRecord recentAlert = new RecentAlertRecord
             {
-                AlertId = reader.GetInt32(0),
+                Id = reader.GetInt32(0),
                 Reporter = reader.GetString(1),
                 Component = reader.GetString(2),
                 ComponentStatus = reader.GetString(3),
                 AlertStatus = reader.GetString(4),
-                AlertDate = DateTime.SpecifyKind(reader.GetDateTime(5), DateTimeKind.Utc)
+                AlertDate = DateTime.SpecifyKind(
+                    reader.GetDateTime(5),
+                    DateTimeKind.Utc)
             };
 
             return recentAlert;

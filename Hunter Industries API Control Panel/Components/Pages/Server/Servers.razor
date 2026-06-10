@@ -1,0 +1,220 @@
+@page "/servers"
+
+<PageTitle>Servers</PageTitle>
+
+<div class="page-header">
+    <h1>Servers</h1>
+    <button class="btn btn-primary" @onclick="OpenModal">Add Server</button>
+</div>
+
+@if (IsLoading && ServerRecords == null)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+
+else
+{
+    <RadzenDataGrid
+        @ref="ServerGrid"
+        Data="@ServerRecords"
+        TItem="ServerInformationModel"
+        AllowSorting="true"
+        AllowFiltering="true"
+        FilterMode="FilterMode.Simple"
+        PageSize="25"
+        AllowPaging="true">
+        <Columns>
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Property="Id"
+                Title="ID"
+                Width="70px"
+                Sortable="false"
+                Filterable="false" />
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Property="Name"
+                Title="Name" />
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Property="EventInterval"
+                Title="Event Interval"
+                Width="120px"
+                Sortable="false"
+                Filterable="false" />
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Property="HostName"
+                Title="Host Name" />
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Property="Game"
+                Title="Game" />
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Property="GameVersion"
+                Title="Version"
+                Width="100px" />
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Title="Address"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="server">
+                    @server.Connection.IpAddress:@server.Connection.Port
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Title="Downtime"
+                Width="100px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="server">
+                    @(server.Downtime?.Time ?? "N/A")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Title="Duration"
+                Width="100px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="server">
+                    @(server.Downtime?.Duration.ToString() ?? "N/A")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Title="Status"
+                Width="100px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="server">
+                    @if (server.IsActive)
+                    {
+                        <StatusBadge
+                            Text="Active"
+                            Type="active" />
+                    }
+                    else
+                    {
+                        <StatusBadge
+                            Text="Inactive"
+                            Type="inactive" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="ServerInformationModel"
+                Title="Actions"
+                Width="80px"
+                Sortable="false"
+                Filterable="false">
+                <Template Context="server">
+                    <button class="btn btn-sm btn-outline-light" @onclick="() => NavigateToEdit(server.Id)" @onclick:stopPropagation="true" title="Edit">
+                        &#9998;
+                    </button>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
+    <!-- Create Server Modal -->
+    @if (ShowModal)
+    {
+        <div class="modal fade show d-block modal-overlay" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Server</h5>
+                        <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" @bind="NewServerName" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Host Name</label>
+                                <select class="form-control" @bind="NewHostName">
+                                    <option value="" disabled selected>Select an option</option>
+                                    @foreach (string hostName in HostNames)
+                                    {
+                                        <option value="@hostName">@hostName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8">
+                                <label class="form-label">Game</label>
+                                <select class="form-control" @bind="NewGame">
+                                    <option value="" disabled selected>Select an option</option>
+                                    @foreach (string game in Games)
+                                    {
+                                        <option value="@game">@game</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8">
+                                <label class="form-label">Connection</label>
+                                <select class="form-control" @bind="NewConnection">
+                                    <option value="" disabled selected>Select an option</option>
+                                    @foreach (string connection in Connections)
+                                    {
+                                        <option value="@connection">@connection</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8">
+                                <label class="form-label">Downtime</label>
+                                <select class="form-control" @bind="NewDowntime">
+                                    <option value="" disabled selected>Select an option</option>
+                                    @foreach (string downtime in Downtimes)
+                                    {
+                                        <option value="@downtime">@downtime</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Event Interval (s)</label>
+                                <input type="number" class="form-control" @bind="NewEventInterval" />
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <div class="alert alert-danger py-2">@ErrorMessage</div>
+                        }
+
+                        @if (string.IsNullOrEmpty(ErrorMessage) && IsLoading)
+                        {
+                            <div class="text-success ms-2">Created server successfully!</div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light btn-sm" @onclick="CloseModal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm" disabled="@IsLoading" @onclick="CreateServer">
+                            @if (IsLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            }
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

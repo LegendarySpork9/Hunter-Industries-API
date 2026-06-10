@@ -13,5 +13,9 @@ namespace HunterIndustriesAPI.Models.Requests.Filters
         /// The name of the user.
         /// </summary>
         public string Username { get; set; }
+        /// <summary>
+        /// Whether to return deleted users.
+        /// </summary>
+        public bool IncludeDeleted { get; set; }
     }
 }

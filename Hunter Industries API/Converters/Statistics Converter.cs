@@ -22,8 +22,7 @@ namespace HunterIndustriesAPI.Converters
                 case "apiTraffic": return "GetAPITraffic.sql";
                 case "errors": return "GetErrorsByIPAndSummary.sql";
                 case "loginAttempts": return "GetLoginAttemptsByUsernameAndApplication.sql";
-                case "serverHealthOverview": return "GetServerHealthOverview.sql";
-                case "serverHealthUptime": return "GetServerHealth30Days.sql";
+                case "serverHealth": return "GetServerHealth30Days.sql";
                 default: return "Unknown.sql";
             }
         }
@@ -76,6 +75,7 @@ order by ChangeCount desc";
                 case "componentAlerts": return "GetAlertsByComponent.sql";
                 case "statusAlerts": return "GetAlertsByStatus.sql";
                 case "lastComponentEvents": return "GetLastEventPerComponent.sql";
+                case "serverHealth": return "GetServerHealth30Days.sql";
                 case "recentAlerts": return "GetRecentAlerts.sql";
                 case "recentEvents": return "GetRecentEvents.sql";
                 default: return "Unknown.sql";
@@ -111,8 +111,7 @@ order by ChangeCount desc";
                 case "apiTraffic": return DashboardDataReaderMapping.APITrafficMapper;
                 case "errors": return DashboardDataReaderMapping.IPAndSummaryErrorMapper;
                 case "loginAttempts": return DashboardDataReaderMapping.LoginAttemptMapper;
-                case "serverHealthOverview": return DashboardDataReaderMapping.ServerHealthOverviewMapper;
-                case "serverHealthUptime": return DashboardDataReaderMapping.ServerHealthUptimeMapper;
+                case "serverHealth": return DashboardDataReaderMapping.ServerHealthUptimeMapper;
                 default: return null;
             }
         }
@@ -142,6 +141,7 @@ order by ChangeCount desc";
                 case "componentAlerts": return ServerDataReaderMapping.AlertComponentMapper;
                 case "statusAlerts": return ServerDataReaderMapping.AlertStatusMapper;
                 case "lastComponentEvents": return ServerDataReaderMapping.EventComponentMapper;
+                case "serverHealth": return ServerDataReaderMapping.ServerHealthUptimeMapper;
                 case "recentAlerts": return ServerDataReaderMapping.RecentAlertMapper;
                 case "recentEvents": return ServerDataReaderMapping.EventComponentMapper;
                 default: return null;

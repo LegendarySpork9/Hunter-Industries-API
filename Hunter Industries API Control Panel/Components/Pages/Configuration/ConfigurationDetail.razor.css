@@ -1,0 +1,37 @@
+.card-rounded {
+    border-radius: 8px;
+}
+
+.card-highlighted {
+    border-radius: 8px;
+    border: 1px solid #7ec8e3;
+}
+
+.divider {
+    border-color: #555;
+}
+
+.col-name {
+    width: 200px;
+    min-width: 200px;
+}
+
+.col-type {
+    width: 200px;
+    min-width: 200px;
+}
+
+.col-required {
+    width: 100px;
+    min-width: 100px;
+}
+
+.col-status {
+    width: 100px;
+    min-width: 100px;
+}
+
+.col-actions {
+    width: 200px;
+    min-width: 200px;
+}

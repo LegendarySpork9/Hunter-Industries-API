@@ -12,7 +12,10 @@ namespace HunterIndustriesAPI.Filters.Operation
         /// <summary>
         /// Adds the required authorisation to the Swagger UI depending on the controller.
         /// </summary>
-        public void Apply(Swashbuckle.Swagger.Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+        public void Apply(
+            Swashbuckle.Swagger.Operation operation,
+            SchemaRegistry schemaRegistry,
+            ApiDescription apiDescription)
         {
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(TokenController))
             {
