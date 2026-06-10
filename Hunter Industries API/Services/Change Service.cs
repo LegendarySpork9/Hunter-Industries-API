@@ -6,6 +6,7 @@ using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services
@@ -51,7 +52,9 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\LogChange.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "LogChange.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@auditID", SqlDbType.Int) { Value = auditId },

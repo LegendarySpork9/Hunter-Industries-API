@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.ServerStatus
@@ -50,7 +51,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Event\GetServerEvents.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Event",
+                    "GetServerEvents.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@component", SqlDbType.VarChar) { Value = component }
@@ -124,7 +129,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Event\LogServerEvent.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Event",
+                    "LogServerEvent.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@serverID", SqlDbType.Int) { Value = serverEvent.ServerId },

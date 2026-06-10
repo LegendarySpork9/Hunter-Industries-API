@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.ServerStatus
@@ -53,7 +54,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetServerAlerts.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Alerts",
+                    "GetServerAlerts.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
@@ -132,7 +137,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetServerAlert.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Alerts",
+                    "GetServerAlert.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@alertID", SqlDbType.Int) { Value = id }
@@ -217,7 +226,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\GetTotalServerAlerts.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Alerts",
+                    "GetTotalServerAlerts.sql"));
                 (int result, Exception ex) = await _Database.QuerySingle(
                     sql,
                     reader => reader.GetInt32(0));
@@ -271,7 +284,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\LogServerAlert.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Alerts",
+                    "LogServerAlert.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@serverID", SqlDbType.Int) { Value = serverAlert.ServerId },
@@ -348,7 +365,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Alerts",
+                    "ServerAlertExists.sql"));
                 sql += @"
 where [Value] != 'Resolved'
 and ServerInformationId = @serverId
@@ -414,7 +435,11 @@ and [Name] = @component";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Alerts",
+                    "ServerAlertExists.sql"));
                 sql += "\nwhere ServerAlertId = @alertId";
 
                 SqlParameter[] parameters =
@@ -478,7 +503,11 @@ and [Name] = @component";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Alerts\ServerAlertUpdated.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Alerts",
+                    "ServerAlertUpdated.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@alertStatus", SqlDbType.VarChar) { Value = value },

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,7 +58,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLGet(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLGet(entity)));
                 SqlParameter[] parameters;
 
                 if (!includeUsed && entity == "authorisation")
@@ -183,7 +187,10 @@ where ApplicationId = @applicationId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLGetTotal(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLGetTotal(entity)));
 
                 (int result, Exception ex) = await _Database.QuerySingle(
                     sql,
@@ -238,7 +245,10 @@ where ApplicationId = @applicationId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLGet(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLGet(entity)));
                 sql += ConfigurationConverter.GetSQLFilterId(entity);
 
                 SqlParameter[] parameters = ConfigurationConverter.GetParametersGetSingle(
@@ -315,7 +325,10 @@ where ApplicationId = @applicationId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLExists(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLExists(entity)));
                 sql += ConfigurationConverter.GetSQLFilter(entity);
 
                 SqlParameter[] parameters = ConfigurationConverter.GetParameterExists(
@@ -379,7 +392,10 @@ where ApplicationId = @applicationId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLExists(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLExists(entity)));
                 sql += ConfigurationConverter.GetSQLFilterId(entity);
 
                 SqlParameter[] parameters = ConfigurationConverter.GetParameterExists(
@@ -444,7 +460,10 @@ where ApplicationId = @applicationId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLCreate(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLCreate(entity)));
                 SqlParameter[] parameters = ConfigurationConverter.GetParametersCreate(
                     entity,
                     record,
@@ -517,7 +536,10 @@ where ApplicationId = @applicationId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLUpdated(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLUpdated(entity)));
                 SqlParameter[] parameters = ConfigurationConverter.GetParametersUpdated(
                     entity,
                     record,
@@ -585,7 +607,10 @@ where ApplicationId = @applicationId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Configuration\{ConfigurationConverter.GetSQLDelete(entity)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Configuration",
+                    ConfigurationConverter.GetSQLDelete(entity)));
                 SqlParameter[] parameters = ConfigurationConverter.GetParametersGetSingle(
                     entity,
                     id);

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services
@@ -48,7 +49,11 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Statistics\Dashboard\{StatisticsConverter.GetSQLDashboard(part)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Statistics",
+                    "Dashboard",
+                    StatisticsConverter.GetSQLDashboard(part)));
                 Func<IDataReader, object> dataReaderMappings = StatisticsConverter.GetDataReaderMappingsDashboard(part);
 
                 if (dataReaderMappings != null)
@@ -107,7 +112,11 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Statistics\Shared\{StatisticsConverter.GetSQLShared(part)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Statistics",
+                    "Shared",
+                    StatisticsConverter.GetSQLShared(part)));
                 SqlParameter[] parameters = Array.Empty<SqlParameter>();
 
                 if (!string.IsNullOrWhiteSpace(type))
@@ -193,7 +202,11 @@ and UserId = @userId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Statistics\Server\{StatisticsConverter.GetSQLServer(part)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Statistics",
+                    "Server",
+                    StatisticsConverter.GetSQLServer(part)));
                 SqlParameter[] parameters =
 {
                     new SqlParameter("@serverId", SqlDbType.Int) { Value = server }
@@ -254,7 +267,11 @@ and UserId = @userId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Statistics\Error\{StatisticsConverter.GetSQLError(part)}");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Statistics",
+                    "Error",
+                    StatisticsConverter.GetSQLError(part)));
                 Func<IDataReader, object> dataReaderMappings = StatisticsConverter.GetDataReaderMappingsError(part);
 
                 if (dataReaderMappings != null)

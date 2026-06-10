@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
@@ -51,7 +52,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Location\GetAssistantLocation.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Location",
+                    "GetAssistantLocation.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
@@ -122,7 +127,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Location\AssistantLocationUpdated.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Location",
+                    "AssistantLocationUpdated.sql"));
 
                 if (string.IsNullOrEmpty(hostName))
                 {

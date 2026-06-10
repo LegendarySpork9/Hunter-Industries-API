@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -67,7 +68,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetUsers.SQL");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Token",
+                    "GetUsers.SQL"));
                 (List<(string, string)> results, Exception ex) = await _Database.Query(
                     sql,
                     reader => (
@@ -126,7 +130,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetAuthorisationPhrases.SQL");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Token",
+                    "GetAuthorisationPhrases.SQL"));
                 (List<string> results, Exception ex) = await _Database.Query(
                     sql,
                     reader => reader.GetString(0));
@@ -177,7 +184,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Token\GetApplicationName.SQL");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Token",
+                    "GetApplicationName.SQL"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@phrase", SqlDbType.VarChar) { Value = phrase }

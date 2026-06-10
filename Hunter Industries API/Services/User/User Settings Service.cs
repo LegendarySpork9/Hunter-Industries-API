@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.User
@@ -52,7 +53,11 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\GetUserSettings.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "User Settings",
+                    "GetUserSettings.sql"));
                 string currentApplication = string.Empty;
                 UserSettingRecord tempRecord = new UserSettingRecord();
                 List<SqlParameter> parameterList = new List<SqlParameter>();
@@ -158,7 +163,11 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\GetUserSetting.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "User Settings",
+                    "GetUserSetting.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@id", SqlDbType.Int) { Value = id }
@@ -226,7 +235,11 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "User Settings",
+                    "UserSettingExists.sql"));
                 sql += @"
 and UserId = @userId";
                 sql += @"
@@ -300,7 +313,11 @@ and [Name] = @name";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "User Settings",
+                    "UserSettingExists.sql"));
                 sql += "\nand UserSettingId = @id";
 
                 SqlParameter[] parameters =
@@ -363,7 +380,11 @@ and [Name] = @name";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingAdded.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "User Settings",
+                    "UserSettingAdded.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@userId", SqlDbType.Int) { Value = userSetting.UserId },
@@ -438,7 +459,11 @@ and [Name] = @name";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\User Settings\UserSettingUpdated.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "User Settings",
+                    "UserSettingUpdated.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@value", SqlDbType.VarChar) { Value = value },

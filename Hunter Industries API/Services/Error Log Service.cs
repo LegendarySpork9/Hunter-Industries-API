@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services
@@ -59,7 +60,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Error Log\GetErrorLog.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Error Log",
+                    "GetErrorLog.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>
                 {
                     new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
@@ -172,7 +176,10 @@ fetch next @pageSize rows only";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Error Log\GetTotalErrorLog.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Error Log",
+                    "GetTotalErrorLog.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>();
 
                 if (!string.IsNullOrEmpty(ipAddress))
@@ -256,7 +263,10 @@ fetch next @pageSize rows only";
                     new SqlParameter("@errorId", SqlDbType.Int) { Value = errorId }
                 };
 
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Error Log\GetErrorLogId.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Error Log",
+                    "GetErrorLogId.sql"));
 
                 (ErrorLogRecord result, Exception ex) = await _Database.QuerySingle(
                     sql,
