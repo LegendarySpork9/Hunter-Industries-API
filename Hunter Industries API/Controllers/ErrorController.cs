@@ -136,7 +136,6 @@ namespace HunterIndustriesAPI.Controllers
             }
 
             (List<ErrorLogRecord> errorLogs, int totalRecords) = await _errorLogService.GetErrorLog(
-                0,
                 filters.IPAddress,
                 filters.Summary,
                 DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc),
@@ -256,16 +255,9 @@ namespace HunterIndustriesAPI.Controllers
                 StandardValues.LoggerValues.Info, 
                 $"Error Log endpoint called with the following parameter \"{id}\".");
 
-            List<ErrorLogRecord> errorLogs = (await _errorLogService.GetErrorLog(
-                id,
-                null,
-                null,
-                _Clock.DefaultDate,
-                _Clock.DefaultDate,
-                25,
-                1)).Item1;
+            ErrorLogRecord errorLog = await _errorLogService.GetErrorLogId(id);
 
-            if (errorLogs.Count == 0)
+            if (errorLog == null)
             {
                 response = new ResponseModel()
                 {
@@ -302,7 +294,7 @@ namespace HunterIndustriesAPI.Controllers
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = errorLogs[0]
+                Data = errorLog
             };
 
             await _auditHistoryService.LogRequest(

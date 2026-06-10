@@ -178,18 +178,6 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         [TestMethod]
         public async Task TestGetById()
         {
-            List<ErrorLogRecord> records =
-            [
-                new ErrorLogRecord
-                {
-                    Id = 1,
-                    DateOccured = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    IPAddress = "127.0.0.1",
-                    Summary = "This is an error.",
-                    Message = "This is a detailed error trace."
-                }
-            ];
-
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.ExecuteScalar(
                     It.IsAny<string>(),
@@ -197,20 +185,20 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    records,
-                    null));
-            mockDatabase.Setup(d => d.QuerySingle(
-                    It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, int>>(),
-                    It.IsAny<SqlParameter[]>()).Result)
-                .Returns((
-                    1,
-                    null));
+                    new ErrorLogRecord
+                    {
+                        Id = 1,
+                        DateOccured = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                        IPAddress = "127.0.0.1",
+                        Summary = "This is an error.",
+                        Message = "This is a detailed error trace."
+                    },
+                    (Exception)null));
 
             ErrorController controller = new(
                 _MockLogger.Object,
@@ -240,8 +228,6 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         [TestMethod]
         public async Task TestGetByIdEmpty()
         {
-            List<ErrorLogRecord> records = [];
-
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.ExecuteScalar(
                     It.IsAny<string>(),
@@ -249,20 +235,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, ErrorLogRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    records,
-                    null));
-            mockDatabase.Setup(d => d.QuerySingle(
-                    It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, int>>(),
-                    It.IsAny<SqlParameter[]>()).Result)
-                .Returns((
-                    0,
-                    null));
+                    (ErrorLogRecord)null,
+                    (Exception)null));
 
             ErrorController controller = new(
                 _MockLogger.Object,

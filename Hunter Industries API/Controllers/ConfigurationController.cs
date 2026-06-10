@@ -222,7 +222,6 @@ namespace HunterIndustriesAPI.Controllers
 
             (List<object> records, int totalRecords) = await _configurationService.GetRecords(
                 entity,
-                0,
                 parentEntityId,
                 filters.IncludeUsed,
                 filters.PageSize,
@@ -353,11 +352,11 @@ namespace HunterIndustriesAPI.Controllers
                 StandardValues.LoggerValues.Info, 
                 $"Configuration (Get) endpoint called with the following parameters \"{entity}\", \"{id}\".");
 
-            List<object> records = (await _configurationService.GetRecords(
+            object record = await _configurationService.GetRecord(
                 entity,
-                id)).Item1;
+                id);
 
-            if (records.Count == 0)
+            if (record == null)
             {
                 response = new ResponseModel()
                 {
@@ -395,7 +394,7 @@ namespace HunterIndustriesAPI.Controllers
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = records[0]
+                Data = record
             };
 
             await _auditHistoryService.LogRequest(

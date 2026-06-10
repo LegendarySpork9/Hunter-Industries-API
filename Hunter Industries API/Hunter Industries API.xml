@@ -2027,11 +2027,6 @@
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.Id">
-            <summary>
-            The id number of the user.
-            </summary>
-        </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.Username">
             <summary>
             The name of the user.
@@ -3585,7 +3580,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetRecords(System.String,System.Int32,System.Nullable{System.Int32},System.Boolean,System.Int32,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetRecords(System.String,System.Nullable{System.Int32},System.Boolean,System.Int32,System.Int32)">
             <summary>
             Returns all records that match the parameters.
             </summary>
@@ -3593,6 +3588,11 @@
         <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetTotalRecord(System.String)">
             <summary>
             Returns the number of records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ConfigurationService.GetRecord(System.String,System.Int32)">
+            <summary>
+            Returns the record that matches the id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Object,System.Nullable{System.Int32})">
@@ -3628,7 +3628,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetErrorLog(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.Int32,System.Int32)">
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetErrorLog(System.String,System.String,System.DateTime,System.DateTime,System.Int32,System.Int32)">
             <summary>
             Returns all error log records that match the parameters.
             </summary>
@@ -3636,6 +3636,11 @@
         <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetTotalErrorLog(System.String,System.String,System.DateTime,System.DateTime)">
             <summary>
             Returns the number of error log records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ErrorLogService.GetErrorLogId(System.Int32)">
+            <summary>
+            Returns the error log record that matches the id.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ModelValidationService">
@@ -3802,9 +3807,14 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.Int32,System.String,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.String,System.Boolean)">
             <summary>
             Returns all user records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUser(System.Int32)">
+            <summary>
+            Returns the user record that matches the id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserService.UserExists(System.String)">

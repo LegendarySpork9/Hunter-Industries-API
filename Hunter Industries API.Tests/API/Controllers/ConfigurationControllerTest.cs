@@ -194,13 +194,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, object>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false }],
-                    null));
+                    (object)new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false },
+                    (Exception)null));
 
             ConfigurationController controller = new(
                 _MockLogger.Object,
@@ -236,13 +236,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, object>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [],
-                    null));
+                    (object)null,
+                    (Exception)null));
 
             ConfigurationController controller = new(
                 _MockLogger.Object,

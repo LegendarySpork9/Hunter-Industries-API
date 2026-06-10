@@ -58,9 +58,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            List<UserRecord> actual = await service.GetUsers(
-                0,
-                null);
+            List<UserRecord> actual = await service.GetUsers(null);
 
             Assert.AreEqual(
                 1,
@@ -101,13 +99,96 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            List<UserRecord> actual = await service.GetUsers(
-                0,
-                null);
+            List<UserRecord> actual = await service.GetUsers(null);
 
             Assert.AreEqual(
                 0,
                 actual.Count);
+        }
+
+        #endregion
+
+        #region GetUser
+
+        /// <summary>
+        /// Checks whether the GetUser method returns a single user.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetUser()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (1, "TestUser", "HashedPassword", false),
+                    (Exception)null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    ["User", "Assistant API"],
+                    null));
+
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            UserRecord actual = await service.GetUser(1);
+
+            Assert.AreEqual(
+                1,
+                actual.Id);
+            Assert.AreEqual(
+                "TestUser",
+                actual.Username);
+            Assert.AreEqual(
+                "HashedPassword",
+                actual.Password);
+            Assert.AreEqual(
+                2,
+                actual.Scopes.Count);
+            Assert.IsFalse(actual.IsDeleted);
+        }
+
+        /// <summary>
+        /// Checks whether the GetUser method returns a default user when no user is found.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetUserEmpty()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (0, (string)null, (string)null, false),
+                    (Exception)null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    (Exception)null));
+
+            UserService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            UserRecord actual = await service.GetUser(999);
+
+            Assert.AreEqual(
+                0,
+                actual.Id);
+            Assert.IsNull(actual.Username);
         }
 
         #endregion

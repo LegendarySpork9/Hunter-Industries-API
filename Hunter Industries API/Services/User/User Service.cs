@@ -42,13 +42,12 @@ namespace HunterIndustriesAPI.Services.User
         /// Returns all user records that match the parameters.
         /// </summary>
         public async Task<List<UserRecord>> GetUsers(
-            int id,
             string username,
             bool includeDeleted = false)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"UserService.GetUsers called with the parameters \"{id}\", \"{username}\", \"{includeDeleted}\".");
+                $"UserService.GetUsers called with the parameters \"{username}\", \"{includeDeleted}\".");
 
             List<UserRecord> users = new List<UserRecord>();
 
@@ -56,12 +55,6 @@ namespace HunterIndustriesAPI.Services.User
             {
                 string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\GetUsers.sql");
                 List<SqlParameter> parameterList = new List<SqlParameter>();
-
-                if (id != 0)
-                {
-                    sql += "\nand UserID = @id";
-                    parameterList.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
-                }
 
                 if (!string.IsNullOrEmpty(username))
                 {
@@ -126,6 +119,85 @@ namespace HunterIndustriesAPI.Services.User
                 StandardValues.LoggerValues.Debug,
                 $"UserService.GetUsers returned {users.Count} records.");
             return users;
+        }
+
+        /// <summary>
+        /// Returns the user record that matches the id.
+        /// </summary>
+        public async Task<UserRecord> GetUser(int id)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetUser called with the parameters \"{id}\".");
+
+            UserRecord user = new UserRecord();
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\GetUser.sql");
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@userId", SqlDbType.Int) { Value = id }
+                };
+
+                ((int, string, string, bool) result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => (
+                        reader.GetInt32(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetBoolean(3)),
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run UserService.GetUser.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                user = new UserRecord
+                {
+                    Id = result.Item1,
+                    Username = result.Item2,
+                    Password = result.Item3,
+                    Scopes = await GetUserScopes(result.Item1),
+                    IsDeleted = result.Item4
+                };
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.GetUser.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (user != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"UserService.GetUser returned 1 record");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"UserService.GetUser returned 0 records");
+            }
+
+            return user;
         }
 
         /// <summary>

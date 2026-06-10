@@ -134,7 +134,6 @@ namespace HunterIndustriesAPI.Controllers.User
             }
 
             List<UserRecord> users = await _userService.GetUsers(
-                filters.Id,
                 filters.Username,
                 filters.IncludeDeleted);
 
@@ -240,12 +239,9 @@ namespace HunterIndustriesAPI.Controllers.User
                 StandardValues.LoggerValues.Info, 
                 $"User (Get) endpoint called with the following parameters \"{id}\".");
 
-            List<UserRecord> users = await _userService.GetUsers(
-                id,
-                null,
-                true);
+            UserRecord user = await _userService.GetUser(id);
 
-            if (users.Count == 0)
+            if (user == null)
             {
                 response = new ResponseModel()
                 {
@@ -282,7 +278,7 @@ namespace HunterIndustriesAPI.Controllers.User
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = users[0]
+                Data = user
             };
 
             await _auditHistoryService.LogRequest(
@@ -656,9 +652,7 @@ namespace HunterIndustriesAPI.Controllers.User
 
             if (await _userService.UserExists(id))
             {
-                UserRecord userRecord = (await _userService.GetUsers(
-                    id,
-                    null))[0];
+                UserRecord userRecord = await _userService.GetUser(id);
 
                 if (await _userService.UserUpdated(
                     id,

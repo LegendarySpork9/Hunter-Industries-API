@@ -158,13 +158,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.User
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [(1, "TestUser", "HashedPassword", false)],
-                    null));
+                    (1, "TestUser", "HashedPassword", false),
+                    (Exception)null));
             mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, string>>(),
@@ -207,13 +207,20 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.User
                 .Returns((
                     "1",
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
+                    (0, (string)null, (string)null, false),
+                    (Exception)null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, string>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
                     [],
-                    null));
+                    (Exception)null));
 
             UserController controller = new(
                 _MockLogger.Object,
@@ -348,13 +355,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.User
                 .Returns((
                     [1],
                     (Exception)null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [(1, "TestUser", "HashedPassword", false)],
-                    null));
+                    (1, "TestUser", "HashedPassword", false),
+                    (Exception)null));
             mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, string>>(),
