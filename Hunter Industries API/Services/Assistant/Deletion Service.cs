@@ -7,6 +7,7 @@ using HunterIndustriesAPICommon.Converters;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
@@ -50,7 +51,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Deletion\GetAssistantDeletion.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Deletion",
+                    "GetAssistantDeletion.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
@@ -119,7 +124,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Deletion\AssistantDeletionUpdated.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Deletion",
+                    "AssistantDeletionUpdated.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@deletion", SqlDbType.Bit) { Value = deletion },

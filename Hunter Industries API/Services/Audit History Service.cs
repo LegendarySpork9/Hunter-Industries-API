@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services
@@ -66,7 +67,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\LogRequest.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "LogRequest.sql"));
                 SqlParameter[] sqlParameters =
                 {
                     new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = ipAddress },
@@ -140,7 +144,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\LogLoginAttempt.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "LogLoginAttempt.sql"));
                 SqlParameter[] sqlParameters =
                 {
                     new SqlParameter("@username", SqlDbType.VarChar) { Value = (object)username ?? DBNull.Value },
@@ -202,7 +209,10 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistory.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "GetAuditHistory.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>
                 {
                     new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
@@ -346,7 +356,10 @@ fetch next @pageSize rows only";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetTotalAuditHistory.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "GetTotalAuditHistory.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>();
 
                 if (!string.IsNullOrEmpty(ipAddress))
@@ -441,7 +454,10 @@ fetch next @pageSize rows only";
                     new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
                 };
 
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryId.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "GetAuditHistoryId.sql"));
 
                 (AuditHistoryRecord result, Exception ex) = await _Database.QuerySingle(
                     sql,
@@ -554,7 +570,10 @@ fetch next @pageSize rows only";
                     new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
                 };
 
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryLoginAttempt.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "GetAuditHistoryLoginAttempt.sql"));
 
                 (LoginAttemptRecord result, Exception ex) = await _Database.QuerySingle(
                     sql,
@@ -642,7 +661,10 @@ fetch next @pageSize rows only";
                     new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
                 };
 
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Audit History\GetAuditHistoryChanges.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "GetAuditHistoryChanges.sql"));
 
                 (List<ChangeRecord> results, Exception ex) = await _Database.Query(
                     sql,

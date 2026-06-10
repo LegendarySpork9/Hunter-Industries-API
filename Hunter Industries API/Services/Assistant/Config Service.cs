@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Assistant
@@ -53,7 +54,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\GetAssistantConfig.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Configuration",
+                    "GetAssistantConfig.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>();
 
                 if (!string.IsNullOrEmpty(assistantName))
@@ -136,7 +141,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\GetTotalAssistantConfig.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Configuration",
+                    "GetTotalAssistantConfig.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>();
 
                 if (!string.IsNullOrEmpty(assistantName))
@@ -200,7 +209,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\GetMostRecentAssistantVersion.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Configuration",
+                    "GetMostRecentAssistantVersion.sql"));
                 (string result, Exception ex) = await _Database.QuerySingle(
                     sql,
                     reader => reader.GetString(0));
@@ -256,7 +269,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\AssistantExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Configuration",
+                    "AssistantExists.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@assistantName", SqlDbType.VarChar) { Value = assistantName },
@@ -324,7 +341,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateLocation.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Assistant",
+                    "Configuration",
+                    "CreateLocation.sql"));
                 SqlParameter[] locationParameters =
                 {
                     new SqlParameter("@hostname", SqlDbType.VarChar) { Value = hostName },
@@ -356,7 +377,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                 if (created)
                 {
-                    sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateUser.sql");
+                    sql = _FileSystem.ReadAllText(Path.Combine(
+                        _Options.SQLFiles,
+                        "Assistant",
+                        "Configuration",
+                        "CreateUser.sql"));
                     SqlParameter[] userParameters =
                     {
                         new SqlParameter("@name", SqlDbType.VarChar) { Value = assignedUser }
@@ -387,7 +412,11 @@ namespace HunterIndustriesAPI.Services.Assistant
 
                     if (created)
                     {
-                        sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Assistant\Configuration\CreateAssistantConfiguration.sql");
+                        sql = _FileSystem.ReadAllText(Path.Combine(
+                            _Options.SQLFiles,
+                            "Assistant",
+                            "Configuration",
+                            "CreateAssistantConfiguration.sql"));
                         SqlParameter[] configParameters =
                         {
                             new SqlParameter("@locationID", SqlDbType.Int) { Value = locationId },

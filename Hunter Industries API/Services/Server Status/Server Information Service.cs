@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -51,7 +52,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\GetServers.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Information",
+                    "GetServers.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>();
 
                 if (isActive)
@@ -140,7 +145,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\GetServers.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Information",
+                    "GetServers.sql"));
                 sql += @"
 where ServerInformationId = @serverId";
                 SqlParameter[] parameters =
@@ -235,7 +244,11 @@ where ServerInformationId = @serverId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Information",
+                    "ServerExists.sql"));
                 sql += @"
 where ServerInformation.[Name] = @name";
                 SqlParameter[] parameters =
@@ -297,7 +310,11 @@ where ServerInformation.[Name] = @name";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Information",
+                    "ServerExists.sql"));
                 sql += @"
 where ServerInformationId = @serverId";
                 SqlParameter[] parameters =
@@ -360,7 +377,11 @@ where ServerInformationId = @serverId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerAdded.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Information",
+                    "ServerAdded.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = server.Name },
@@ -440,7 +461,11 @@ where ServerInformationId = @serverId";
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\Server Status\Server Information\ServerUpdated.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Information",
+                    "ServerUpdated.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>()
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = server.Name },

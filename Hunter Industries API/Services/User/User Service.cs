@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,7 +54,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\GetUsers.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "GetUsers.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>();
 
                 if (!string.IsNullOrEmpty(username))
@@ -134,7 +138,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\GetUser.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "GetUser.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@userId", SqlDbType.Int) { Value = id }
@@ -213,7 +220,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "UserExists.sql"));
                 sql += "\nand Username = @username";
 
                 SqlParameter[] parameters =
@@ -275,7 +285,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserExists.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "UserExists.sql"));
                 sql += "\nand UserID = @id";
 
                 SqlParameter[] parameters =
@@ -340,7 +353,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\CreateUser.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "CreateUser.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
@@ -413,7 +429,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\CreateUserScope.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "CreateUserScope.sql"));
 
                 foreach (string scope in scopes)
                 {
@@ -481,7 +500,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\GetUserScopes.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "GetUserScopes.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>();
 
                 if (id != 0)
@@ -553,7 +575,10 @@ namespace HunterIndustriesAPI.Services.User
             {
                 try
                 {
-                    string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserUpdated.sql");
+                    string sql = _FileSystem.ReadAllText(Path.Combine(
+                        _Options.SQLFiles,
+                        "User",
+                        "UserUpdated.sql"));
 
                     if (string.IsNullOrEmpty(username))
                     {
@@ -668,7 +693,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\DeleteUserScope.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "DeleteUserScope.sql"));
 
                 foreach (string scope in scopes)
                 {
@@ -732,7 +760,10 @@ namespace HunterIndustriesAPI.Services.User
 
             try
             {
-                string sql = _FileSystem.ReadAllText($@"{_Options.SQLFiles}\User\UserDeleted.sql");
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "UserDeleted.sql"));
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@userID", SqlDbType.Int) { Value = id }
