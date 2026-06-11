@@ -1,4 +1,4 @@
-// Copyright (c) 11/06/2026 Toby Hunter
+// Copyright (c) - 11/06/2026 - Toby Hunter
 #nullable enable
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPIControlPanel.Abstractions;

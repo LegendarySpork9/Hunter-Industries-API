@@ -1,0 +1,17 @@
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Objects.Media
+{
+    /// <summary>
+    /// </summary>
+    public class MediaTypeRecord
+    {
+        /// <summary>
+        /// The type of file.
+        /// </summary>
+        public string Entension { get; set; }
+        /// <summary>
+        /// The mime type of the file.
+        /// </summary>
+        public string MimeType { get; set; }
+    }
+}

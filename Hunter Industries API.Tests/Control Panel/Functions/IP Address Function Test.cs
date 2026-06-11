@@ -1,4 +1,4 @@
-// Copyright (c) 11/06/2026 Toby Hunter
+// Copyright (c) - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPIControlPanel.Functions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
