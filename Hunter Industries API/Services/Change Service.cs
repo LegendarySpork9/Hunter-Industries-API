@@ -1,9 +1,11 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPI.Objects;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -54,6 +56,7 @@ namespace HunterIndustriesAPI.Services
             {
                 string sql = _FileSystem.ReadAllText(Path.Combine(
                     _Options.SQLFiles,
+                    "Change",
                     "LogChange.sql"));
                 SqlParameter[] parameters =
                 {
@@ -101,6 +104,84 @@ namespace HunterIndustriesAPI.Services
                 StandardValues.LoggerValues.Debug,
                 $"ChangeService.LogChange returned {successful}.");
             return successful;
+        }
+
+        /// <summary>
+        /// Returns the change records attached to the audit history record that matches the id.
+        /// </summary>
+        public async Task<List<ChangeRecord>> GetAuditHistoryChanges(int auditId)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ChangeService.GetAuditHistoryChanges called with the parameters \"{auditId}\".");
+
+            List<ChangeRecord> changes = new List<ChangeRecord>();
+
+            try
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
+                };
+
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Change",
+                    "GetAuditHistoryChanges.sql"));
+
+                (List<ChangeRecord> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => new ChangeRecord()
+                    {
+                        Id = reader.GetInt32(0),
+                        Field = reader.GetString(1),
+                        OldValue = reader.GetString(2),
+                        NewValue = reader.GetString(3)
+                    },
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ChangeService.GetAuditHistoryChanges.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                changes = results;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ChangeService.GetAuditHistoryChanges.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (changes != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"ChangeService.GetAuditHistoryChanges returned {changes} record");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "ChangeService.GetAuditHistoryChanges returned 0 records");
+            }
+
+            return changes;
         }
     }
 }

@@ -1,6 +1,7 @@
 // Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Functions;
+using HunterIndustriesAPI.Models.Requests.Bodies.User;
 using HunterIndustriesAPI.Objects.User;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
@@ -71,13 +72,15 @@ namespace HunterIndustriesAPI.Services.User
                     sql += "\nand IsDeleted = 0";
                 }
 
-                (List<(int, string, string, bool)> results, Exception ex) = await _Database.Query(
+                (List<UserRecord> results, Exception ex) = await _Database.Query(
                     sql,
-                    reader => (
-                        reader.GetInt32(0),
-                        reader.GetString(1),
-                        reader.GetString(2),
-                        reader.GetBoolean(3)),
+                    reader => new UserRecord
+                    {
+                        Id = reader.GetInt32(0),
+                        Username = reader.GetString(1),
+                        Password = reader.GetString(2),
+                        IsDeleted = reader.GetBoolean(3)
+                    },
                     parameterList.ToArray());
 
                 if (ex != null)
@@ -92,18 +95,11 @@ namespace HunterIndustriesAPI.Services.User
                         message);
                 }
 
-                foreach (var result in results)
+                foreach (UserRecord result in results)
                 {
-                    UserRecord user = new UserRecord
-                    {
-                        Id = result.Item1,
-                        Username = result.Item2,
-                        Password = result.Item3,
-                        Scopes = await GetUserScopes(result.Item1),
-                        IsDeleted = result.Item4
-                    };
+                    result.Scopes = await GetUserScopes(result.Id);
 
-                    users.Add(user);
+                    users.Add(result);
                 }
             }
 
@@ -147,13 +143,15 @@ namespace HunterIndustriesAPI.Services.User
                     new SqlParameter("@userId", SqlDbType.Int) { Value = id }
                 };
 
-                ((int, string, string, bool) result, Exception ex) = await _Database.QuerySingle(
+                (UserRecord result, Exception ex) = await _Database.QuerySingle(
                     sql,
-                    reader => (
-                        reader.GetInt32(0),
-                        reader.GetString(1),
-                        reader.GetString(2),
-                        reader.GetBoolean(3)),
+                    reader => new UserRecord
+                    {
+                        Id = reader.GetInt32(0),
+                        Username = reader.GetString(1),
+                        Password = reader.GetString(2),
+                        IsDeleted = reader.GetBoolean(3)
+                    },
                     parameters);
 
                 if (ex != null)
@@ -168,14 +166,8 @@ namespace HunterIndustriesAPI.Services.User
                         message);
                 }
 
-                user = new UserRecord
-                {
-                    Id = result.Item1,
-                    Username = result.Item2,
-                    Password = result.Item3,
-                    Scopes = await GetUserScopes(result.Item1),
-                    IsDeleted = result.Item4
-                };
+                result.Scopes = await GetUserScopes(result.Id);
+                user = result;
             }
 
             catch (Exception ex)

@@ -49,12 +49,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     "1",
                     null));
 
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
             AuditHistoryService service = new(
                 _MockLogger.Object,
                 _MockFileSystem.Object,
                 _MockOptions.Object,
                 mockDatabase.Object,
-                _MockClock.Object);
+                _MockClock.Object,
+                _changeService);
 
             (bool logged, int auditId) = await service.LogRequest(
                 "127.0.0.1",
@@ -83,12 +90,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     null,
                     null));
 
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
             AuditHistoryService service = new(
                 _MockLogger.Object,
                 _MockFileSystem.Object,
                 _MockOptions.Object,
                 mockDatabase.Object,
-                _MockClock.Object);
+                _MockClock.Object,
+                _changeService);
 
             (bool logged, int auditId) = await service.LogRequest(
                 "127.0.0.1",
@@ -121,12 +135,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     1,
                     null));
 
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
             AuditHistoryService service = new(
                 _MockLogger.Object,
                 _MockFileSystem.Object,
                 _MockOptions.Object,
                 mockDatabase.Object,
-                _MockClock.Object);
+                _MockClock.Object,
+                _changeService);
 
             await service.LogLoginAttempt(
                 1,
@@ -179,12 +200,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     5,
                     null));
 
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
             AuditHistoryService service = new(
                 _MockLogger.Object,
                 _MockFileSystem.Object,
                 _MockOptions.Object,
                 mockDatabase.Object,
-                _MockClock.Object);
+                _MockClock.Object,
+                _changeService);
 
             (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(
                 null,
@@ -234,12 +262,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     0,
                     null));
 
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
             AuditHistoryService service = new(
                 _MockLogger.Object,
                 _MockFileSystem.Object,
                 _MockOptions.Object,
                 mockDatabase.Object,
-                _MockClock.Object);
+                _MockClock.Object,
+                _changeService);
 
             (List<AuditHistoryRecord> actual, int totalRecords) = await service.GetAuditHistory(
                 null,
@@ -322,12 +357,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     changes,
                     (Exception)null));
 
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
             AuditHistoryService service = new(
                 _MockLogger.Object,
                 _MockFileSystem.Object,
                 _MockOptions.Object,
                 mockDatabase.Object,
-                _MockClock.Object);
+                _MockClock.Object,
+                _changeService);
 
             AuditHistoryRecord actual = await service.GetAuditHistoryId(1);
 
@@ -363,12 +405,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
                     (AuditHistoryRecord)null,
                     (Exception)null));
 
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
             AuditHistoryService service = new(
                 _MockLogger.Object,
                 _MockFileSystem.Object,
                 _MockOptions.Object,
                 mockDatabase.Object,
-                _MockClock.Object);
+                _MockClock.Object,
+                _changeService);
 
             AuditHistoryRecord actual = await service.GetAuditHistoryId(999);
 

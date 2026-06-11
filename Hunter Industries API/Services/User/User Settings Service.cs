@@ -74,13 +74,21 @@ namespace HunterIndustriesAPI.Services.User
                     parameterList.Add(new SqlParameter("@application", SqlDbType.VarChar) { Value = application });
                 }
 
-                (List<(string, int, string, string)> results, Exception ex) = await _Database.Query(
+                (List<(string, SettingRecord)> results, Exception ex) = await _Database.Query(
                     sql,
-                    reader => (
-                        reader.GetString(0),
-                        reader.GetInt32(1),
-                        reader.GetString(2),
-                        reader.GetString(3)),
+                    reader =>
+                    {
+                        string app = reader.GetString(0);
+
+                        SettingRecord setting = new SettingRecord()
+                        {
+                            Id = reader.GetInt32(1),
+                            Name = reader.GetString(2),
+                            Value = reader.GetString(3)
+                        };
+
+                        return (app, setting);
+                    },
                     parameterList.ToArray());
 
                 if (ex != null)
@@ -95,7 +103,7 @@ namespace HunterIndustriesAPI.Services.User
                         message);
                 }
 
-                foreach ((string, int, string, string) result in results)
+                foreach ((string, SettingRecord) result in results)
                 {
                     if (string.IsNullOrEmpty(currentApplication) || currentApplication != result.Item1)
                     {
@@ -118,12 +126,7 @@ namespace HunterIndustriesAPI.Services.User
                         currentApplication = result.Item1;
                     }
 
-                    tempRecord.Settings.Add(new SettingRecord()
-                    {
-                        Id = result.Item2,
-                        Name = result.Item3,
-                        Value = result.Item4
-                    });
+                    tempRecord.Settings.Add(result.Item2);
                 }
 
                 if (!string.IsNullOrEmpty(currentApplication))

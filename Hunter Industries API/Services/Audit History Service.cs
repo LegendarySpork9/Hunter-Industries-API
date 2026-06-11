@@ -22,6 +22,7 @@ namespace HunterIndustriesAPI.Services
         private readonly IDatabaseOptions _Options;
         private readonly IDatabase _Database;
         private readonly IClock _Clock;
+        private readonly ChangeService _ChangeService;
 
         /// <summary>
         /// </summary>
@@ -31,13 +32,15 @@ namespace HunterIndustriesAPI.Services
             IFileSystem _fileSystem,
             IDatabaseOptions _options,
             IDatabase _database,
-            IClock clock)
+            IClock clock,
+            ChangeService _changeService = null)
         {
             _Logger = _logger;
             _FileSystem = _fileSystem;
             _Options = _options;
             _Database = _database;
             _Clock = clock;
+            _ChangeService = _changeService;
         }
 
         /// <summary>
@@ -520,7 +523,7 @@ fetch next @pageSize rows only";
 
                 auditHistory = result;
                 auditHistory.LoginAttempt = await GetAuditHistoryLoginAttempt(auditId);
-                auditHistory.Change = await GetAuditHistoryChanges(auditId);
+                auditHistory.Change = await _ChangeService.GetAuditHistoryChanges(auditId);
             }
 
             catch (Exception ex)
@@ -539,14 +542,14 @@ fetch next @pageSize rows only";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"AuditHistoryService.GetAuditHistoryId returned 1 record");
+                    "AuditHistoryService.GetAuditHistoryId returned 1 record");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"AuditHistoryService.GetAuditHistoryId returned 0 records");
+                    "AuditHistoryService.GetAuditHistoryId returned 0 records");
             }
 
             return auditHistory;
@@ -630,95 +633,17 @@ fetch next @pageSize rows only";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"AuditHistoryService.GetAuditHistoryLoginAttempt returned 1 record");
+                    "AuditHistoryService.GetAuditHistoryLoginAttempt returned 1 record");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"AuditHistoryService.GetAuditHistoryLoginAttempt returned 0 records");
+                    "AuditHistoryService.GetAuditHistoryLoginAttempt returned 0 records");
             }
 
             return loginAttempt;
-        }
-
-        /// <summary>
-        /// Returns the change records attached to the audit history record that matches the id.
-        /// </summary>
-        private async Task<List<ChangeRecord>> GetAuditHistoryChanges(int auditId)
-        {
-            _Logger.LogMessage(
-                StandardValues.LoggerValues.Debug,
-                $"AuditHistoryService.GetAuditHistoryChanges called with the parameters \"{auditId}\".");
-
-            List<ChangeRecord> changes = new List<ChangeRecord>();
-
-            try
-            {
-                SqlParameter[] parameters =
-                {
-                    new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId }
-                };
-
-                string sql = _FileSystem.ReadAllText(Path.Combine(
-                    _Options.SQLFiles,
-                    "Audit History",
-                    "GetAuditHistoryChanges.sql"));
-
-                (List<ChangeRecord> results, Exception ex) = await _Database.Query(
-                    sql,
-                    reader => new ChangeRecord()
-                    {
-                        Id = reader.GetInt32(0),
-                        Field = reader.GetString(1),
-                        OldValue = reader.GetString(2),
-                        NewValue = reader.GetString(3)
-                    },
-                    parameters);
-
-                if (ex != null)
-                {
-                    string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryChanges.";
-                    _Logger.LogMessage(
-                        StandardValues.LoggerValues.Warning,
-                        message);
-                    _Logger.LogMessage(
-                        StandardValues.LoggerValues.Error,
-                        ex.ToString(),
-                        message);
-                }
-
-                changes = results;
-            }
-
-            catch (Exception ex)
-            {
-                string message = "An error occured when trying to run AuditHistoryService.GetAuditHistoryChanges.";
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Warning,
-                    message);
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Error,
-                    ex.ToString(),
-                    message);
-            }
-
-            if (changes != null)
-            {
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    $"AuditHistoryService.GetAuditHistoryChanges returned 1 record");
-            }
-
-            else
-            {
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    $"AuditHistoryService.GetAuditHistoryChanges returned 0 records");
-            }
-
-            return changes;
         }
     }
 }

@@ -37,13 +37,26 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUserSettings()
         {
+            SettingRecord settingOne = new()
+            {
+                Id = 1,
+                Name = "Theme",
+                Value = "Dark"
+            };
+            SettingRecord settingTwo = new()
+            {
+                Id = 2,
+                Name = "Language",
+                Value = "English"
+            };
+
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, (string, int, string, string)>>(),
+                    It.IsAny<Func<SqlDataReader, (string, SettingRecord)>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [("TestApp", 1, "Theme", "Dark"), ("TestApp", 2, "Language", "English")],
+                    [("TestApp", settingOne), ("TestApp", settingTwo)],
                     null));
 
             UserSettingsService service = new(
