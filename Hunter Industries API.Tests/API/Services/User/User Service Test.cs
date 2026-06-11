@@ -36,13 +36,21 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUsers()
         {
+            UserRecord expected = new()
+            {
+                Id = 1,
+                Username = "TestUser",
+                Password = "HashedPassword",
+                IsDeleted = false
+            };
+
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
+                    It.IsAny<Func<SqlDataReader, UserRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [(1, "TestUser", "HashedPassword", false)],
+                    [expected],
                     null));
             mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),
@@ -116,13 +124,21 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
         [TestMethod]
         public async Task TestGetUser()
         {
+            UserRecord expected = new()
+            {
+                Id = 1,
+                Username = "TestUser",
+                Password = "HashedPassword",
+                IsDeleted = false
+            };
+
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, (int, string, string, bool)>>(),
+                    It.IsAny<Func<SqlDataReader, UserRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (1, "TestUser", "HashedPassword", false),
+                    expected,
                     (Exception)null));
             mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),

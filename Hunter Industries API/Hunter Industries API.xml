@@ -3520,7 +3520,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPICommon.Abstractions.IClock)">
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPICommon.Abstractions.IClock,HunterIndustriesAPI.Services.ChangeService)">
             <summary>
             </summary>
         </member>
@@ -3554,11 +3554,6 @@
             Returns the login attempt record attached to the audit history record that matches the id.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.GetAuditHistoryChanges(System.Int32)">
-            <summary>
-            Returns the change records attached to the audit history record that matches the id.
-            </summary>
-        </member>
         <member name="T:HunterIndustriesAPI.Services.ChangeService">
             <summary>
             </summary>
@@ -3570,6 +3565,11 @@
         <member name="M:HunterIndustriesAPI.Services.ChangeService.LogChange(System.Int32,System.String,System.String,System.String)">
             <summary>
             Creates a record in the Change table.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ChangeService.GetAuditHistoryChanges(System.Int32)">
+            <summary>
+            Returns the change records attached to the audit history record that matches the id.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.ConfigurationService">

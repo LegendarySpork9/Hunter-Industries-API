@@ -228,12 +228,18 @@ namespace HunterIndustriesAPI.Controllers
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> Get(int id)
         {
+            ChangeService _changeService = new ChangeService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database);
             AuditHistoryService _auditHistoryService = new AuditHistoryService(
                 _Logger,
                 _FileSystem,
                 _Options,
                 _Database,
-                _Clock);
+                _Clock,
+                _changeService);
 
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
