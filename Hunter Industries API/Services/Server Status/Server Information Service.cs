@@ -232,7 +232,7 @@ where ServerInformationId = @serverId";
         }
 
         /// <summary>
-        /// Returns whether a server already exists with the given values.
+        /// Returns whether a server already exists with the given name.
         /// </summary>
         public async Task<bool> ServerExists(string name)
         {
@@ -298,7 +298,7 @@ where ServerInformation.[Name] = @name";
         }
 
         /// <summary>
-        /// Returns whether a server already exists with the given values.
+        /// Returns whether a server exists with the given id.
         /// </summary>
         public async Task<bool> ServerExists(int id)
         {

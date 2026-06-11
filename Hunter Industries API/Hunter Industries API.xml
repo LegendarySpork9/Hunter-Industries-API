@@ -816,6 +816,20 @@
             Returns the status id number.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Converters.MediaConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.MediaConverter.GetSQLGetApplicationEntity(System.String)">
+            <summary>
+            Returns the Getx application entity sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.MediaConverter.GetSQLCreateApplicationEntityLink(System.String)">
+            <summary>
+            Returns the Createx application entity link sql.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Converters.StatisticsConverter">
             <summary>
             </summary>
@@ -1118,21 +1132,21 @@
             Creates the route for the given context.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Functions.ConfigurationFunction">
+        <member name="T:HunterIndustriesAPI.Functions.SQLFunction">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanParameterArray(System.Object,System.Data.SqlClient.SqlParameter[])">
+        <member name="M:HunterIndustriesAPI.Functions.SQLFunction.CleanParameterArray(System.Object,System.Data.SqlClient.SqlParameter[])">
             <summary>
             Removes any null properties from the SQL parameter list.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.CleanSQL(System.Object,System.String)">
+        <member name="M:HunterIndustriesAPI.Functions.SQLFunction.CleanSQL(System.Object,System.String)">
             <summary>
             Removes any null properties from the SQL.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.ConfigurationFunction.GetProperties(System.Object)">
+        <member name="M:HunterIndustriesAPI.Functions.SQLFunction.GetProperties(System.Object)">
             <summary>
             Returns all the properties in the model.
             </summary>
@@ -1618,6 +1632,15 @@
             The port the server runs on.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DomainModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DomainModel.Host">
+            <summary>
+            The domain URL.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.DowntimeModel">
             <summary>
             </summary>
@@ -1653,6 +1676,64 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Configuration.MachineModel.HostName">
             <summary>
             The name of the machine.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaUpdateModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaUpdateModel.Name">
+            <summary>
+            The name of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaUpdateModel.Size">
+            <summary>
+            The size in bytes of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaUpdateModel.Path">
+            <summary>
+            The folder path to the file.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Name">
+            <summary>
+            The name of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Entension">
+            <summary>
+            The type of file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.MimeType">
+            <summary>
+            The mime type of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Size">
+            <summary>
+            The size in bytes of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Path">
+            <summary>
+            The folder path to the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Domain">
+            <summary>
+            The URL the file is served on.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Application">
+            <summary>
+            The application the file relates to.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel">
@@ -2023,6 +2104,25 @@
             The number of the page to pull.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Filters.Media.MediaFilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.Media.MediaFilterModel.IncludeDeleted">
+            <summary>
+            Whether to return deleted media.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.Media.MediaFilterModel.PageSize">
+            <summary>
+            The number of records to pull per page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.Media.MediaFilterModel.PageNumber">
+            <summary>
+            The number of the page to pull.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel">
             <summary>
             </summary>
@@ -2221,6 +2321,40 @@
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Responses.ErrorLogResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Media.MediaResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Media.MediaResponseModel.Entries">
+            <summary>
+            The media records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Media.MediaResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Media.MediaResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Media.MediaResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Media.MediaResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Media.MediaResponseModel.TotalCount">
             <summary>
             The total number of records returned.
             </summary>
@@ -2629,6 +2763,25 @@
             Whether the record is deleted.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Configuration.DomainRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.DomainRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.DomainRecord.Host">
+            <summary>
+            The domain URL.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Configuration.DomainRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.ErrorLogRecord">
             <summary>
             </summary>
@@ -2656,6 +2809,79 @@
         <member name="P:HunterIndustriesAPI.Objects.ErrorLogRecord.Message">
             <summary>
             The full error including the trace.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Media.MediaRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.Name">
+            <summary>
+            The name of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.Type">
+            <summary>
+            The type information of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.Size">
+            <summary>
+            The size in bytes of the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.Path">
+            <summary>
+            The folder path to the file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.Domain">
+            <summary>
+            The URL the file is served on.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.URL">
+            <summary>
+            The URL to access the the image.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.Application">
+            <summary>
+            The application the file relates to.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.DateUploaded">
+            <summary>
+            The date and time the file was uploaded.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.DateUpdated">
+            <summary>
+            THe date and time the file was updated.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Media.MediaTypeRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaTypeRecord.Entension">
+            <summary>
+            The type of file.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaTypeRecord.MimeType">
+            <summary>
+            The mime type of the file.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ConnectionRecord">
@@ -3488,6 +3714,69 @@
             Updates the version number of the given assistant.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Services.Media.MediaService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.GetApplicationMedia(System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Returns all media records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.GetTotalMedia(System.String,System.Boolean)">
+            <summary>
+            Returns the number of media records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.GetApplicationEntityMedia(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Returns all media records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.GetMediaId(System.Int32)">
+            <summary>
+            Returns the media record that matches the id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaExists(System.String,System.String)">
+            <summary>
+            Returns whether a media record already exists for the application with the given name.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaExists(System.Int32)">
+            <summary>
+            Returns whether a media record exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaTypeCreated(System.String,System.String)">
+            <summary>
+            Checks and creates the MediaType record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaCreated(HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel)">
+            <summary>
+            Creates the media.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.ApplicationEntityLinkCreated(System.String,System.Int32,System.Int32)">
+            <summary>
+            Creates the application entity link record.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaUpdated(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaUpdateModel)">
+            <summary>
+            Updates the details of the given media.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaDeleted(System.Int32)">
+            <summary>
+            Sets the media to deleted.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Services.StatisticService">
             <summary>
             </summary>
@@ -3602,7 +3891,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordExists(System.String,System.Int32)">
             <summary>
-            Returns whether a record already exists with the given id.
+            Returns whether a record exists with the given id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ConfigurationService.RecordCreated(System.String,System.Object,System.Nullable{System.Int32})">
@@ -3753,12 +4042,12 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerExists(System.String)">
             <summary>
-            Returns whether a server already exists with the given values.
+            Returns whether a server already exists with the given name.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerExists(System.Int32)">
             <summary>
-            Returns whether a server already exists with the given values.
+            Returns whether a server exists with the given id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.ServerAdded(HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel)">
@@ -3824,7 +4113,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserService.UserExists(System.Int32)">
             <summary>
-            Returns whether a user already exists with the given id.
+            Returns whether a user exists with the given id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserService.UserCreated(System.String,System.String)">
@@ -3882,7 +4171,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.UserSettingExists(System.Int32)">
             <summary>
-            Returns whether a user setting already exists with the given id.
+            Returns whether a user setting exists with the given id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserSettingsService.UserSettingAdded(HunterIndustriesAPI.Models.Requests.Bodies.User.UserSettingsModel)">

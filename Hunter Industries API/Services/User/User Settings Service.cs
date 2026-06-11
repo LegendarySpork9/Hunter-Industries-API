@@ -304,7 +304,7 @@ and [Name] = @name";
         }
 
         /// <summary>
-        /// Returns whether a user setting already exists with the given id.
+        /// Returns whether a user setting exists with the given id.
         /// </summary>
         public async Task<bool> UserSettingExists(int id)
         {

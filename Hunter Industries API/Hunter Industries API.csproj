@@ -342,6 +342,7 @@
     <Compile Include="Controllers\User\UserController.cs" />
     <Compile Include="Controllers\User\UserSettingsController.cs" />
     <Compile Include="Converters\Audit History Converter.cs" />
+    <Compile Include="Converters\Media Converter.cs" />
     <Compile Include="Converters\Statistics Converter.cs" />
     <Compile Include="Converters\Configuration Converter.cs" />
     <Compile Include="Converters\Token Converter.cs" />
@@ -352,7 +353,7 @@
     <Compile Include="Filters\Operation\Response Example Operation Filter.cs" />
     <Compile Include="Filters\Dependency Resolver.cs" />
     <Compile Include="Filters\Required Policy Authorisation Attribute Filter.cs" />
-    <Compile Include="Functions\Configuration Function.cs" />
+    <Compile Include="Functions\SQL Function.cs" />
     <Compile Include="Functions\IP Address Function.cs" />
     <Compile Include="Implementations\Logger Service Wrapper.cs" />
     <Compile Include="Mappings\Configuration Data Reader Mapping.cs" />
@@ -389,6 +390,7 @@
     <Compile Include="Models\Requests\Bodies\Configuration\Downtime Model.cs" />
     <Compile Include="Models\Requests\Bodies\Configuration\Game Model.cs" />
     <Compile Include="Models\Requests\Bodies\Configuration\Machine Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Media\Media Update Model.cs" />
     <Compile Include="Models\Requests\Bodies\Media\Media Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Alert Update Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Server Alert Model.cs" />
@@ -402,6 +404,7 @@
     <Compile Include="Models\Requests\Filters\Configuration Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Error Log Filter Model.cs" />
+    <Compile Include="Models\Requests\Filters\Media\Media Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\User Filter Model.cs" />
     <Compile Include="Models\Responses\Assistant\Config Response Model.cs" />
     <Compile Include="Models\Responses\Assistant\Deletion Response Model.cs" />
@@ -468,6 +471,7 @@
     <Compile Include="Services\Assistant\Deletion Service.cs" />
     <Compile Include="Services\Assistant\Location Service.cs" />
     <Compile Include="Services\Assistant\Version Service.cs" />
+    <Compile Include="Services\Media\Media Service.cs" />
     <Compile Include="Services\Statistic Service.cs" />
     <Compile Include="Services\Audit History Service.cs" />
     <Compile Include="Services\Change Service.cs" />
@@ -567,6 +571,15 @@
     <Content Include="SQL\Error Log\GetErrorLog.sql" />
     <Content Include="SQL\Error Log\GetTotalErrorLog.sql" />
     <Content Include="SQL\Change\LogChange.sql" />
+    <Content Include="SQL\Media\DeleteMedia.sql" />
+    <Content Include="SQL\Media\MediaUpdated.sql" />
+    <Content Include="SQL\Media\CreateMediaType.sql" />
+    <Content Include="SQL\Media\CreateMedia.sql" />
+    <Content Include="SQL\Media\GetApplicationEntityMedia.sql" />
+    <Content Include="SQL\Media\MediaExists.sql" />
+    <Content Include="SQL\Media\GetMediaId.sql" />
+    <Content Include="SQL\Media\GetTotalMedia.sql" />
+    <Content Include="SQL\Media\GetApplicationMedia.sql" />
     <Content Include="SQL\Server Status\Server Alerts\GetServerAlert.sql" />
     <Content Include="SQL\Server Status\Server Alerts\GetServerAlerts.sql" />
     <Content Include="SQL\Server Status\Server Alerts\GetTotalServerAlerts.sql" />

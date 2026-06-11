@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 namespace HunterIndustriesAPI.Tests.API.Functions
 {
     [TestClass]
-    public class ConfigurationFunctionTest
+    public class SQLFunctionTest
     {
         #region CleanParameterArray Tests
 
@@ -28,7 +28,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 new SqlParameter("@value", "SomeValue")
             ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+            SqlParameter[] actual = SQLFunction.CleanParameterArray(
                 model,
                 parameters);
 
@@ -57,7 +57,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 new SqlParameter("@value", "Present")
             ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+            SqlParameter[] actual = SQLFunction.CleanParameterArray(
                 model,
                 parameters);
 
@@ -83,7 +83,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 new SqlParameter("@value", "SomeValue")
             ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+            SqlParameter[] actual = SQLFunction.CleanParameterArray(
                 model,
                 parameters);
 
@@ -101,7 +101,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
             object model = new { };
             SqlParameter[] parameters = Array.Empty<SqlParameter>();
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+            SqlParameter[] actual = SQLFunction.CleanParameterArray(
                 model,
                 parameters);
 
@@ -129,7 +129,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 new SqlParameter("@third", "C")
             ];
 
-            SqlParameter[] actual = ConfigurationFunction.CleanParameterArray(
+            SqlParameter[] actual = SQLFunction.CleanParameterArray(
                 model,
                 parameters);
 
@@ -167,7 +167,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 "and Value = @value"
             ]);
 
-            string actual = ConfigurationFunction.CleanSQL(
+            string actual = SQLFunction.CleanSQL(
                 model,
                 sql);
 
@@ -202,7 +202,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 "and Value = @value"
             ]);
 
-            string actual = ConfigurationFunction.CleanSQL(
+            string actual = SQLFunction.CleanSQL(
                 model,
                 sql);
 
@@ -230,7 +230,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 "and Value = @value"
             ]);
 
-            string actual = ConfigurationFunction.CleanSQL(
+            string actual = SQLFunction.CleanSQL(
                 model,
                 sql);
 
@@ -260,7 +260,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 "where Id = 1"
             ]);
 
-            string actual = ConfigurationFunction.CleanSQL(
+            string actual = SQLFunction.CleanSQL(
                 model,
                 sql);
 
@@ -290,7 +290,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 "and Third = @third"
             ]);
 
-            string actual = ConfigurationFunction.CleanSQL(
+            string actual = SQLFunction.CleanSQL(
                 model,
                 sql);
 
@@ -326,7 +326,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 "where Id = @id"
             ]);
 
-            string actual = ConfigurationFunction.CleanSQL(
+            string actual = SQLFunction.CleanSQL(
                 model,
                 sql);
 
@@ -363,7 +363,7 @@ namespace HunterIndustriesAPI.Tests.API.Functions
                 "where Id = @id"
             ]);
 
-            string actual = ConfigurationFunction.CleanSQL(
+            string actual = SQLFunction.CleanSQL(
                 model,
                 sql);
 

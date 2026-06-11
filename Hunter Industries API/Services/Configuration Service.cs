@@ -296,14 +296,14 @@ where ApplicationId = @applicationId";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"ConfigurationService.GetRecord returned 1 record");
+                    "ConfigurationService.GetRecord returned 1 record");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"ConfigurationService.GetRecord returned 0 records");
+                    "ConfigurationService.GetRecord returned 0 records");
             }
 
             return record;
@@ -378,7 +378,7 @@ where ApplicationId = @applicationId";
         }
 
         /// <summary>
-        /// Returns whether a record already exists with the given id.
+        /// Returns whether a record exists with the given id.
         /// </summary>
         public async Task<bool> RecordExists(
             string entity,
@@ -545,10 +545,10 @@ where ApplicationId = @applicationId";
                     record,
                     id);
 
-                sql = ConfigurationFunction.CleanSQL(
+                sql = SQLFunction.CleanSQL(
                     record,
                     sql);
-                parameters = ConfigurationFunction.CleanParameterArray(
+                parameters = SQLFunction.CleanParameterArray(
                     record,
                     parameters);
 
