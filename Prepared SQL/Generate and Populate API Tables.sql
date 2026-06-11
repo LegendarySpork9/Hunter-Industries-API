@@ -559,6 +559,63 @@ GO
 ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((300)) FOR [IsActive]
 GO
 
+/* Media API */
+
+/****** Object:  Table [dbo].[Domain]    Script Date: 11/06/2026 12:57:53 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Domain](
+	[DomainId] [int] IDENTITY(1,1) NOT NULL,
+	[Host] [varchar](255) NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+ CONSTRAINT [PK_Domain] PRIMARY KEY CLUSTERED 
+(
+	[DomainId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Media]    Script Date: 11/06/2026 12:57:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Media](
+	[MediaId] [int] IDENTITY(1,1) NOT NULL,
+	[MediaTypeId] [int] NOT NULL,
+	[DomainId] [int] NOT NULL,
+	[ApplicationId] [int] NOT NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Size] [bigint] NOT NULL,
+	[Path] [varchar](400) NOT NULL,
+	[DateUploaded] [datetime] NOT NULL,
+	[DateUpdated] [datetime] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+ CONSTRAINT [PK_Media] PRIMARY KEY CLUSTERED 
+(
+	[MediaId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[MediaType]    Script Date: 11/06/2026 12:57:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[MediaType](
+	[MediaTypeId] [int] IDENTITY(1,1) NOT NULL,
+	[Extension] [varchar](10) NOT NULL,
+	[MimeType] [varchar](100) NOT NULL,
+ CONSTRAINT [PK_MediaType] PRIMARY KEY CLUSTERED 
+(
+	[MediaTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /* Constraints */
 
 ALTER TABLE [dbo].[Application]  WITH CHECK ADD  CONSTRAINT [FK_Applications_Authorisation] FOREIGN KEY([PhraseId])
@@ -655,6 +712,21 @@ ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_AP
 REFERENCES [dbo].[APIUser] ([UserId])
 GO
 ALTER TABLE [dbo].[LoginAttempt] CHECK CONSTRAINT [FK_LoginAttempt_APIUser]
+GO
+ALTER TABLE [dbo].[Media]  WITH CHECK ADD  CONSTRAINT [FK_Media_Application] FOREIGN KEY([ApplicationId])
+REFERENCES [dbo].[Application] ([ApplicationId])
+GO
+ALTER TABLE [dbo].[Media] CHECK CONSTRAINT [FK_Media_Application]
+GO
+ALTER TABLE [dbo].[Media]  WITH CHECK ADD  CONSTRAINT [FK_Media_Domain] FOREIGN KEY([DomainId])
+REFERENCES [dbo].[Domain] ([DomainId])
+GO
+ALTER TABLE [dbo].[Media] CHECK CONSTRAINT [FK_Media_Domain]
+GO
+ALTER TABLE [dbo].[Media]  WITH CHECK ADD  CONSTRAINT [FK_Media_MediaType] FOREIGN KEY([MediaTypeId])
+REFERENCES [dbo].[MediaType] ([MediaTypeId])
+GO
+ALTER TABLE [dbo].[Media] CHECK CONSTRAINT [FK_Media_MediaType]
 GO
 ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_Component] FOREIGN KEY([ComponentId])
 REFERENCES [dbo].[Component] ([ComponentId])
