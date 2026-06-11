@@ -32,6 +32,10 @@ namespace HunterIndustriesAPI.Objects.Media
         /// </summary>
         public string Domain { get; set; }
         /// <summary>
+        /// The URL to access the the image.
+        /// </summary>
+        public string URL { get; set; }
+        /// <summary>
         /// The application the file relates to.
         /// </summary>
         public string Application { get; set; }

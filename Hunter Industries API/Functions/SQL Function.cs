@@ -9,7 +9,7 @@ namespace HunterIndustriesAPI.Functions
 {
     /// <summary>
     /// </summary>
-    public static class ConfigurationFunction
+    public static class SQLFunction
     {
         /// <summary>
         /// Removes any null properties from the SQL parameter list.

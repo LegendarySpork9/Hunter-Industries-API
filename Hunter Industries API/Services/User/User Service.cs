@@ -265,7 +265,7 @@ namespace HunterIndustriesAPI.Services.User
         }
 
         /// <summary>
-        /// Returns whether a user already exists with the given id.
+        /// Returns whether a user exists with the given id.
         /// </summary>
         public async Task<bool> UserExists(int id)
         {

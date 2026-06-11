@@ -318,14 +318,14 @@ fetch next @pageSize rows only";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"ErrorLogService.GetErrorLogId returned 1 record");
+                    "ErrorLogService.GetErrorLogId returned 1 record");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"ErrorLogService.GetErrorLogId returned 0 records");
+                    "ErrorLogService.GetErrorLogId returned 0 records");
             }
 
             return error;
