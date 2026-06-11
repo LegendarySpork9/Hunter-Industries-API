@@ -1,4 +1,4 @@
-﻿// Copyright © 11/06/2026 Toby Hunter
+﻿// Copyright © - 11/06/2026 - Toby Hunter
 namespace HunterIndustriesAPIControlPanel.Functions
 {
     public static class IPAddressFunction
