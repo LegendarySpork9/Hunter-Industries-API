@@ -1,4 +1,4 @@
-// Copyright © - Unpublished - Toby Hunter
+// Copyright © 11/06/2026 Toby Hunter
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPICommon.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

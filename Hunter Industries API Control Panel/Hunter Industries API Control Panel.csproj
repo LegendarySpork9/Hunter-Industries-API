@@ -15,6 +15,10 @@
     <Copyright>Copyright ©  2026</Copyright>
     <RepositoryUrl>https://github.com/LegendarySpork9/Hunter-Industries-API</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <Version>1.0.0</Version>
+    <PackageIcon>favicon.png</PackageIcon>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,7 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\" />
+    <None Include="wwwroot\Images\favicon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

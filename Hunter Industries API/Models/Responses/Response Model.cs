@@ -1,4 +1,4 @@
-﻿// Copyright © - Unpublished - Toby Hunter
+﻿// Copyright © 11/06/2026 Toby Hunter
 using Newtonsoft.Json;
 
 namespace HunterIndustriesAPI.Models.Responses
