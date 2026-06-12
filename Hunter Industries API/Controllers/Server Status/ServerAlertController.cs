@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -304,7 +304,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         /// </remarks>
         /// <param name="request">An object containing the alert.</param>
         [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Alert.Create")]
-        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(ServerAlertRecord), Description = "If the server is successfuly added.")]
+        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(ServerAlertRecord), Description = "If the server alert is successfully logged.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]

@@ -451,7 +451,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
         }
 
         /// <summary>
-        /// Checks whether the MediaTypeCreated method returns false when zero rows are affected.
+        /// Checks whether the MediaTypeCreated method returns true when zero rows are affected.
         /// </summary>
         [TestMethod]
         public async Task TestMediaTypeCreatedNoRowsAffected()
@@ -474,7 +474,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
                 ".png",
                 "image/png");
 
-            Assert.IsFalse(actual);
+            Assert.IsTrue(actual);
         }
 
         /// <summary>
@@ -535,11 +535,10 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
                 MimeType = "image/png",
                 Size = 1024,
                 Path = "/images",
-                Domain = "https://example.com",
-                Application = "TestApp"
+                Domain = "https://example.com"
             };
 
-            (bool created, int mediaId) = await service.MediaCreated(media);
+            (bool created, int mediaId) = await service.MediaCreated("TestApp", media);
 
             Assert.IsTrue(created);
             Assert.AreEqual(
@@ -574,11 +573,10 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
                 MimeType = "image/png",
                 Size = 1024,
                 Path = "/images",
-                Domain = "https://example.com",
-                Application = "TestApp"
+                Domain = "https://example.com"
             };
 
-            (bool created, int mediaId) = await service.MediaCreated(media);
+            (bool created, int mediaId) = await service.MediaCreated("TestApp", media);
 
             Assert.IsFalse(created);
             Assert.AreEqual(
@@ -613,11 +611,10 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
                 MimeType = "image/png",
                 Size = 1024,
                 Path = "/images",
-                Domain = "https://example.com",
-                Application = "TestApp"
+                Domain = "https://example.com"
             };
 
-            (bool created, int mediaId) = await service.MediaCreated(media);
+            (bool created, int mediaId) = await service.MediaCreated("TestApp", media);
 
             Assert.IsFalse(created);
             Assert.AreEqual(
@@ -742,7 +739,37 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
 
             bool actual = await service.MediaUpdated(
                 1,
-                new MediaUpdateModel { Name = "UpdatedMedia", Size = 2048, Path = "/images/updated" });
+                new MediaUpdateModel { Name = "UpdatedMedia", Size = 2048 });
+
+            Assert.IsTrue(actual);
+        }
+
+        /// <summary>
+        /// Checks whether the MediaUpdated method returns true when ClearPath is set.
+        /// </summary>
+        [TestMethod]
+        public async Task TestMediaUpdatedClearPath()
+        {
+            _MockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>()))
+                .Returns("update Media\nset [Name] = @name\nwhere MediaId = @mediaId");
+
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+
+            MediaService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            bool actual = await service.MediaUpdated(
+                1,
+                new MediaUpdateModel { Name = "UpdatedMedia", Size = 2048, ClearPath = true });
 
             Assert.IsTrue(actual);
         }
@@ -772,7 +799,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
 
             bool actual = await service.MediaUpdated(
                 1,
-                new MediaUpdateModel { Name = "UpdatedMedia", Size = 2048, Path = "/images/updated" });
+                new MediaUpdateModel { Name = "UpdatedMedia", Size = 2048 });
 
             Assert.IsFalse(actual);
         }
@@ -802,7 +829,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
 
             bool actual = await service.MediaUpdated(
                 1,
-                new MediaUpdateModel { Name = "UpdatedMedia", Size = 2048, Path = "/images/updated" });
+                new MediaUpdateModel { Name = "UpdatedMedia", Size = 2048 });
 
             Assert.IsFalse(actual);
         }

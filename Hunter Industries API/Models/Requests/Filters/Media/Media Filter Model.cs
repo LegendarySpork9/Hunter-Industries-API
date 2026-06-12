@@ -8,7 +8,7 @@ namespace HunterIndustriesAPI.Models.Requests.Filters.Media
         /// <summary>
         /// Whether to return deleted media.
         /// </summary>
-        public bool IncludeDeleted { get; set; }
+        public bool IncludeDeleted { get; set; } = false;
         /// <summary>
         /// The number of records to pull per page.
         /// </summary>

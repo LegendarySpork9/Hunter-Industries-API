@@ -6,11 +6,13 @@ using HunterIndustriesAPI.Models.Requests.Bodies.Media;
 using HunterIndustriesAPI.Objects.Media;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
+using Microsoft.AspNetCore.Hosting.Server;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HunterIndustriesAPI.Services.Media
@@ -531,7 +533,7 @@ namespace HunterIndustriesAPI.Services.Media
                 StandardValues.LoggerValues.Debug,
                 $"MediaService.MediaTypeCreated called with the parameters \"{extension}\", \"{mimeType}\".");
 
-            bool created = false;
+            bool created = true;
 
             try
             {
@@ -562,11 +564,6 @@ namespace HunterIndustriesAPI.Services.Media
 
                     created = false;
                 }
-
-                if (rowsAffected == 1)
-                {
-                    created = true;
-                }
             }
 
             catch (Exception ex)
@@ -592,11 +589,13 @@ namespace HunterIndustriesAPI.Services.Media
         /// <summary>
         /// Creates the media.
         /// </summary>
-        public async Task<(bool, int)> MediaCreated(MediaModel media)
+        public async Task<(bool, int)> MediaCreated(
+            string application,
+            MediaModel media)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"MediaService.MediaCreated called with the parameters {ParameterFunction.FormatParameters(media)}.");
+                $"MediaService.MediaCreated called with the parameters \"{application}\", {ParameterFunction.FormatParameters(media)}.");
 
             bool created = true;
             int mediaId = 0;
@@ -611,11 +610,11 @@ namespace HunterIndustriesAPI.Services.Media
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = media.Name },
                     new SqlParameter("@size", SqlDbType.BigInt) { Value = media.Size },
-                    new SqlParameter("@path", SqlDbType.VarChar) { Value = media.Path },
+                    new SqlParameter("@path", SqlDbType.VarChar) { Value = (object)media.Path ?? DBNull.Value },
                     new SqlParameter("@extension", SqlDbType.VarChar) { Value = media.Entension },
                     new SqlParameter("@mimeType", SqlDbType.VarChar) { Value = media.MimeType },
                     new SqlParameter("@domain", SqlDbType.VarChar) { Value = media.Domain },
-                    new SqlParameter("@application", SqlDbType.VarChar) { Value = media.Application },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = application },
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(
@@ -760,24 +759,60 @@ values (
                     _Options.SQLFiles,
                     "Media",
                     "MediaUpdate.sql"));
-                SqlParameter[] parameters =
+                List<SqlParameter> parameterList = new List<SqlParameter>()
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = media.Name },
                     new SqlParameter("@size", SqlDbType.BigInt) { Value = media.Size },
-                    new SqlParameter("@path", SqlDbType.VarChar) { Value = media.Path },
+                    new SqlParameter("@path", SqlDbType.VarChar) { Value = (object)media.Path ?? DBNull.Value },
                     new SqlParameter("@mediaId", SqlDbType.Int) { Value = id }
                 };
 
-                sql = SQLFunction.CleanSQL(
-                    media,
-                    sql);
-                parameters = SQLFunction.CleanParameterArray(
-                    media,
-                    parameters);
+                if (string.IsNullOrWhiteSpace(media.Name))
+                {
+                    sql = sql.Replace(@"
+	[Name] = @name,", "");
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@name"));
+
+                }
+
+                if (media.Size == 0)
+                {
+                    sql = sql.Replace(@"
+	Size = @size,", "");
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@size"));
+                }
+                
+                if (!media.ClearPath)
+                {
+                    sql = sql.Replace(@"
+	[Path] = @path", "");
+
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@path"));
+                }
+
+                List<string> sqlLines = sql.Split(new[]
+                {
+                    Environment.NewLine,
+                    "\n",
+                    "\r\n"
+                },
+                StringSplitOptions.None)
+                    .ToList();
+                string lastSet = sqlLines.LastOrDefault(s => s.Contains(','));
+
+                if (lastSet != null)
+                {
+                    int index = sqlLines.IndexOf(lastSet);
+                    sqlLines[index] = sqlLines[index].Replace(",", "");
+                }
+
+                sql = string.Join(
+                    Environment.NewLine,
+                    sqlLines);
 
                 (int rowsAffected, Exception ex) = await _Database.Execute(
                     sql,
-                    parameters);
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {

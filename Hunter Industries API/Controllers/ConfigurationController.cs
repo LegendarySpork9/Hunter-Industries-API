@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -432,8 +432,8 @@ namespace HunterIndustriesAPI.Controllers
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         ///     Content-Type: application/json
         ///     {
-        ///         "Name": "Test",
-        ///         "Phrase": "This is a test phrase."
+        ///         "name": "Test",
+        ///         "phrase": "This is a test phrase."
         ///     }
         /// </remarks>
         /// <param name="entity">The name of the configuration object.</param>
@@ -441,8 +441,8 @@ namespace HunterIndustriesAPI.Controllers
         /// <param name="request">An object containing the record information.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Configuration.Create")]
         [VersionedRoute("configuration/{entity}", "2.0")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a record matching the details already exists.")]
-        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(object), Description = "If the record is successfuly created.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If a record matching the details already exists.")]
+        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(object), Description = "If the record is successfully created.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -685,7 +685,7 @@ namespace HunterIndustriesAPI.Controllers
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         ///     Content-Type: application/json
         ///     {
-        ///         "Name": "TestApplication"
+        ///         "name": "TestApplication"
         ///     }
         /// </remarks>
         /// <param name="entity">The name of the configuration object.</param>
@@ -931,11 +931,11 @@ namespace HunterIndustriesAPI.Controllers
         /// <remarks>
         /// Sample Request:
         ///
-        ///     Delete /configuration/Application/1
+        ///     Delete /configuration/application/1
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
         /// <param name="entity">The name of the configuration object.</param>
-        /// <param name="id">The id number of the user.</param>
+        /// <param name="id">The id number of the record.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Configuration.Delete")]
         [VersionedRoute("configuration/{entity}/{id:int}", "2.0")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "Returns a confirmation that the record was deleted.")]

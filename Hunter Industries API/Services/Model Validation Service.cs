@@ -144,6 +144,13 @@ namespace HunterIndustriesAPI.Services
                     out _);
             }
 
+            if (value.GetType() == typeof(long))
+            {
+                valueConfirmed = long.TryParse(
+                    value.ToString(),
+                    out _);
+            }
+
             if (value.GetType() == typeof(bool))
             {
                 valueConfirmed = bool.TryParse(

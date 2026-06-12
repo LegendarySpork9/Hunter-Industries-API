@@ -16,6 +16,10 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Media
         /// <summary>
         /// The folder path to the file.
         /// </summary>
-        public string Path { get; set; } 
+        public string Path { get; set; }
+        /// <summary>
+        /// Whether the path should be cleared.
+        /// </summary>
+        public bool ClearPath { get; set; } = false;
     }
 }

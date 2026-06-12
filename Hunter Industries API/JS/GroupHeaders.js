@@ -9,6 +9,10 @@ $(function () {
             controllers: ['Config', 'Deletion', 'Location', 'Version']
         },
         {
+            title: 'Media API',
+            controllers: ['Media']
+        },
+        {
             title: 'Server Status API',
             controllers: ['ServerAlert', 'ServerEvent', 'ServerInformation']
         }

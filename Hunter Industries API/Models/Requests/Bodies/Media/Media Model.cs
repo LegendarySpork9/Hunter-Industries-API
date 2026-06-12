@@ -29,9 +29,5 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Media
         /// The URL the file is served on.
         /// </summary>
         public string Domain { get; set; }
-        /// <summary>
-        /// The application the file relates to.
-        /// </summary>
-        public string Application { get; set; }
     }
 }

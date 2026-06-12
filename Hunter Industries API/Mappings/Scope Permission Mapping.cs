@@ -50,6 +50,12 @@ namespace HunterIndustriesAPI.Mappings
                     "UserSettings.Read",
                     "UserSettings.Update"
                 }
+            },
+            {
+                "Media API", new List<string>
+                {
+                    "Media"
+                }
             }
         };
 

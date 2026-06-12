@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -52,7 +52,7 @@ namespace HunterIndustriesAPI.Controllers.User
         }
 
         /// <summary>
-        /// Returns the collection of settings for given id.
+        /// Returns the collection of settings for the given id.
         /// </summary>
         /// <remarks>
         /// Sample Request:
@@ -181,8 +181,8 @@ namespace HunterIndustriesAPI.Controllers.User
         /// <param name="request">An object containing the user setting information.</param>
         [RequiredPolicyAuthorisationAttributeFilter("UserSettings.Create")]
         [VersionedRoute("usersettings", "1.1")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a setting matching the name already exists for the application.")]
-        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(UserSettingRecord), Description = "If the setting is successfuly added.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If a setting matching the name already exists for the application.")]
+        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(UserSettingRecord), Description = "If the setting is successfully added.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -363,7 +363,7 @@ namespace HunterIndustriesAPI.Controllers.User
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         ///     Content-Type: application/json
         ///     {
-        ///         "Value": "False"
+        ///         "value": "False"
         ///     }
         /// </remarks>
         /// <param name="id">The id number of the user setting.</param>

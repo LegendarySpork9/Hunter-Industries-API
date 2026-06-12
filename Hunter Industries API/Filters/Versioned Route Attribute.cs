@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using System;
 using System.Web.Http.Routing;
 
@@ -12,7 +12,7 @@ namespace HunterIndustriesAPI.Filters
         /// <summary>
         /// All known API versions in order.
         /// </summary>
-        public static readonly string[] ApiVersions = { "1.0", "1.1", "2.0" };
+        public static readonly string[] ApiVersions = { "1.0", "1.1", "2.0", "2.1" };
 
         /// <summary>
         /// The route path without the api/vN.N/ prefix.
