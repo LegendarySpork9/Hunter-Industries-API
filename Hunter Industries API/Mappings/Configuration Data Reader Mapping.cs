@@ -109,6 +109,21 @@ namespace HunterIndustriesAPI.Mappings
         /// <summary>
         /// The SQL row to model mappings for the downtime record.
         /// </summary>
+        public static readonly Func<IDataReader, DomainRecord> DomainMapper = reader =>
+        {
+            DomainRecord domain = new DomainRecord()
+            {
+                Id = reader.GetInt32(0),
+                Host = reader.GetString(1),
+                IsDeleted = reader.GetBoolean(2)
+            };
+
+            return domain;
+        };
+
+        /// <summary>
+        /// The SQL row to model mappings for the downtime record.
+        /// </summary>
         public static readonly Func<IDataReader, ConfigurationDowntimeRecord> DowntimeMapper = reader =>
         {
             ConfigurationDowntimeRecord downtime = new ConfigurationDowntimeRecord()

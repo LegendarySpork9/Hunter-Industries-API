@@ -96,6 +96,7 @@ namespace HunterIndustriesAPI.Controllers
                         "authorisation",
                         "component",
                         "connection",
+                        "domain",
                         "downtime",
                         "game",
                         "machine"
