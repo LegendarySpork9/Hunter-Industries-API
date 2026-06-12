@@ -46,8 +46,8 @@ namespace HunterIndustriesAPI.Services
             string entity,
             int? parentEntityId = null,
             bool includeUsed = true,
-            int pageSize = 0,
-            int pageNumber = 0)
+            int pageSize = 25,
+            int pageNumber = 1)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,

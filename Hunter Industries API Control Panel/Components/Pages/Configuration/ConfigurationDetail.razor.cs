@@ -31,6 +31,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private AuthorisationModel? Authorisation;
         private ComponentModel? Component;
         private ConnectionModel? Connection;
+        private DomainModel? Domain;
         private DowntimeModel? Downtime;
         private GameModel? Game;
         private MachineModel? Machine;
@@ -64,6 +65,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private string EditComponentName = string.Empty;
         private string EditConnectionIP = string.Empty;
         private int EditConnectionPort = 0;
+        private string EditDomainHost = string.Empty;
         private string EditDowntimeTime = string.Empty;
         private int EditDowntimeDuration = 0;
         private string EditGameName = string.Empty;
@@ -98,6 +100,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             ["authorisation"] = "Authorisation",
             ["component"] = "Component",
             ["connection"] = "Connection",
+            ["domain"] = "Domain",
             ["downtime"] = "Downtime",
             ["game"] = "Game",
             ["machine"] = "Machine"
@@ -128,7 +131,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             await LoadData();
 
             if (Application != null || Authorisation != null || Component != null || Connection != null
-                || Component != null || Downtime != null || Game != null || Machine != null)
+                || Component != null || Domain != null || Downtime != null || Game != null || Machine != null)
             {
                 HasData = true;
             }
@@ -205,6 +208,18 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                 {
                     EditConnectionIP = Connection.IPAddress;
                     EditConnectionPort = Connection.Port;
+                }
+            }
+
+            else if (Entity == "domain")
+            {
+                Domain = await APIService.GetConfigurationEntity<DomainModel?>(
+                    Entity,
+                    Id);
+
+                if (Domain != null)
+                {
+                    EditDomainHost = Domain.Host;
                 }
             }
 
@@ -675,6 +690,87 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Warning,
                         ErrorMessage);
+                }
+
+                await InvokeAsync(StateHasChanged);
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Save Success: {SaveSuccess}");
+
+                await Task.Delay(2000).ContinueWith(_ =>
+                {
+                    SaveSuccess = false;
+                    ErrorFor = string.Empty;
+                    ErrorMessage = string.Empty;
+
+                    InvokeAsync(StateHasChanged);
+                });
+            }
+
+            IsSaving = false;
+        }
+
+        /// <summary>
+        /// Performs the domain update steps.
+        /// </summary>
+        private async Task SaveDomain()
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "Save Clicked");
+
+            IsSaving = true;
+
+            if (Domain != null)
+            {
+                DomainUpdateRequestModel domainUpdate = new();
+
+                if (!string.IsNullOrWhiteSpace(EditDomainHost) && EditDomainHost != Domain.Host)
+                {
+                    if ((EditDomainHost.StartsWith("http://") || EditDomainHost.StartsWith("https://")) && EditDomainHost.EndsWith('/'))
+                    {
+                        domainUpdate.Host = EditDomainHost;
+
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Debug,
+                            $"Domain Host: {Domain.Host} -> {EditDomainHost}");
+                    }
+
+                    else
+                    {
+                        SaveSuccess = false;
+                        ErrorFor = "Entity";
+                        ErrorMessage = "Host must start with \"http://\" or \"https://\" and end with \"/\"";
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            ErrorMessage);
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(ErrorFor) && string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                    (DomainModel? domain, ResponseModel? apiResponse) = await APIService.UpdateConfigurationEntity<DomainModel, DomainUpdateRequestModel>(
+                    Entity,
+                    Id,
+                    domainUpdate);
+
+                    if (domain != null)
+                    {
+                        SaveSuccess = true;
+                        Domain = domain;
+                        EditDomainHost = Domain.Host;
+                    }
+
+                    else
+                    {
+                        SaveSuccess = false;
+                        ErrorFor = "Entity";
+                        ErrorMessage = $"API returned {apiResponse?.StatusCode} ({apiResponse?.Message})";
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            ErrorMessage);
+                    }
                 }
 
                 await InvokeAsync(StateHasChanged);

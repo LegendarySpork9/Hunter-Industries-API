@@ -41,6 +41,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     ["authorisation"] = ("Authorisation", "&#x1F512;"),
                     ["component"] = ("Component", "&#x1F9E9;"),
                     ["connection"] = ("Connection", "&#x1F310;"),
+                    ["domain"] = ("Domain", "&#x1F310;"),
                     ["downtime"] = ("Downtime", "&#x23F0;"),
                     ["game"] = ("Game", "&#x1F3AE;"),
                     ["machine"] = ("Machine", "&#x1F5A5;")

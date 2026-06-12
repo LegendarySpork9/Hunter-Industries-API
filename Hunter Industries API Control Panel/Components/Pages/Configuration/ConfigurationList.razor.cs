@@ -46,6 +46,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
         private string NewComponentName = string.Empty;
         private string NewConnectionIP = string.Empty;
         private int NewConnectionPort = 0;
+        private string NewDomainHost = string.Empty;
         private string NewDowntimeTime = string.Empty;
         private int NewDowntimeDuration = 0;
         private string NewGameName = string.Empty;
@@ -61,6 +62,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             ["authorisation"] = "Authorisation",
             ["component"] = "Component",
             ["connection"] = "Connection",
+            ["domain"] = "Domain",
             ["downtime"] = "Downtime",
             ["game"] = "Game",
             ["machine"] = "Machine"
@@ -162,15 +164,31 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
                 if (components != null)
                 {
-                    Records = new()
+                    if (components.Entries == null)
                     {
-                        Entries = [.. components.Entries.Select(com => com.ToListObject())],
-                        EntryCount = components.EntryCount,
-                        PageNumber = components.PageNumber,
-                        PageSize = components.PageSize,
-                        TotalPageCount = components.TotalPageCount,
-                        TotalCount = components.TotalCount
-                    };
+                        Records = new()
+                        {
+                            Entries = [],
+                            EntryCount = 0,
+                            PageNumber = PageNumber,
+                            PageSize = PageSize,
+                            TotalPageCount = 0,
+                            TotalCount = 0
+                        };
+                    }
+
+                    else
+                    {
+                        Records = new()
+                        {
+                            Entries = [.. components.Entries.Select(com => com.ToListObject())],
+                            EntryCount = components.EntryCount,
+                            PageNumber = components.PageNumber,
+                            PageSize = components.PageSize,
+                            TotalPageCount = components.TotalPageCount,
+                            TotalCount = components.TotalCount
+                        };
+                    }
                 }
             }
 
@@ -183,15 +201,68 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
                 if (connections != null)
                 {
-                    Records = new()
+                    if (connections.Entries == null)
                     {
-                        Entries = [.. connections.Entries.Select(c => c.ToListObject())],
-                        EntryCount = connections.EntryCount,
-                        PageNumber = connections.PageNumber,
-                        PageSize = connections.PageSize,
-                        TotalPageCount = connections.TotalPageCount,
-                        TotalCount = connections.TotalCount
-                    };
+                        Records = new()
+                        {
+                            Entries = [],
+                            EntryCount = 0,
+                            PageNumber = PageNumber,
+                            PageSize = PageSize,
+                            TotalPageCount = 0,
+                            TotalCount = 0
+                        };
+                    }
+
+                    else
+                    {
+                        Records = new()
+                        {
+                            Entries = [.. connections.Entries.Select(c => c.ToListObject())],
+                            EntryCount = connections.EntryCount,
+                            PageNumber = connections.PageNumber,
+                            PageSize = connections.PageSize,
+                            TotalPageCount = connections.TotalPageCount,
+                            TotalCount = connections.TotalCount
+                        };
+                    }
+                }
+            }
+
+            else if (Entity == "domain")
+            {
+                PagedAPIResponseModel<DomainModel>? domains = await APIService.GetPagedConfiguration<PagedAPIResponseModel<DomainModel>?>(
+                    Entity,
+                    PageSize,
+                    PageNumber);
+
+                if (domains != null)
+                {
+                    if (domains.Entries == null)
+                    {
+                        Records = new()
+                        {
+                            Entries = [],
+                            EntryCount = 0,
+                            PageNumber = PageNumber,
+                            PageSize = PageSize,
+                            TotalPageCount = 0,
+                            TotalCount = 0
+                        };
+                    }
+
+                    else
+                    {
+                        Records = new()
+                        {
+                            Entries = [.. domains.Entries.Select(d => d.ToListObject())],
+                            EntryCount = domains.EntryCount,
+                            PageNumber = domains.PageNumber,
+                            PageSize = domains.PageSize,
+                            TotalPageCount = domains.TotalPageCount,
+                            TotalCount = domains.TotalCount
+                        };
+                    }
                 }
             }
 
@@ -204,15 +275,31 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
                 if (downtimes != null)
                 {
-                    Records = new()
+                    if (downtimes.Entries == null)
                     {
-                        Entries = [.. downtimes.Entries.Select(d => d.ToListObject())],
-                        EntryCount = downtimes.EntryCount,
-                        PageNumber = downtimes.PageNumber,
-                        PageSize = downtimes.PageSize,
-                        TotalPageCount = downtimes.TotalPageCount,
-                        TotalCount = downtimes.TotalCount
-                    };
+                        Records = new()
+                        {
+                            Entries = [],
+                            EntryCount = 0,
+                            PageNumber = PageNumber,
+                            PageSize = PageSize,
+                            TotalPageCount = 0,
+                            TotalCount = 0
+                        };
+                    }
+
+                    else
+                    {
+                        Records = new()
+                        {
+                            Entries = [.. downtimes.Entries.Select(d => d.ToListObject())],
+                            EntryCount = downtimes.EntryCount,
+                            PageNumber = downtimes.PageNumber,
+                            PageSize = downtimes.PageSize,
+                            TotalPageCount = downtimes.TotalPageCount,
+                            TotalCount = downtimes.TotalCount
+                        };
+                    }
                 }
             }
 
@@ -225,15 +312,31 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
                 if (games != null)
                 {
-                    Records = new()
+                    if (games.Entries == null)
                     {
-                        Entries = [.. games.Entries.Select(g => g.ToListObject())],
-                        EntryCount = games.EntryCount,
-                        PageNumber = games.PageNumber,
-                        PageSize = games.PageSize,
-                        TotalPageCount = games.TotalPageCount,
-                        TotalCount = games.TotalCount
-                    };
+                        Records = new()
+                        {
+                            Entries = [],
+                            EntryCount = 0,
+                            PageNumber = PageNumber,
+                            PageSize = PageSize,
+                            TotalPageCount = 0,
+                            TotalCount = 0
+                        };
+                    }
+
+                    else
+                    {
+                        Records = new()
+                        {
+                            Entries = [.. games.Entries.Select(g => g.ToListObject())],
+                            EntryCount = games.EntryCount,
+                            PageNumber = games.PageNumber,
+                            PageSize = games.PageSize,
+                            TotalPageCount = games.TotalPageCount,
+                            TotalCount = games.TotalCount
+                        };
+                    }
                 }
             }
 
@@ -246,15 +349,31 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
 
                 if (machines != null)
                 {
-                    Records = new()
+                    if (machines.Entries == null)
                     {
-                        Entries = [.. machines.Entries.Select(m => m.ToListObject())],
-                        EntryCount = machines.EntryCount,
-                        PageNumber = machines.PageNumber,
-                        PageSize = machines.PageSize,
-                        TotalPageCount = machines.TotalPageCount,
-                        TotalCount = machines.TotalCount
-                    };
+                        Records = new()
+                        {
+                            Entries = [],
+                            EntryCount = 0,
+                            PageNumber = PageNumber,
+                            PageSize = PageSize,
+                            TotalPageCount = 0,
+                            TotalCount = 0
+                        };
+                    }
+
+                    else
+                    {
+                        Records = new()
+                        {
+                            Entries = [.. machines.Entries.Select(m => m.ToListObject())],
+                            EntryCount = machines.EntryCount,
+                            PageNumber = machines.PageNumber,
+                            PageSize = machines.PageSize,
+                            TotalPageCount = machines.TotalPageCount,
+                            TotalCount = machines.TotalCount
+                        };
+                    }
                 }
             }
 
@@ -327,6 +446,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
             NewComponentName = string.Empty;
             NewConnectionIP = string.Empty;
             NewConnectionPort = 0;
+            NewDomainHost = string.Empty;
             NewDowntimeTime = string.Empty;
             NewDowntimeDuration = 0;
             NewGameName = string.Empty;
@@ -466,6 +586,31 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Configuration
                     connection);
 
                 success = newConnection != null;
+            }
+
+            else if (Entity == "domain")
+            {
+                if (string.IsNullOrWhiteSpace(NewDomainHost) || ((!NewDomainHost.StartsWith("http://") && !NewDomainHost.StartsWith("https://")) || !NewDomainHost.EndsWith('/')))
+                {
+                    ErrorMessage = "Domain host is required starting with \"http://\" or \"https://\" and ending with \"/\".";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        ErrorMessage);
+                    IsLoading = false;
+                    return;
+                }
+
+                DomainRequestModel domain = new()
+                {
+                    Host = NewDomainHost
+                };
+
+                (DomainModel? newDomain, apiResponse) = await APIService.CreateConfigurationEntity<DomainModel, DomainRequestModel>(
+                    Entity,
+                    NewDomainHost,
+                    domain);
+
+                success = newDomain != null;
             }
 
             else if (Entity == "downtime")

@@ -398,6 +398,58 @@ else
                 </div>
                 break;
 
+            case "domain":
+                <div class="card mb-3 card-rounded">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">@Domain?.Host</h6>
+                        @if (IsDeleted)
+                        {
+                            <StatusBadge
+                                Text="Deleted"
+                                Type="deleted" />
+                        }
+                        else
+                        {
+                            <StatusBadge
+                                Text="Active"
+                                Type="active" />
+                        }
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Host</label>
+                                <input type="text" class="form-control" @bind="EditDomainHost" disabled="@IsDeleted" />
+                            </div>
+                        </div>
+                        @if (!IsDeleted)
+                        {
+                            <div class="mt-3 d-flex justify-content-between">
+                                <div>
+                                    <button type="submit" class="btn btn-primary" disabled="@IsSaving" @onclick="SaveDomain">
+                                        @if (IsSaving)
+                                        {
+                                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                        }
+                                        Save Changes
+                                    </button>
+                                    @if (!string.IsNullOrEmpty(ErrorMessage) && ErrorFor == "Entity")
+                                    {
+                                        <div class="alert alert-danger py-2 d-inline-block ms-2 mb-0 align-middle">@ErrorMessage</div>
+                                    }
+
+                                    @if (SaveSuccess)
+                                    {
+                                        <span class="text-success ms-2">Saved changes successfully!</span>
+                                    }
+                                </div>
+                                <button class="btn btn-outline-danger" @onclick="() => ConfirmDelete()">Delete</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+                break;
+
             case "downtime":
                 <div class="card mb-3 card-rounded">
                     <div class="card-header d-flex justify-content-between align-items-center">
