@@ -26,6 +26,7 @@ namespace HunterIndustriesAPI.Converters
                 case "authorisation": return @"Authorisation\GetAuthorisation.sql";
                 case "component": return @"Component\GetComponent.sql";
                 case "connection": return @"Connection\GetConnection.sql";
+                case "domain": return @"Domain\GetDomain.sql";
                 case "downtime": return @"Downtime\GetDowntime.sql";
                 case "game": return @"Game\GetGame.sql";
                 case "machine": return @"Machine\GetMachine.sql";
@@ -56,6 +57,10 @@ fetch next @pageSize rows only";
 order by ConnectionId asc
 offset (@pageSize * (@pageNumber - 1)) rows
 fetch next @pageSize rows only";
+                case "domain": return @"
+order by DomainId asc
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
                 case "downtime": return @"
 order by DowntimeId asc
 offset (@pageSize * (@pageNumber - 1)) rows
@@ -84,6 +89,7 @@ fetch next @pageSize rows only";
                 case "authorisation": return @"Authorisation\GetTotalAuthorisation.sql";
                 case "component": return @"Component\GetTotalComponent.sql";
                 case "connection": return @"Connection\GetTotalConnection.sql";
+                case "domain": return @"Domain\GetTotalDomain.sql";
                 case "downtime": return @"Downtime\GetTotalDowntime.sql";
                 case "game": return @"Game\GetTotalGame.sql";
                 case "machine": return @"Machine\GetTotalMachine.sql";
@@ -103,6 +109,7 @@ fetch next @pageSize rows only";
                 case "authorisation": return @"Authorisation\AuthorisationExists.sql";
                 case "component": return @"Component\ComponentExists.sql";
                 case "connection": return @"Connection\ConnectionExists.sql";
+                case "domain": return @"Domain\DomainExists.sql";
                 case "downtime": return @"Downtime\DowntimeExists.sql";
                 case "game": return @"Game\GameExists.sql";
                 case "machine": return @"Machine\MachineExists.sql";
@@ -133,6 +140,9 @@ and IsDeleted = 0";
                 case "connection": return @"
 where IPAddress = @ipAddress
 and [Port] = @port
+and IsDeleted = 0";
+                case "domain": return @"
+where Host = @domain
 and IsDeleted = 0";
                 case "downtime": return @"
 where Time = @time
@@ -166,6 +176,8 @@ where PhraseId = @phraseId";
 where ComponentId = @componentId";
                 case "connection": return @"
 where ConnectionId = @connectionId";
+                case "domain": return @"
+where DomainId = @domainId";
                 case "downtime": return @"
 where DowntimeId = @downtimeId";
                 case "game": return @"
@@ -188,6 +200,7 @@ where MachineId = @machineId";
                 case "authorisation": return @"Authorisation\CreateAuthorisation.sql";
                 case "component": return @"Component\CreateComponent.sql";
                 case "connection": return @"Connection\CreateConnection.sql";
+                case "domain": return @"Domain\CreateDomain.sql";
                 case "downtime": return @"Downtime\CreateDowntime.sql";
                 case "game": return @"Game\CreateGame.sql";
                 case "machine": return @"Machine\CreateMachine.sql";
@@ -207,6 +220,7 @@ where MachineId = @machineId";
                 case "authorisation": return @"Authorisation\AuthorisationUpdated.sql";
                 case "component": return @"Component\ComponentUpdated.sql";
                 case "connection": return @"Connection\ConnectionUpdated.sql";
+                case "domain": return @"Domain\DomainUpdated.sql";
                 case "downtime": return @"Downtime\DowntimeUpdated.sql";
                 case "game": return @"Game\GameUpdated.sql";
                 case "machine": return @"Machine\MachineUpdated.sql";
@@ -226,6 +240,7 @@ where MachineId = @machineId";
                 case "authorisation": return @"Authorisation\DeleteAuthorisation.sql";
                 case "component": return @"Component\DeleteComponent.sql";
                 case "connection": return @"Connection\DeleteConnection.sql";
+                case "domain": return @"Domain\DeleteDomain.sql";
                 case "downtime": return @"Downtime\DeleteDowntime.sql";
                 case "game": return @"Game\DeleteGame.sql";
                 case "machine": return @"Machine\DeleteMachine.sql";
@@ -266,6 +281,12 @@ where MachineId = @machineId";
                         new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                     };
                 case "connection":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                        new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
+                    };
+                case "domain":
                     return new SqlParameter[]
                     {
                         new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
@@ -326,6 +347,11 @@ where MachineId = @machineId";
                     return new SqlParameter[]
                     {
                         new SqlParameter("@connectionId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "domain":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@domainId", SqlDbType.Int) { Value = entityId }
                     };
                 case "downtime":
                     return new SqlParameter[]
@@ -393,6 +419,13 @@ where MachineId = @machineId";
                         new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
                         new SqlParameter("@port", SqlDbType.Int) { Value = connection.Port }
                     };
+                case "domain":
+                    DomainModel domain = record as DomainModel;
+
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@domain", SqlDbType.VarChar) { Value = domain.Host }
+                    };
                 case "downtime":
                     DowntimeModel downtime = record as DowntimeModel;
 
@@ -453,6 +486,11 @@ where MachineId = @machineId";
                     return new SqlParameter[]
                     {
                         new SqlParameter("@connectionId", SqlDbType.Int) { Value = entityId }
+                    };
+                case "domain":
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@domainId", SqlDbType.Int) { Value = entityId }
                     };
                 case "downtime":
                     return new SqlParameter[]
@@ -522,6 +560,13 @@ where MachineId = @machineId";
                     {
                         new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
                         new SqlParameter("@port", SqlDbType.Int) { Value = connection.Port }
+                    };
+                case "domain":
+                    DomainModel domain = record as DomainModel;
+
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@domain", SqlDbType.VarChar) { Value = domain.Host }
                     };
                 case "downtime":
                     DowntimeModel downtime = record as DowntimeModel;
@@ -604,6 +649,14 @@ where MachineId = @machineId";
                         new SqlParameter("@ipAddress", SqlDbType.VarChar) { Value = connection.IPAddress },
                         new SqlParameter("@port", SqlDbType.Int) { Value = connection.Port }
                     };
+                case "domain":
+                    DomainModel domain = record as DomainModel;
+
+                    return new SqlParameter[]
+                    {
+                        new SqlParameter("@domainId", SqlDbType.Int) { Value = entityId },
+                        new SqlParameter("@domain", SqlDbType.VarChar) { Value = domain.Host }
+                    };
                 case "downtime":
                     DowntimeModel downtime = record as DowntimeModel;
 
@@ -648,6 +701,7 @@ where MachineId = @machineId";
                 case "authorisation": return ConfigurationDataReaderMapping.AuthorisationMapper;
                 case "component": return ConfigurationDataReaderMapping.ComponentMapper;
                 case "connection": return ConfigurationDataReaderMapping.ConnectionMapper;
+                case "domain": return ConfigurationDataReaderMapping.DomainMapper;
                 case "downtime": return ConfigurationDataReaderMapping.DowntimeMapper;
                 case "game": return ConfigurationDataReaderMapping.GameMapper;
                 case "machine": return ConfigurationDataReaderMapping.MachineMapper;
@@ -669,6 +723,7 @@ where MachineId = @machineId";
                 case "authorisation": return JsonConvert.DeserializeObject<AuthorisationModel>(request.ToString());
                 case "component": return JsonConvert.DeserializeObject<ComponentModel>(request.ToString());
                 case "connection": return JsonConvert.DeserializeObject<ConnectionModel>(request.ToString());
+                case "domain": return JsonConvert.DeserializeObject<DomainModel>(request.ToString());
                 case "downtime": return JsonConvert.DeserializeObject<DowntimeModel>(request.ToString());
                 case "game": return JsonConvert.DeserializeObject<GameModel>(request.ToString());
                 case "machine": return JsonConvert.DeserializeObject<MachineModel>(request.ToString());

@@ -1334,6 +1334,11 @@
             The SQL row to model mappings for the connection record.
             </summary>
         </member>
+        <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.DomainMapper">
+            <summary>
+            The SQL row to model mappings for the downtime record.
+            </summary>
+        </member>
         <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.DowntimeMapper">
             <summary>
             The SQL row to model mappings for the downtime record.

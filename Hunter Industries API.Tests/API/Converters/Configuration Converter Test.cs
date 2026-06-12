@@ -100,6 +100,20 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         }
 
         /// <summary>
+        /// Tests whether the GetSQLGet method returns "Domain\GetDomain.sql" when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLGetDomain()
+        {
+            string expected = @"Domain\GetDomain.sql";
+            string actual = ConfigurationConverter.GetSQLGet("domain");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
         /// Tests whether the GetSQLGet method returns "Downtime\GetDowntime.sql" when given "downtime".
         /// </summary>
         [TestMethod]
@@ -221,6 +235,23 @@ order by ConnectionId asc
 offset (@pageSize * (@pageNumber - 1)) rows
 fetch next @pageSize rows only";
             string actual = ConfigurationConverter.GetSQLGetPagination("connection");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLGetPagination method returns the domain pagination sql when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLGetPaginationDomain()
+        {
+            string expected = @"
+order by DomainId asc
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
+            string actual = ConfigurationConverter.GetSQLGetPagination("domain");
 
             Assert.AreEqual(
                 expected,
@@ -367,6 +398,20 @@ fetch next @pageSize rows only";
         }
 
         /// <summary>
+        /// Tests whether the GetSQLGetTotal method returns "Domain\GetTotalDomain.sql" when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLGetTotalDomain()
+        {
+            string expected = @"Domain\GetTotalDomain.sql";
+            string actual = ConfigurationConverter.GetSQLGetTotal("domain");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
         /// Tests whether the GetSQLGetTotal method returns "Downtime\GetTotalDowntime.sql" when given "downtime".
         /// </summary>
         [TestMethod]
@@ -490,6 +535,20 @@ fetch next @pageSize rows only";
         {
             string expected = @"Connection\ConnectionExists.sql";
             string actual = ConfigurationConverter.GetSQLExists("connection");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLExists method returns "Domain\DomainExists.sql" when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLExistsDomain()
+        {
+            string expected = @"Domain\DomainExists.sql";
+            string actual = ConfigurationConverter.GetSQLExists("domain");
 
             Assert.AreEqual(
                 expected,
@@ -632,6 +691,22 @@ where IPAddress = @ipAddress
 and [Port] = @port
 and IsDeleted = 0";
             string actual = ConfigurationConverter.GetSQLFilter("connection");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLFilter method returns the domain filter sql when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterDomain()
+        {
+            string expected = @"
+where Host = @domain
+and IsDeleted = 0";
+            string actual = ConfigurationConverter.GetSQLFilter("domain");
 
             Assert.AreEqual(
                 expected,
@@ -782,6 +857,21 @@ where ConnectionId = @connectionId";
         }
 
         /// <summary>
+        /// Tests whether the GetSQLFilterId method returns the domain filter sql when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLFilterIdDomain()
+        {
+            string expected = @"
+where DomainId = @domainId";
+            string actual = ConfigurationConverter.GetSQLFilterId("domain");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
         /// Tests whether the GetSQLFilterId method returns the downtime filter sql when given "downtime".
         /// </summary>
         [TestMethod]
@@ -908,6 +998,20 @@ where MachineId = @machineId";
         {
             string expected = @"Connection\CreateConnection.sql";
             string actual = ConfigurationConverter.GetSQLCreate("connection");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLCreate method returns "Domain\CreateDomain.sql" when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLCreateDomain()
+        {
+            string expected = @"Domain\CreateDomain.sql";
+            string actual = ConfigurationConverter.GetSQLCreate("domain");
 
             Assert.AreEqual(
                 expected,
@@ -1045,6 +1149,20 @@ where MachineId = @machineId";
         }
 
         /// <summary>
+        /// Tests whether the GetSQLUpdated method returns "Domain\DomainUpdated.sql" when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLUpdatedDomain()
+        {
+            string expected = @"Domain\DomainUpdated.sql";
+            string actual = ConfigurationConverter.GetSQLUpdated("domain");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
         /// Tests whether the GetSQLUpdated method returns "Downtime\DowntimeUpdated.sql" when given "downtime".
         /// </summary>
         [TestMethod]
@@ -1168,6 +1286,20 @@ where MachineId = @machineId";
         {
             string expected = @"Connection\DeleteConnection.sql";
             string actual = ConfigurationConverter.GetSQLDelete("connection");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLDelete method returns "Domain\DeleteDomain.sql" when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLDeleteDomain()
+        {
+            string expected = @"Domain\DeleteDomain.sql";
+            string actual = ConfigurationConverter.GetSQLDelete("domain");
 
             Assert.AreEqual(
                 expected,
@@ -1315,6 +1447,31 @@ where MachineId = @machineId";
         public void TestGetParametersGetConnection()
         {
             SqlParameter[] actual = ConfigurationConverter.GetParametersGet("connection", 10, 1);
+
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "@pageSize",
+                actual[0].ParameterName);
+            Assert.AreEqual(
+                10,
+                actual[0].Value);
+            Assert.AreEqual(
+                "@pageNumber",
+                actual[1].ParameterName);
+            Assert.AreEqual(
+                1,
+                actual[1].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParametersGet method returns the correct parameters when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParametersGetDomain()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParametersGet("domain", 10, 1);
 
             Assert.AreEqual(
                 2,
@@ -1521,6 +1678,25 @@ where MachineId = @machineId";
         }
 
         /// <summary>
+        /// Tests whether the GetParametersGetSingle method returns the correct parameters when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParametersGetSingleDomain()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParametersGetSingle("domain", 1);
+
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "@domainId",
+                actual[0].ParameterName);
+            Assert.AreEqual(
+                1,
+                actual[0].Value);
+        }
+
+        /// <summary>
         /// Tests whether the GetParametersGetSingle method returns the correct parameters when given "downtime".
         /// </summary>
         [TestMethod]
@@ -1707,6 +1883,26 @@ where MachineId = @machineId";
         }
 
         /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsDomain()
+        {
+            DomainModel model = new() { Host = "TestDomain" };
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("domain", model);
+
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "@domain",
+                actual[0].ParameterName);
+            Assert.AreEqual(
+                "TestDomain",
+                actual[0].Value);
+        }
+
+        /// <summary>
         /// Tests whether the GetParameterExists method returns the correct parameters when given "downtime".
         /// </summary>
         [TestMethod]
@@ -1884,6 +2080,25 @@ where MachineId = @machineId";
                 actual.Length);
             Assert.AreEqual(
                 "@connectionId",
+                actual[0].ParameterName);
+            Assert.AreEqual(
+                1,
+                actual[0].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParameterExists method returns the correct parameters when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParameterExistsByIdDomain()
+        {
+            SqlParameter[] actual = ConfigurationConverter.GetParameterExists("domain", 1);
+
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "@domainId",
                 actual[0].ParameterName);
             Assert.AreEqual(
                 1,
@@ -2109,6 +2324,29 @@ where MachineId = @machineId";
             Assert.AreEqual(
                 8080,
                 actual[1].Value);
+        }
+
+        /// <summary>
+        /// Tests whether the GetParametersCreate method returns the correct parameters when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParametersCreateDomain()
+        {
+            DomainModel model = new()
+            {
+                Host = "TestDomain"
+            };
+            SqlParameter[] actual = ConfigurationConverter.GetParametersCreate("domain", model);
+
+            Assert.AreEqual(
+                1,
+                actual.Length);
+            Assert.AreEqual(
+                "@domain",
+                actual[0].ParameterName);
+            Assert.AreEqual(
+                "TestDomain",
+                actual[0].Value);
         }
 
         /// <summary>
@@ -2376,6 +2614,35 @@ where MachineId = @machineId";
         }
 
         /// <summary>
+        /// Tests whether the GetParametersUpdated method returns the correct parameters when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetParametersUpdatedDomain()
+        {
+            DomainModel model = new()
+            {
+                Host = "TestDomain"
+            };
+            SqlParameter[] actual = ConfigurationConverter.GetParametersUpdated("domain", model, 1);
+
+            Assert.AreEqual(
+                2,
+                actual.Length);
+            Assert.AreEqual(
+                "@domainId",
+                actual[0].ParameterName);
+            Assert.AreEqual(
+                1,
+                actual[0].Value);
+            Assert.AreEqual(
+                "@domain",
+                actual[1].ParameterName);
+            Assert.AreEqual(
+                "TestDomain",
+                actual[1].Value);
+        }
+
+        /// <summary>
         /// Tests whether the GetParametersUpdated method returns the correct parameters when given "downtime".
         /// </summary>
         [TestMethod]
@@ -2557,6 +2824,19 @@ where MachineId = @machineId";
         }
 
         /// <summary>
+        /// Tests whether the GetDataReaderMappings method returns the domain mapper when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsDomain()
+        {
+            Func<IDataReader, object> actual = ConfigurationConverter.GetDataReaderMappings("domain");
+
+            Assert.AreEqual(
+                ConfigurationDataReaderMapping.DomainMapper,
+                actual);
+        }
+
+        /// <summary>
         /// Tests whether the GetDataReaderMappings method returns the downtime mapper when given "downtime".
         /// </summary>
         [TestMethod]
@@ -2693,6 +2973,23 @@ where MachineId = @machineId";
             Assert.AreEqual(
                 "127.0.0.1",
                 ((ConnectionModel)actual).IPAddress);
+        }
+
+        /// <summary>
+        /// Tests whether the GetRequestObject method returns a DomainModel when given "domain".
+        /// </summary>
+        [TestMethod]
+        public void TestGetRequestObjectDomain()
+        {
+            DomainModel model = new() { Host = "TestDomain" };
+            object actual = ConfigurationConverter.GetRequestObject("domain", JObject.FromObject(model));
+
+            Assert.IsInstanceOfType(
+                actual,
+                typeof(DomainModel));
+            Assert.AreEqual(
+                "TestDomain",
+                ((DomainModel)actual).Host);
         }
 
         /// <summary>
