@@ -46,7 +46,7 @@ BEGIN
 		[ApplicationId] [int] NOT NULL,
 		[Name] [varchar](255) NOT NULL,
 		[Size] [bigint] NOT NULL,
-		[Path] [varchar](400) NOT NULL,
+		[Path] [varchar](400) NULL,
 		[DateUploaded] [datetime] NOT NULL,
 		[DateUpdated] [datetime] NOT NULL,
 		[IsDeleted] [bit] NOT NULL,
@@ -99,6 +99,26 @@ BEGIN
 END
 ELSE
 	PRINT('FK_Media_MediaType Already Exists')
+GO
+
+IF NOT EXISTS (SELECT * FROM [dbo].[EndpointVersion] WHERE [Value] = 'v2.1')
+BEGIN
+	INSERT INTO EndpointVersion([Value]) VALUES ('v2.1')
+
+	PRINT('Added Endpoint Version to EndpointVersion Table')
+END
+ELSE
+	PRINT('v2.1 Endpoint Version Already Exists')
+GO
+
+IF NOT EXISTS (SELECT * FROM [dbo].[Endpoint] WHERE [Value] = '/media')
+BEGIN
+	INSERT INTO [Endpoint]([Value]) VALUES ('/media')
+
+	PRINT('Added Media Endpoint')
+END
+ELSE
+	PRINT('Media Endpoint Already Exists')
 GO
 
 IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.1.0')

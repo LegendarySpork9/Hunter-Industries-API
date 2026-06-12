@@ -118,6 +118,19 @@ namespace HunterIndustriesAPI.Tests.API.Services
         }
 
         /// <summary>
+        /// Checks whether the IsValid method returns true when the model has a long property.
+        /// </summary>
+        [TestMethod]
+        public void TestIsValidLongProperty()
+        {
+            TestModelLong model = new() { Size = 1024L };
+
+            bool actual = _Service.IsValid(model);
+
+            Assert.IsTrue(actual);
+        }
+
+        /// <summary>
         /// Checks whether the IsValid method returns true when the model has a bool property.
         /// </summary>
         [TestMethod]
@@ -173,6 +186,14 @@ namespace HunterIndustriesAPI.Tests.API.Services
         private class TestModelInt
         {
             public int Count { get; set; }
+        }
+
+        /// <summary>
+        /// A test model with a long property.
+        /// </summary>
+        private class TestModelLong
+        {
+            public long Size { get; set; }
         }
 
         /// <summary>

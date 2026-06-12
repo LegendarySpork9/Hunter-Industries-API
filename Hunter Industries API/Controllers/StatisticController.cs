@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -292,7 +292,7 @@ namespace HunterIndustriesAPI.Controllers
         [RequiredPolicyAuthorisationAttributeFilter("Statistic.Read")]
         [VersionedRoute("statistic/error", "2.0")]
         [SwaggerOperation("GetStatisticError")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ErrorResponseModel), Description = "Returns the statistics for the dashboard.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ErrorResponseModel), Description = "Returns the statistics for the error page.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
         public async Task<IHttpActionResult> GetError()

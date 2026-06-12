@@ -177,16 +177,16 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         ///     Content-Type: application/json
         ///     {
-        ///         "AssistantName": "Test",
-        ///         "IDNumber": "TST 1456-4",
-        ///         "AssignedUser": "Tester",
-        ///         "HostName": "PlaceHolder"
+        ///         "assistantName": "Test",
+        ///         "idNumber": "TST 1456-4",
+        ///         "assignedUser": "Tester",
+        ///         "hostName": "PlaceHolder"
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the basic assistant configuration information.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Assistant.Config.Create")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If the a configuration matching the name and id number already exists.")]
-        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(AssistantConfiguration), Description = "If the configuration is successfuly created.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If a configuration matching the name and id number already exists.")]
+        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(AssistantConfiguration), Description = "If the configuration is successfully created.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]

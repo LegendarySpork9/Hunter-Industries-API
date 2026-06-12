@@ -1,4 +1,4 @@
-﻿// Copyright © 11/06/2026 Toby Hunter
+﻿// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
 using HunterIndustriesAPI.Controllers.ServerStatus;
@@ -329,6 +329,35 @@ namespace HunterIndustriesAPI.Filters.Operation
                         if (param.name == "filters.includeUsed")
                         {
                             param.name = "includeUsed";
+                        }
+
+                        if (param.name == "filters.pageSize")
+                        {
+                            param.name = "pageSize";
+                        }
+
+                        if (param.name == "filters.pageNumber")
+                        {
+                            param.name = "pageNumber";
+                        }
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(MediaController))
+            {
+                if (operation.parameters != null)
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "media";
+                        }
+
+                        if (param.name == "filters.includeDeleted")
+                        {
+                            param.name = "includeDeleted";
                         }
 
                         if (param.name == "filters.pageSize")

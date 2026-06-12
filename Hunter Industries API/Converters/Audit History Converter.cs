@@ -1,4 +1,4 @@
-﻿// Copyright © 11/06/2026 Toby Hunter
+﻿// Copyright © - 11/06/2026 - Toby Hunter
 namespace HunterIndustriesAPI.Converters
 {
     /// <summary>
@@ -26,6 +26,7 @@ namespace HunterIndustriesAPI.Converters
                 case "errorlog": return 12;
                 case "configuration": return 13;
                 case "statistic": return 14;
+                case "media": return 15;
                 default: return 0;
             }
         }
@@ -40,6 +41,7 @@ namespace HunterIndustriesAPI.Converters
                 case "1.0": return 1;
                 case "1.1": return 2;
                 case "2.0": return 3;
+                case "2.1": return 4;
                 default: return 1;
             }
         }

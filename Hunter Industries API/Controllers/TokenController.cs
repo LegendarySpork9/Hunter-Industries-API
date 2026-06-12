@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -67,7 +67,7 @@ namespace HunterIndustriesAPI.Controllers
         ///         "phrase": "Some wise words or something here."
         ///     }
         /// </remarks>
-        /// <param name="request">The application identifier.</param>
+        /// <param name="request">An object containing the authentication details.</param>
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel), Description = "Returns the bearer token and token information.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body or header is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the details given do not match anything in the database.")]

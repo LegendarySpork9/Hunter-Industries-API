@@ -104,10 +104,10 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "AssistantName": "Test",
-                     "IDNumber": "TST 1456-4",
-                     "AssignedUser": "Tester",
-                     "HostName": "PlaceHolder"
+                     "assistantName": "Test",
+                     "idNumber": "TST 1456-4",
+                     "assignedUser": "Tester",
+                     "hostName": "PlaceHolder"
                  }
              </remarks>
              <param name="request">An object containing the basic assistant configuration information.</param>
@@ -142,11 +142,11 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "Deletion": "true"
+                     "deletion": "true"
                  }
              </remarks>
              <param name="request">An object containing the deletion value.</param>
-             <param name="filters">An object containing the fitler to apply the value to.</param>
+             <param name="filters">An object containing the filter to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.VersionController">
             <summary>
@@ -182,7 +182,7 @@
                  }
              </remarks>
              <param name="request">An object containing the version information.</param>
-             <param name="filters">An object containing the fitler to apply the value to.</param>
+             <param name="filters">An object containing the filter to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.Assistant.LocationController">
             <summary>
@@ -194,7 +194,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Controllers.Assistant.LocationController.Get(HunterIndustriesAPI.Models.Requests.Filters.Assistant.AssistantFilterModel)">
              <summary>
-             Returns the location details of an assistants.
+             Returns the location details of an assistant.
              </summary>
              <remarks>
              Sample Request:
@@ -214,11 +214,11 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "HostName": "Test"
+                     "hostName": "Test"
                  }
              </remarks>
              <param name="request">An object containing the location data.</param>
-             <param name="filters">An object containing the fitler to apply the value to.</param>
+             <param name="filters">An object containing the filter to apply the value to.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.AuditController">
             <summary>
@@ -250,6 +250,104 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the audit history record.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.MediaController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.MediaController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.MediaController.Get(System.String,HunterIndustriesAPI.Models.Requests.Filters.Media.MediaFilterModel)">
+             <summary>
+             Returns a collection of media.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /media/Portfolio
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="application">The application the media belongs to.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.MediaController.Get(System.String,System.Int32,System.Boolean)">
+             <summary>
+             Returns a collection of media.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /media/Portfolio/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="application">The application the media belongs to.</param>
+             <param name="entityId">The id number of the application item the media is for.</param>
+             <param name="includeDeleted">Whether to return deleted media.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.MediaController.Get(System.Int32)">
+             <summary>
+             Returns the media matching the given id.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /media/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="id">The id number of the media.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.MediaController.Post(System.String,System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel)">
+             <summary>
+             Creates a new media record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 POST /media/Portfolio/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "name": "Example",
+                     "extension": ".png",
+                     "mimeType": "image/png",
+                     "size": 1024,
+                     "path": null,
+                     "domain": "https://media.example.com"
+                 }
+             </remarks>
+             <param name="application">The application the media belongs to.</param>
+             <param name="entityId">The id number of the application item the media is for.</param>
+             <param name="request">An object containing the media information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.MediaController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaUpdateModel)">
+             <summary>
+             Updates the details of the media record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 PATCH /media/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "name": "Test 2"
+                 }
+             </remarks>
+             <param name="id">The id number of the media.</param>
+             <param name="request">An object containing the record data.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.MediaController.Delete(System.Int32)">
+             <summary>
+             Deletes the media record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 Delete /media/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="id">The id number of the media.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.StatisticController">
             <summary>
@@ -530,7 +628,7 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "IsActive": "true"
+                     "isActive": "true"
                  }
              </remarks>
              <param name="id">The id number of the server.</param>
@@ -558,7 +656,7 @@
                      "phrase": "Some wise words or something here."
                  }
              </remarks>
-             <param name="request">The application identifier.</param>
+             <param name="request">An object containing the authentication details.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.ConfigurationController">
             <summary>
@@ -616,8 +714,8 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "Name": "Test",
-                     "Phrase": "This is a test phrase."
+                     "name": "Test",
+                     "phrase": "This is a test phrase."
                  }
              </remarks>
              <param name="entity">The name of the configuration object.</param>
@@ -635,7 +733,7 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "Name": "TestApplication"
+                     "name": "TestApplication"
                  }
              </remarks>
              <param name="entity">The name of the configuration object.</param>
@@ -649,11 +747,11 @@
              <remarks>
              Sample Request:
             
-                 Delete /configuration/Application/1
+                 Delete /configuration/application/1
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="entity">The name of the configuration object.</param>
-             <param name="id">The id number of the user.</param>
+             <param name="id">The id number of the record.</param>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.User.UserController">
             <summary>
@@ -697,9 +795,9 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "Username": "TestUser",
-                     "Password": "Password",
-                     "Scopes": [
+                     "username": "TestUser",
+                     "password": "Password",
+                     "scopes": [
                          "Assistant API"
                      ]
                  }
@@ -717,7 +815,7 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "Password": "Password2"
+                     "password": "Password2"
                  }
              </remarks>
              <param name="id">The id number of the user.</param>
@@ -745,7 +843,7 @@
         </member>
         <member name="M:HunterIndustriesAPI.Controllers.User.UserSettingsController.Get(System.Int32,System.String)">
              <summary>
-             Returns the collection of settings for given id.
+             Returns the collection of settings for the given id.
              </summary>
              <remarks>
              Sample Request:
@@ -786,7 +884,7 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
-                     "Value": "False"
+                     "value": "False"
                  }
              </remarks>
              <param name="id">The id number of the user setting.</param>
@@ -1702,6 +1800,11 @@
             The folder path to the file.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaUpdateModel.ClearPath">
+            <summary>
+            Whether the path should be cleared.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel">
             <summary>
             </summary>
@@ -1734,11 +1837,6 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Domain">
             <summary>
             The URL the file is served on.
-            </summary>
-        </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Application">
-            <summary>
-            The application the file relates to.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel">
@@ -3762,7 +3860,7 @@
             Checks and creates the MediaType record.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaCreated(HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel)">
+        <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaCreated(System.String,HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel)">
             <summary>
             Creates the media.
             </summary>

@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -52,7 +52,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         }
 
         /// <summary>
-        /// Returns the location details of an assistants.
+        /// Returns the location details of an assistant.
         /// </summary>
         /// <remarks>
         /// Sample Request:
@@ -205,11 +205,11 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         ///     Content-Type: application/json
         ///     {
-        ///         "HostName": "Test"
+        ///         "hostName": "Test"
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the location data.</param>
-        /// <param name="filters">An object containing the fitler to apply the value to.</param>
+        /// <param name="filters">An object containing the filter to apply the value to.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Assistant.Location.Update")]
         [MakeFiltersRequired]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(LocationResponseModel), Description = "Returns the updated item.")]

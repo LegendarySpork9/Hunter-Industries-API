@@ -1,4 +1,4 @@
-﻿// Copyright © 11/06/2026 Toby Hunter
+﻿// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
 using HunterIndustriesAPI.Controllers.ServerStatus;
@@ -161,6 +161,7 @@ namespace HunterIndustriesAPI.Filters.Operation
                                         "authorisation",
                                         "component",
                                         "connection",
+                                        "domain",
                                         "downtime",
                                         "game",
                                         "machine"
@@ -205,6 +206,45 @@ namespace HunterIndustriesAPI.Filters.Operation
                                 {
                                     type = "string",
                                     example = "The given record has been deleted."
+                                }
+                            }
+                        }
+                    };
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(MediaController))
+            {
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Media_Post")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "A media record with the details already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Media_Delete")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "The given media has been deleted."
                                 }
                             }
                         }

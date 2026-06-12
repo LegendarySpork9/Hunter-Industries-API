@@ -1,4 +1,4 @@
-// Copyright © 11/06/2026 Toby Hunter
+// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
@@ -209,7 +209,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the version information.</param>
-        /// <param name="filters">An object containing the fitler to apply the value to.</param>
+        /// <param name="filters">An object containing the filter to apply the value to.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Assistant.Version.Update")]
         [MakeFiltersRequired]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(VersionResponseModel), Description = "Returns the updated item.")]
