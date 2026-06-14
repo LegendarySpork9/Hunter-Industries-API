@@ -2064,5 +2064,239 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
         }
 
         #endregion
+
+        #region GetMediaRecords
+
+        /// <summary>
+        /// Tests whether the GetMediaRecords method returns paged media with UTC dates.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaRecords()
+        {
+            DateTime originalDate = new(2025, 6, 1, 12, 0, 0, DateTimeKind.Unspecified);
+
+            PagedAPIResponseModel<MediaModel> pagedResponse = new()
+            {
+                Entries =
+                [
+                    new MediaModel
+                    {
+                        Id = 1,
+                        Name = "TestMedia",
+                        Type = new MediaTypeModel { Extension = ".png", MimeType = "image/png" },
+                        Size = 1024,
+                        Path = "/images",
+                        Domain = "https://example.com",
+                        URL = "https://example.com/images/TestMedia.png",
+                        Application = "TestApp",
+                        DateUploaded = originalDate,
+                        DateUpdated = originalDate,
+                        IsDeleted = false
+                    }
+                ],
+                EntryCount = 1,
+                PageNumber = 1,
+                PageSize = 25,
+                TotalPageCount = 1,
+                TotalCount = 1
+            };
+
+            _MockAPIClient.Setup(c => c.GetPagedMedia(
+                    "TestApp",
+                    It.IsAny<List<KeyValuePair<string, object>>>()))
+                .ReturnsAsync(pagedResponse);
+
+            APIService service = CreateService();
+            PagedAPIResponseModel<MediaModel>? actual = await service.GetMediaRecords("TestApp");
+
+            Assert.IsNotNull(actual);
+
+            Assert.AreEqual(
+                DateTimeKind.Utc,
+                actual.Entries[0].DateUploaded.Kind);
+            Assert.AreEqual(
+                DateTimeKind.Utc,
+                actual.Entries[0].DateUpdated.Kind);
+        }
+
+        /// <summary>
+        /// Tests whether the GetMediaRecords method returns null when no media is found.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaRecordsNull()
+        {
+            _MockAPIClient.Setup(c => c.GetPagedMedia(
+                    "TestApp",
+                    It.IsAny<List<KeyValuePair<string, object>>>()))
+                .ReturnsAsync((PagedAPIResponseModel<MediaModel>?)null);
+
+            APIService service = CreateService();
+            PagedAPIResponseModel<MediaModel>? actual = await service.GetMediaRecords("TestApp");
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetMediaRecords method returns null when an exception occurs.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaRecordsException()
+        {
+            _MockAPIClient.Setup(c => c.GetPagedMedia(
+                    "TestApp",
+                    It.IsAny<List<KeyValuePair<string, object>>>()))
+                .ThrowsAsync(new Exception("Connection refused"));
+
+            APIService service = CreateService();
+            PagedAPIResponseModel<MediaModel>? actual = await service.GetMediaRecords("TestApp");
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetMediaRecords method passes custom query parameters to the API client.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaRecordsCustomParams()
+        {
+            List<KeyValuePair<string, object>>? capturedParams = null;
+
+            _MockAPIClient.Setup(c => c.GetPagedMedia(
+                    "TestApp",
+                    It.IsAny<List<KeyValuePair<string, object>>>()))
+                .Callback<string, List<KeyValuePair<string, object>>?>((_, p) => capturedParams = p)
+                .ReturnsAsync((PagedAPIResponseModel<MediaModel>?)null);
+
+            APIService service = CreateService();
+
+            await service.GetMediaRecords(
+                "TestApp",
+                pageSize: 50,
+                pageNumber: 2);
+
+            Assert.IsNotNull(capturedParams);
+
+            Assert.AreEqual(
+                2,
+                capturedParams.Count);
+        }
+
+        /// <summary>
+        /// Tests whether the GetMediaRecords method excludes default query parameters.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaRecordsDefaultParams()
+        {
+            List<KeyValuePair<string, object>>? capturedParams = null;
+
+            _MockAPIClient.Setup(c => c.GetPagedMedia(
+                    "TestApp",
+                    It.IsAny<List<KeyValuePair<string, object>>>()))
+                .Callback<string, List<KeyValuePair<string, object>>?>((_, p) => capturedParams = p)
+                .ReturnsAsync((PagedAPIResponseModel<MediaModel>?)null);
+
+            APIService service = CreateService();
+            await service.GetMediaRecords("TestApp");
+
+            Assert.IsNotNull(capturedParams);
+
+            Assert.AreEqual(
+                0,
+                capturedParams.Count);
+        }
+
+        /// <summary>
+        /// Tests whether the GetMediaRecords method reauthorises when the token has expired.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaRecordsReauthorises()
+        {
+            _MockAPIClient.Setup(c => c.GetPagedMedia(
+                    "TestApp",
+                    It.IsAny<List<KeyValuePair<string, object>>>()))
+                .ReturnsAsync((PagedAPIResponseModel<MediaModel>?)null);
+
+            APIService service = CreateServiceWithExpiredToken();
+            await service.GetMediaRecords("TestApp");
+
+            _MockAPIClient.Verify(
+                c => c.Authorise(),
+                Times.Once);
+        }
+
+        #endregion
+
+        #region GetMedia
+
+        /// <summary>
+        /// Tests whether the GetMedia method returns a media record with UTC dates.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMedia()
+        {
+            DateTime originalDate = new(2025, 6, 1, 12, 0, 0, DateTimeKind.Unspecified);
+
+            MediaModel expected = new()
+            {
+                Id = 1,
+                Name = "TestMedia",
+                Type = new MediaTypeModel { Extension = ".png", MimeType = "image/png" },
+                Size = 1024,
+                Path = "/images",
+                Domain = "https://example.com",
+                URL = "https://example.com/images/TestMedia.png",
+                Application = "TestApp",
+                DateUploaded = originalDate,
+                DateUpdated = originalDate,
+                IsDeleted = false
+            };
+
+            _MockAPIClient.Setup(c => c.GetMedia(1))
+                .ReturnsAsync(expected);
+
+            APIService service = CreateService();
+            MediaModel? actual = await service.GetMedia(1);
+
+            Assert.IsNotNull(actual);
+
+            Assert.AreEqual(
+                DateTimeKind.Utc,
+                actual.DateUploaded.Kind);
+            Assert.AreEqual(
+                DateTimeKind.Utc,
+                actual.DateUpdated.Kind);
+        }
+
+        /// <summary>
+        /// Tests whether the GetMedia method returns null when no media is found.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaNull()
+        {
+            _MockAPIClient.Setup(c => c.GetMedia(1))
+                .ReturnsAsync((MediaModel?)null);
+
+            APIService service = CreateService();
+            MediaModel? actual = await service.GetMedia(1);
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetMedia method returns null when an exception occurs.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetMediaException()
+        {
+            _MockAPIClient.Setup(c => c.GetMedia(1))
+                .ThrowsAsync(new Exception("Connection refused"));
+
+            APIService service = CreateService();
+            MediaModel? actual = await service.GetMedia(1);
+
+            Assert.IsNull(actual);
+        }
+
+        #endregion
     }
 }
