@@ -2311,6 +2311,161 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
+        /// Returns the paged media from the API.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<MediaModel>?> GetPagedMedia(
+            string application,
+            List<KeyValuePair<string, object>>? queryParameters = null)
+        {
+            PagedAPIResponseModel<MediaModel>? media = null;
+
+            try
+            {
+                string url = BuildURL(
+                    "/media",
+                    application,
+                    queryParameters);
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    media = JsonConvert.DeserializeObject<PagedAPIResponseModel<MediaModel>>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
+            }
+
+            return media;
+        }
+
+        /// <summary>
+        /// Returns the paged media from the API.
+        /// </summary>
+        public async Task<MediaModel?> GetMedia(int mediaId)
+        {
+            MediaModel? media = null;
+
+            try
+            {
+                string url = BuildURL(
+                    "/media",
+                    mediaId);
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    media = JsonConvert.DeserializeObject<MediaModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
+            }
+
+            return media;
+        }
+
+        /// <summary>
         /// Returns the API url.
         /// </summary>
         private string BuildURL(

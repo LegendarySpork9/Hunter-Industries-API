@@ -794,9 +794,9 @@ namespace HunterIndustriesAPI.Controllers
                     PropertyInfo[] requestProperties = request.GetType()
                         .GetProperties();
 
-                    object updatedRecord = (await _configurationService.GetRecords(
+                    object updatedRecord = await _configurationService.GetRecord(
                         entity,
-                        id)).Item1[0];
+                        id);
 
                     response = new ResponseModel()
                     {

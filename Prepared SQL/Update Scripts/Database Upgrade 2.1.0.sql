@@ -123,6 +123,16 @@ ELSE
 	PRINT('Media Endpoint Already Exists')
 GO
 
+IF NOT EXISTS (SELECT * FROM [dbo].[Scope] WHERE [Value] = 'Media API')
+BEGIN
+	INSERT INTO [Scope]([Value]) VALUES ('Media API')
+
+	PRINT('Added Media Scope')
+END
+ELSE
+	PRINT('Media Scope Already Exists')
+GO
+
 IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.1.0')
 	INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
 	VALUES ('2.1.0', 'Database Upgrade 2.1.0', GETUTCDATE())

@@ -2,6 +2,7 @@
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Abstractions;
+using HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory;
 using HunterIndustriesAPIControlPanel.Models.Requests.Patch;
 using HunterIndustriesAPIControlPanel.Models.Requests.Post;
 using HunterIndustriesAPIControlPanel.Models.Responses;
@@ -1894,6 +1895,165 @@ namespace HunterIndustriesAPIControlPanel.Services
             }
 
             return auditHistory;
+        }
+
+        /// <summary>
+        /// Gets the media records from the API matching the given parameters.
+        /// </summary>
+        public async Task<PagedAPIResponseModel<MediaModel>?> GetMediaRecords(
+            string application,
+            int pageSize = 25,
+            int pageNumber = 1)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Fetching media records from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PagedAPIResponseModel<MediaModel>? pagedResponse = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
+
+            try
+            {
+                pagedResponse = await _APIClient.GetPagedMedia(
+                    application,
+                    queryParameters);
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Media Returned: {pagedResponse?.EntryCount ?? 0}");
+
+                if (pagedResponse != null)
+                {
+                    List<MediaModel> mediaRecords = pagedResponse.Entries;
+
+                    foreach (MediaModel mediaRecord in mediaRecords)
+                    {
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Info,
+                            $"Specifying date times as UTC for media record {mediaRecord.Id}");
+
+                        mediaRecord.DateUploaded = DateTime.SpecifyKind(
+                            mediaRecord.DateUploaded,
+                            DateTimeKind.Utc);
+                        mediaRecord.DateUpdated = DateTime.SpecifyKind(
+                            mediaRecord.DateUpdated,
+                            DateTimeKind.Utc);
+
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Info,
+                            $"Specified date times as UTC for media record {mediaRecord.Id}");
+                    }
+
+                    pagedResponse.Entries = mediaRecords;
+
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        "Fetched media records from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        "Failed to fetch media records from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    "Failed to fetch media records from API");
+            }
+
+            return pagedResponse;
+        }
+
+        /// <summary>
+        /// Gets the media record from the API.
+        /// </summary>
+        public async Task<MediaModel?> GetMedia(int mediaId)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Fetching media record, {mediaId}, from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            MediaModel? media = null;
+
+            try
+            {
+                media = await _APIClient.GetMedia(mediaId);
+
+                if (media != null)
+                {
+                    _Logger.LogMessage(
+                            StandardValues.LoggerValues.Info,
+                            $"Specifying date times as UTC for media record {media.Id}");
+
+                    media.DateUploaded = DateTime.SpecifyKind(
+                        media.DateUploaded,
+                        DateTimeKind.Utc);
+                    media.DateUpdated = DateTime.SpecifyKind(
+                        media.DateUpdated,
+                        DateTimeKind.Utc);
+
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        $"Specified date times as UTC for media record {media.Id}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        $"Fetched media record, {mediaId}, from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        $"Failed to fetch media record, {mediaId}, from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Failed to fetch media record, {mediaId}, from API");
+            }
+
+            return media;
         }
     }
 }

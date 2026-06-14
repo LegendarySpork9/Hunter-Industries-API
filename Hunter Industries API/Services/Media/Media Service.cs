@@ -6,7 +6,6 @@ using HunterIndustriesAPI.Models.Requests.Bodies.Media;
 using HunterIndustriesAPI.Objects.Media;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
-using Microsoft.AspNetCore.Hosting.Server;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,6 +13,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace HunterIndustriesAPI.Services.Media
 {
@@ -75,29 +75,54 @@ namespace HunterIndustriesAPI.Services.Media
                     sql += "\nand Media.IsDeleted = 0";
                 }
 
+                sql += @"
+order by Media.MediaId desc
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
+
                 (List<MediaRecord> results, Exception ex) = await _Database.Query(
                     sql,
-                    reader => new MediaRecord
+                    reader => 
                     {
-                        Id = reader.GetInt32(0),
-                        Type = new MediaTypeRecord
+                        string name = reader.GetString(3);
+                        string extension = reader.GetString(1);
+
+                        string path = null;
+                        string url = null;
+
+                        if (!reader.IsDBNull(5) && !string.IsNullOrWhiteSpace(reader.GetString(5)))
                         {
-                            Entension = reader.GetString(1),
-                            MimeType = reader.GetString(2)
-                        },
-                        Name = reader.GetString(3),
-                        Size = reader.GetInt64(4),
-                        Path = reader.GetString(5),
-                        Domain = reader.GetString(6),
-                        URL = $"{reader.GetString(6)}{reader.GetString(5)}/{reader.GetString(3)}{reader.GetString(1)}",
-                        Application = reader.GetString(7),
-                        DateUploaded = DateTime.SpecifyKind(
+                            path = reader.GetString(5);
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5))}/{Uri.EscapeDataString($"{name}{extension}")}";
+                        }
+
+                        else
+                        {
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString($"{name}{extension}")}";
+                        }
+
+                        return new MediaRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            Type = new MediaTypeRecord
+                            {
+                                Extension = extension,
+                                MimeType = reader.GetString(2)
+                            },
+                            Name = name,
+                            Size = reader.GetInt64(4),
+                            Path = path,
+                            Domain = reader.GetString(6),
+                            URL = url,
+                            Application = reader.GetString(7),
+                            DateUploaded = DateTime.SpecifyKind(
                             reader.GetDateTime(8),
                             DateTimeKind.Utc),
-                        DateUpdated = DateTime.SpecifyKind(
+                            DateUpdated = DateTime.SpecifyKind(
                             reader.GetDateTime(9),
                             DateTimeKind.Utc),
-                        IsDeleted = reader.GetBoolean(10),
+                            IsDeleted = reader.GetBoolean(10)
+                        };
                     },
                     parameters);
 
@@ -240,27 +265,47 @@ namespace HunterIndustriesAPI.Services.Media
 
                 (List<MediaRecord> results, Exception ex) = await _Database.Query(
                     sql,
-                    reader => new MediaRecord
+                    reader =>
                     {
-                        Id = reader.GetInt32(0),
-                        Type = new MediaTypeRecord
+                        string name = reader.GetString(3);
+                        string extension = reader.GetString(1);
+
+                        string path = null;
+                        string url = null;
+
+                        if (!reader.IsDBNull(5) && !string.IsNullOrWhiteSpace(reader.GetString(5)))
                         {
-                            Entension = reader.GetString(1),
-                            MimeType = reader.GetString(2)
-                        },
-                        Name = reader.GetString(3),
-                        Size = reader.GetInt64(4),
-                        Path = reader.GetString(5),
-                        Domain = reader.GetString(6),
-                        URL = $"{reader.GetString(6)}{reader.GetString(5)}/{reader.GetString(3)}{reader.GetString(1)}",
-                        Application = reader.GetString(7),
-                        DateUploaded = DateTime.SpecifyKind(
+                            path = reader.GetString(5);
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5))}/{Uri.EscapeDataString($"{name}{extension}")}";
+                        }
+
+                        else
+                        {
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString($"{name}{extension}")}";
+                        }
+
+                        return new MediaRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            Type = new MediaTypeRecord
+                            {
+                                Extension = extension,
+                                MimeType = reader.GetString(2)
+                            },
+                            Name = name,
+                            Size = reader.GetInt64(4),
+                            Path = path,
+                            Domain = reader.GetString(6),
+                            URL = url,
+                            Application = reader.GetString(7),
+                            DateUploaded = DateTime.SpecifyKind(
                             reader.GetDateTime(8),
                             DateTimeKind.Utc),
-                        DateUpdated = DateTime.SpecifyKind(
+                            DateUpdated = DateTime.SpecifyKind(
                             reader.GetDateTime(9),
                             DateTimeKind.Utc),
-                        IsDeleted = reader.GetBoolean(10),
+                            IsDeleted = reader.GetBoolean(10)
+                        };
                     },
                     parameters);
 
@@ -321,27 +366,47 @@ namespace HunterIndustriesAPI.Services.Media
 
                 (MediaRecord result, Exception ex) = await _Database.QuerySingle(
                     sql,
-                    reader => new MediaRecord
+                    reader =>
                     {
-                        Id = reader.GetInt32(0),
-                        Type = new MediaTypeRecord
+                        string name = reader.GetString(3);
+                        string extension = reader.GetString(1);
+
+                        string path = null;
+                        string url = null;
+
+                        if (!reader.IsDBNull(5) && !string.IsNullOrWhiteSpace(reader.GetString(5)))
                         {
-                            Entension = reader.GetString(1),
-                            MimeType = reader.GetString(2)
-                        },
-                        Name = reader.GetString(3),
-                        Size = reader.GetInt64(4),
-                        Path = reader.GetString(5),
-                        Domain = reader.GetString(6),
-                        URL = $"{reader.GetString(6)}{reader.GetString(5)}/{reader.GetString(3)}{reader.GetString(1)}",
-                        Application = reader.GetString(7),
-                        DateUploaded = DateTime.SpecifyKind(
+                            path = reader.GetString(5);
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5))}/{Uri.EscapeDataString($"{name}{extension}")}";
+                        }
+
+                        else
+                        {
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString($"{name}{extension}")}";
+                        }
+
+                        return new MediaRecord()
+                        {
+                            Id = reader.GetInt32(0),
+                            Type = new MediaTypeRecord
+                            {
+                                Extension = extension,
+                                MimeType = reader.GetString(2)
+                            },
+                            Name = name,
+                            Size = reader.GetInt64(4),
+                            Path = path,
+                            Domain = reader.GetString(6),
+                            URL = url,
+                            Application = reader.GetString(7),
+                            DateUploaded = DateTime.SpecifyKind(
                             reader.GetDateTime(8),
                             DateTimeKind.Utc),
-                        DateUpdated = DateTime.SpecifyKind(
+                            DateUpdated = DateTime.SpecifyKind(
                             reader.GetDateTime(9),
                             DateTimeKind.Utc),
-                        IsDeleted = reader.GetBoolean(10),
+                            IsDeleted = reader.GetBoolean(10)
+                        };
                     },
                     parameters);
 
@@ -611,7 +676,7 @@ namespace HunterIndustriesAPI.Services.Media
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = media.Name },
                     new SqlParameter("@size", SqlDbType.BigInt) { Value = media.Size },
                     new SqlParameter("@path", SqlDbType.VarChar) { Value = (object)media.Path ?? DBNull.Value },
-                    new SqlParameter("@extension", SqlDbType.VarChar) { Value = media.Entension },
+                    new SqlParameter("@extension", SqlDbType.VarChar) { Value = media.Extension },
                     new SqlParameter("@mimeType", SqlDbType.VarChar) { Value = media.MimeType },
                     new SqlParameter("@domain", SqlDbType.VarChar) { Value = media.Domain },
                     new SqlParameter("@application", SqlDbType.VarChar) { Value = application },
@@ -785,7 +850,7 @@ values (
                 if (!media.ClearPath)
                 {
                     sql = sql.Replace(@"
-	[Path] = @path", "");
+	[Path] = @path,", "");
 
                     parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@path"));
                 }

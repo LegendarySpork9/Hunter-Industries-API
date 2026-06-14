@@ -86,7 +86,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
             string? fromDate = FilterFromDate?.ToString("dd/MM/yyyy");
             string? toDate = FilterToDate?.ToString("dd/MM/yyyy");
 
-            (ErrorLog) = await APIService.GetErrors(
+            ErrorLog = await APIService.GetErrors(
                 fromDate,
                 toDate,
                 FilterIPAddress,

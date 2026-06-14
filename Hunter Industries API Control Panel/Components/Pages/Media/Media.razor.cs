@@ -1,13 +1,13 @@
-// Copyright © - 11/06/2026 - Toby Hunter
+// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
+namespace HunterIndustriesAPIControlPanel.Components.Pages.Media
 {
-    public partial class AuditHistory
+    public partial class Media
     {
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
@@ -16,14 +16,14 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         [Inject]
         private APIService APIService { get; set; } = default!;
 
-        private PagedAPIResponseModel<AuditHistoryModel>? AuditLogs;
+        [SupplyParameterFromQuery(Name = "application")]
+        public string? QueryApplication { get; set; }
+
+        private PagedAPIResponseModel<MediaModel>? MediaRecords;
 
         private bool IsLoading;
 
-        private DateTime? FilterFromDate;
-        private DateTime? FilterToDate;
-        private string FilterEndpoint = string.Empty;
-        private string FilterIPAddress = string.Empty;
+        private string FilterApplication = string.Empty;
         private int PageSize = 25;
         private int PageNumber = 1;
 
@@ -31,34 +31,45 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
-                "Opened Audit History Page");
+                "Opened Media Page");
 
-            await LoadData();
+            if (!string.IsNullOrWhiteSpace(QueryApplication))
+            {
+                MediaRecords = await APIService.GetMediaRecords(
+                    QueryApplication,
+                    PageSize,
+                    PageNumber);
+            }
+
+            else
+            {
+                MediaRecords = new()
+                {
+                    Entries = [],
+                    EntryCount = 0,
+                    PageNumber = 1,
+                    PageSize = 25,
+                    TotalPageCount = 0,
+                    TotalCount = 0
+                };
+            }
         }
 
         /// <summary>
-        /// Loads and transforms the audit data.
+        /// Loads and transforms the media data.
         /// </summary>
         private async Task LoadData()
         {
             IsLoading = true;
 
-            string? fromDate = FilterFromDate?.ToString("dd/MM/yyyy");
-            string? toDate = FilterToDate?.ToString("dd/MM/yyyy");
-
-            AuditLogs = await APIService.GetAuditHistories(
-                fromDate,
-                toDate,
-                FilterIPAddress,
-                FilterEndpoint,
-                null,
-                null,
+            MediaRecords = await APIService.GetMediaRecords(
+                FilterApplication,
                 PageSize,
                 PageNumber);
 
-            if (AuditLogs == null)
+            if (MediaRecords == null)
             {
-                AuditLogs = new()
+                MediaRecords = new()
                 {
                     Entries = [],
                     EntryCount = 0,
@@ -94,10 +105,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
                 StandardValues.LoggerValues.Debug,
                 "Clear Clicked");
 
-            FilterFromDate = null;
-            FilterToDate = null;
-            FilterEndpoint = string.Empty;
-            FilterIPAddress = string.Empty;
+            FilterApplication = string.Empty;
             PageNumber = 1;
             await LoadData();
         }
@@ -127,7 +135,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
                 StandardValues.LoggerValues.Debug,
                 "Next >> Clicked");
 
-            if (PageNumber < AuditLogs?.TotalPageCount)
+            if (PageNumber < MediaRecords?.TotalPageCount)
             {
                 PageNumber++;
                 await LoadData();
