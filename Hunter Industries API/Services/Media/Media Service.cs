@@ -13,7 +13,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace HunterIndustriesAPI.Services.Media
 {
@@ -93,7 +92,7 @@ fetch next @pageSize rows only";
                         if (!reader.IsDBNull(5) && !string.IsNullOrWhiteSpace(reader.GetString(5)))
                         {
                             path = reader.GetString(5);
-                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5))}/{Uri.EscapeDataString($"{name}{extension}")}";
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5)).Replace("%2F", "/")}/{Uri.EscapeDataString($"{name}{extension}")}";
                         }
 
                         else
@@ -276,7 +275,7 @@ fetch next @pageSize rows only";
                         if (!reader.IsDBNull(5) && !string.IsNullOrWhiteSpace(reader.GetString(5)))
                         {
                             path = reader.GetString(5);
-                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5))}/{Uri.EscapeDataString($"{name}{extension}")}";
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5)).Replace("%2F", "/")}/{Uri.EscapeDataString($"{name}{extension}")}";
                         }
 
                         else
@@ -377,7 +376,7 @@ fetch next @pageSize rows only";
                         if (!reader.IsDBNull(5) && !string.IsNullOrWhiteSpace(reader.GetString(5)))
                         {
                             path = reader.GetString(5);
-                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5))}/{Uri.EscapeDataString($"{name}{extension}")}";
+                            url = $"{reader.GetString(6)}{Uri.EscapeDataString(reader.GetString(5)).Replace("%2F", "/")}/{Uri.EscapeDataString($"{name}{extension}")}";
                         }
 
                         else

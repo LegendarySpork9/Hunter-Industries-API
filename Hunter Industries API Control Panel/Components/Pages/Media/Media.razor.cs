@@ -33,25 +33,24 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Media
                 StandardValues.LoggerValues.Info,
                 "Opened Media Page");
 
+            FilterApplication = QueryApplication ?? string.Empty;
+
+            MediaRecords = new()
+            {
+                Entries = [],
+                EntryCount = 0,
+                PageNumber = 1,
+                PageSize = 25,
+                TotalPageCount = 0,
+                TotalCount = 0
+            };
+
             if (!string.IsNullOrWhiteSpace(QueryApplication))
             {
                 MediaRecords = await APIService.GetMediaRecords(
                     QueryApplication,
                     PageSize,
                     PageNumber);
-            }
-
-            else
-            {
-                MediaRecords = new()
-                {
-                    Entries = [],
-                    EntryCount = 0,
-                    PageNumber = 1,
-                    PageSize = 25,
-                    TotalPageCount = 0,
-                    TotalCount = 0
-                };
             }
         }
 
