@@ -513,7 +513,12 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(
                 request,
-                true))
+                true,
+                null,
+                new string[]
+                {
+                    "Path"
+                }))
             {
                 response = new ResponseModel()
                 {
@@ -598,10 +603,13 @@ namespace HunterIndustriesAPI.Controllers
 
                 if (created)
                 {
-                    created = await _mediaService.ApplicationEntityLinkCreated(
+                    if (MediaConverter.GetSQLCreateApplicationEntityLink(application) != "NoApplicationEntityLink")
+                    {
+                        created = await _mediaService.ApplicationEntityLinkCreated(
                         application,
                         entityId,
                         id);
+                    }
                 }
             }
 
