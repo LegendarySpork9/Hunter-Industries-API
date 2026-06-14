@@ -82,10 +82,12 @@ else
                 <h6 class="mb-0">Image</h6>
             </div>
             <div class="card-body">
-                <RadzenImage
-                    Path="@Media.URL"
-                    AlternateText="@Media.URL"
-                    Style="height: 800px"/>
+                <div class="mb-0">
+                    <RadzenImage
+                        Path="@Media.URL"
+                        AlternateText="@Media.URL"
+                        Style="max-width: 100%; max-height: 600px; height: auto; object-fit: contain;" />
+                </div>
             </div>
         </div>
     }
