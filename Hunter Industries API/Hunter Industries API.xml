@@ -1814,7 +1814,7 @@
             The name of the file.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Entension">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Extension">
             <summary>
             The type of file.
             </summary>
@@ -2977,7 +2977,7 @@
             <summary>
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.Media.MediaTypeRecord.Entension">
+        <member name="P:HunterIndustriesAPI.Objects.Media.MediaTypeRecord.Extension">
             <summary>
             The type of file.
             </summary>

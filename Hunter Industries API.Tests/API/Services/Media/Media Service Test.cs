@@ -43,7 +43,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
                 {
                     Id = 1,
                     Name = "TestMedia",
-                    Type = new MediaTypeRecord { Entension = ".png", MimeType = "image/png" },
+                    Type = new MediaTypeRecord { Extension = ".png", MimeType = "image/png" },
                     Size = 1024,
                     Path = "/images",
                     Domain = "https://example.com",
@@ -152,7 +152,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
                 {
                     Id = 1,
                     Name = "TestMedia",
-                    Type = new MediaTypeRecord { Entension = ".png", MimeType = "image/png" },
+                    Type = new MediaTypeRecord { Extension = ".png", MimeType = "image/png" },
                     Size = 1024,
                     Path = "/images",
                     Domain = "https://example.com",
@@ -243,7 +243,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
                     {
                         Id = 1,
                         Name = "TestMedia",
-                        Type = new MediaTypeRecord { Entension = ".png", MimeType = "image/png" },
+                        Type = new MediaTypeRecord { Extension = ".png", MimeType = "image/png" },
                         Size = 1024,
                         Path = "/images",
                         Domain = "https://example.com",
@@ -531,7 +531,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
             MediaModel media = new()
             {
                 Name = "TestMedia",
-                Entension = ".png",
+                Extension = ".png",
                 MimeType = "image/png",
                 Size = 1024,
                 Path = "/images",
@@ -569,7 +569,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
             MediaModel media = new()
             {
                 Name = "TestMedia",
-                Entension = ".png",
+                Extension = ".png",
                 MimeType = "image/png",
                 Size = 1024,
                 Path = "/images",
@@ -607,7 +607,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Media
             MediaModel media = new()
             {
                 Name = "TestMedia",
-                Entension = ".png",
+                Extension = ".png",
                 MimeType = "image/png",
                 Size = 1024,
                 Path = "/images",

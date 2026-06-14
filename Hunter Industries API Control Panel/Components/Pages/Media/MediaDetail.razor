@@ -1,0 +1,94 @@
+@page "/media/{Id:int}"
+
+<PageTitle>Media Record</PageTitle>
+
+<div class="mb-3">
+    <a href="@ReturnURL" class="btn btn-outline-light btn-sm">&larr; Back to Media</a>
+</div>
+
+@if (IsLoading)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+
+else
+{
+    @if (Media == null)
+    {
+        <div class="alert alert-warning">Media record not found.</div>
+    }
+
+    else
+    {
+        <!-- General Info -->
+        <div class="card mb-4 card-rounded">
+            <div class="card-header">
+                <h5 class="mb-0">Media Record #@Media.Id</h5>
+                @if (Media.IsDeleted)
+                {
+                    <StatusBadge
+                        Text="Deleted"
+                        Type="deleted" />
+                }
+
+                else
+                {
+                    <StatusBadge
+                        Text="Active"
+                        Type="active" />
+                }
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label text-muted">Name</label>
+                        <div>@($"{Media.Name}{Media.Type.Extension}")</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted">Size</label>
+                        <div>@MediaConverter.FormatFileSize(Media.Size)</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted">Domain</label>
+                        <div>@Media.Domain</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted">Path</label>
+                        <div>@(Media.Path ?? "Top Level")</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted">Application</label>
+                        <div>@Media.Application</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted">Date Uploaded (UTC)</label>
+                        <div>@Media.DateUploaded.ToString("dd MMM yyyy HH:mm:ss")</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted">Date Uploaded (UTC)</label>
+                        <div>@Media.DateUpdated.ToString("dd MMM yyyy HH:mm:ss")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image -->
+        <div class="card mb-4 card-rounded">
+            <div class="card-header">
+                <h6 class="mb-0">Image</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-0">
+                    <RadzenImage
+                        Path="@Media.URL"
+                        AlternateText="@Media.URL"
+                        Style="max-width: 100%; max-height: 600px; height: auto; object-fit: contain;" />
+                </div>
+            </div>
+        </div>
+    }
+}

@@ -289,12 +289,12 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     [],
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, object>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false }],
+                    new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false },
                     null));
 
             ConfigurationController controller = new(
@@ -429,12 +429,12 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     [1],
                     null));
-            mockDatabase.Setup(d => d.Query(
+            mockDatabase.Setup(d => d.QuerySingle(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, object>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    [new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false }],
+                    new ComponentRecord { Id = 1, Name = "TestComponent", IsDeleted = false },
                     null));
             mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),

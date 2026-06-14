@@ -607,11 +607,11 @@ namespace HunterIndustriesAPI.Controllers
                     response.Data);
             }
 
-            List<object> records = (await _configurationService.GetRecords(
+            object record = await _configurationService.GetRecord(
                 entity,
-                id)).Item1;
+                id);
 
-            if (records.Count == 0)
+            if (record == null)
             {
                 response = new ResponseModel()
                 {
@@ -648,7 +648,7 @@ namespace HunterIndustriesAPI.Controllers
             response = new ResponseModel()
             {
                 StatusCode = 201,
-                Data = records[0]
+                Data = record
             };
 
             await _auditHistoryService.LogRequest(
@@ -782,9 +782,9 @@ namespace HunterIndustriesAPI.Controllers
                 entity,
                 id))
             {
-                object record = (await _configurationService.GetRecords(
+                object record = await _configurationService.GetRecord(
                     entity,
-                    id)).Item1[0];
+                    id);
 
                 if (await _configurationService.RecordUpdated(
                     entity,
@@ -794,9 +794,9 @@ namespace HunterIndustriesAPI.Controllers
                     PropertyInfo[] requestProperties = request.GetType()
                         .GetProperties();
 
-                    object updatedRecord = (await _configurationService.GetRecords(
+                    object updatedRecord = await _configurationService.GetRecord(
                         entity,
-                        id)).Item1[0];
+                        id);
 
                     response = new ResponseModel()
                     {

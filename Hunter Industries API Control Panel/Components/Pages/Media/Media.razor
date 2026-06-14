@@ -1,0 +1,115 @@
+@page "/media"
+
+<PageTitle>Media</PageTitle>
+
+<div class="page-header">
+    <h1>Media</h1>
+</div>
+
+<!-- Filter Bar -->
+<div class="card mb-4 card-rounded">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label class="form-label">Application</label>
+                <input type="text" class="form-control" @bind="FilterApplication" placeholder="e.g. Portfolio" />
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button class="btn btn-primary btn-sm" disabled="@IsLoading" @onclick="ApplyFilters">Apply</button>
+                <button class="btn btn-outline-light btn-sm" disabled="@IsLoading" @onclick="ClearFilters">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results -->
+<div class="table-scroll-wrapper">
+    <RadzenDataGrid
+        Data="@MediaRecords?.Entries"
+        TItem="MediaModel"
+        AllowSorting="false"
+        RowClick="@(args => Navigation.NavigateTo($"/media/{args.Data.Id}"))"
+        Style="cursor: pointer;">
+        <Columns>
+            <RadzenDataGridColumn
+                TItem="MediaModel"
+                Property="Id"
+                Title="ID"
+                Width="100px" />
+            <RadzenDataGridColumn
+                TItem="MediaModel"
+                Title="Name"
+                MinWidth="100px" >
+                <Template Context="record">
+                    @($"{record.Name}{record.Type.Extension}")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="MediaModel"
+                Title="Size"
+                Width="120px">
+                <Template Context="record">
+                    @(MediaConverter.FormatFileSize(record.Size))
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="MediaModel"
+                Property="Domain"
+                Title="Domain"
+                MinWidth="200px" />
+            <RadzenDataGridColumn
+                TItem="MediaModel"
+                Title="Date Updated (UTC)"
+                Width="190px">
+                <Template Context="record">
+                    @record.DateUpdated.ToString("dd MMM yyyy HH:mm:ss")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn
+                TItem="MediaModel"
+                Title="Status"
+                Width="120px">
+                <Template Context="record">
+                    @if (record.IsDeleted)
+                    {
+                        <StatusBadge
+                            Text="Deleted"
+                            Type="deleted" />
+                    }
+
+                    else
+                    {
+                        <StatusBadge
+                            Text="Active"
+                            Type="active" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+    <div class="text-muted">
+        @if (MediaRecords?.TotalCount > 0)
+        {
+            <span>Showing @((MediaRecords?.PageNumber - 1) * MediaRecords?.PageSize + 1)-@((MediaRecords?.PageNumber - 1) * MediaRecords?.PageSize + MediaRecords?.EntryCount) of @MediaRecords?.TotalCount records</span>
+        }
+
+        else
+        {
+            <span>No records found</span>
+        }
+    </div>
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+        <select class="form-select form-select-sm page-size-select" disabled="@IsLoading" @bind="PageSize" @bind:after="ApplyFilters">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+        <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber <= 1 || IsLoading)" @onclick="PreviousPage">&laquo; Prev</button>
+        <span class="text-muted">Page @PageNumber of @MediaRecords?.TotalPageCount</span>
+        <button class="btn btn-outline-light btn-sm" disabled="@(PageNumber >= MediaRecords?.TotalPageCount || IsLoading)" @onclick="NextPage">Next &raquo;</button>
+    </div>
+</div>

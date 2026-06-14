@@ -12,7 +12,7 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Media
         /// <summary>
         /// The type of file.
         /// </summary>
-        public string Entension { get; set; }
+        public string Extension { get; set; }
         /// <summary>
         /// The mime type of the file.
         /// </summary>

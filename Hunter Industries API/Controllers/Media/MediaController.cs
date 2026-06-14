@@ -589,7 +589,7 @@ namespace HunterIndustriesAPI.Controllers
             int id = 0;
 
             if (await _mediaService.MediaTypeCreated(
-                request.Entension,
+                request.Extension,
                 request.MimeType))
             {
                 (created, id) = await _mediaService.MediaCreated(

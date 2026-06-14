@@ -1,2 +1,4 @@
-update Media set IsDeleted = 1
+update Media set
+	IsDeleted = 1,
+	DateUpdated = GETUTCDATE()
 where MediaId = @mediaId

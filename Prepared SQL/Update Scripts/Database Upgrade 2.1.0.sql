@@ -12,6 +12,7 @@ BEGIN
 		[DomainId] ASC
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 	) ON [PRIMARY]
+	ALTER TABLE [dbo].[Domain] ADD DEFAULT ((0)) FOR [IsDeleted]
 
 	PRINT('Domain Table Added')
 END
@@ -55,6 +56,7 @@ BEGIN
 		[MediaId] ASC
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 	) ON [PRIMARY]
+	ALTER TABLE [dbo].[Media] ADD DEFAULT ((0)) FOR [IsDeleted]
 
 	PRINT('MediaType Table Added')
 END
@@ -119,6 +121,16 @@ BEGIN
 END
 ELSE
 	PRINT('Media Endpoint Already Exists')
+GO
+
+IF NOT EXISTS (SELECT * FROM [dbo].[Scope] WHERE [Value] = 'Media API')
+BEGIN
+	INSERT INTO [Scope]([Value]) VALUES ('Media API')
+
+	PRINT('Added Media Scope')
+END
+ELSE
+	PRINT('Media Scope Already Exists')
 GO
 
 IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.1.0')
