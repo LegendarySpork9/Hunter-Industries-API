@@ -12,6 +12,7 @@ namespace HunterIndustriesAPIControlPanel.Converters
             {
                 "/user" => "?includeDeleted=true",
                 "/configuration/authorisation" => "?includeUsed=false",
+                "/media" => "?includeDeleted=true",
                 _ => string.Empty
             };
         }

@@ -48,7 +48,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Media
             if (!string.IsNullOrWhiteSpace(QueryApplication))
             {
                 MediaRecords = await APIService.GetMediaRecords(
-                    QueryApplication,
+                    FilterApplication,
                     PageSize,
                     PageNumber);
             }
