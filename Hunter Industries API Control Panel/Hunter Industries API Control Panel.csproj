@@ -17,7 +17,7 @@
     <RepositoryType>git</RepositoryType>
     <Version>1.0.0</Version>
     <PackageIcon>favicon.ico</PackageIcon>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
     <ApplicationIcon>Content\favicon.ico</ApplicationIcon>
   </PropertyGroup>

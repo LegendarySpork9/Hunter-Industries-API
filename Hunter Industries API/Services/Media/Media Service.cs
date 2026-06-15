@@ -822,7 +822,7 @@ values (
                 string sql = _FileSystem.ReadAllText(Path.Combine(
                     _Options.SQLFiles,
                     "Media",
-                    "MediaUpdate.sql"));
+                    "MediaUpdated.sql"));
                 List<SqlParameter> parameterList = new List<SqlParameter>()
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = media.Name },
@@ -862,12 +862,17 @@ values (
                 },
                 StringSplitOptions.None)
                     .ToList();
-                string lastSet = sqlLines.LastOrDefault(s => s.Contains(','));
+                string where = sqlLines.LastOrDefault(s => s.Contains("where"));
 
-                if (lastSet != null)
+                if (where != null)
                 {
-                    int index = sqlLines.IndexOf(lastSet);
-                    sqlLines[index] = sqlLines[index].Replace(",", "");
+                    int lastSetIndex = sqlLines.IndexOf(where) - 1;
+                    string lastSet = sqlLines[lastSetIndex];
+
+                    if (lastSet.Contains(','))
+                    {
+                        sqlLines[lastSetIndex] = sqlLines[lastSetIndex].Replace(",", "");
+                    }
                 }
 
                 sql = string.Join(
