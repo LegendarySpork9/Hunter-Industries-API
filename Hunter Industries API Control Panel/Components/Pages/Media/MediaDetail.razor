@@ -69,24 +69,48 @@ else
                         <div>@Media.DateUploaded.ToString("dd MMM yyyy HH:mm:ss")</div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label text-muted">Date Uploaded (UTC)</label>
+                        <label class="form-label text-muted">Date Updated (UTC)</label>
                         <div>@Media.DateUpdated.ToString("dd MMM yyyy HH:mm:ss")</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Image -->
+        <!-- Media Preview -->
         <div class="card mb-4 card-rounded">
             <div class="card-header">
-                <h6 class="mb-0">Image</h6>
+                <h6 class="mb-0">@MediaCategory</h6>
             </div>
             <div class="card-body">
                 <div class="mb-0">
-                    <RadzenImage
-                        Path="@Media.URL"
-                        AlternateText="@Media.URL"
-                        Style="max-width: 100%; max-height: 600px; height: auto; object-fit: contain;" />
+                    @if (Media.Type.MimeType.StartsWith("image/"))
+                    {
+                        <RadzenImage
+                            Path="@Media.URL"
+                            AlternateText="@Media.URL"
+                            Style="max-width: 100%; max-height: 600px; height: auto; object-fit: contain;" />
+                    }
+
+                    else if (Media.Type.MimeType.StartsWith("video/"))
+                    {
+                        <video controls style="max-width: 100%; max-height: 600px;">
+                            <source src="@Media.URL" type="@Media.Type.MimeType" />
+                            Your browser does not support the video element.
+                        </video>
+                    }
+
+                    else if (Media.Type.MimeType.StartsWith("audio/"))
+                    {
+                        <audio controls style="width: 100%;">
+                            <source src="@Media.URL" type="@Media.Type.MimeType" />
+                            Your browser does not support the audio element.
+                        </audio>
+                    }
+
+                    else
+                    {
+                        <div class="text-muted">Preview not available for this media type.</div>
+                    }
                 </div>
             </div>
         </div>

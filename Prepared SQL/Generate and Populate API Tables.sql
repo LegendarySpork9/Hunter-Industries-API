@@ -424,7 +424,7 @@ GO
 CREATE TABLE [dbo].[MediaType](
 	[MediaTypeId] [int] IDENTITY(1,1) NOT NULL,
 	[Extension] [varchar](10) NOT NULL,
-	[MimeType] [varchar](100) NOT NULL,
+	[MimeType] [varchar](40) NOT NULL,
  CONSTRAINT [PK_MediaType] PRIMARY KEY CLUSTERED 
 (
 	[MediaTypeId] ASC

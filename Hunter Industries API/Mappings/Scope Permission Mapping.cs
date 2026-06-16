@@ -21,6 +21,7 @@ namespace HunterIndustriesAPI.Mappings
                     "AuditHistory",
                     "Configuration",
                     "ErrorLog",
+                    "Media.Read",
                     "ServerStatus.Alert",
                     "ServerStatus.Event",
                     "ServerStatus.Information",

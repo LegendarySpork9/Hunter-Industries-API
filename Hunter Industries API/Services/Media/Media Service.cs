@@ -472,7 +472,7 @@ fetch next @pageSize rows only";
                     _Options.SQLFiles,
                     "Media",
                     "MediaExists.sql"));
-                sql += "\nwhere [Application] = @application\nand Media.[Name] = @name";
+                sql += "\nwhere [Application].[Name] = @application\nand Media.[Name] = @name";
 
                 SqlParameter[] parameters =
                 {
