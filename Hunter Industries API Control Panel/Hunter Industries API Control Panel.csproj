@@ -15,10 +15,10 @@
     <Copyright>Copyright ©  2026</Copyright>
     <RepositoryUrl>https://github.com/LegendarySpork9/Hunter-Industries-API</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <PackageIcon>favicon.ico</PackageIcon>
     <AssemblyVersion>1.1.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
+    <FileVersion>1.1.0</FileVersion>
     <ApplicationIcon>Content\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
