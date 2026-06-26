@@ -94,7 +94,7 @@ else
                     else if (Media.Type.MimeType.StartsWith("video/"))
                     {
                         <video controls style="max-width: 100%; max-height: 600px;">
-                            <source src="@Media.URL" type="@Media.Type.MimeType" />
+                            <source src="@Media.URL" />
                             Your browser does not support the video element.
                         </video>
                     }
@@ -102,7 +102,7 @@ else
                     else if (Media.Type.MimeType.StartsWith("audio/"))
                     {
                         <audio controls style="width: 100%;">
-                            <source src="@Media.URL" type="@Media.Type.MimeType" />
+                            <source src="@Media.URL" />
                             Your browser does not support the audio element.
                         </audio>
                     }
