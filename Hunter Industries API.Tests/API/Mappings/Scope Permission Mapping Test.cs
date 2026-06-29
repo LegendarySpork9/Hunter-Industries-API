@@ -32,7 +32,7 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
             List<string> actual = ScopePermissionMapping.GetPermissions(["Control Panel API"]);
 
             Assert.AreEqual(
-                13,
+                14,
                 actual.Count);
             Assert.IsTrue(actual.Contains("Assistant.Config"));
             Assert.IsTrue(actual.Contains("Assistant.Deletion"));
@@ -41,6 +41,7 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
             Assert.IsTrue(actual.Contains("AuditHistory"));
             Assert.IsTrue(actual.Contains("Configuration"));
             Assert.IsTrue(actual.Contains("ErrorLog"));
+            Assert.IsTrue(actual.Contains("Media.Read"));
             Assert.IsTrue(actual.Contains("Statistic"));
             Assert.IsTrue(actual.Contains("ServerStatus.Alert"));
             Assert.IsTrue(actual.Contains("ServerStatus.Event"));
@@ -95,7 +96,7 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
             List<string> actual = ScopePermissionMapping.GetPermissions(["Control Panel API", "Assistant API"]);
 
             Assert.AreEqual(
-                13,
+                14,
                 actual.Count);
         }
 

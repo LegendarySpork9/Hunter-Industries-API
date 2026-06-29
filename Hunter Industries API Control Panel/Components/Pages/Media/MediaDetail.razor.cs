@@ -23,6 +23,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Media
 
         private string ReturnURL = "/media";
 
+        private string MediaCategory = "Media Preview";
+
         /// <summary>
         /// Loads the data.
         /// </summary>
@@ -39,6 +41,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Media
             if (Media != null)
             {
                 ReturnURL = $"/media?application={Media.Application}";
+
+                if (Media.Type.MimeType.StartsWith("image/"))
+                {
+                    MediaCategory = "Image";
+                }
+
+                else if (Media.Type.MimeType.StartsWith("video/"))
+                {
+                    MediaCategory = "Video";
+                }
+
+                else if (Media.Type.MimeType.StartsWith("audio/"))
+                {
+                    MediaCategory = "Audio";
+                }
             }
 
             IsLoading = false;

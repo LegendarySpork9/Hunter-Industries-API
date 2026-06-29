@@ -12,7 +12,7 @@ namespace HunterIndustriesAPI.Converters
         {
             switch (application)
             {
-                default: return "Unknown.sql";
+                default: return "NoApplicationEntity";
             }
         }
 
@@ -23,7 +23,7 @@ namespace HunterIndustriesAPI.Converters
         {
             switch (application)
             {
-                default: return "Unknown";
+                default: return "NoApplicationEntityLink";
             }
         }
     }

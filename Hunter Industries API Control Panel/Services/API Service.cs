@@ -204,7 +204,7 @@ namespace HunterIndustriesAPIControlPanel.Services
             {
                 PagedAPIResponseModel<AuditHistoryModel>? pagedResponse = await _APIClient.GetPagedAuditHistory(queryParameters);
 
-                if (pagedResponse != null)
+                if (pagedResponse != null && pagedResponse.Entries != null)
                 {
                     auditHistories = pagedResponse.Entries;
 
@@ -234,6 +234,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 else
                 {
+                    pagedResponse = null;
+
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
                         "Failed to fetch audit history records from API");
@@ -611,7 +613,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     StandardValues.LoggerValues.Debug,
                     $"Audit Histories Returned: {pagedResponse?.EntryCount ?? 0}");
 
-                if (pagedResponse != null)
+                if (pagedResponse != null && pagedResponse.Entries != null)
                 {
                     List<AuditHistoryModel> auditHistories = pagedResponse.Entries;
 
@@ -639,6 +641,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 else
                 {
+                    pagedResponse = null;
+
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
                         "Failed to fetch audit history records from API");
@@ -1723,7 +1727,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     StandardValues.LoggerValues.Debug,
                     $"Errors Returned: {pagedResponse?.EntryCount ?? 0}");
 
-                if (pagedResponse != null)
+                if (pagedResponse != null && pagedResponse.Entries != null)
                 {
                     List<ErrorModel> errors = pagedResponse.Entries;
 
@@ -1751,6 +1755,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 else
                 {
+                    pagedResponse = null;
+
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
                         "Failed to fetch error records from API");
@@ -1938,7 +1944,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     StandardValues.LoggerValues.Debug,
                     $"Media Returned: {pagedResponse?.EntryCount ?? 0}");
 
-                if (pagedResponse != null)
+                if (pagedResponse != null && pagedResponse.Entries != null)
                 {
                     List<MediaModel> mediaRecords = pagedResponse.Entries;
 
@@ -1969,6 +1975,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 else
                 {
+                    pagedResponse = null;
+
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
                         "Failed to fetch media records from API");

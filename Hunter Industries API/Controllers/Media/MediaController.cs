@@ -513,7 +513,12 @@ namespace HunterIndustriesAPI.Controllers
 
             if (!_modelValidator.IsValid(
                 request,
-                true))
+                true,
+                null,
+                new string[]
+                {
+                    "Path"
+                }))
             {
                 response = new ResponseModel()
                 {
@@ -521,6 +526,41 @@ namespace HunterIndustriesAPI.Controllers
                     Data = new
                     {
                         error = "Invalid request, check the following. A body is provided with the correct tags."
+                    }
+                };
+
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("media"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    new string[]
+                    {
+                        $"Application: {application}",
+                        $"Application Entity Id: {entityId}"
+                    },
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Media (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest,
+                    response.Data);
+            }
+
+            if (!request.MimeType.StartsWith("image/") && !request.MimeType.StartsWith("video/") && !request.MimeType.StartsWith("audio/"))
+            {
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "The provided MIME type is not supported. Only image, video, and audio media types are accepted."
                     }
                 };
 
@@ -585,23 +625,22 @@ namespace HunterIndustriesAPI.Controllers
                     response.Data);
             }
 
-            bool created = false;
-            int id = 0;
-
-            if (await _mediaService.MediaTypeCreated(
+            await _mediaService.MediaTypeCreated(
                 request.Extension,
-                request.MimeType))
-            {
-                (created, id) = await _mediaService.MediaCreated(
+                request.MimeType);
+
+            (bool created, int id) = await _mediaService.MediaCreated(
                 application,
                 request);
 
-                if (created)
+            if (created)
+            {
+                if (MediaConverter.GetSQLCreateApplicationEntityLink(application) != "NoApplicationEntityLink")
                 {
                     created = await _mediaService.ApplicationEntityLinkCreated(
-                        application,
-                        entityId,
-                        id);
+                    application,
+                    entityId,
+                    id);
                 }
             }
 

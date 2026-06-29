@@ -567,12 +567,17 @@ left join Downtime D with (nolock) on D.[Time] = @time
                 },
                 StringSplitOptions.None)
                     .ToList();
-                string lastSet = sqlLines.LastOrDefault(s => s.Contains(','));
+                string from = sqlLines.LastOrDefault(s => s.Contains("from"));
 
-                if (lastSet != null)
+                if (from != null)
                 {
-                    int index = sqlLines.IndexOf(lastSet);
-                    sqlLines[index] = sqlLines[index].Replace(",", "");
+                    int lastSetIndex = sqlLines.IndexOf(from) - 1;
+                    string lastSet = sqlLines[lastSetIndex];
+
+                    if (lastSet.Contains(','))
+                    {
+                        sqlLines[lastSetIndex] = sqlLines[lastSetIndex].Replace(",", "");
+                    }
                 }
 
                 sql = string.Join(

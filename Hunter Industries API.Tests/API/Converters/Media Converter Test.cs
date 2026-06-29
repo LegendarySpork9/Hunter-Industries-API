@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         [TestMethod]
         public void TestGetSQLGetApplicationEntity()
         {
-            string expected = "Unknown.sql";
+            string expected = "NoApplicationEntity";
             string actual = MediaConverter.GetSQLGetApplicationEntity("Trombone");
 
             Assert.AreEqual(
@@ -33,7 +33,7 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         [TestMethod]
         public void TestGetSQLCreateApplicationEntityLink()
         {
-            string expected = "Unknown";
+            string expected = "NoApplicationEntityLink";
             string actual = MediaConverter.GetSQLCreateApplicationEntityLink("Trombone");
 
             Assert.AreEqual(
