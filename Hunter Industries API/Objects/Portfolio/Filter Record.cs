@@ -1,18 +1,22 @@
-﻿// Copyright © - 29/06/2026 - Toby Hunter
-namespace HunterIndustriesAPI.Objects.Configuration
+﻿// Copyright © - Unpublished - Toby Hunter
+namespace HunterIndustriesAPI.Objects.Portfolio
 {
     /// <summary>
     /// </summary>
-    public class DomainRecord
+    public class FilterRecord
     {
         /// <summary>
         /// Id of the record.
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// The domain URL.
+        /// The name of the filter.
         /// </summary>
-        public string Host { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// The values the filter allows.
+        /// </summary>
+        public string Values { get; set; }
         /// <summary>
         /// Whether the record is deleted.
         /// </summary>

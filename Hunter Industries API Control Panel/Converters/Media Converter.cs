@@ -1,4 +1,4 @@
-﻿// Copyright © - Unpublished - Toby Hunter
+﻿// Copyright © - 29/06/2026 - Toby Hunter
 namespace HunterIndustriesAPIControlPanel.Converters
 {
     public static class MediaConverter

@@ -381,7 +381,7 @@ GO
 CREATE TABLE [dbo].[Domain](
 	[DomainId] [int] IDENTITY(1,1) NOT NULL,
 	[Host] [varchar](255) NOT NULL,
-	[IsDeleted] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Domain] PRIMARY KEY CLUSTERED 
 (
 	[DomainId] ASC
@@ -406,7 +406,7 @@ CREATE TABLE [dbo].[Media](
 	[Path] [varchar](400) NULL,
 	[DateUploaded] [datetime] NOT NULL,
 	[DateUpdated] [datetime] NOT NULL,
-	[IsDeleted] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_Media] PRIMARY KEY CLUSTERED 
 (
 	[MediaId] ASC
@@ -531,11 +531,14 @@ CREATE TABLE [dbo].[PortfolioFilter](
 	[PortfolioFilterId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
 	[Values] [varchar](max) NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_PortfolioFilter] PRIMARY KEY CLUSTERED 
 (
 	[PortfolioFilterId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[PortfolioFilter] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 /****** Object:  Table [dbo].[PortfolioItem]    Script Date: 30/06/2026 13:29:01 ******/
@@ -560,11 +563,14 @@ CREATE TABLE [dbo].[PortfolioItem](
 	[LLMUsageNotes] [varchar](400) NULL,
 	[DateCreated] [datetime] NOT NULL,
 	[DateUpdated] [datetime] NOT NULL,
+	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_PortfolioItem] PRIMARY KEY CLUSTERED 
 (
 	[PortfolioItemId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[PortfolioItem] ADD DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 /****** Object:  Table [dbo].[PortfolioItemBuildHistory]    Script Date: 30/06/2026 13:44:34 ******/
