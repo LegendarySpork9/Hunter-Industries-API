@@ -393,6 +393,8 @@
     <Compile Include="Models\Requests\Bodies\Configuration\Machine Model.cs" />
     <Compile Include="Models\Requests\Bodies\Media\Media Update Model.cs" />
     <Compile Include="Models\Requests\Bodies\Media\Media Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Portfolio\Filter Model.cs" />
+    <Compile Include="Models\Requests\Bodies\Portfolio\Item Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Alert Update Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Server Alert Model.cs" />
     <Compile Include="Models\Requests\Bodies\Server Status\Server Event Model.cs" />
@@ -433,6 +435,14 @@
     <Compile Include="Objects\Configuration\Domain Record.cs" />
     <Compile Include="Objects\Media\Media Record.cs" />
     <Compile Include="Objects\Media\Media Type Record.cs" />
+    <Compile Include="Objects\Portfolio\Build History Record.cs" />
+    <Compile Include="Objects\Portfolio\Filter Record.cs" />
+    <Compile Include="Objects\Portfolio\GitHub Issue Breakdown Record.cs" />
+    <Compile Include="Objects\Portfolio\GitHub Issue Assignee Breakdown Record.cs" />
+    <Compile Include="Objects\Portfolio\GitHub Issue In Progress Breakdown Record.cs" />
+    <Compile Include="Objects\Portfolio\GitHub Record.cs" />
+    <Compile Include="Objects\Portfolio\Item Record.cs" />
+    <Compile Include="Objects\Portfolio\LLM Record.cs" />
     <Compile Include="Objects\Server Status\Connection Record.cs" />
     <Compile Include="Objects\Server Status\Downtime Record.cs" />
     <Compile Include="Objects\Server Status\Server Alert Record.cs" />
