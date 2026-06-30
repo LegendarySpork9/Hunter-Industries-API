@@ -6,7 +6,6 @@ select
 	Size,
 	[Path],
 	Host,
-	[Application].[Name] as [App],
 	DateUploaded,
 	DateUpdated,
 	Media.IsDeleted

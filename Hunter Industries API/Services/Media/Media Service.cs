@@ -115,11 +115,11 @@ fetch next @pageSize rows only";
                             URL = url,
                             Application = reader.GetString(7),
                             DateUploaded = DateTime.SpecifyKind(
-                            reader.GetDateTime(8),
-                            DateTimeKind.Utc),
+                                reader.GetDateTime(8),
+                                DateTimeKind.Utc),
                             DateUpdated = DateTime.SpecifyKind(
-                            reader.GetDateTime(9),
-                            DateTimeKind.Utc),
+                                reader.GetDateTime(9),
+                                DateTimeKind.Utc),
                             IsDeleted = reader.GetBoolean(10)
                         };
                     },
@@ -243,7 +243,6 @@ fetch next @pageSize rows only";
                 $"MediaService.GetApplicationEntityMedia called with the parameters {ParameterFunction.FormatParameters(new string[] { application, includeDeleted.ToString(), applicationEntityId.ToString() })}.");
 
             List<MediaRecord> media = new List<MediaRecord>();
-            int totalRecords = 0;
 
             try
             {
@@ -296,13 +295,13 @@ fetch next @pageSize rows only";
                             Path = path,
                             Domain = reader.GetString(6),
                             URL = url,
-                            Application = reader.GetString(7),
+                            Application = application,
                             DateUploaded = DateTime.SpecifyKind(
-                            reader.GetDateTime(8),
-                            DateTimeKind.Utc),
+                                reader.GetDateTime(8),
+                                DateTimeKind.Utc),
                             DateUpdated = DateTime.SpecifyKind(
-                            reader.GetDateTime(9),
-                            DateTimeKind.Utc),
+                                reader.GetDateTime(9),
+                                DateTimeKind.Utc),
                             IsDeleted = reader.GetBoolean(10)
                         };
                     },
@@ -399,11 +398,11 @@ fetch next @pageSize rows only";
                             URL = url,
                             Application = reader.GetString(7),
                             DateUploaded = DateTime.SpecifyKind(
-                            reader.GetDateTime(8),
-                            DateTimeKind.Utc),
+                                reader.GetDateTime(8),
+                                DateTimeKind.Utc),
                             DateUpdated = DateTime.SpecifyKind(
-                            reader.GetDateTime(9),
-                            DateTimeKind.Utc),
+                                reader.GetDateTime(9),
+                                DateTimeKind.Utc),
                             IsDeleted = reader.GetBoolean(10)
                         };
                     },
@@ -748,7 +747,11 @@ fetch next @pageSize rows only";
 
             try
             {
-                string sql = MediaConverter.GetSQLCreateApplicationEntityLink(application);
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Media",
+                    "ApplicationEntityLinks",
+                    MediaConverter.GetSQLCreateApplicationEntityLink(application)));
                 sql += @"
 values (
     @entityId,

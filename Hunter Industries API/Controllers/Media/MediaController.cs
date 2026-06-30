@@ -635,12 +635,12 @@ namespace HunterIndustriesAPI.Controllers
 
             if (created)
             {
-                if (MediaConverter.GetSQLCreateApplicationEntityLink(application) != "NoApplicationEntityLink")
+                if (MediaConverter.HasApplicationEntityLink(application))
                 {
                     created = await _mediaService.ApplicationEntityLinkCreated(
-                    application,
-                    entityId,
-                    id);
+                        application,
+                        entityId,
+                        id);
                 }
             }
 

@@ -923,6 +923,11 @@
             Returns the Getx application entity sql.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Converters.MediaConverter.HasApplicationEntityLink(System.String)">
+            <summary>
+            Returns whether the application has a link table.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Converters.MediaConverter.GetSQLCreateApplicationEntityLink(System.String)">
             <summary>
             Returns the Createx application entity link sql.
