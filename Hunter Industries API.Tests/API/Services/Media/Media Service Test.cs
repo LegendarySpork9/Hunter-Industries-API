@@ -1,4 +1,4 @@
-// Copyright © - Unpublished - Toby Hunter
+// Copyright © - 29/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Models.Requests.Bodies.Media;
 using HunterIndustriesAPI.Objects.Media;

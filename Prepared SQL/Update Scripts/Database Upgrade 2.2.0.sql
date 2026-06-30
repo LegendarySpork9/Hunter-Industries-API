@@ -7,11 +7,13 @@ BEGIN
 		[PortfolioFilterId] [int] IDENTITY(1,1) NOT NULL,
 		[Name] [varchar](50) NOT NULL,
 		[Values] [varchar](max) NOT NULL,
+		[IsDeleted] [bit] NOT NULL
  	 CONSTRAINT [PK_PortfolioFilter] PRIMARY KEY CLUSTERED 
 	(
 		[PortfolioFilterId] ASC
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+	ALTER TABLE [dbo].[PortfolioFilter] ADD DEFAULT ((0)) FOR [IsDeleted]
 
 	PRINT('PortfolioFilter Table Added')
 END
@@ -121,11 +123,13 @@ BEGIN
 		[LLMUsageNotes] [varchar](255) NULL,
 		[DateCreated] [datetime] NOT NULL,
 		[DateUpdated] [datetime] NOT NULL,
+		[IsDeleted] [bit] NOT NULL
 	 CONSTRAINT [PK_PortfolioItem] PRIMARY KEY CLUSTERED 
 	(
 		[PortfolioItemId] ASC
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+	ALTER TABLE [dbo].[PortfolioItem] ADD DEFAULT ((0)) FOR [IsDeleted]
 
 	PRINT('PortfolioItem Table Added')
 END
