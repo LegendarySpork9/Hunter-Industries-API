@@ -573,6 +573,7 @@
     <Content Include="SQL\Error Log\GetErrorLog.sql" />
     <Content Include="SQL\Error Log\GetTotalErrorLog.sql" />
     <Content Include="SQL\Change\LogChange.sql" />
+    <Content Include="SQL\Media\ApplicationEntityLinks\CreatePortfolioItemImage.sql" />
     <Content Include="SQL\Media\DeleteMedia.sql" />
     <Content Include="SQL\Media\MediaUpdated.sql" />
     <Content Include="SQL\Media\CreateMediaType.sql" />

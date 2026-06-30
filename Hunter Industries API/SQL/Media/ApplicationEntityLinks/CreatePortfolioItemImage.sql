@@ -1,0 +1,1 @@
+insert into PortfolioItemImage (PortfolioItemId, MediaId)
