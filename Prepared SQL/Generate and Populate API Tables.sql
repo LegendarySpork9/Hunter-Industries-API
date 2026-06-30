@@ -432,6 +432,228 @@ CREATE TABLE [dbo].[MediaType](
 ) ON [PRIMARY]
 GO
 
+/* Portfolio API */
+
+/****** Object:  Table [dbo].[Environment]    Script Date: 30/06/2026 13:27:54 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Environment](
+	[EnvironmentId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Environment] PRIMARY KEY CLUSTERED 
+(
+	[EnvironmentId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Framework]    Script Date: 30/06/2026 13:25:54 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Framework](
+	[FrameworkId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Framework] PRIMARY KEY CLUSTERED 
+(
+	[FrameworkId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Language]    Script Date: 30/06/2026 13:26:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Language](
+	[LanguageId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Language] PRIMARY KEY CLUSTERED 
+(
+	[LanguageId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[LLMCompany]    Script Date: 30/06/2026 13:28:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[LLMCompany](
+	[LLMCompanyId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](20) NOT NULL,
+ CONSTRAINT [PK_LLMCompany] PRIMARY KEY CLUSTERED 
+(
+	[LLMCompanyId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[LLMModel]    Script Date: 30/06/2026 13:36:18 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[LLMModel](
+	[LLMModelId] [int] IDENTITY(1,1) NOT NULL,
+	[LLMCompanyId] [int] NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_LLMModel] PRIMARY KEY CLUSTERED 
+(
+	[LLMModelId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioFilter]    Script Date: 30/06/2026 13:25:46 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioFilter](
+	[PortfolioFilterId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+	[Values] [varchar](max) NOT NULL,
+ CONSTRAINT [PK_PortfolioFilter] PRIMARY KEY CLUSTERED 
+(
+	[PortfolioFilterId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioItem]    Script Date: 30/06/2026 13:29:01 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItem](
+	[PortfolioItemId] [int] IDENTITY(1,1) NOT NULL,
+	[TypeId] [int] NOT NULL,
+	[LLMModelId] [int] NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Summary] [varchar](255) NOT NULL,
+	[Description] [varchar](max) NOT NULL,
+	[ReleaseNotes] [varchar](max) NOT NULL,
+	[GitHubLink] [varchar](400) NOT NULL,
+	[DemoLink] [varchar](400) NULL,
+	[UnitTestCoverage] [decimal](5, 2) NULL,
+	[LLMUsageNotes] [varchar](400) NULL,
+	[DateCreated] [datetime] NOT NULL,
+	[DateUpdated] [datetime] NOT NULL,
+ CONSTRAINT [PK_PortfolioItem] PRIMARY KEY CLUSTERED 
+(
+	[PortfolioItemId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioItemBuildHistory]    Script Date: 30/06/2026 13:44:34 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItemBuildHistory](
+	[PortfolioItemBuildHistoryId] [int] IDENTITY(1,1) NOT NULL,
+	[PortfolioItemId] [int] NOT NULL,
+	[Version] [varchar](10) NOT NULL,
+	[ReleaseDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_PortfolioItemBuildHistory] PRIMARY KEY CLUSTERED 
+(
+	[PortfolioItemBuildHistoryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioItemEnvironment]    Script Date: 30/06/2026 13:52:44 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItemEnvironment](
+	[PortfolioItemId] [int] NOT NULL,
+	[EnvironmentId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioItemFramework]    Script Date: 30/06/2026 13:46:41 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItemFramework](
+	[PortfolioItemId] [int] NOT NULL,
+	[FrameworkId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioItemImage]    Script Date: 30/06/2026 13:40:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItemImage](
+	[PortfolioItemId] [int] NOT NULL,
+	[MediaId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioItemLanguage]    Script Date: 30/06/2026 13:50:05 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItemLanguage](
+	[PortfolioItemId] [int] NOT NULL,
+	[LanguageId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[PortfolioItemType]    Script Date: 30/06/2026 13:25:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItemType](
+	[PortfolioItemTypeId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_PortfolioItemType] PRIMARY KEY CLUSTERED 
+(
+	[PortfolioItemTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /* Server Status API */
 
 /****** Object:  Table [dbo].[Component]    Script Date: 17/05/2025 12:29:22 ******/
@@ -702,6 +924,11 @@ REFERENCES [dbo].[ServerInformation] ([ServerInformationId])
 GO
 ALTER TABLE [dbo].[ComponentInformation] CHECK CONSTRAINT [FK_ComponentInformation_ServerInformation]
 GO
+ALTER TABLE [dbo].[LLMModel]  WITH CHECK ADD  CONSTRAINT [FK_LLMModel_LLMCompany] FOREIGN KEY([LLMCompanyId])
+REFERENCES [dbo].[LLMCompany] ([LLMCompanyId])
+GO
+ALTER TABLE [dbo].[LLMModel] CHECK CONSTRAINT [FK_LLMModel_LLMCompany]
+GO
 ALTER TABLE [dbo].[LoginAttempt]  WITH CHECK ADD  CONSTRAINT [FK_LoginAttempt_AuditHistory] FOREIGN KEY([AuditId])
 REFERENCES [dbo].[AuditHistory] ([AuditId])
 GO
@@ -731,6 +958,61 @@ ALTER TABLE [dbo].[Media]  WITH CHECK ADD  CONSTRAINT [FK_Media_MediaType] FOREI
 REFERENCES [dbo].[MediaType] ([MediaTypeId])
 GO
 ALTER TABLE [dbo].[Media] CHECK CONSTRAINT [FK_Media_MediaType]
+GO
+ALTER TABLE [dbo].[PortfolioItem]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItem_LLMModel] FOREIGN KEY([LLMModelId])
+REFERENCES [dbo].[LLMModel] ([LLMModelId])
+GO
+ALTER TABLE [dbo].[PortfolioItem] CHECK CONSTRAINT [FK_PortfolioItem_LLMModel]
+GO
+ALTER TABLE [dbo].[PortfolioItem]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItem_PortfolioItemType] FOREIGN KEY([TypeId])
+REFERENCES [dbo].[PortfolioItemType] ([PortfolioItemTypeId])
+GO
+ALTER TABLE [dbo].[PortfolioItem] CHECK CONSTRAINT [FK_PortfolioItem_PortfolioItemType]
+GO
+ALTER TABLE [dbo].[PortfolioItemBuildHistory]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemBuildHistory_PortfolioItem] FOREIGN KEY([PortfolioItemId])
+REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
+GO
+ALTER TABLE [dbo].[PortfolioItemBuildHistory] CHECK CONSTRAINT [FK_PortfolioItemBuildHistory_PortfolioItem]
+GO
+ALTER TABLE [dbo].[PortfolioItemEnvironment]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemEnvironment_Environment] FOREIGN KEY([EnvironmentId])
+REFERENCES [dbo].[Environment] ([EnvironmentId])
+GO
+ALTER TABLE [dbo].[PortfolioItemEnvironment] CHECK CONSTRAINT [FK_PortfolioItemEnvironment_Environment]
+GO
+ALTER TABLE [dbo].[PortfolioItemEnvironment]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemEnvironment_PortfolioItem] FOREIGN KEY([PortfolioItemId])
+REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
+GO
+ALTER TABLE [dbo].[PortfolioItemEnvironment] CHECK CONSTRAINT [FK_PortfolioItemEnvironment_PortfolioItem]
+GO
+ALTER TABLE [dbo].[PortfolioItemFramework]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemFramework_Framework] FOREIGN KEY([FrameworkId])
+REFERENCES [dbo].[Framework] ([FrameworkId])
+GO
+ALTER TABLE [dbo].[PortfolioItemFramework] CHECK CONSTRAINT [FK_PortfolioItemFramework_Framework]
+GO
+ALTER TABLE [dbo].[PortfolioItemFramework]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemFramework_PortfolioItem] FOREIGN KEY([PortfolioItemId])
+REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
+GO
+ALTER TABLE [dbo].[PortfolioItemFramework] CHECK CONSTRAINT [FK_PortfolioItemFramework_PortfolioItem]
+GO
+ALTER TABLE [dbo].[PortfolioItemImage]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemImage_Media] FOREIGN KEY([MediaId])
+REFERENCES [dbo].[Media] ([MediaId])
+GO
+ALTER TABLE [dbo].[PortfolioItemImage] CHECK CONSTRAINT [FK_PortfolioItemImage_Media]
+GO
+ALTER TABLE [dbo].[PortfolioItemImage]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemImage_PortfolioItem] FOREIGN KEY([PortfolioItemId])
+REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
+GO
+ALTER TABLE [dbo].[PortfolioItemImage] CHECK CONSTRAINT [FK_PortfolioItemImage_PortfolioItem]
+GO
+ALTER TABLE [dbo].[PortfolioItemLanguage]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemLanguage_Language] FOREIGN KEY([LanguageId])
+REFERENCES [dbo].[Language] ([LanguageId])
+GO
+ALTER TABLE [dbo].[PortfolioItemLanguage] CHECK CONSTRAINT [FK_PortfolioItemLanguage_Language]
+GO
+ALTER TABLE [dbo].[PortfolioItemLanguage]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemLanguage_PortfolioItem] FOREIGN KEY([PortfolioItemId])
+REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
+GO
+ALTER TABLE [dbo].[PortfolioItemLanguage] CHECK CONSTRAINT [FK_PortfolioItemLanguage_PortfolioItem]
 GO
 ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_Component] FOREIGN KEY([ComponentId])
 REFERENCES [dbo].[Component] ([ComponentId])
@@ -846,6 +1128,10 @@ INSERT [dbo].[Endpoint] ([Value]) VALUES ('/statistic')
 GO
 INSERT [dbo].[Endpoint] ([Value]) VALUES ('/media')
 GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/portfolio')
+GO
+INSERT [dbo].[Endpoint] ([Value]) VALUES ('/portfolio/filter')
+GO
 INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v1.0')
 GO
 INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v1.1')
@@ -853,6 +1139,8 @@ GO
 INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v2.0')
 GO
 INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v2.1')
+GO
+INSERT [dbo].[EndpointVersion] ([Value]) VALUES ('v2.2')
 GO
 INSERT [dbo].[Method] ([Value]) VALUES ('GET')
 GO
@@ -897,4 +1185,6 @@ GO
 INSERT [dbo].[Scope] ([Value]) VALUES ('Server Status API')
 GO
 INSERT [dbo].[Scope] ([Value]) VALUES ('Media API')
+GO
+INSERT [dbo].[Scope] ([Value]) VALUES ('Portfolio API')
 GO
