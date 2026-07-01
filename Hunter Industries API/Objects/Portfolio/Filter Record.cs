@@ -1,4 +1,6 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
+using System.Collections.Generic;
+
 namespace HunterIndustriesAPI.Objects.Portfolio
 {
     /// <summary>
@@ -16,7 +18,7 @@ namespace HunterIndustriesAPI.Objects.Portfolio
         /// <summary>
         /// The values the filter allows.
         /// </summary>
-        public string Values { get; set; }
+        public List<string> Values { get; set; }
         /// <summary>
         /// Whether the record is deleted.
         /// </summary>

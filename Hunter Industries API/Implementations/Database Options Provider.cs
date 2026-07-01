@@ -12,6 +12,10 @@ namespace HunterIndustriesAPI.Implementations
         /// Returns the ConnectionString from the DatabaseModel.
         /// </summary>
         public string ConnectionString => DatabaseModel.ConnectionString;
+        /// <summary>
+        /// Returns the GitHubConnectionString from the DatabaseModel.
+        /// </summary>
+        public string GitHubConnectionString => DatabaseModel.GitHubConnectionString;
 
         /// <summary>
         /// Returns the SQLFiles from the DatabaseModel.

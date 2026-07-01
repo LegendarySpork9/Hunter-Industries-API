@@ -19,6 +19,12 @@ namespace HunterIndustriesAPI.Abstractions
         Task<(T, Exception)> QuerySingle<T>(string sql, Func<SqlDataReader, T> map, params SqlParameter[] parameters);
         /// <summary>
         /// </summary>
+        Task<(List<T>, Exception)> QueryGitHub<T>(string sql, Func<SqlDataReader, T> map, params SqlParameter[] parameters);
+        /// <summary>
+        /// </summary>
+        Task<(T, Exception)> QuerySingleGitHub<T>(string sql, Func<SqlDataReader, T> map, params SqlParameter[] parameters);
+        /// <summary>
+        /// </summary>
         Task<(int, Exception)> Execute(string sql, params SqlParameter[] parameters);
         /// <summary>
         /// </summary>

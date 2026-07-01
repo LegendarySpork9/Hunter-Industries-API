@@ -78,7 +78,7 @@ and Authorisation.IsDeleted = 0";
 where ApplicationId = @applicationId";
                     parameters = new SqlParameter[]
                     {
-                        new SqlParameter("@applicationId", SqlDbType.VarChar) { Value = parentEntityId.Value }
+                        new SqlParameter("@applicationId", SqlDbType.Int) { Value = parentEntityId.Value }
                     };
                 }
 
@@ -448,8 +448,8 @@ where ApplicationId = @applicationId";
         /// </summary>
         public async Task<(bool, int)> RecordCreated(
             string entity,
-            object record, int?
-            parentEntityId = null)
+            object record,
+            int? parentEntityId = null)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,

@@ -11,6 +11,9 @@ namespace HunterIndustriesAPI.Abstractions
         string ConnectionString { get; }
         /// <summary>
         /// </summary>
+        string GitHubConnectionString { get; }
+        /// <summary>
+        /// </summary>
         string SQLFiles { get; }
     }
 }

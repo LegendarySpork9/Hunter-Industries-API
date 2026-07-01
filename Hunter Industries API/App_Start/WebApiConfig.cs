@@ -45,6 +45,7 @@ namespace HunterIndustriesAPI
             config.DependencyResolver = new DependencyResolver(provider);
 
             DatabaseModel.ConnectionString = ConfigurationManager.AppSettings["SQLConnectionString"];
+            DatabaseModel.GitHubConnectionString = ConfigurationManager.AppSettings["GitHubSQLConnectionString"];
             DatabaseModel.SQLFiles = ConfigurationManager.AppSettings["SQLFiles"];
             ValidationModel.Issuer = ConfigurationManager.AppSettings["Issuer"];
             ValidationModel.Audience = ConfigurationManager.AppSettings["Audience"];
