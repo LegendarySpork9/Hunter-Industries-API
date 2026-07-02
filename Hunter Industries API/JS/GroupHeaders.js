@@ -13,6 +13,10 @@ $(function () {
             controllers: ['Media']
         },
         {
+            title: 'Portfolio API',
+            controllers: ['Filter', 'Portfolio']
+        },
+        {
             title: 'Server Status API',
             controllers: ['ServerAlert', 'ServerEvent', 'ServerInformation']
         }

@@ -47,7 +47,7 @@ namespace HunterIndustriesAPI.Objects.Portfolio
         /// <summary>
         /// The link to the demo environment.
         /// </summary>
-        public string DemoURL { get; set; }
+        public string DemoLink { get; set; }
         /// <summary>
         /// The latest release notes.
         /// </summary>

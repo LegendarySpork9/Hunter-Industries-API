@@ -333,6 +333,8 @@
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\Media\MediaController.cs" />
+    <Compile Include="Controllers\Portfolio\FilterController.cs" />
+    <Compile Include="Controllers\Portfolio\PortfolioController.cs" />
     <Compile Include="Converters\GitHub Issue Converter.cs" />
     <Compile Include="Controllers\StatisticController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />

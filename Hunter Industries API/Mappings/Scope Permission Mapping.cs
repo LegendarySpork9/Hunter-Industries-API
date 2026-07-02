@@ -57,6 +57,13 @@ namespace HunterIndustriesAPI.Mappings
                 {
                     "Media"
                 }
+            },
+            {
+                "Portfolio API", new List<string>
+                {
+                    "Filter",
+                    "Portfolio"
+                }
             }
         };
 

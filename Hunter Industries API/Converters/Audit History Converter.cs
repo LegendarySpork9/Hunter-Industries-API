@@ -27,6 +27,8 @@ namespace HunterIndustriesAPI.Converters
                 case "configuration": return 13;
                 case "statistic": return 14;
                 case "media": return 15;
+                case "portfolio": return 16;
+                case "portfolio/filter": return 17;
                 default: return 0;
             }
         }
@@ -42,6 +44,7 @@ namespace HunterIndustriesAPI.Converters
                 case "1.1": return 2;
                 case "2.0": return 3;
                 case "2.1": return 4;
+                case "2.2": return 5;
                 default: return 1;
             }
         }

@@ -219,6 +219,48 @@ namespace HunterIndustriesAPI.Tests.API.Converters
                 actual);
         }
 
+        /// <summary>
+        /// Tests whether the GetEndpointId method returns 15 when given "media".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointIdMedia()
+        {
+            int expected = 15;
+            int actual = AuditHistoryConverter.GetEndpointId("media");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetEndpointId method returns 16 when given "portfolio".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointIdPortfolio()
+        {
+            int expected = 16;
+            int actual = AuditHistoryConverter.GetEndpointId("portfolio");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetEndpointId method returns 17 when given "portfolio/filter".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointIdPortfolioFilter()
+        {
+            int expected = 17;
+            int actual = AuditHistoryConverter.GetEndpointId("portfolio/filter");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
         #endregion
 
         #region GetEndpointVersionId
@@ -273,6 +315,34 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         {
             int expected = 3;
             int actual = AuditHistoryConverter.GetEndpointVersionId("2.0");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetEndpointVersionId method returns 4 when given "2.1".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointVersionIdV21()
+        {
+            int expected = 4;
+            int actual = AuditHistoryConverter.GetEndpointVersionId("2.1");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetEndpointVersionId method returns 5 when given "2.2".
+        /// </summary>
+        [TestMethod]
+        public void TestGetEndpointVersionIdV22()
+        {
+            int expected = 5;
+            int actual = AuditHistoryConverter.GetEndpointVersionId("2.2");
 
             Assert.AreEqual(
                 expected,

@@ -296,14 +296,14 @@ where ApplicationId = @applicationId";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "ConfigurationService.GetRecord returned 1 record");
+                    "ConfigurationService.GetRecord returned 1 record.");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "ConfigurationService.GetRecord returned 0 records");
+                    "ConfigurationService.GetRecord returned 0 records.");
             }
 
             return record;

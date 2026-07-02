@@ -1,6 +1,7 @@
 ﻿// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
+using HunterIndustriesAPI.Controllers.Portfolio;
 using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Controllers.User;
 using Swashbuckle.Swagger;
@@ -245,6 +246,45 @@ namespace HunterIndustriesAPI.Filters.Operation
                                 {
                                     type = "string",
                                     example = "The given media has been deleted."
+                                }
+                            }
+                        }
+                    };
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(FilterController))
+            {
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Filter_Post")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "A filter record with the details already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Filter_Delete")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "The given filter has been deleted."
                                 }
                             }
                         }

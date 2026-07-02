@@ -439,14 +439,14 @@ fetch next @pageSize rows only";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "MediaService.GetMediaId returned 1 record");
+                    "MediaService.GetMediaId returned 1 record.");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "MediaService.GetMediaId returned 0 records");
+                    "MediaService.GetMediaId returned 0 records.");
             }
 
             return media;

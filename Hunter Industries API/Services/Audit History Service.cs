@@ -70,6 +70,11 @@ namespace HunterIndustriesAPI.Services
 
             try
             {
+                if (responseBody == "null")
+                {
+                    responseBody = null;
+                }
+
                 string sql = _FileSystem.ReadAllText(Path.Combine(
                     _Options.SQLFiles,
                     "Audit History",
@@ -542,14 +547,14 @@ fetch next @pageSize rows only";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "AuditHistoryService.GetAuditHistoryId returned 1 record");
+                    "AuditHistoryService.GetAuditHistoryId returned 1 record.");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "AuditHistoryService.GetAuditHistoryId returned 0 records");
+                    "AuditHistoryService.GetAuditHistoryId returned 0 records.");
             }
 
             return auditHistory;
@@ -633,14 +638,14 @@ fetch next @pageSize rows only";
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "AuditHistoryService.GetAuditHistoryLoginAttempt returned 1 record");
+                    "AuditHistoryService.GetAuditHistoryLoginAttempt returned 1 record.");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "AuditHistoryService.GetAuditHistoryLoginAttempt returned 0 records");
+                    "AuditHistoryService.GetAuditHistoryLoginAttempt returned 0 records.");
             }
 
             return loginAttempt;

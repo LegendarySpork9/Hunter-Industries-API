@@ -5,6 +5,7 @@ select
 	IconURL,
 	Summary,
 	[Description],
+	GitHubLink,
 	DemoLink,
 	ReleaseNotes,
 	UnitTestCoverage,

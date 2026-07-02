@@ -70,9 +70,9 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     {
                         string demoURL = null;
 
-                        if (!reader.IsDBNull(6) && !string.IsNullOrWhiteSpace(reader.GetString(6)))
+                        if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                         {
-                            demoURL = reader.GetString(6);
+                            demoURL = reader.GetString(7);
                         }
 
                         return new ItemRecord()
@@ -83,22 +83,26 @@ namespace HunterIndustriesAPI.Services.Portfolio
                             IconURL = reader.GetString(3),
                             Summary = reader.GetString(4),
                             Description = reader.GetString(5),
-                            DemoURL = demoURL,
-                            ReleaseNotes = reader.GetString(7),
-                            UnitTestCoverage = reader.GetDecimal(8),
+                            GitHubInformation = new GitHubRecord()
+                            {
+                                URL = reader.GetString(6)
+                            },
+                            DemoLink = demoURL,
+                            ReleaseNotes = reader.GetString(8),
+                            UnitTestCoverage = reader.GetDecimal(9),
                             LLMUsage = new LLMRecord()
                             {
-                                Company = reader.GetString(9),
-                                Model = reader.GetString(10),
+                                Company = reader.GetString(10),
+                                Model = reader.GetString(11),
                             },
-                            LLMUsageNotes = reader.GetString(11),
+                            LLMUsageNotes = reader.GetString(12),
                             DateCreated = DateTime.SpecifyKind(
-                                reader.GetDateTime(12),
-                                DateTimeKind.Utc),
-                            DateUpdated = DateTime.SpecifyKind(
                                 reader.GetDateTime(13),
                                 DateTimeKind.Utc),
-                            IsDeleted = reader.GetBoolean(14)
+                            DateUpdated = DateTime.SpecifyKind(
+                                reader.GetDateTime(14),
+                                DateTimeKind.Utc),
+                            IsDeleted = reader.GetBoolean(15)
                         };
                     });
 
@@ -243,9 +247,9 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     {
                         string demoURL = null;
 
-                        if (!reader.IsDBNull(6) && !string.IsNullOrWhiteSpace(reader.GetString(6)))
+                        if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                         {
-                            demoURL = reader.GetString(6);
+                            demoURL = reader.GetString(7);
                         }
 
                         return new ItemRecord()
@@ -256,22 +260,26 @@ namespace HunterIndustriesAPI.Services.Portfolio
                             IconURL = reader.GetString(3),
                             Summary = reader.GetString(4),
                             Description = reader.GetString(5),
-                            DemoURL = demoURL,
-                            ReleaseNotes = reader.GetString(7),
-                            UnitTestCoverage = reader.GetDecimal(8),
+                            GitHubInformation = new GitHubRecord()
+                            {
+                                URL = reader.GetString(6)
+                            },
+                            DemoLink = demoURL,
+                            ReleaseNotes = reader.GetString(8),
+                            UnitTestCoverage = reader.GetDecimal(9),
                             LLMUsage = new LLMRecord()
                             {
-                                Company = reader.GetString(9),
-                                Model = reader.GetString(10),
+                                Company = reader.GetString(10),
+                                Model = reader.GetString(11),
                             },
-                            LLMUsageNotes = reader.GetString(11),
+                            LLMUsageNotes = reader.GetString(12),
                             DateCreated = DateTime.SpecifyKind(
-                                reader.GetDateTime(12),
-                                DateTimeKind.Utc),
-                            DateUpdated = DateTime.SpecifyKind(
                                 reader.GetDateTime(13),
                                 DateTimeKind.Utc),
-                            IsDeleted = reader.GetBoolean(14)
+                            DateUpdated = DateTime.SpecifyKind(
+                                reader.GetDateTime(14),
+                                DateTimeKind.Utc),
+                            IsDeleted = reader.GetBoolean(15)
                         };
                     });
 
@@ -306,14 +314,14 @@ namespace HunterIndustriesAPI.Services.Portfolio
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "PortfolioService.GetItem returned 1 record");
+                    "PortfolioService.GetItem returned 1 record.");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    "PortfolioService.GetItem returned 0 records");
+                    "PortfolioService.GetItem returned 0 records.");
             }
 
             return item;
@@ -477,8 +485,8 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     new SqlParameter("@description", SqlDbType.VarChar) { Value = item.Description },
                     new SqlParameter("@icon", SqlDbType.VarChar) { Value = item.IconURL },
                     new SqlParameter("@releaseNotes", SqlDbType.VarChar) { Value = item.ReleaseNotes },
-                    new SqlParameter("@gitHub", SqlDbType.VarChar) { Value = item.GitHubURL },
-                    new SqlParameter("@demo", SqlDbType.VarChar) { Value = item.DemoURL },
+                    new SqlParameter("@gitHub", SqlDbType.VarChar) { Value = item.GitHubLink },
+                    new SqlParameter("@demo", SqlDbType.VarChar) { Value = item.DemoLink },
                     new SqlParameter("@unitTestCoverage", SqlDbType.Decimal) { Value = item.UnitTestCoverage },
                     new SqlParameter("@llmUsageNotes", SqlDbType.VarChar) { Value = item.LLMUsageNotes },
                     new SqlParameter("@model", SqlDbType.VarChar) { Value = item.LLMUsage.Model },
@@ -771,10 +779,10 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     new SqlParameter("@icon", SqlDbType.VarChar) { Value = item.IconURL },
                     new SqlParameter("@summary", SqlDbType.VarChar) { Value = item.Summary },
                     new SqlParameter("@description", SqlDbType.VarChar) { Value = item.Description },
-                    new SqlParameter("@demo", SqlDbType.VarChar) { Value = (object)item.DemoURL ?? DBNull.Value },
+                    new SqlParameter("@demo", SqlDbType.VarChar) { Value = (object)item.DemoLink ?? DBNull.Value },
                     new SqlParameter("@releaseNotes", SqlDbType.VarChar) { Value = item.ReleaseNotes },
                     new SqlParameter("@unitTestCoverage", SqlDbType.Decimal) { Value = item.UnitTestCoverage },
-                    new SqlParameter("@gitHub", SqlDbType.VarChar) { Value = item.GitHubURL },
+                    new SqlParameter("@gitHub", SqlDbType.VarChar) { Value = item.GitHubLink },
                     new SqlParameter("@llmUsageNotes", SqlDbType.VarChar) { Value = item.LLMUsageNotes },
                     new SqlParameter("@model", SqlDbType.VarChar) { Value = item.LLMUsage.Model },
                     new SqlParameter("@company", SqlDbType.VarChar) { Value = item.LLMUsage.Company },
@@ -823,7 +831,7 @@ join PortfolioItemType PIT with (nolock) on [PI].TypeId = @type", "");
 
                 }
 
-                if (string.IsNullOrWhiteSpace(item.DemoURL))
+                if (string.IsNullOrWhiteSpace(item.DemoLink))
                 {
                     sql = sql.Replace(@"
 	DemoLink = @demo,", "");
@@ -847,7 +855,7 @@ join PortfolioItemType PIT with (nolock) on [PI].TypeId = @type", "");
 
                 }
 
-                if (string.IsNullOrWhiteSpace(item.GitHubURL))
+                if (string.IsNullOrWhiteSpace(item.GitHubLink))
                 {
                     sql = sql.Replace(@"
 	GitHubLink = @gitHub,", "");
