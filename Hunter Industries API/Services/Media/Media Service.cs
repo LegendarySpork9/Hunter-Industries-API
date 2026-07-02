@@ -677,7 +677,7 @@ fetch next @pageSize rows only";
                     new SqlParameter("@extension", SqlDbType.VarChar) { Value = media.Extension },
                     new SqlParameter("@mimeType", SqlDbType.VarChar) { Value = media.MimeType },
                     new SqlParameter("@domain", SqlDbType.VarChar) { Value = media.Domain },
-                    new SqlParameter("@application", SqlDbType.VarChar) { Value = application },
+                    new SqlParameter("@application", SqlDbType.VarChar) { Value = application }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(

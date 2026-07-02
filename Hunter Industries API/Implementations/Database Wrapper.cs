@@ -103,6 +103,86 @@ namespace HunterIndustriesAPI.Implementations
         }
 
         /// <summary>
+        /// Returns a list of the given model from the GitHub database.
+        /// </summary>
+        public async Task<(List<T>, Exception)> QueryGitHub<T>(
+            string sql,
+            Func<SqlDataReader, T> map,
+            params SqlParameter[] parameters)
+        {
+            List<T> results = new List<T>();
+            Exception exception = null;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_Options.GitHubConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddRange(parameters);
+
+                        using (SqlDataReader dataReader = await command.ExecuteReaderAsync())
+                        {
+                            while (await dataReader.ReadAsync())
+                            {
+                                results.Add(map(dataReader));
+                            }
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+
+            return (results, exception);
+        }
+
+        /// <summary>
+        /// Returns the given field from the database.
+        /// </summary>
+        public async Task<(T, Exception)> QuerySingleGitHub<T>(
+            string sql,
+            Func<SqlDataReader, T> map,
+            params SqlParameter[] parameters)
+        {
+            T result = default;
+            Exception exception = null;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_Options.GitHubConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddRange(parameters);
+
+                        using (SqlDataReader dataReader = await command.ExecuteReaderAsync())
+                        {
+                            if (await dataReader.ReadAsync())
+                            {
+                                result = map(dataReader);
+                            }
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+
+            return (result, exception);
+        }
+
+        /// <summary>
         /// Returns the result of the execution for given query.
         /// </summary>
         public async Task<(int, Exception)> Execute(

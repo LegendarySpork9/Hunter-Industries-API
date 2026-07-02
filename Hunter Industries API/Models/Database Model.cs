@@ -10,6 +10,10 @@ namespace HunterIndustriesAPI.Models
         /// </summary>
         public static string ConnectionString = null;
         /// <summary>
+        /// The connection string for the GitHub SQL database.
+        /// </summary>
+        public static string GitHubConnectionString = null;
+        /// <summary>
         /// The location of the SQL query files.
         /// </summary>
         public static string SQLFiles = null;

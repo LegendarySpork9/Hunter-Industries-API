@@ -17,6 +17,14 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.IDatabase.QueryGitHub``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Abstractions.IDatabase.QuerySingleGitHub``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Abstractions.IDatabase.Execute(System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
             </summary>
@@ -31,6 +39,10 @@
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Abstractions.IDatabaseOptions.ConnectionString">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Abstractions.IDatabaseOptions.GitHubConnectionString">
             <summary>
             </summary>
         </member>
@@ -890,6 +902,15 @@
              <param name="id">The id number of the user setting.</param>
              <param name="request">An object containing the new setting value.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Converters.Portfolio.GitHubIssueConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.GitHubIssueConverter.GetIssueType(System.String)">
+            <summary>
+            Returns the type in a friendly format.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Converters.AuditHistoryConverter">
             <summary>
             </summary>
@@ -931,6 +952,45 @@
         <member name="M:HunterIndustriesAPI.Converters.MediaConverter.GetSQLCreateApplicationEntityLink(System.String)">
             <summary>
             Returns the Createx application entity link sql.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Converters.PortfolioConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLGet(System.String)">
+            <summary>
+            Returns the Getx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLCreate(System.String)">
+            <summary>
+            Returns the Createx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLCreateLink(System.String)">
+            <summary>
+            Returns the CreateLinkx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLDeleteLink(System.String)">
+            <summary>
+            Returns the DeleteLinkx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetParametersCreate(System.String,System.Int32,System.Object)">
+            <summary>
+            Returns the parameters for the Createx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetParametersCreateLink(System.String,System.Int32,System.String)">
+            <summary>
+            Returns the parameters for the link sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetDataReaderMappings(System.String)">
+            <summary>
+            Returns the data reader mappings for the given linked item.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.StatisticsConverter">
@@ -1384,6 +1444,16 @@
             Returns the given field from the database.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.QueryGitHub``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Returns a list of the given model from the GitHub database.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.QuerySingleGitHub``1(System.String,System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Returns the given field from the database.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Implementations.DatabaseWrapper.Execute(System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
             Returns the result of the execution for given query.
@@ -1401,6 +1471,11 @@
         <member name="P:HunterIndustriesAPI.Implementations.DatabaseOptionsProvider.ConnectionString">
             <summary>
             Returns the ConnectionString from the DatabaseModel.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Implementations.DatabaseOptionsProvider.GitHubConnectionString">
+            <summary>
+            Returns the GitHubConnectionString from the DatabaseModel.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Implementations.DatabaseOptionsProvider.SQLFiles">
@@ -1455,6 +1530,20 @@
         <member name="F:HunterIndustriesAPI.Mappings.ConfigurationDataReaderMapping.MachineMapper">
             <summary>
             The SQL row to model mappings for the machine record.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Mappings.Portfolio.PortfolioDataReaderMapping">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.Portfolio.PortfolioDataReaderMapping.SingleLinkedItemMapper">
+            <summary>
+            The SQL row to List mappings for single linked items.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.Portfolio.PortfolioDataReaderMapping.BuildHistoryMapper">
+            <summary>
+            The SQL row to model mappings for the build history record.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Mappings.ScopePermissionMapping">
@@ -1588,6 +1677,11 @@
         <member name="F:HunterIndustriesAPI.Models.DatabaseModel.ConnectionString">
             <summary>
             The connection string for the SQL database.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Models.DatabaseModel.GitHubConnectionString">
+            <summary>
+            The connection string for the GitHub SQL database.
             </summary>
         </member>
         <member name="F:HunterIndustriesAPI.Models.DatabaseModel.SQLFiles">
@@ -1842,6 +1936,99 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Media.MediaModel.Domain">
             <summary>
             The URL the file is served on.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Name">
+            <summary>
+            The name of the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Values">
+            <summary>
+            The values the filter allows.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.Name">
+            <summary>
+            The name of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.Type">
+            <summary>
+            The type of project.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.IconURL">
+            <summary>
+            The url to the icon used for the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.Summary">
+            <summary>
+            The summary of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.Description">
+            <summary>
+            The description of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.Frameworks">
+            <summary>
+            The frameworks used by the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.Languages">
+            <summary>
+            The languages used by the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.Environments">
+            <summary>
+            The environments used by the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.DemoURL">
+            <summary>
+            The link to the demo environment.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.ReleaseNotes">
+            <summary>
+            The latest release notes.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.BuildHistory">
+            <summary>
+            The build history of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.UnitTestCoverage">
+            <summary>
+            The percentage of code covered by unit tests.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.GitHubURL">
+            <summary>
+            The url to the GitHub repository.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.LLMUsage">
+            <summary>
+            The LLM used for the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.LLMUsageNotes">
+            <summary>
+            How the model has been used.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.AlertUpdateModel">
@@ -2992,6 +3179,243 @@
             The mime type of the file.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.BuildHistoryRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.BuildHistoryRecord.Version">
+            <summary>
+            The version number of the build.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.BuildHistoryRecord.ReleaseDate">
+            <summary>
+            The date the version was released.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.FilterRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Name">
+            <summary>
+            The name of the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Values">
+            <summary>
+            The values the filter allows.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueBreakdownRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueBreakdownRecord.TotalIssues">
+            <summary>
+            The total number of open issues for an item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueBreakdownRecord.Bugs">
+            <summary>
+            The number of open bug issues for an item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueBreakdownRecord.NewFeatures">
+            <summary>
+            The number of open new feature issues for an item.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueAssigneeBreakdownRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueAssigneeBreakdownRecord.Name">
+            <summary>
+            The name of the assignee.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueAssigneeBreakdownRecord.Issues">
+            <summary>
+            The number of open issues assigned to the assignee.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueInProgressBreakdownRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueInProgressBreakdownRecord.Id">
+            <summary>
+            The id number of the issue.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueInProgressBreakdownRecord.Assignee">
+            <summary>
+            The name of the assignee.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueInProgressBreakdownRecord.Title">
+            <summary>
+            The title of the issue.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubIssueInProgressBreakdownRecord.Type">
+            <summary>
+            The type of issue.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.GitHubRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubRecord.URL">
+            <summary>
+            The url to the repository.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubRecord.CIStatus">
+            <summary>
+            The collection of CI statuses.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubRecord.IssueBreakdown">
+            <summary>
+            The breakdown of issues.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubRecord.AssigneeBreakdown">
+            <summary>
+            The collection of assignee breakdowns.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubRecord.InProgressBreakdown">
+            <summary>
+            The collection of in progress issue breakdowns.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.ItemRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Name">
+            <summary>
+            The name of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Type">
+            <summary>
+            The type of project.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.IconURL">
+            <summary>
+            The url to the icon used for the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Summary">
+            <summary>
+            The summary of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Description">
+            <summary>
+            The description of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Frameworks">
+            <summary>
+            The frameworks used by the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Languages">
+            <summary>
+            The languages used by the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.Environments">
+            <summary>
+            The environments used by the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.DemoURL">
+            <summary>
+            The link to the demo environment.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.ReleaseNotes">
+            <summary>
+            The latest release notes.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.BuildHistory">
+            <summary>
+            The build history of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.UnitTestCoverage">
+            <summary>
+            The percentage of code covered by unit tests.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.GitHubInformation">
+            <summary>
+            The GitHub information for the project.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.LLMUsage">
+            <summary>
+            The LLM used for the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.LLMUsageNotes">
+            <summary>
+            How the model has been used.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.DateCreated">
+            <summary>
+            The date the item was made.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.DateUpdated">
+            <summary>
+            The date the item was updated.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.IsDeleted">
+            <summary>
+            Whether the record is deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.LLMRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.LLMRecord.Company">
+            <summary>
+            The company that owns the model.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.LLMRecord.Model">
+            <summary>
+            The name of the model.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.ServerStatus.ConnectionRecord">
             <summary>
             </summary>
@@ -3883,6 +4307,135 @@
         <member name="M:HunterIndustriesAPI.Services.Media.MediaService.MediaDeleted(System.Int32)">
             <summary>
             Sets the media to deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.Portfolio.FilterService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.GetFilters(System.Boolean)">
+            <summary>
+            Returns all filter records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.FilterExists(System.String)">
+            <summary>
+            Returns whether a filter record already exists with the given name.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.FilterExists(System.Int32)">
+            <summary>
+            Returns whether a filter record exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.FilterCreated(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel)">
+            <summary>
+            Creates the filter.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.FilterUpdated(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel)">
+            <summary>
+            Updates the details of the given filter.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.FilterDeleted(System.Int32)">
+            <summary>
+            Sets the filter to deleted.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.Portfolio.GitHubService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.GitHubService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.GitHubService.GetCIStatus(System.String)">
+            <summary>
+            Returns all CI statuses for the given repository.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.GitHubService.GetIssueBreakdown(System.String)">
+            <summary>
+            Returns the issue breakdown record for the given repository.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.GitHubService.GetIssueAssigneeBreakdown(System.String)">
+            <summary>
+            Returns all issue assignee breakdown records for the given repository.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.GitHubService.GetIssueInProgressBreakdown(System.String)">
+            <summary>
+            Returns all issue in progress breakdown records for the given repository.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Services.Portfolio.PortfolioService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.GetItems(System.Boolean)">
+            <summary>
+            Returns all item records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.GetLinkedItemData(System.String,System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            Returns all linked item records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.GetItem(System.Int32)">
+            <summary>
+            Returns the item record that matches the id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.ItemExists(System.String)">
+            <summary>
+            Returns whether an item record already exists with the given name.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.ItemExists(System.Int32)">
+            <summary>
+            Returns whether an item record exists with the given id.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.ItemCreated(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel)">
+            <summary>
+            Creates the item.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.LinkedItemDataCreated(System.String,System.Int32,System.Object)">
+            <summary>
+            Creates the linked item records
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.LinkItemDataDeleted(System.String,System.Int32,System.String)">
+            <summary>
+            Deletes the link between the item and linked record
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.LinkItemDataCreated(System.String,System.Int32,System.String)">
+            <summary>
+            Creates the link between the item and linked record
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.ItemUpdated(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel)">
+            <summary>
+            Updates the details of the given item.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.PortfolioService.ItemDeleted(System.Int32)">
+            <summary>
+            Sets the item to deleted.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Services.StatisticService">

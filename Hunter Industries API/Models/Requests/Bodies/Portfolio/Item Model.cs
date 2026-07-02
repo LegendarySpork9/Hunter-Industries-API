@@ -57,16 +57,16 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Portfolio
         /// </summary>
         public decimal UnitTestCoverage { get; set; }
         /// <summary>
-        /// The GitHub information for the project.
+        /// The url to the GitHub repository.
         /// </summary>
-        public GitHubRecord GitHubInformation { get; set; }
-        /// <summary>
-        /// How the model has been used.
-        /// </summary>
-        public string LLMUsageNotes { get; set; }
+        public string GitHubURL { get; set; }
         /// <summary>
         /// The LLM used for the item.
         /// </summary>
         public LLMRecord LLMUsage { get; set; }
+        /// <summary>
+        /// How the model has been used.
+        /// </summary>
+        public string LLMUsageNotes { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿if (
-	select count(*)
+	select
+		count(*)
 	from MediaType with (nolock)
 	where Extension = @extension
 	and MimeType = @mimeType
