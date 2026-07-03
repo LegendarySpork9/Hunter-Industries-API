@@ -1,6 +1,7 @@
 // Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace HunterIndustriesAPI.Tests.API.Converters
 {
@@ -413,6 +414,108 @@ namespace HunterIndustriesAPI.Tests.API.Converters
 
         #endregion
 
+        #region GetSQLPortfolio
+
+        /// <summary>
+        /// Tests whether the GetSQLPortfolio method returns "Unknown.sql" when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLPortfolio()
+        {
+            string expected = "Unknown.sql";
+            string actual = StatisticsConverter.GetSQLPortfolio("Trombone");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLPortfolio method returns "GetTopBarStats.sql" when given "topBarStats".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLPortfolioTopBarStats()
+        {
+            string expected = "GetTopBarStats.sql";
+            string actual = StatisticsConverter.GetSQLPortfolio("topBarStats");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLPortfolio method returns "GetTopFiveItems.sql" when given "topFiveViewed".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLPortfolioTopFiveViewed()
+        {
+            string expected = "GetTopFiveItems.sql";
+            string actual = StatisticsConverter.GetSQLPortfolio("topFiveViewed");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLPortfolio method returns "GetTopFiveFrameworks.sql" when given "topFiveFrameworks".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLPortfolioTopFiveFrameworks()
+        {
+            string expected = "GetTopFiveFrameworks.sql";
+            string actual = StatisticsConverter.GetSQLPortfolio("topFiveFrameworks");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLPortfolio method returns "GetTopFiveLanguages.sql" when given "topFiveLanguages".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLPortfolioTopFiveLanguages()
+        {
+            string expected = "GetTopFiveLanguages.sql";
+            string actual = StatisticsConverter.GetSQLPortfolio("topFiveLanguages");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLPortfolio method returns "GetTopFiveEnvironments.sql" when given "topFiveEnvironments".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLPortfolioTopFiveEnvironments()
+        {
+            string expected = "GetTopFiveEnvironments.sql";
+            string actual = StatisticsConverter.GetSQLPortfolio("topFiveEnvironments");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetSQLPortfolio method returns "GetLLMUsed.sql" when given "llmUsed".
+        /// </summary>
+        [TestMethod]
+        public void TestGetSQLPortfolioLLMUsed()
+        {
+            string expected = "GetLLMUsed.sql";
+            string actual = StatisticsConverter.GetSQLPortfolio("llmUsed");
+
+            Assert.AreEqual(
+                expected,
+                actual);
+        }
+
+        #endregion
+
         #region GetDataReaderMappingsDashboard
 
         /// <summary>
@@ -665,6 +768,87 @@ namespace HunterIndustriesAPI.Tests.API.Converters
         public void TestGetDataReaderMappingsErrorSummaryErrors()
         {
             var actual = StatisticsConverter.GetDataReaderMappingsError("summaryErrors");
+
+            Assert.IsNotNull(actual);
+        }
+
+        #endregion
+
+        #region GetDataReaderMappingsPortfolio
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsPortfolio method returns null when given any value.
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsPortfolio()
+        {
+            Func<System.Data.IDataReader, object> actual = StatisticsConverter.GetDataReaderMappingsPortfolio("Trombone");
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsPortfolio method returns a mapping when given "topBarStats".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsPortfolioTopBarStats()
+        {
+            var actual = StatisticsConverter.GetDataReaderMappingsPortfolio("topBarStats");
+
+            Assert.IsNotNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsPortfolio method returns a mapping when given "topFiveViewed".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsPortfolioTopFiveViewed()
+        {
+            var actual = StatisticsConverter.GetDataReaderMappingsPortfolio("topFiveViewed");
+
+            Assert.IsNotNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsPortfolio method returns a mapping when given "topFiveFrameworks".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsPortfolioTopFiveFrameworks()
+        {
+            var actual = StatisticsConverter.GetDataReaderMappingsPortfolio("topFiveFrameworks");
+
+            Assert.IsNotNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsPortfolio method returns a mapping when given "topFiveLanguages".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsPortfolioTopFiveLanguages()
+        {
+            var actual = StatisticsConverter.GetDataReaderMappingsPortfolio("topFiveLanguages");
+
+            Assert.IsNotNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsPortfolio method returns a mapping when given "topFiveEnvironments".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsPortfolioTopFiveEnvironments()
+        {
+            var actual = StatisticsConverter.GetDataReaderMappingsPortfolio("topFiveEnvironments");
+
+            Assert.IsNotNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetDataReaderMappingsPortfolio method returns a mapping when given "llmUsed".
+        /// </summary>
+        [TestMethod]
+        public void TestGetDataReaderMappingsPortfolioLLMUsed()
+        {
+            var actual = StatisticsConverter.GetDataReaderMappingsPortfolio("llmUsed");
 
             Assert.IsNotNull(actual);
         }

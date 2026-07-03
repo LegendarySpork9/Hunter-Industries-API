@@ -1,6 +1,6 @@
 ﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
-using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters.Portfolio;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.Portfolio;
 using HunterIndustriesAPI.Objects.Portfolio;

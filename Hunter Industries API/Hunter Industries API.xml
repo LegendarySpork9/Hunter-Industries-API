@@ -427,6 +427,30 @@
              </remarks>
              <param name="id">The id number of the filter.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.Portfolio.MetricController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.MetricController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.MetricController.Post(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemMetricModel)">
+             <summary>
+             Updates the metric for the portfolio item.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 POST /portfolio/metric
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "id": 1,
+                     "metric": "summary"
+                 }
+             </remarks>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController">
             <summary>
             </summary>
@@ -594,6 +618,17 @@
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
              <param name="id">The id number of the user.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.StatisticController.GetPortfolio">
+             <summary>
+             Returns the statistics for the portfolio dashboard page.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /statistic/portfolio/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
         </member>
         <member name="T:HunterIndustriesAPI.Controllers.ErrorController">
             <summary>
@@ -1079,6 +1114,59 @@
             Returns the type in a friendly format.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Converters.Portfolio.MetricConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.MetricConverter.GetUpdateSQL(System.String)">
+            <summary>
+            Returns the sql xUpdated SQL for the given metric.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.MetricConverter.GetMetricName(System.String)">
+            <sumamry>
+            Returns the friendly name for the given metric.
+            </sumamry>
+        </member>
+        <member name="T:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter.GetSQLGet(System.String)">
+            <summary>
+            Returns the Getx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter.GetSQLCreate(System.String)">
+            <summary>
+            Returns the Createx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter.GetSQLCreateLink(System.String)">
+            <summary>
+            Returns the CreateLinkx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter.GetSQLDeleteLink(System.String)">
+            <summary>
+            Returns the DeleteLinkx sql file to load.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter.GetParametersCreate(System.String,System.Int32,System.Object)">
+            <summary>
+            Returns the parameters for the Createx sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter.GetParametersCreateLink(System.String,System.Int32,System.String)">
+            <summary>
+            Returns the parameters for the link sql.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.Portfolio.PortfolioConverter.GetDataReaderMappings(System.String)">
+            <summary>
+            Returns the data reader mappings for the given linked item.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Converters.AuditHistoryConverter">
             <summary>
             </summary>
@@ -1103,62 +1191,23 @@
             Returns the status id number.
             </summary>
         </member>
-        <member name="T:HunterIndustriesAPI.Converters.MediaConverter">
+        <member name="T:HunterIndustriesAPI.Converters.Media.MediaConverter">
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.MediaConverter.GetSQLGetApplicationEntity(System.String)">
+        <member name="M:HunterIndustriesAPI.Converters.Media.MediaConverter.GetSQLGetApplicationEntity(System.String)">
             <summary>
             Returns the Getx application entity sql.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.MediaConverter.HasApplicationEntityLink(System.String)">
+        <member name="M:HunterIndustriesAPI.Converters.Media.MediaConverter.HasApplicationEntityLink(System.String)">
             <summary>
             Returns whether the application has a link table.
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Converters.MediaConverter.GetSQLCreateApplicationEntityLink(System.String)">
+        <member name="M:HunterIndustriesAPI.Converters.Media.MediaConverter.GetSQLCreateApplicationEntityLink(System.String)">
             <summary>
             Returns the Createx application entity link sql.
-            </summary>
-        </member>
-        <member name="T:HunterIndustriesAPI.Converters.PortfolioConverter">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLGet(System.String)">
-            <summary>
-            Returns the Getx sql file to load.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLCreate(System.String)">
-            <summary>
-            Returns the Createx sql file to load.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLCreateLink(System.String)">
-            <summary>
-            Returns the CreateLinkx sql file to load.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetSQLDeleteLink(System.String)">
-            <summary>
-            Returns the DeleteLinkx sql file to load.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetParametersCreate(System.String,System.Int32,System.Object)">
-            <summary>
-            Returns the parameters for the Createx sql.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetParametersCreateLink(System.String,System.Int32,System.String)">
-            <summary>
-            Returns the parameters for the link sql.
-            </summary>
-        </member>
-        <member name="M:HunterIndustriesAPI.Converters.PortfolioConverter.GetDataReaderMappings(System.String)">
-            <summary>
-            Returns the data reader mappings for the given linked item.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.StatisticsConverter">
@@ -1190,6 +1239,11 @@
             Returns the Getx sql file to load for the error page.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetSQLPortfolio(System.String)">
+            <summary>
+            Returns the Getx sql file to load for the portfolio dashboard.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetDataReaderMappingsDashboard(System.String)">
             <summary>
             Returns the data reader mappings for the dashboard.
@@ -1208,6 +1262,11 @@
         <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetDataReaderMappingsError(System.String)">
             <summary>
             Returns the data reader mappings for the error page.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Converters.StatisticsConverter.GetDataReaderMappingsPortfolio(System.String)">
+            <summary>
+            Returns the data reader mappings for the portfolio dashboard.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Converters.ConfigurationConverter">
@@ -1830,6 +1889,30 @@
             The SQL row to model mappings for the top bar stats record.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Mappings.PortfolioDataReaderMapping">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.PortfolioDataReaderMapping.TopBarStatusMapper">
+            <summary>
+            The SQL row to model mappings for the top bar stats record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.PortfolioDataReaderMapping.TopFiveViewedItemMapper">
+            <summary>
+            The SQL row to model mappings for the top five viewed items record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.PortfolioDataReaderMapping.TopFiveMapper">
+            <summary>
+            The SQL row to model mappings for the top five record.
+            </summary>
+        </member>
+        <member name="F:HunterIndustriesAPI.Mappings.PortfolioDataReaderMapping.LLMUsedMapper">
+            <summary>
+            The SQL row to model mappings for the LLM used record.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.WebApiApplication">
             <summary>
             </summary>
@@ -2118,6 +2201,20 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Values">
             <summary>
             The values the filter allows.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemMetricModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemMetricModel.Id">
+            <summary>
+            Id of the record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemMetricModel.Metric">
+            <summary>
+            The metric being logged.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel">
@@ -2970,6 +3067,40 @@
         <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.ServerResponseModel.RecentEvents">
             <summary>
             The recent event records.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.Statistics.PortfolioResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.PortfolioResponseModel.Metrics">
+            <summary>
+            The top bar record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.PortfolioResponseModel.TopFiveViewedItems">
+            <summary>
+            The top five viewed items record.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.PortfolioResponseModel.TopFiveFrameworks">
+            <summary>
+            The top five framework records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.PortfolioResponseModel.TopFiveLanguages">
+            <summary>
+            The top five language records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.PortfolioResponseModel.TopFiveEnvironments">
+            <summary>
+            The top five environment records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.Statistics.PortfolioResponseModel.LLMUsed">
+            <summary>
+            The llm used records.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.Statistics.SharedStatResponseModel">
@@ -4199,6 +4330,82 @@
             The percentage of time the server was online.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Portfolio.LLMUsedRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.LLMUsedRecord.Company">
+            <summary>
+            The company that owns the model.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.LLMUsedRecord.Model">
+            <summary>
+            The name of the model.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.LLMUsedRecord.Uses">
+            <summary>
+            The number of times the LLM has been used.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopBarStatRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopBarStatRecord.Items">
+            <summary>
+            The number of items registered.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopBarStatRecord.Filters">
+            <summary>
+            The number of filters registered.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopBarStatRecord.AIUsed">
+            <summary>
+            The number of items where LLMs have been used.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveRecord.Name">
+            <summary>
+            The name of the top five object.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveRecord.Uses">
+            <summary>
+            The number of times the object has been used.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveViewedItemsRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveViewedItemsRecord.Name">
+            <summary>
+            The name of the item.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveViewedItemsRecord.SummaryViews">
+            <summary>
+            The number of times the summary has been looked at.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveViewedItemsRecord.FullDetailViews">
+            <summary>
+            The number of times the full details have been looked at.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Statistics.Portfolio.TopFiveViewedItemsRecord.TotalViews">
+            <summary>
+            The total number of times the item has been viewed.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Statistics.Shared.ChangeCallRecord">
             <summary>
             </summary>
@@ -4562,6 +4769,19 @@
             Returns all issue in progress breakdown records for the given repository.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Services.Portfolio.MetricService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.MetricService.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPI.Abstractions.IDatabase)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.MetricService.MetricUpdated(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemMetricModel)">
+            <summary>
+            Updates the details of the given metric.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Services.Portfolio.PortfolioService">
             <summary>
             </summary>
@@ -4649,6 +4869,11 @@
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.StatisticService.GetErrorStatistic(System.String)">
+            <summary>
+            Returns all statistic records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.StatisticService.GetPortfolioStatistic(System.String)">
             <summary>
             Returns all statistic records that match the parameters.
             </summary>

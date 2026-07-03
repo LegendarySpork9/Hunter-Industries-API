@@ -313,5 +313,65 @@ and UserId = @userId";
                 $"StatisticService.GetErrorStatistic returned {records.Count} records.");
             return records;
         }
+
+        /// <summary>
+        /// Returns all statistic records that match the parameters.
+        /// </summary>
+        public async Task<List<object>> GetPortfolioStatistic(string part)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetPortfolioStatistic called with the parameter \"{part}\".");
+
+            List<object> records = new List<object>();
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Statistics",
+                    "Portfolio",
+                    StatisticsConverter.GetSQLPortfolio(part)));
+                Func<IDataReader, object> dataReaderMappings = StatisticsConverter.GetDataReaderMappingsPortfolio(part);
+
+                if (dataReaderMappings != null)
+                {
+                    (List<object> results, Exception ex) = await _Database.Query(
+                        sql,
+                        dataReaderMappings);
+
+                    if (ex != null)
+                    {
+                        string message = "An error occured when trying to run StatisticService.GetPortfolioStatistic.";
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
+                    }
+
+                    records = results;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run StatisticService.GetPortfolioStatistic.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"StatisticService.GetPortfolioStatistic returned {records.Count} records.");
+            return records;
+        }
     }
 }

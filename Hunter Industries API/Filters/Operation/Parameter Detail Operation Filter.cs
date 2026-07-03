@@ -401,6 +401,20 @@ namespace HunterIndustriesAPI.Filters.Operation
                     }
                 }
             }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(MetricController))
+            {
+                if (operation.parameters != null)
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "metric";
+                        }
+                    }
+                }
+            }
         }
     }
 }

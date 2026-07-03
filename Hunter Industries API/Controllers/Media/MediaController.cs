@@ -1,6 +1,7 @@
 // Copyright © - 29/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters.Media;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.Media;
