@@ -292,6 +292,45 @@ namespace HunterIndustriesAPI.Filters.Operation
                 }
             }
 
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(PortfolioController))
+            {
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Portfolio_Post")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "A portfolio item record with the details already exists."
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Portfolio_Delete")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Information", new Schema
+                                {
+                                    type = "string",
+                                    example = "The given portfolio item has been deleted."
+                                }
+                            }
+                        }
+                    };
+                }
+            }
+
             if (operation.responses.TryGetValue("204", out existingResponse))
             {
                 existingResponse.schema = new Schema

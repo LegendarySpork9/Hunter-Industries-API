@@ -14,7 +14,7 @@ namespace HunterIndustriesAPI.Objects.Portfolio
         /// <summary>
         /// The collection of CI statuses.
         /// </summary>
-        public Dictionary<string, string> CIStatus { get; set; }
+        public List<GitHubCIStatusRecord> CIStatus { get; set; }
         /// <summary>
         /// The breakdown of issues.
         /// </summary>

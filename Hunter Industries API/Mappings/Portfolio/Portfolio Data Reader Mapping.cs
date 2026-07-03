@@ -28,7 +28,7 @@ namespace HunterIndustriesAPI.Mappings.Portfolio
             {
                 Version = reader.GetString(1),
                 ReleaseDate = DateTime.SpecifyKind(
-                    reader.GetDateTime(3),
+                    reader.GetDateTime(2),
                     DateTimeKind.Utc)
             };
 

@@ -3,21 +3,15 @@ using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
-using HunterIndustriesAPI.Models.Requests.Bodies.Media;
 using HunterIndustriesAPI.Models.Requests.Bodies.Portfolio;
-using HunterIndustriesAPI.Models.Requests.Filters.Media;
 using HunterIndustriesAPI.Models.Responses;
-using HunterIndustriesAPI.Models.Responses.Media;
-using HunterIndustriesAPI.Objects.Media;
 using HunterIndustriesAPI.Objects.Portfolio;
 using HunterIndustriesAPI.Services;
-using HunterIndustriesAPI.Services.Media;
 using HunterIndustriesAPI.Services.Portfolio;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -167,7 +161,7 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                 string repository = item.GitHubInformation.URL.Split('/')
                     .Last();
 
-                Dictionary<string, string> ciStatuses = await _gitHubService.GetCIStatus(repository);
+                List<GitHubCIStatusRecord> ciStatuses = await _gitHubService.GetCIStatus(repository);
                 GitHubIssueBreakdownRecord issueBreakdown = await _gitHubService.GetIssueBreakdown(repository);
                 List<(int, string)> itemFrameworks = frameworks.Where(f => f.Item1 == item.Id)
                     .ToList();
@@ -232,7 +226,7 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
         [RequiredPolicyAuthorisationAttributeFilter("Portfolio.Read")]
         [VersionedRoute("portfolio/{id:int}", "2.2")]
         [SwaggerOperation("GetPortfolioId")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(MediaRecord), Description = "Returns the item matching the given id.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ItemRecord), Description = "Returns the item matching the given id.")]
         [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -325,7 +319,7 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
             string repository = item.GitHubInformation.URL.Split('/')
                     .Last();
 
-            Dictionary<string, string> ciStatuses = await _gitHubService.GetCIStatus(repository);
+            List<GitHubCIStatusRecord> ciStatuses = await _gitHubService.GetCIStatus(repository);
             GitHubIssueBreakdownRecord issueBreakdown = await _gitHubService.GetIssueBreakdown(repository);
             List<GitHubIssueAssigneeBreakdownRecord> issueAssigneeBreakdown = await _gitHubService.GetIssueAssigneeBreakdown(repository);
             List<GitHubIssueInProgressBreakdownRecord> issueInProgressBreakdown = await _gitHubService.GetIssueInProgressBreakdown(repository);
@@ -382,19 +376,39 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         ///     Content-Type: application/json
         ///     {
-        ///         "name": "Example",
-        ///         "extension": ".png",
-        ///         "mimeType": "image/png",
-        ///         "size": 1024,
-        ///         "path": null,
-        ///         "domain": "https://media.example.com"
+        ///         "name": "Test",
+        ///         "type": "Console Application",
+        ///         "iconURL": "https://github.com/LegendarySpork9/Hunter-Industries-API/blob/main/Hunter%20Industries%20API/Content/HI%20Tech%20Logo%20NBG.png",
+        ///         "summary": "A test portfolio item.",
+        ///         "description": "A test portfolio item made in C# as a console application.",
+        ///         "frameworks": [
+        ///             ".NET"
+        ///         ],
+        ///         "languages": [
+        ///             "C#"
+        ///         ],
+        ///         "environments": [
+        ///             "Windows"
+        ///         ],
+        ///         "demoLink": null,
+        ///         "releaseNotes": "A new test portfolio item.",
+        ///         "buildHistory": [
+        ///             {
+        ///                 "version": "1.0.0",
+        ///                 "releaseDate": "2026-07-03T08:46:37.573Z"
+        ///             }
+        ///         ],
+        ///         "unitTestCoverage": null,
+        ///         "gitHubLink": "https://github.com/LegendarySpork9/Hunter-Industries-API",
+        ///         "llmUsage": null,
+        ///         "llmUsageNotes": null
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the portfolio information.</param>
         [RequiredPolicyAuthorisationAttributeFilter("Portfolio.Create")]
         [VersionedRoute("portfolio", "2.2")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ResponseModel), Description = "If a record matching the details already exists.")]
-        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(MediaRecord), Description = "If the record is successfully created.")]
+        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(ItemRecord), Description = "If the record is successfully created.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the body is invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
@@ -500,64 +514,50 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                     response.Data);
             }
 
-            bool failed = false;
-            bool created = false;
-
-            created = await _portfolioService.LinkedItemDataCreated(
+            await _portfolioService.LinkedItemDataCreated(
                 "type",
                 0,
                 request.Type);
-            created = await _portfolioService.LinkedItemDataCreated(
-                "llmCompany",
-                0,
-                request.LLMUsage.Company);
-            created = await _portfolioService.LinkedItemDataCreated(
-                "llmModel",
-                0,
-                request.LLMUsage);
+            
+            if (request.LLMUsage != null && (!string.IsNullOrWhiteSpace(request.LLMUsage.Company) && !string.IsNullOrWhiteSpace(request.LLMUsage.Model)))
+            {
+                await _portfolioService.LinkedItemDataCreated(
+                    "llmCompany",
+                    0,
+                    request.LLMUsage.Company);
+                await _portfolioService.LinkedItemDataCreated(
+                    "llmModel",
+                    0,
+                    request.LLMUsage);
+            }
 
             foreach (string framework in request.Frameworks)
             {
-                created = await _portfolioService.LinkedItemDataCreated(
+                await _portfolioService.LinkedItemDataCreated(
                     "frameworks",
                     0,
                     framework);
-
-                if (!created)
-                {
-                    failed = true;
-                }
             }
 
             foreach (string language in request.Languages)
             {
-                created = await _portfolioService.LinkedItemDataCreated(
+                await _portfolioService.LinkedItemDataCreated(
                     "languages",
                     0,
                     language);
-
-                if (!created)
-                {
-                    failed = true;
-                }
             }
 
             foreach (string environment in request.Environments)
             {
-                created = await _portfolioService.LinkedItemDataCreated(
+                await _portfolioService.LinkedItemDataCreated(
                     "environments",
                     0,
                     environment);
-
-                if (!created)
-                {
-                    failed = true;
-                }
             }
 
-            int id = 0;
+            (bool created, int id) = await _portfolioService.ItemCreated(request);
 
-            (created, id) = await _portfolioService.ItemCreated(request);
+            bool failed = false;
 
             if (created)
             {
@@ -675,6 +675,36 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                     HttpStatusCode.InternalServerError,
                     response.Data);
             }
+
+            List<object> rawFrameworks = await _portfolioService.GetLinkedItemData(
+                "frameworks",
+                id);
+            List<(int, string)> frameworks = rawFrameworks.Cast<(int, string)>()
+                .ToList();
+            List<object> rawLanguages = await _portfolioService.GetLinkedItemData(
+                "languages",
+                id);
+            List<(int, string)> languages = rawLanguages.Cast<(int, string)>()
+                .ToList();
+            List<object> rawEnvironments = await _portfolioService.GetLinkedItemData(
+                "environments",
+                id);
+            List<(int, string)> environments = rawEnvironments.Cast<(int, string)>()
+                .ToList();
+            List<object> rawBuildHistories = await _portfolioService.GetLinkedItemData(
+                "buildHistories",
+                id);
+            List<(int, BuildHistoryRecord)> buildHistories = rawBuildHistories.Cast<(int, BuildHistoryRecord)>()
+                .ToList();
+
+            item.Frameworks = frameworks.Select(f => f.Item2)
+                .ToList();
+            item.Languages = languages.Select(l => l.Item2)
+                .ToList();
+            item.Environments = environments.Select(e => e.Item2)
+                .ToList();
+            item.BuildHistory = buildHistories.Select(bh => bh.Item2)
+                .ToList();
 
             response = new ResponseModel()
             {
@@ -797,18 +827,58 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
 
             if (await _portfolioService.ItemExists(id))
             {
-                await _portfolioService.LinkedItemDataCreated(
-                    "type",
-                    0,
-                    request.Type);
-                await _portfolioService.LinkedItemDataCreated(
-                    "llmCompany",
-                    0,
-                    request.LLMUsage.Company);
-                await _portfolioService.LinkedItemDataCreated(
-                    "llmModel",
-                    0,
-                    request.LLMUsage);
+                if (!string.IsNullOrWhiteSpace(request.Type))
+                {
+                    await _portfolioService.LinkedItemDataCreated(
+                        "type",
+                        0,
+                        request.Type);
+                }
+
+                if (request.LLMUsage != null && (!string.IsNullOrWhiteSpace(request.LLMUsage.Company) && !string.IsNullOrWhiteSpace(request.LLMUsage.Model)))
+                {
+                    await _portfolioService.LinkedItemDataCreated(
+                        "llmCompany",
+                        0,
+                        request.LLMUsage.Company);
+                    await _portfolioService.LinkedItemDataCreated(
+                        "llmModel",
+                        0,
+                        request.LLMUsage);
+                }
+
+                if (request.Frameworks != null && request.Frameworks.Count > 0)
+                {
+                    foreach (string framework in request.Frameworks)
+                    {
+                        await _portfolioService.LinkedItemDataCreated(
+                            "frameworks",
+                            0,
+                            framework);
+                    }
+                }
+
+                if (request.Languages != null && request.Frameworks.Count > 0)
+                {
+                    foreach (string language in request.Languages)
+                    {
+                        await _portfolioService.LinkedItemDataCreated(
+                            "languages",
+                            0,
+                            language);
+                    }
+                }
+
+                if (request.Environments != null && request.Environments.Count > 0)
+                {
+                    foreach (string environment in request.Environments)
+                    {
+                        await _portfolioService.LinkedItemDataCreated(
+                            "environments",
+                            0,
+                            environment);
+                    }
+                }
 
                 List<object> rawFrameworks = await _portfolioService.GetLinkedItemData(
                     "frameworks",
@@ -834,15 +904,13 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                 string updatedEnvironments = null;
                 List<BuildHistoryRecord> updatedBuildHistory = new List<BuildHistoryRecord>();
 
-                if (!string.IsNullOrWhiteSpace(string.Join(",", request.Frameworks)))
+                if (request.Frameworks != null && !string.IsNullOrWhiteSpace(string.Join(",", request.Frameworks)))
                 {
                     frameworkString = string.Join(",", frameworks.Select(f => f.Item2));
                     updatedFrameworks = string.Join(",", request.Frameworks);
 
                     if (updatedFrameworks != frameworkString)
                     {
-                        frameworks.Clear();
-
                         foreach (string framework in frameworks.Select(f => f.Item2))
                         {
                             await _portfolioService.LinkItemDataDeleted(
@@ -850,6 +918,8 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                                 id,
                                 framework);
                         }
+
+                        frameworks.Clear();
 
                         foreach (string framework in request.Frameworks)
                         {
@@ -863,15 +933,13 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(string.Join(",", request.Languages)))
+                if (request.Languages != null && !string.IsNullOrWhiteSpace(string.Join(",", request.Languages)))
                 {
                     languageString = string.Join(",", languages.Select(f => f.Item2));
                     updatedLanguages = string.Join(",", request.Languages);
 
                     if (updatedLanguages != languageString)
                     {
-                        languages.Clear();
-
                         foreach (string language in languages.Select(f => f.Item2))
                         {
                             await _portfolioService.LinkItemDataDeleted(
@@ -879,6 +947,8 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                                 id,
                                 language);
                         }
+
+                        languages.Clear();
 
                         foreach (string language in request.Languages)
                         {
@@ -892,22 +962,22 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(string.Join(",", request.Environments)))
+                if (request.Environments != null && !string.IsNullOrWhiteSpace(string.Join(",", request.Environments)))
                 {
                     environmentString = string.Join(",", environments.Select(f => f.Item2));
                     updatedEnvironments = string.Join(",", request.Environments);
 
                     if (updatedEnvironments != environmentString)
                     {
-                        environments.Clear();
-
                         foreach (string environment in environments.Select(f => f.Item2))
                         {
                             await _portfolioService.LinkItemDataDeleted(
-                                "enviornments",
+                                "environments",
                                 id,
                                 environment);
                         }
+
+                        environments.Clear();
 
                         foreach (string environment in request.Environments)
                         {
@@ -999,7 +1069,7 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
 
                         Type propType = prop.PropertyType;
 
-                        if (propType.IsClass || (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(List<>)))
+                        if ((propType.IsClass && propType != typeof(string)) || (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(List<>)))
                         {
                             continue;
                         }

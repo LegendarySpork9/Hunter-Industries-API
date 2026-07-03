@@ -48,7 +48,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                     IconURL = "https://example.com/icon.png",
                     Summary = "Test summary",
                     Description = "Test description",
-                    DemoURL = null,
+                    DemoLink = null,
                     ReleaseNotes = "Initial release",
                     UnitTestCoverage = 85.5m,
                     LLMUsage = new LLMRecord { Company = "Anthropic", Model = "Claude" },
@@ -202,7 +202,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                         IconURL = "https://example.com/icon.png",
                         Summary = "Test summary",
                         Description = "Test description",
-                        DemoURL = null,
+                        DemoLink = null,
                         ReleaseNotes = "Initial release",
                         UnitTestCoverage = 85.5m,
                         LLMUsage = new LLMRecord { Company = "Anthropic", Model = "Claude" },
@@ -404,10 +404,10 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                 IconURL = "https://example.com/icon.png",
                 Summary = "Test summary",
                 Description = "Test description",
-                DemoURL = null,
+                DemoLink = null,
                 ReleaseNotes = "Initial release",
                 UnitTestCoverage = 85.5m,
-                GitHubURL = "https://github.com/test",
+                GitHubLink = "https://github.com/test",
                 LLMUsage = new LLMRecord { Company = "Anthropic", Model = "Claude" },
                 LLMUsageNotes = "Used for code generation"
             };
@@ -447,10 +447,10 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                 IconURL = "https://example.com/icon.png",
                 Summary = "Test summary",
                 Description = "Test description",
-                DemoURL = null,
+                DemoLink = null,
                 ReleaseNotes = "Initial release",
                 UnitTestCoverage = 85.5m,
-                GitHubURL = "https://github.com/test",
+                GitHubLink = "https://github.com/test",
                 LLMUsage = new LLMRecord { Company = "Anthropic", Model = "Claude" },
                 LLMUsageNotes = "Used for code generation"
             };
@@ -490,10 +490,10 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                 IconURL = "https://example.com/icon.png",
                 Summary = "Test summary",
                 Description = "Test description",
-                DemoURL = null,
+                DemoLink = null,
                 ReleaseNotes = "Initial release",
                 UnitTestCoverage = 85.5m,
-                GitHubURL = "https://github.com/test",
+                GitHubLink = "https://github.com/test",
                 LLMUsage = new LLMRecord { Company = "Anthropic", Model = "Claude" },
                 LLMUsageNotes = "Used for code generation"
             };
@@ -517,12 +517,12 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestLinkedItemDataCreated()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)1,
-                    null));
+                    1,
+                    (Exception)null));
 
             PortfolioService service = new(
                 _MockLogger.Object,
@@ -545,18 +545,18 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         }
 
         /// <summary>
-        /// Checks whether the LinkedItemDataCreated method returns false when the database returns null.
+        /// Checks whether the LinkedItemDataCreated method returns false when zero rows are affected.
         /// </summary>
         [TestMethod]
-        public async Task TestLinkedItemDataCreatedNullResult()
+        public async Task TestLinkedItemDataCreatedNoRowsAffected()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)null,
-                    null));
+                    0,
+                    (Exception)null));
 
             PortfolioService service = new(
                 _MockLogger.Object,
@@ -585,11 +585,11 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestLinkedItemDataCreatedWithError()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)null,
+                    0,
                     new Exception("Database error")));
 
             PortfolioService service = new(
@@ -623,12 +623,12 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestLinkItemDataDeleted()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)1,
-                    null));
+                    1,
+                    (Exception)null));
 
             PortfolioService service = new(
                 _MockLogger.Object,
@@ -645,18 +645,18 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         }
 
         /// <summary>
-        /// Checks whether the LinkItemDataDeleted method returns false when the database returns null.
+        /// Checks whether the LinkItemDataDeleted method returns false when zero rows are affected.
         /// </summary>
         [TestMethod]
-        public async Task TestLinkItemDataDeletedNullResult()
+        public async Task TestLinkItemDataDeletedNoRowsAffected()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)null,
-                    null));
+                    0,
+                    (Exception)null));
 
             PortfolioService service = new(
                 _MockLogger.Object,
@@ -679,11 +679,11 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestLinkItemDataDeletedWithError()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)null,
+                    0,
                     new Exception("Database error")));
 
             PortfolioService service = new(
@@ -711,12 +711,12 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestLinkItemDataCreated()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)1,
-                    null));
+                    1,
+                    (Exception)null));
 
             PortfolioService service = new(
                 _MockLogger.Object,
@@ -733,18 +733,18 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         }
 
         /// <summary>
-        /// Checks whether the LinkItemDataCreated method returns false when the database returns null.
+        /// Checks whether the LinkItemDataCreated method returns false when zero rows are affected.
         /// </summary>
         [TestMethod]
-        public async Task TestLinkItemDataCreatedNullResult()
+        public async Task TestLinkItemDataCreatedNoRowsAffected()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)null,
-                    null));
+                    0,
+                    (Exception)null));
 
             PortfolioService service = new(
                 _MockLogger.Object,
@@ -767,11 +767,11 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestLinkItemDataCreatedWithError()
         {
             Mock<IDatabase> mockDatabase = new();
-            mockDatabase.Setup(d => d.ExecuteScalar(
+            mockDatabase.Setup(d => d.Execute(
                     It.IsAny<string>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
-                    (object)null,
+                    0,
                     new Exception("Database error")));
 
             PortfolioService service = new(

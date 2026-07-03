@@ -55,7 +55,7 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Portfolio
         /// <summary>
         /// The percentage of code covered by unit tests.
         /// </summary>
-        public decimal UnitTestCoverage { get; set; }
+        public decimal? UnitTestCoverage { get; set; }
         /// <summary>
         /// The url to the GitHub repository.
         /// </summary>

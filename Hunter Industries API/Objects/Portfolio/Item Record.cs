@@ -59,7 +59,7 @@ namespace HunterIndustriesAPI.Objects.Portfolio
         /// <summary>
         /// The percentage of code covered by unit tests.
         /// </summary>
-        public decimal UnitTestCoverage { get; set; }
+        public decimal? UnitTestCoverage { get; set; }
         /// <summary>
         /// The GitHub information for the project.
         /// </summary>

@@ -15,7 +15,7 @@ select
 	GETUTCDATE(),
 	GETUTCDATE()
 from PortfolioItemType PIT with (nolock)
-left join LLMModel with (nolock) on LLMModel.[Name] = @model
+join LLMModel with (nolock) on LLMModel.[Name] = @model
 join LLMCompany with (nolock) on LLMModel.LLMCompanyId = LLMCompany.LLMCompanyId
 	and LLMCompany.[Name] = @company
 where PIT.[Name] = @type

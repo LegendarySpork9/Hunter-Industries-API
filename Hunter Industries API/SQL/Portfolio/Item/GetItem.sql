@@ -18,5 +18,5 @@ select
 from PortfolioItem [PI] with (nolock)
 join PortfolioItemType PIT with (nolock) on [PI].TypeId = PIT.PortfolioItemTypeId
 left join LLMModel with (nolock) on [PI].LLMModelId = LLMModel.LLMModelId
-join LLMCompany with (nolock) on LLMModel.LLMCompanyId = LLMCompany.LLMCompanyId
+left join LLMCompany with (nolock) on LLMModel.LLMCompanyId = LLMCompany.LLMCompanyId
 where [PI].PortfolioItemId = @itemId

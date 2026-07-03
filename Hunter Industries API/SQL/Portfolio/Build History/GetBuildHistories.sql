@@ -1,5 +1,5 @@
 select
-	PortfolioItemId,
+	[PI].PortfolioItemId,
 	[Version],
 	ReleaseDate
 from PortfolioItemBuildHistory PIBH with (nolock)

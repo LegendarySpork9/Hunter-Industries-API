@@ -69,10 +69,35 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     reader =>
                     {
                         string demoURL = null;
+                        decimal? unitTestCoverage = null;
+                        LLMRecord llm = null;
+                        string llmUsageNotes = null;
 
                         if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                         {
                             demoURL = reader.GetString(7);
+                        }
+
+                        if (!reader.IsDBNull(9) && reader.GetDecimal(9) != 0)
+                        {
+                            unitTestCoverage = reader.GetDecimal(9);
+                        }
+
+                        if (!reader.IsDBNull(10) && !reader.IsDBNull(11))
+                        {
+                            if (!string.IsNullOrWhiteSpace(reader.GetString(10)) && !string.IsNullOrWhiteSpace(reader.GetString(11)))
+                            {
+                                llm = new LLMRecord()
+                                {
+                                    Company = reader.GetString(10),
+                                    Model = reader.GetString(11)
+                                };
+                            }
+                        }
+
+                        if (!reader.IsDBNull(12) && !string.IsNullOrWhiteSpace(reader.GetString(12)))
+                        {
+                            llmUsageNotes = reader.GetString(12);
                         }
 
                         return new ItemRecord()
@@ -89,13 +114,9 @@ namespace HunterIndustriesAPI.Services.Portfolio
                             },
                             DemoLink = demoURL,
                             ReleaseNotes = reader.GetString(8),
-                            UnitTestCoverage = reader.GetDecimal(9),
-                            LLMUsage = new LLMRecord()
-                            {
-                                Company = reader.GetString(10),
-                                Model = reader.GetString(11),
-                            },
-                            LLMUsageNotes = reader.GetString(12),
+                            UnitTestCoverage = unitTestCoverage,
+                            LLMUsage = llm,
+                            LLMUsageNotes = llmUsageNotes,
                             DateCreated = DateTime.SpecifyKind(
                                 reader.GetDateTime(13),
                                 DateTimeKind.Utc),
@@ -159,7 +180,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     _Options.SQLFiles,
                     "Portfolio",
                     PortfolioConverter.GetSQLGet(linkedItem)));
-                SqlParameter[] parameters = null;
+                SqlParameter[] parameters = Array.Empty<SqlParameter>();
 
                 if (itemId.HasValue)
                 {
@@ -170,7 +191,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     };
                 }
 
-                if (!includeDeleted)
+                if (!includeDeleted && itemId == null)
                 {
                     sql += "\nwhere IsDeleted = 0";
                 }
@@ -246,10 +267,35 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     reader =>
                     {
                         string demoURL = null;
+                        decimal? unitTestCoverage = null;
+                        LLMRecord llm = null;
+                        string llmUsageNotes = null;
 
                         if (!reader.IsDBNull(7) && !string.IsNullOrWhiteSpace(reader.GetString(7)))
                         {
                             demoURL = reader.GetString(7);
+                        }
+
+                        if (!reader.IsDBNull(9) && reader.GetDecimal(9) != 0)
+                        {
+                            unitTestCoverage = reader.GetDecimal(9);
+                        }
+
+                        if (!reader.IsDBNull(10) && !reader.IsDBNull(11))
+                        {
+                            if (!string.IsNullOrWhiteSpace(reader.GetString(10)) && !string.IsNullOrWhiteSpace(reader.GetString(11)))
+                            {
+                                llm = new LLMRecord()
+                                {
+                                    Company = reader.GetString(10),
+                                    Model = reader.GetString(11)
+                                };
+                            }
+                        }
+
+                        if (!reader.IsDBNull(12) && !string.IsNullOrWhiteSpace(reader.GetString(12)))
+                        {
+                            llmUsageNotes = reader.GetString(12);
                         }
 
                         return new ItemRecord()
@@ -266,13 +312,9 @@ namespace HunterIndustriesAPI.Services.Portfolio
                             },
                             DemoLink = demoURL,
                             ReleaseNotes = reader.GetString(8),
-                            UnitTestCoverage = reader.GetDecimal(9),
-                            LLMUsage = new LLMRecord()
-                            {
-                                Company = reader.GetString(10),
-                                Model = reader.GetString(11),
-                            },
-                            LLMUsageNotes = reader.GetString(12),
+                            UnitTestCoverage = unitTestCoverage,
+                            LLMUsage = llm,
+                            LLMUsageNotes = llmUsageNotes,
                             DateCreated = DateTime.SpecifyKind(
                                 reader.GetDateTime(13),
                                 DateTimeKind.Utc),
@@ -281,7 +323,8 @@ namespace HunterIndustriesAPI.Services.Portfolio
                                 DateTimeKind.Utc),
                             IsDeleted = reader.GetBoolean(15)
                         };
-                    });
+                    },
+                    parameters);
 
                 if (ex != null)
                 {
@@ -478,7 +521,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     "Portfolio",
                     "Item",
                     "CreateItem.sql"));
-                SqlParameter[] parameters =
+                List<SqlParameter> parameterList = new List<SqlParameter>()
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = item.Name },
                     new SqlParameter("@summary", SqlDbType.VarChar) { Value = item.Summary },
@@ -486,17 +529,30 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     new SqlParameter("@icon", SqlDbType.VarChar) { Value = item.IconURL },
                     new SqlParameter("@releaseNotes", SqlDbType.VarChar) { Value = item.ReleaseNotes },
                     new SqlParameter("@gitHub", SqlDbType.VarChar) { Value = item.GitHubLink },
-                    new SqlParameter("@demo", SqlDbType.VarChar) { Value = item.DemoLink },
-                    new SqlParameter("@unitTestCoverage", SqlDbType.Decimal) { Value = item.UnitTestCoverage },
-                    new SqlParameter("@llmUsageNotes", SqlDbType.VarChar) { Value = item.LLMUsageNotes },
-                    new SqlParameter("@model", SqlDbType.VarChar) { Value = item.LLMUsage.Model },
-                    new SqlParameter("@company", SqlDbType.VarChar) { Value = item.LLMUsage.Company },
+                    new SqlParameter("@demo", SqlDbType.VarChar) { Value = (object)item.DemoLink ?? DBNull.Value },
+                    new SqlParameter("@unitTestCoverage", SqlDbType.Decimal) { Value = (object)item.UnitTestCoverage ?? DBNull.Value },
+                    new SqlParameter("@llmUsageNotes", SqlDbType.VarChar) { Value = (object)item.LLMUsageNotes ?? DBNull.Value },
                     new SqlParameter("@type", SqlDbType.VarChar) { Value = item.Type },
                 };
 
+                if (item.LLMUsage != null && (!string.IsNullOrWhiteSpace(item.LLMUsage.Company) && !string.IsNullOrWhiteSpace(item.LLMUsage.Model)))
+                {
+                    parameterList.Add(new SqlParameter("@model", SqlDbType.VarChar) { Value = item.LLMUsage.Model });
+                    parameterList.Add(new SqlParameter("@company", SqlDbType.VarChar) { Value = item.LLMUsage.Company });
+                }
+
+                else
+                {
+                    sql = sql.Replace("LLMModel.LLMModelId", "null")
+                        .Replace(@"
+join LLMModel with (nolock) on LLMModel.[Name] = @model
+join LLMCompany with (nolock) on LLMModel.LLMCompanyId = LLMCompany.LLMCompanyId
+	and LLMCompany.[Name] = @company", "");
+                }
+
                 (object result, Exception ex) = await _Database.ExecuteScalar(
                     sql,
-                    parameters);
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
@@ -570,7 +626,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     itemId,
                     record);
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(
+                (int rowsAffected, Exception ex) = await _Database.Execute(
                     sql,
                     parameters);
 
@@ -588,7 +644,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     created = false;
                 }
 
-                if (result == null)
+                if (rowsAffected != 1)
                 {
                     created = false;
                 }
@@ -639,7 +695,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     new SqlParameter("@itemId", SqlDbType.Int) { Value = itemId }
                 };
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(
+                (int rowsAffected, Exception ex) = await _Database.Execute(
                     sql,
                     parameters);
 
@@ -657,7 +713,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     deleted = false;
                 }
 
-                if (result == null)
+                if (rowsAffected != 1)
                 {
                     deleted = false;
                 }
@@ -708,7 +764,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     itemId,
                     data);
 
-                (object result, Exception ex) = await _Database.ExecuteScalar(
+                (int rowsAffected, Exception ex) = await _Database.Execute(
                     sql,
                     parameters);
 
@@ -726,7 +782,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     created = false;
                 }
 
-                if (result == null)
+                if (rowsAffected != 1)
                 {
                     created = false;
                 }
@@ -781,11 +837,9 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     new SqlParameter("@description", SqlDbType.VarChar) { Value = item.Description },
                     new SqlParameter("@demo", SqlDbType.VarChar) { Value = (object)item.DemoLink ?? DBNull.Value },
                     new SqlParameter("@releaseNotes", SqlDbType.VarChar) { Value = item.ReleaseNotes },
-                    new SqlParameter("@unitTestCoverage", SqlDbType.Decimal) { Value = item.UnitTestCoverage },
+                    new SqlParameter("@unitTestCoverage", SqlDbType.Decimal) { Value = (object)item.UnitTestCoverage ?? DBNull.Value },
                     new SqlParameter("@gitHub", SqlDbType.VarChar) { Value = item.GitHubLink },
-                    new SqlParameter("@llmUsageNotes", SqlDbType.VarChar) { Value = item.LLMUsageNotes },
-                    new SqlParameter("@model", SqlDbType.VarChar) { Value = item.LLMUsage.Model },
-                    new SqlParameter("@company", SqlDbType.VarChar) { Value = item.LLMUsage.Company },
+                    new SqlParameter("@llmUsageNotes", SqlDbType.VarChar) { Value = (object)item.LLMUsageNotes ?? DBNull.Value },
                     new SqlParameter("@itemId", SqlDbType.Int) { Value = id }
                 };
 
@@ -847,7 +901,7 @@ join PortfolioItemType PIT with (nolock) on [PI].TypeId = @type", "");
 
                 }
 
-                if (item.UnitTestCoverage == default)
+                if (item.UnitTestCoverage == null)
                 {
                     sql = sql.Replace(@"
 	UnitTestCoverage = @unitTestCoverage,", "");
@@ -871,16 +925,20 @@ join PortfolioItemType PIT with (nolock) on [PI].TypeId = @type", "");
 
                 }
 
-                if (string.IsNullOrWhiteSpace(item.LLMUsage.Company) || string.IsNullOrWhiteSpace(item.LLMUsage.Model))
+                if (item.LLMUsage != null && (!string.IsNullOrWhiteSpace(item.LLMUsage.Company) && !string.IsNullOrWhiteSpace(item.LLMUsage.Model)))
+                {
+                    parameterList.Add(new SqlParameter("@model", SqlDbType.VarChar) { Value = item.LLMUsage.Model });
+                    parameterList.Add(new SqlParameter("@company", SqlDbType.VarChar) { Value = item.LLMUsage.Company });
+                }
+
+                else
                 {
                     sql = sql.Replace(@"
 	LLMModelId = LLMModel.LLMModelId,", "")
                         .Replace(@"
-left join LLMModel with (nolock) on LLMModel.[Name] = @model
+join LLMModel with (nolock) on LLMModel.[Name] = @model
 join LLMCompany with (nolock) on LLMModel.LLMCompanyId = LLMCompany.LLMCompanyId
 	and LLMCompany.[Name] = @company", "");
-                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@company"));
-                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@model"));
                 }
 
                 List<string> sqlLines = sql.Split(new[]
