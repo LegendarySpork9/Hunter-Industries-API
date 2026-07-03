@@ -186,14 +186,14 @@ namespace HunterIndustriesAPI.Services.User
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"UserService.GetUser returned 1 record");
+                    $"UserService.GetUser returned 1 record.");
             }
 
             else
             {
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
-                    $"UserService.GetUser returned 0 records");
+                    $"UserService.GetUser returned 0 records.");
             }
 
             return user;

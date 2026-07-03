@@ -43,7 +43,7 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Portfolio
         /// <summary>
         /// The link to the demo environment.
         /// </summary>
-        public string DemoURL { get; set; }
+        public string DemoLink { get; set; }
         /// <summary>
         /// The latest release notes.
         /// </summary>
@@ -55,11 +55,11 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.Portfolio
         /// <summary>
         /// The percentage of code covered by unit tests.
         /// </summary>
-        public decimal UnitTestCoverage { get; set; }
+        public decimal? UnitTestCoverage { get; set; }
         /// <summary>
         /// The url to the GitHub repository.
         /// </summary>
-        public string GitHubURL { get; set; }
+        public string GitHubLink { get; set; }
         /// <summary>
         /// The LLM used for the item.
         /// </summary>

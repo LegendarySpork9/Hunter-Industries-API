@@ -1,6 +1,7 @@
 ﻿// Copyright © - 11/06/2026 - Toby Hunter
 using HunterIndustriesAPI.Controllers;
 using HunterIndustriesAPI.Controllers.Assistant;
+using HunterIndustriesAPI.Controllers.Portfolio;
 using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Controllers.User;
 using Swashbuckle.Swagger;
@@ -368,6 +369,34 @@ namespace HunterIndustriesAPI.Filters.Operation
                         if (param.name == "filters.pageNumber")
                         {
                             param.name = "pageNumber";
+                        }
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(FilterController))
+            {
+                if (operation.parameters != null)
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "filter";
+                        }
+                    }
+                }
+            }
+
+            if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(PortfolioController))
+            {
+                if (operation.parameters != null)
+                {
+                    foreach (Parameter param in operation.parameters)
+                    {
+                        if (param.name == "request")
+                        {
+                            param.name = "item";
                         }
                     }
                 }

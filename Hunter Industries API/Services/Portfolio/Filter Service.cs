@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HunterIndustriesAPI.Services.Portfolio
 {
@@ -106,6 +107,88 @@ namespace HunterIndustriesAPI.Services.Portfolio
                 StandardValues.LoggerValues.Debug,
                 $"FilterService.GetFilters returned {filters.Count} records.");
             return filters;
+        }
+
+        /// <summary>
+        /// Returns the filter record that matches the id.
+        /// </summary>
+        public async Task<FilterRecord> GetFilter(int filterId)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"FilterService.GetFilter called with the parameter \"{filterId}\".");
+
+            FilterRecord filter = new FilterRecord();
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Portfolio",
+                    "Filter",
+                    "GetFilters.sql"));
+                sql += "\nwhere PortfolioFilterId = @filterId";
+                
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@filterId", SqlDbType.Int) { Value = filterId }
+                };
+
+                (FilterRecord result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => new FilterRecord()
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        Values = reader.GetString(2)
+                            .Split(',')
+                            .ToList(),
+                        IsDeleted = reader.GetBoolean(3)
+                    },
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run FilterService.GetFilter.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                filter = result;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run FilterService.GetFilter.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            if (filter != null)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "FilterService.GetFilter returned 1 record.");
+            }
+
+            else
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "FilterService.GetFilter returned 0 records.");
+            }
+
+            return filter;
         }
 
         /// <summary>

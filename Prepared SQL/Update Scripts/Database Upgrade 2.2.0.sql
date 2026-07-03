@@ -181,7 +181,7 @@ BEGIN
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 	) ON [PRIMARY]
 
-	PRINT('PortfolioItemImage Table Added')
+	PRINT('PortfolioItemBuildHistory Table Added')
 END
 ELSE
 	PRINT('PortfolioItemBuildHistory Table Already Exists')
@@ -194,7 +194,7 @@ BEGIN
 		[FrameworkId] [int] NOT NULL
 	) ON [PRIMARY]
 
-	PRINT('PortfolioItemImage Table Added')
+	PRINT('PortfolioItemFramework Table Added')
 END
 ELSE
 	PRINT('PortfolioItemFramework Table Already Exists')
@@ -207,7 +207,7 @@ BEGIN
 		[LanguageId] [int] NOT NULL
 	) ON [PRIMARY]
 
-	PRINT('PortfolioItemImage Table Added')
+	PRINT('PortfolioItemLanguage Table Added')
 END
 ELSE
 	PRINT('PortfolioItemLanguage Table Already Exists')
@@ -220,7 +220,7 @@ BEGIN
 		[EnvironmentId] [int] NOT NULL
 	) ON [PRIMARY]
 
-	PRINT('PortfolioItemImage Table Added')
+	PRINT('PortfolioItemEnvironment Table Added')
 END
 ELSE
 	PRINT('PortfolioItemEnvironment Table Already Exists')
@@ -404,12 +404,12 @@ GO
 
 IF NOT EXISTS (SELECT * FROM [dbo].[Endpoint] WHERE [Value] = '/portfolio/filter')
 BEGIN
-	INSERT INTO [Endpoint]([Value]) VALUES ('/portfolio')
+	INSERT INTO [Endpoint]([Value]) VALUES ('/portfolio/filter')
 
-	PRINT('Added Portfolio Endpoint')
+	PRINT('Added Portfolio Filter Endpoint')
 END
 ELSE
-	PRINT('Portfolio Endpoint Already Exists')
+	PRINT('Portfolio Filter Endpoint Already Exists')
 GO
 
 IF NOT EXISTS (SELECT * FROM [dbo].[Scope] WHERE [Value] = 'Portfolio API')

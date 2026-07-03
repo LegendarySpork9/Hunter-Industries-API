@@ -11,8 +11,6 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
     [TestClass]
     public class PortfolioDataReaderMappingTest
     {
-        #region SingleLinkedItemMapper
-
         /// <summary>
         /// Tests whether the SingleLinkedItemMapper returns the correct tuple of (int, string).
         /// </summary>
@@ -37,24 +35,20 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
                 name);
         }
 
-        #endregion
-
-        #region BuildHistoryMapper
-
         /// <summary>
         /// Tests whether the BuildHistoryMapper returns the correct tuple of (int, BuildHistoryRecord).
         /// </summary>
         [TestMethod]
         public void TestBuildHistoryMapper()
         {
-            DateTime releaseDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime releaseDate = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             Mock<IDataReader> mockReader = new();
             mockReader.Setup(r => r.GetInt32(0))
                 .Returns(1);
             mockReader.Setup(r => r.GetString(1))
                 .Returns("1.0.0");
-            mockReader.Setup(r => r.GetDateTime(3))
+            mockReader.Setup(r => r.GetDateTime(2))
                 .Returns(releaseDate);
 
             object result = PortfolioDataReaderMapping.BuildHistoryMapper(mockReader.Object);
@@ -71,7 +65,5 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
                 releaseDate,
                 buildHistory.ReleaseDate);
         }
-
-        #endregion
     }
 }

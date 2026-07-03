@@ -41,39 +41,51 @@ namespace HunterIndustriesAPI.Functions
 
             if (model != null)
             {
-                foreach (PropertyInfo property in model.GetType()
-                    .GetProperties())
+                Type modelType = model.GetType();
+
+                if (modelType.IsPrimitive || model is string || model is decimal || model is DateTime || model is Guid || modelType.IsEnum)
                 {
-                    if (property.GetValue(model) != null)
+                    formattedParameters = formattedParameters.Append(model.ToString())
+                        .ToArray();
+                }
+
+                else
+                {
+                    foreach (PropertyInfo property in modelType
+                        .GetProperties()
+                        .Where(p => p.GetIndexParameters().Length == 0))
                     {
-                        if (property.GetValue(model) is IList list)
+                        if (property.GetValue(model) != null)
                         {
-                            foreach (object item in list)
+                            if (property.GetValue(model) is IList list)
                             {
-                                formattedParameters = formattedParameters.Append(item.ToString())
+                                foreach (object item in list)
+                                {
+                                    formattedParameters = formattedParameters.Append(item.ToString())
+                                        .ToArray();
+                                }
+                            }
+
+                            else if (property.Name == "Password")
+                            {
+                                formattedParameters = formattedParameters.Append(HashFunction.HashString(property.GetValue(model)
+                                    .ToString()))
+                                    .ToArray();
+                            }
+
+                            else
+                            {
+                                formattedParameters = formattedParameters.Append(property.GetValue(model)
+                                    .ToString())
                                     .ToArray();
                             }
                         }
 
-                        else if (property.Name == "Password")
-                        {
-                            formattedParameters = formattedParameters.Append(HashFunction.HashString(property.GetValue(model)
-                                .ToString()))
-                                .ToArray();
-                        }
-
                         else
                         {
-                            formattedParameters = formattedParameters.Append(property.GetValue(model)
-                                .ToString())
+                            formattedParameters = formattedParameters.Append("")
                                 .ToArray();
                         }
-                    }
-
-                    else
-                    {
-                        formattedParameters = formattedParameters.Append("")
-                            .ToArray();
                     }
                 }
             }
@@ -138,35 +150,46 @@ namespace HunterIndustriesAPI.Functions
 
             if (model != null)
             {
-                foreach (PropertyInfo property in model.GetType()
-                    .GetProperties())
+                Type modelType = model.GetType();
+
+                if (modelType.IsPrimitive || model is string || model is decimal || model is DateTime || model is Guid || modelType.IsEnum)
                 {
-                    object value = property.GetValue(model);
+                    formattedParameters = $"\"{model}\",";
+                }
 
-                    if (value != null)
+                else
+                {
+                    foreach (PropertyInfo property in modelType
+                        .GetProperties()
+                        .Where(p => p.GetIndexParameters().Length == 0))
                     {
-                        if (value is IList list)
-                        {
-                            foreach (object item in list)
-                            {
-                                formattedParameters += $"\"{property.Name}: {item}\", ";
-                            }
-                        }
+                        object value = property.GetValue(model);
 
-                        else if (property.Name == "Password")
+                        if (value != null)
                         {
-                            formattedParameters += $"\"{property.Name}: {HashFunction.HashString(value.ToString())}\", ";
+                            if (value is IList list)
+                            {
+                                foreach (object item in list)
+                                {
+                                    formattedParameters += $"\"{property.Name}: {item}\", ";
+                                }
+                            }
+
+                            else if (property.Name == "Password")
+                            {
+                                formattedParameters += $"\"{property.Name}: {HashFunction.HashString(value.ToString())}\", ";
+                            }
+
+                            else
+                            {
+                                formattedParameters += $"\"{property.Name}: {value}\", ";
+                            }
                         }
 
                         else
                         {
-                            formattedParameters += $"\"{property.Name}: {value}\", ";
+                            formattedParameters += $"\"{property.Name}: null\", ";
                         }
-                    }
-
-                    else
-                    {
-                        formattedParameters += $"\"{property.Name}: null\", ";
                     }
                 }
             }
@@ -291,44 +314,54 @@ namespace HunterIndustriesAPI.Functions
         {
             string[] parameters = otherParameters;
 
-            if (model == null)
+            if (model != null)
             {
-                return parameters;
-            }
+                Type modelType = model.GetType();
 
-            foreach (PropertyInfo property in model.GetType()
-                .GetProperties())
-            {
-                if (property.GetValue(model) != null)
+                if (modelType.IsPrimitive || model is string || model is decimal || model is DateTime || model is Guid || modelType.IsEnum)
                 {
-                    if (property.GetValue(model) is IList list)
-                    {
-                        foreach (object item in list)
-                        {
-                            parameters = parameters.Append(item.ToString())
-                                .ToArray();
-                        }
-                    }
-
-                    else if (property.Name == "Password")
-                    {
-                        parameters = parameters.Append(HashFunction.HashString(property.GetValue(model)
-                            .ToString()))
-                            .ToArray();
-                    }
-
-                    else
-                    {
-                        parameters = parameters.Append(property.GetValue(model)
-                            .ToString())
-                            .ToArray();
-                    }
+                    parameters = parameters.Append(model.ToString())
+                        .ToArray();
                 }
 
                 else
                 {
-                    parameters = parameters.Append("")
-                        .ToArray();
+                    foreach (PropertyInfo property in modelType
+                        .GetProperties()
+                        .Where(p => p.GetIndexParameters().Length == 0))
+                    {
+                        if (property.GetValue(model) != null)
+                        {
+                            if (property.GetValue(model) is IList list)
+                            {
+                                foreach (object item in list)
+                                {
+                                    parameters = parameters.Append(item.ToString())
+                                        .ToArray();
+                                }
+                            }
+
+                            else if (property.Name == "Password")
+                            {
+                                parameters = parameters.Append(HashFunction.HashString(property.GetValue(model)
+                                    .ToString()))
+                                    .ToArray();
+                            }
+
+                            else
+                            {
+                                parameters = parameters.Append(property.GetValue(model)
+                                    .ToString())
+                                    .ToArray();
+                            }
+                        }
+
+                        else
+                        {
+                            parameters = parameters.Append("")
+                                .ToArray();
+                        }
+                    }
                 }
             }
 

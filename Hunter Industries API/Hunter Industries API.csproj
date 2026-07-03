@@ -333,6 +333,8 @@
     <Compile Include="Controllers\Assistant\LocationController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\Media\MediaController.cs" />
+    <Compile Include="Controllers\Portfolio\FilterController.cs" />
+    <Compile Include="Controllers\Portfolio\PortfolioController.cs" />
     <Compile Include="Converters\GitHub Issue Converter.cs" />
     <Compile Include="Controllers\StatisticController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -444,6 +446,7 @@
     <Compile Include="Objects\Portfolio\GitHub Issue Assignee Breakdown Record.cs" />
     <Compile Include="Objects\Portfolio\GitHub Issue In Progress Breakdown Record.cs" />
     <Compile Include="Objects\Portfolio\GitHub Record.cs" />
+    <Compile Include="Objects\Portfolio\GitHub CI Status Record.cs" />
     <Compile Include="Objects\Portfolio\Item Record.cs" />
     <Compile Include="Objects\Portfolio\LLM Record.cs" />
     <Compile Include="Objects\Server Status\Connection Record.cs" />

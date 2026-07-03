@@ -41,13 +41,13 @@ namespace HunterIndustriesAPI.Services.Portfolio
         /// <summary>
         /// Returns all CI statuses for the given repository.
         /// </summary>
-        public async Task<Dictionary<string, string>> GetCIStatus(string repository)
+        public async Task<List<GitHubCIStatusRecord>> GetCIStatus(string repository)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
                 $"GitHubService.GetCIStatus called with the parameter \"{repository}\".");
 
-            Dictionary<string, string> ciStatus = new Dictionary<string, string>();
+            List<GitHubCIStatusRecord> ciStatus = new List<GitHubCIStatusRecord>();
 
             try
             {
@@ -61,11 +61,13 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     new SqlParameter("@repository", SqlDbType.VarChar) { Value = repository }
                 };
 
-                (List<KeyValuePair<string, string>> results, Exception ex) = await _Database.QueryGitHub(
+                (List<GitHubCIStatusRecord> results, Exception ex) = await _Database.QueryGitHub(
                     sql,
-                    reader => new KeyValuePair<string, string>(
-                        reader.GetString(0),
-                        reader.GetString(1)),
+                    reader =>new GitHubCIStatusRecord
+                    {
+                        Workflow = reader.GetString(0),
+                        Status = reader.GetString(1)
+                    },
                     parameters);
 
                 if (ex != null)
@@ -80,7 +82,7 @@ namespace HunterIndustriesAPI.Services.Portfolio
                         message);
                 }
 
-                ciStatus = results.ToDictionary(r => r.Key, r => r.Value);
+                ciStatus = results;
             }
 
             catch (Exception ex)

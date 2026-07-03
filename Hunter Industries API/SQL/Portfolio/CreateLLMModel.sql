@@ -8,10 +8,10 @@ if (
 ) = 0 
 begin
 	
-	insert into LLMModel ([Name])
+	insert into LLMModel (LLMCompanyId, [Name])
 	select
-		@model,
-		LLMCompany.LLMCompanyId
+		LLMCompany.LLMCompanyId,
+		@model
 	from LLMCompany with (nolock)
 	where LLMCompany.[Name] = @company
 

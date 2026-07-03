@@ -151,6 +151,13 @@ namespace HunterIndustriesAPI.Services
                     out _);
             }
 
+            if (value.GetType() == typeof(decimal))
+            {
+                valueConfirmed = decimal.TryParse(
+                    value.ToString(),
+                    out _);
+            }
+
             if (value.GetType() == typeof(bool))
             {
                 valueConfirmed = bool.TryParse(
@@ -158,10 +165,32 @@ namespace HunterIndustriesAPI.Services
                     out _);
             }
 
+            if (value.GetType() == typeof(DateTime))
+            {
+                valueConfirmed = true;
+            }
+
             if (value is IList list)
             {
                 valueConfirmed = list.Count > 0 && list.Cast<object>()
-                    .All(item => item != null);
+                    .All(item => item != null && ConfirmValue(item));
+            }
+
+            else if (!valueConfirmed)
+            {
+                Type valueType = value.GetType();
+
+                if (valueType.IsClass && valueType != typeof(string))
+                {
+                    PropertyInfo[] properties = valueType.GetProperties()
+                        .Where(p => p.GetIndexParameters().Length == 0)
+                        .ToArray();
+
+                    if (properties.Length > 0)
+                    {
+                        valueConfirmed = properties.All(p => HasValue(p.GetValue(value)));
+                    }
+                }
             }
 
             return valueConfirmed;

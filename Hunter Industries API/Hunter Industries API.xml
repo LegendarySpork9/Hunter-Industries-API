@@ -361,6 +361,174 @@
              </remarks>
              <param name="id">The id number of the media.</param>
         </member>
+        <member name="T:HunterIndustriesAPI.Controllers.Portfolio.FilterController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.FilterController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.FilterController.Get(System.Boolean)">
+             <summary>
+             Returns a collection of filters.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /portfolio/filter
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="includeDeleted">Whether to return deleted filters.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.FilterController.Post(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel)">
+             <summary>
+             Creates a new filter record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 POST /portfolio/filter
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "name": "Test",
+                     "values": "C#,Python,HTML,CSS"
+                 }
+             </remarks>
+             <param name="request">An object containing the filter information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.FilterController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel)">
+             <summary>
+             Updates the details of the filter record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 PATCH /portfolio/filter/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "name": "Test 2"
+                 }
+             </remarks>
+             <param name="id">The id number of the filter.</param>
+             <param name="request">An object containing the record data.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.FilterController.Delete(System.Int32)">
+             <summary>
+             Deletes the filter record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 Delete /portfolio/filter/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="id">The id number of the filter.</param>
+        </member>
+        <member name="T:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController.#ctor(HunterIndustriesAPICommon.Abstractions.ILoggerService,HunterIndustriesAPICommon.Abstractions.IFileSystem,HunterIndustriesAPI.Abstractions.IDatabase,HunterIndustriesAPI.Abstractions.IDatabaseOptions,HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController.Get(System.Boolean)">
+             <summary>
+             Returns a collection of portfolio items.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /portfolio
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="includeDeleted">Whether to return deleted media.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController.Get(System.Int32)">
+             <summary>
+             Returns the portfolio item matching the given id.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /portfolio/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="id">The id number of the portfolio item.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController.Post(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel)">
+             <summary>
+             Creates a new portfolio record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 POST /portfolio/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "name": "Test",
+                     "type": "Console Application",
+                     "iconURL": "https://github.com/LegendarySpork9/Hunter-Industries-API/blob/main/Hunter%20Industries%20API/Content/HI%20Tech%20Logo%20NBG.png",
+                     "summary": "A test portfolio item.",
+                     "description": "A test portfolio item made in C# as a console application.",
+                     "frameworks": [
+                         ".NET"
+                     ],
+                     "languages": [
+                         "C#"
+                     ],
+                     "environments": [
+                         "Windows"
+                     ],
+                     "demoLink": null,
+                     "releaseNotes": "A new test portfolio item.",
+                     "buildHistory": [
+                         {
+                             "version": "1.0.0",
+                             "releaseDate": "2026-07-03T08:46:37.573Z"
+                         }
+                     ],
+                     "unitTestCoverage": null,
+                     "gitHubLink": "https://github.com/LegendarySpork9/Hunter-Industries-API",
+                     "llmUsage": null,
+                     "llmUsageNotes": null
+                 }
+             </remarks>
+             <param name="request">An object containing the portfolio information.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController.Patch(System.Int32,HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel)">
+             <summary>
+             Updates the details of the portfolio item.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 PATCH /portfolio/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+                 Content-Type: application/json
+                 {
+                     "name": "Test 2"
+                 }
+             </remarks>
+             <param name="id">The id number of the portfolio item.</param>
+             <param name="request">An object containing the record data.</param>
+        </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.PortfolioController.Delete(System.Int32)">
+             <summary>
+             Deletes the portfolio item record.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 Delete /portfolio/1
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+             <param name="id">The id number of the portfolio item.</param>
+        </member>
         <member name="T:HunterIndustriesAPI.Controllers.StatisticController">
             <summary>
             </summary>
@@ -1996,7 +2164,7 @@
             The environments used by the item.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.DemoURL">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.DemoLink">
             <summary>
             The link to the demo environment.
             </summary>
@@ -2016,7 +2184,7 @@
             The percentage of code covered by unit tests.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.GitHubURL">
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemModel.GitHubLink">
             <summary>
             The url to the GitHub repository.
             </summary>
@@ -3303,6 +3471,20 @@
             The collection of in progress issue breakdowns.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Objects.Portfolio.GitHubCIStatusRecord">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubCIStatusRecord.Workflow">
+            <summary>
+            The name of the CI workflow.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.GitHubCIStatusRecord.Status">
+            <summary>
+            The status of the CI workflow.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Objects.Portfolio.ItemRecord">
             <summary>
             </summary>
@@ -3352,7 +3534,7 @@
             The environments used by the item.
             </summary>
         </member>
-        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.DemoURL">
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.ItemRecord.DemoLink">
             <summary>
             The link to the demo environment.
             </summary>
@@ -4320,6 +4502,11 @@
         <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.GetFilters(System.Boolean)">
             <summary>
             Returns all filter records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.GetFilter(System.Int32)">
+            <summary>
+            Returns the filter record that matches the id.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.Portfolio.FilterService.FilterExists(System.String)">

@@ -31,21 +31,21 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         #region GetCIStatus
 
         /// <summary>
-        /// Checks whether the GetCIStatus method returns the correct dictionary entries.
+        /// Checks whether the GetCIStatus method returns the correct records.
         /// </summary>
         [TestMethod]
         public async Task TestGetCIStatus()
         {
-            List<KeyValuePair<string, string>> results =
+            List<GitHubCIStatusRecord> results =
             [
-                new KeyValuePair<string, string>("Build", "Passing"),
-                new KeyValuePair<string, string>("Tests", "Passing")
+                new GitHubCIStatusRecord { Workflow = "Build", Status = "Passing" },
+                new GitHubCIStatusRecord { Workflow = "Tests", Status = "Passing" }
             ];
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.QueryGitHub(
                     It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, KeyValuePair<string, string>>>(),
+                    It.IsAny<Func<SqlDataReader, GitHubCIStatusRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
                     results,
@@ -57,28 +57,31 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            Dictionary<string, string> actual = await service.GetCIStatus("TestRepo");
+            List<GitHubCIStatusRecord> actual = await service.GetCIStatus("TestRepo");
 
             Assert.AreEqual(
                 2,
                 actual.Count);
             Assert.AreEqual(
+                "Build",
+                actual[0].Workflow);
+            Assert.AreEqual(
                 "Passing",
-                actual["Build"]);
+                actual[0].Status);
         }
 
         /// <summary>
-        /// Checks whether the GetCIStatus method returns an empty dictionary when the database returns no results.
+        /// Checks whether the GetCIStatus method returns an empty list when the database returns no results.
         /// </summary>
         [TestMethod]
         public async Task TestGetCIStatusEmpty()
         {
-            List<KeyValuePair<string, string>> results = [];
+            List<GitHubCIStatusRecord> results = [];
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.QueryGitHub(
                     It.IsAny<string>(),
-                    It.IsAny<Func<SqlDataReader, KeyValuePair<string, string>>>(),
+                    It.IsAny<Func<SqlDataReader, GitHubCIStatusRecord>>(),
                     It.IsAny<SqlParameter[]>()).Result)
                 .Returns((
                     results,
@@ -90,7 +93,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            Dictionary<string, string> actual = await service.GetCIStatus("TestRepo");
+            List<GitHubCIStatusRecord> actual = await service.GetCIStatus("TestRepo");
 
             Assert.AreEqual(
                 0,
