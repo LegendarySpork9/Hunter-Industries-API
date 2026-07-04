@@ -14,7 +14,7 @@ $(function () {
         },
         {
             title: 'Portfolio API',
-            controllers: ['Filter', 'Portfolio']
+            controllers: ['Filter', 'Metric', 'Portfolio']
         },
         {
             title: 'Server Status API',

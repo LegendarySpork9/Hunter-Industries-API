@@ -1,5 +1,5 @@
 ﻿// Copyright © - 11/06/2026 - Toby Hunter
-namespace HunterIndustriesAPI.Converters
+namespace HunterIndustriesAPI.Converters.Media
 {
     /// <summary>
     /// </summary>

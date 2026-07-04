@@ -1,5 +1,5 @@
 // Copyright © - Unpublished - Toby Hunter
-using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters.Portfolio;
 using HunterIndustriesAPI.Objects.Portfolio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 
-namespace HunterIndustriesAPI.Tests.API.Converters
+namespace HunterIndustriesAPI.Tests.API.Converters.Portfolio
 {
     [TestClass]
     public class PortfolioConverterTest

@@ -96,6 +96,23 @@ order by ChangeCount desc";
             }
         }
 
+        /// <summary>
+        /// Returns the Getx sql file to load for the portfolio dashboard.
+        /// </summary>
+        public static string GetSQLPortfolio(string part)
+        {
+            switch (part)
+            {
+                case "topBarStats": return "GetTopBarStats.sql";
+                case "topFiveViewed": return "GetTopFiveItems.sql";
+                case "topFiveFrameworks": return "GetTopFiveFrameworks.sql";
+                case "topFiveLanguages": return "GetTopFiveLanguages.sql";
+                case "topFiveEnvironments": return "GetTopFiveEnvironments.sql";
+                case "llmUsed": return "GetLLMUsed.sql";
+                default: return "Unknown.sql";
+            }
+        }
+
         #endregion
 
         #region Mappings
@@ -158,6 +175,23 @@ order by ChangeCount desc";
                 case "errorsOverTime": return ErrorDataReaderMapping.ErrorOverTimeMapper;
                 case "ipErrors": return ErrorDataReaderMapping.IPErrorMapper;
                 case "summaryErrors": return ErrorDataReaderMapping.SummaryErrorMapper;
+                default: return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the data reader mappings for the portfolio dashboard.
+        /// </summary>
+        public static Func<IDataReader, object> GetDataReaderMappingsPortfolio(string part)
+        {
+            switch (part)
+            {
+                case "topBarStats": return PortfolioDataReaderMapping.TopBarStatusMapper;
+                case "topFiveViewed": return PortfolioDataReaderMapping.TopFiveViewedItemMapper;
+                case "topFiveFrameworks": return PortfolioDataReaderMapping.TopFiveMapper;
+                case "topFiveLanguages": return PortfolioDataReaderMapping.TopFiveMapper;
+                case "topFiveEnvironments": return PortfolioDataReaderMapping.TopFiveMapper;
+                case "llmUsed": return PortfolioDataReaderMapping.LLMUsedMapper;
                 default: return null;
             }
         }

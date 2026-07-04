@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 
-namespace HunterIndustriesAPI.Converters
+namespace HunterIndustriesAPI.Converters.Portfolio
 {
     /// <summary>
     /// </summary>

@@ -644,6 +644,25 @@ CREATE TABLE [dbo].[PortfolioItemLanguage](
 ) ON [PRIMARY]
 GO
 
+/****** Object:  Table [dbo].[PortfolioItemMetric]    Script Date: 03/07/2026 16:18:05 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortfolioItemMetric](
+	[PortfolioItemId] [int] NOT NULL,
+	[SummaryViews] [int] NOT NULL,
+	[FullDetailViews] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[PortfolioItemMetric] ADD DEFAULT ((0)) FOR [SummaryViews]
+GO
+
+ALTER TABLE [dbo].[PortfolioItemMetric] ADD DEFAULT ((0)) FOR [FullDetailViews]
+GO
+
 /****** Object:  Table [dbo].[PortfolioItemType]    Script Date: 30/06/2026 13:25:50 ******/
 SET ANSI_NULLS ON
 GO
@@ -1020,6 +1039,11 @@ ALTER TABLE [dbo].[PortfolioItemLanguage]  WITH CHECK ADD  CONSTRAINT [FK_Portfo
 REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
 GO
 ALTER TABLE [dbo].[PortfolioItemLanguage] CHECK CONSTRAINT [FK_PortfolioItemLanguage_PortfolioItem]
+GO
+ALTER TABLE [dbo].[PortfolioItemMetric]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemMetric_PortfolioItem] FOREIGN KEY([PortfolioItemId])
+REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
+GO
+ALTER TABLE [dbo].[PortfolioItemMetric] CHECK CONSTRAINT [FK_PortfolioItemMetric_PortfolioItem]
 GO
 ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_Component] FOREIGN KEY([ComponentId])
 REFERENCES [dbo].[Component] ([ComponentId])

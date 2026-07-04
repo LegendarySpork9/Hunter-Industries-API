@@ -29,6 +29,7 @@ namespace HunterIndustriesAPI.Converters
                 case "media": return 15;
                 case "portfolio": return 16;
                 case "portfolio/filter": return 17;
+                case "portfolio/metric": return 18;
                 default: return 0;
             }
         }

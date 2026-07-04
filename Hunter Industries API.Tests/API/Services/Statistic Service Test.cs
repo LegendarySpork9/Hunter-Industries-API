@@ -364,5 +364,65 @@ namespace HunterIndustriesAPI.Tests.API.Services
         }
 
         #endregion
+
+        #region GetPortfolioStatistic
+
+        /// <summary>
+        /// Checks whether the GetPortfolioStatistic method returns the correct records.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetPortfolioStatistic()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new HunterIndustriesAPI.Objects.Statistics.Portfolio.TopBarStatRecord
+                        {
+                            Items = 10,
+                            Filters = 3,
+                            AIUsed = 5
+                        }
+                    ],
+                    (Exception)null));
+
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            List<object> records = await service.GetPortfolioStatistic("topBarStats");
+
+            Assert.AreEqual(
+                1,
+                records.Count);
+        }
+
+        /// <summary>
+        /// Checks whether the GetPortfolioStatistic method returns an empty list when the part is unknown.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetPortfolioStatisticUnknown()
+        {
+            Mock<IDatabase> mockDatabase = new();
+
+            StatisticService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            List<object> records = await service.GetPortfolioStatistic("unknown");
+
+            Assert.AreEqual(
+                0,
+                records.Count);
+        }
+
+        #endregion
     }
 }

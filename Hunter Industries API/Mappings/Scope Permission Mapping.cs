@@ -62,6 +62,7 @@ namespace HunterIndustriesAPI.Mappings
                 "Portfolio API", new List<string>
                 {
                     "Filter",
+                    "Metric",
                     "Portfolio"
                 }
             }

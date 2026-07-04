@@ -2063,5 +2063,56 @@ namespace HunterIndustriesAPIControlPanel.Services
 
             return media;
         }
+
+        /// <summary>
+        /// Gets the portfolio statistics from the API.
+        /// </summary>
+        public async Task<PortfolioStatisticsModel?> GetPortfolioStatistics()
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                "Fetching portfolio statistics from API");
+
+            if (ExpiryTime < _Clock.UtcNow)
+            {
+                await Authorise();
+            }
+
+            PortfolioStatisticsModel? portfolioStatistics = null;
+
+            try
+            {
+                portfolioStatistics = await _APIClient.GetPortfolioStatistics();
+
+                if (portfolioStatistics != null)
+                {
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        "Fetched portfolio statistics from API");
+                }
+
+                else
+                {
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Info,
+                        "Failed to fetch portfolio statistics from API");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    "Failed to fetch portfolio statistics from API");
+            }
+
+            return portfolioStatistics;
+        }
     }
 }

@@ -2466,6 +2466,80 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
+        /// Returns the statistics for the portfolio from the API.
+        /// </summary>
+        public async Task<PortfolioStatisticsModel?> GetPortfolioStatistics()
+        {
+            PortfolioStatisticsModel? portfolioStatistics = null;
+
+            try
+            {
+                string url = BuildURL("/statistic/portfolio");
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"URL: {url}");
+
+                RestClient client = new(url);
+                client.AddDefaultHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Client");
+
+                RestRequest request = new()
+                {
+                    Method = Method.Get
+                };
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Configured Rest Request");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    "Sending Request");
+
+                RestResponse response = await client.ExecuteAsync(request);
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Code: {response.StatusCode}");
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Response Message: {response.Content ?? "No Response Content"}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                {
+                    portfolioStatistics = JsonConvert.DeserializeObject<PortfolioStatisticsModel>(response.Content);
+                }
+
+                if (response.ErrorException != null)
+                {
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Error: {response.ErrorException.Message}");
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        $"Response Stack Trace: {response.ErrorException.StackTrace}");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ex.Message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString());
+            }
+
+            return portfolioStatistics;
+        }
+
+        /// <summary>
         /// Returns the API url.
         /// </summary>
         private string BuildURL(

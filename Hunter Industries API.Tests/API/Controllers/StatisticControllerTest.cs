@@ -529,5 +529,106 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         }
 
         #endregion
+
+        #region GetPortfolio
+
+        /// <summary>
+        /// Checks whether the GetPortfolio method returns a 200 with portfolio statistics.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetPortfolio()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+            mockDatabase.SetupSequence(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, object>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new Objects.Statistics.Portfolio.TopBarStatRecord
+                        {
+                            Items = 10,
+                            Filters = 3,
+                            AIUsed = 5
+                        }
+                    ],
+                    (Exception)null))
+                .Returns((
+                    [
+                        new Objects.Statistics.Portfolio.TopFiveViewedItemsRecord
+                        {
+                            Name = "Test Item",
+                            SummaryViews = 100,
+                            FullDetailViews = 50,
+                            TotalViews = 150
+                        }
+                    ],
+                    (Exception)null))
+                .Returns((
+                    [
+                        new Objects.Statistics.Portfolio.TopFiveRecord
+                        {
+                            Name = "ASP.NET",
+                            Uses = 5
+                        }
+                    ],
+                    (Exception)null))
+                .Returns((
+                    [
+                        new Objects.Statistics.Portfolio.TopFiveRecord
+                        {
+                            Name = "C#",
+                            Uses = 8
+                        }
+                    ],
+                    (Exception)null))
+                .Returns((
+                    [
+                        new Objects.Statistics.Portfolio.TopFiveRecord
+                        {
+                            Name = "Windows",
+                            Uses = 6
+                        }
+                    ],
+                    (Exception)null))
+                .Returns((
+                    [
+                        new Objects.Statistics.Portfolio.LLMUsedRecord
+                        {
+                            Company = "Anthropic",
+                            Model = "Claude",
+                            Uses = 3
+                        }
+                    ],
+                    (Exception)null));
+
+            StatisticController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v2.2/statistic/portfolio")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.GetPortfolio();
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
+
+        #endregion
     }
 }

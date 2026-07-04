@@ -1,0 +1,271 @@
+@page "/portfolio"
+
+<PageTitle>Portfolio Dashboard</PageTitle>
+
+@if (IsLoading && Statistics == null)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+
+else
+{
+    <!-- Row 1: KPI Cards -->
+    <div class="row g-3 mb-4 justify-content-evenly">
+        <div class="col-6 col-md-4 col-xl-2">
+            <KPICard
+                Title="Items"
+                Value="@Statistics?.Metrics.Items.ToString()"
+                Icon="&#9776;"
+                IconColour="#20c997"
+                Trend="@("")" />
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <KPICard
+                Title="Filters"
+                Value="@Statistics?.Metrics.Filters.ToString()"
+                Icon="&#9698;"
+                IconColour="#28a745"
+                Trend="@("")" />
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <KPICard
+                Title="Items with AI Used"
+                Value="@Statistics?.Metrics.AIUsed.ToString()"
+                Icon="&#129302;"
+                IconColour="#17a2b8"
+                Trend="@("")" />
+        </div>
+    </div>
+
+    <!-- Row 2: Donut Charts -->
+    <div class="row g-3 mb-4 justify-content-evenly">
+        <div class="col-6 col-md-3">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Top 5 Frameworks</h6>
+                    @if (Statistics?.TopFiveFrameworks.Count > 0)
+                    {
+                        <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
+                            <RadzenDonutSeries
+                                Data="@Statistics.TopFiveFrameworks"
+                                CategoryProperty="Name"
+                                ValueProperty="Uses"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@FrameworkColours"
+                                Strokes="@FrameworkColours" />
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @for (int x = 0; x < Statistics.TopFiveFrameworks.Count; x++)
+                            {
+                                TopFiveModel item = Statistics.TopFiveFrameworks[x];
+                                string colour = FrameworkColours[x % FrameworkColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Name (@item.Uses)
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Top 5 Languages</h6>
+                    @if (Statistics?.TopFiveLanguages.Count > 0)
+                    {
+                        <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
+                            <RadzenDonutSeries
+                                Data="@Statistics.TopFiveLanguages"
+                                CategoryProperty="Name"
+                                ValueProperty="Uses"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@LanguageColours"
+                                Strokes="@LanguageColours" />
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @for (int x = 0; x < Statistics.TopFiveLanguages.Count; x++)
+                            {
+                                TopFiveModel item = Statistics.TopFiveLanguages[x];
+                                string colour = LanguageColours[x % LanguageColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Name (@item.Uses)
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Top 5 Environments</h6>
+                    @if (Statistics?.TopFiveEnvironments.Count > 0)
+                    {
+                        <RadzenChart Style="height: 160px;">
+                            <RadzenChartTooltipOptions Visible="false" />
+                            <RadzenDonutSeries
+                                Data="@Statistics.TopFiveEnvironments"
+                                CategoryProperty="Name"
+                                ValueProperty="Uses"
+                                InnerRadius="40"
+                                Radius="70"
+                                Fills="@EnvironmentColours"
+                                Strokes="@EnvironmentColours" />
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @for (int x = 0; x < Statistics.TopFiveEnvironments.Count; x++)
+                            {
+                                TopFiveModel item = Statistics.TopFiveEnvironments[x];
+                                string colour = EnvironmentColours[x % EnvironmentColours.Length];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Name (@item.Uses)
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3: Top 5 Items & LLM Usage -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">Top 5 Viewed Items</h6>
+                    @if (Statistics?.TopFiveViewedItems.Count > 0)
+                    {
+                        <RadzenStack class="rz-p-0 rz-p-md-6 rz-p-lg-12">
+                            <RadzenRow>
+                                <RadzenColumn Size="12">
+                                    <RadzenChart
+                                        Animate="true"
+                                        style="height: 350px">
+                                        <RadzenStackedBarSeries
+                                            Data="@ItemSummaryViews"
+                                            CategoryProperty="Label"
+                                            Title="Summary Views"
+                                            ValueProperty="Value" />
+                                        <RadzenStackedBarSeries
+                                            Data="@ItemFullDetailViews"
+                                            CategoryProperty="Label"
+                                            Title="Full Detail Views"
+                                            ValueProperty="Value" />
+                                        <RadzenValueAxis>
+                                            <RadzenGridLines
+                                                Visible="true"
+                                                Stroke="#555" />
+                                        </RadzenValueAxis>
+                                        <RadzenBarOptions
+                                            Radius="5"
+                                            Height="40" />
+                                    </RadzenChart>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenStack>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 card-rounded">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-3">LLM Usage by Company &amp; Model</h6>
+                    @if (LLMModelByCompany.Count > 0)
+                    {
+                        <RadzenChart Style="height: 280px;">
+                            @foreach (KeyValuePair<string, List<ChartDataPointModel>> group in LLMModelByCompany)
+                            {
+                                <RadzenStackedBarSeries
+                                    Data="@group.Value"
+                                    CategoryProperty="Label"
+                                    ValueProperty="Value"
+                                    Title="@group.Key"
+                                    StrokeWidth="0"
+                                    Fill="@LLMModelColours[group.Key]">
+                                    <TooltipTemplate Context="data">
+                                        @{
+                                            ChartDataPointModel model = (ChartDataPointModel)data;
+                                            IEnumerable<LLMUsedModel> groupedModels = Statistics!.LLMsUsed.Where(llm => llm.Company == model.Label);
+                                            int totalUsage = groupedModels.Sum(llm => llm.Uses);
+                                        }
+                                        <div>
+                                            <strong>@model.Label (@totalUsage)</strong>
+                                            @foreach (LLMUsedModel row in groupedModels)
+                                            {
+                                                <div>@row.Model: @row.Uses</div>
+                                            }
+                                        </div>
+                                    </TooltipTemplate>
+                                </RadzenStackedBarSeries>
+                            }
+                            <RadzenCategoryAxis />
+                            <RadzenValueAxis>
+                                <RadzenGridLines
+                                    Visible="true"
+                                    Stroke="#555" />
+                            </RadzenValueAxis>
+                            <RadzenLegend Visible="false" />
+                        </RadzenChart>
+                        <div class="d-flex flex-wrap gap-2 mt-2 justify-content-center chart-legend">
+                            @foreach (KeyValuePair<string, List<ChartDataPointModel>> item in LLMModelByCompany)
+                            {
+                                string colour = LLMModelColours[item.Key];
+
+                                <span class="text-muted">
+                                    <span class="legend-dot" style="background:@colour;"></span>
+                                    @item.Key
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    else
+                    {
+                        <p class="text-muted text-center mt-4">No data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

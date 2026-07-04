@@ -12,7 +12,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace HunterIndustriesAPI.Services.Portfolio
 {

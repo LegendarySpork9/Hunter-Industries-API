@@ -100,6 +100,22 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
                 actual.Count);
         }
 
+        /// <summary>
+        /// Tests whether the GetPermissions method returns the correct permissions when given "Portfolio API".
+        /// </summary>
+        [TestMethod]
+        public void TestGetPermissionsPortfolioAPI()
+        {
+            List<string> actual = ScopePermissionMapping.GetPermissions(["Portfolio API"]);
+
+            Assert.AreEqual(
+                3,
+                actual.Count);
+            Assert.IsTrue(actual.Contains("Filter"));
+            Assert.IsTrue(actual.Contains("Metric"));
+            Assert.IsTrue(actual.Contains("Portfolio"));
+        }
+
         #endregion
 
         #region HasPermission

@@ -2298,5 +2298,94 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
         }
 
         #endregion
+
+        #region GetPortfolioStatistics
+
+        /// <summary>
+        /// Tests whether the GetPortfolioStatistics method returns statistics.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetPortfolioStatistics()
+        {
+            PortfolioStatisticsModel expected = new()
+            {
+                Metrics = new PortfolioStatsModel
+                {
+                    Items = 10,
+                    Filters = 3,
+                    AIUsed = 5
+                },
+                TopFiveViewedItems =
+                [
+                    new TopFiveViewedItemsRecord
+                    {
+                        Name = "Test Item",
+                        SummaryViews = 100,
+                        FullDetailViews = 50,
+                        TotalViews = 150
+                    }
+                ],
+                TopFiveFrameworks =
+                [
+                    new TopFiveModel { Name = "ASP.NET", Uses = 5 }
+                ],
+                TopFiveLanguages =
+                [
+                    new TopFiveModel { Name = "C#", Uses = 8 }
+                ],
+                TopFiveEnvironments =
+                [
+                    new TopFiveModel { Name = "Windows", Uses = 6 }
+                ],
+                LLMsUsed =
+                [
+                    new LLMUsedModel { Company = "Anthropic", Model = "Claude", Uses = 3 }
+                ]
+            };
+
+            _MockAPIClient.Setup(c => c.GetPortfolioStatistics())
+                .ReturnsAsync(expected);
+
+            APIService service = CreateService();
+            PortfolioStatisticsModel? actual = await service.GetPortfolioStatistics();
+
+            Assert.IsNotNull(actual);
+
+            Assert.AreEqual(
+                10,
+                actual.Metrics.Items);
+        }
+
+        /// <summary>
+        /// Tests whether the GetPortfolioStatistics method returns null when no data is found.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetPortfolioStatisticsNull()
+        {
+            _MockAPIClient.Setup(c => c.GetPortfolioStatistics())
+                .ReturnsAsync((PortfolioStatisticsModel?)null);
+
+            APIService service = CreateService();
+            PortfolioStatisticsModel? actual = await service.GetPortfolioStatistics();
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the GetPortfolioStatistics method returns null when an exception occurs.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetPortfolioStatisticsException()
+        {
+            _MockAPIClient.Setup(c => c.GetPortfolioStatistics())
+                .ThrowsAsync(new Exception("Connection refused"));
+
+            APIService service = CreateService();
+            PortfolioStatisticsModel? actual = await service.GetPortfolioStatistics();
+
+            Assert.IsNull(actual);
+        }
+
+        #endregion
     }
 }

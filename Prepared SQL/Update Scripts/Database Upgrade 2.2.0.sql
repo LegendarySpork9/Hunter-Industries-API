@@ -382,6 +382,35 @@ ELSE
 	PRINT('FK_PortfolioItemEnvironment_PortfolioItem Already Exists')
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'PortfolioItemMetric' AND schema_id = SCHEMA_ID('dbo'))
+BEGIN
+	CREATE TABLE [dbo].[PortfolioItemMetric](
+		[PortfolioItemId] [int] NOT NULL,
+		[SummaryViews] [int] NOT NULL,
+		[FullDetailViews] [int] NOT NULL
+	) ON [PRIMARY]
+	ALTER TABLE [dbo].[PortfolioItemMetric] ADD DEFAULT ((0)) FOR [SummaryViews]
+	ALTER TABLE [dbo].[PortfolioItemMetric] ADD DEFAULT ((0)) FOR [FullDetailViews]
+
+	PRINT('PortfolioItemMetric Table Added')
+END
+ELSE
+	PRINT('PortfolioItemMetric Table Already Exists')
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_PortfolioItemMetric_PortfolioItem')
+BEGIN
+	ALTER TABLE [dbo].[PortfolioItemMetric]  WITH CHECK ADD  CONSTRAINT [FK_PortfolioItemMetric_PortfolioItem] FOREIGN KEY([PortfolioItemId])
+	REFERENCES [dbo].[PortfolioItem] ([PortfolioItemId])
+
+	ALTER TABLE [dbo].[PortfolioItemMetric] CHECK CONSTRAINT [FK_PortfolioItemMetric_PortfolioItem]
+
+	PRINT('Added Foreign Key to PortfolioItemId Field in PortfolioItemMetric Table')
+END
+ELSE
+	PRINT('FK_PortfolioItemMetric_PortfolioItem Already Exists')
+GO
+
 IF NOT EXISTS (SELECT * FROM [dbo].[EndpointVersion] WHERE [Value] = 'v2.2')
 BEGIN
 	INSERT INTO EndpointVersion([Value]) VALUES ('v2.2')
@@ -410,6 +439,16 @@ BEGIN
 END
 ELSE
 	PRINT('Portfolio Filter Endpoint Already Exists')
+GO
+
+IF NOT EXISTS (SELECT * FROM [dbo].[Endpoint] WHERE [Value] = '/portfolio/metric')
+BEGIN
+	INSERT INTO [Endpoint]([Value]) VALUES ('/portfolio/metric')
+
+	PRINT('Added Portfolio Metric Endpoint')
+END
+ELSE
+	PRINT('Portfolio Metric Endpoint Already Exists')
 GO
 
 IF NOT EXISTS (SELECT * FROM [dbo].[Scope] WHERE [Value] = 'Portfolio API')

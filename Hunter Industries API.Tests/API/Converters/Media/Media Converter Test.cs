@@ -1,8 +1,8 @@
 // Copyright © - 11/06/2026 - Toby Hunter
-using HunterIndustriesAPI.Converters;
+using HunterIndustriesAPI.Converters.Media;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HunterIndustriesAPI.Tests.API.Converters
+namespace HunterIndustriesAPI.Tests.API.Converters.Media
 {
     [TestClass]
     public class MediaConverterTest

@@ -2,7 +2,7 @@
 using HunterIndustriesAPI.Converters.Portfolio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HunterIndustriesAPI.Tests.API.Converters
+namespace HunterIndustriesAPI.Tests.API.Converters.Portfolio
 {
     [TestClass]
     public class GitHubIssueConverterTest
