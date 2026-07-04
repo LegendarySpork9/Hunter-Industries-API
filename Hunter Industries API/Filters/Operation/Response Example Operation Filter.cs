@@ -333,7 +333,36 @@ namespace HunterIndustriesAPI.Filters.Operation
 
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(MetricController))
             {
-                operation.responses.Remove("200");
+                if (operation.responses.TryGetValue("200", out existingResponse) && operation.operationId == "Metric_Get")
+                {
+                    existingResponse.schema = new Schema
+                    {
+                        type = "object",
+                        properties = new Dictionary<string, Schema>
+                        {
+                            {
+                                "Metrics", new Schema
+                                {
+                                    type = "array",
+                                    example = new string[]
+                                    {
+                                        "summary",
+                                        "full"
+                                    },
+                                    items = new Schema
+                                    {
+                                        type = "string"
+                                    }
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (operation.operationId == "Metric_Post")
+                {
+                    operation.responses.Remove("200");
+                }
 
                 if (operation.responses.TryGetValue("201", out existingResponse) && operation.operationId == "Metric_Post")
                 {
