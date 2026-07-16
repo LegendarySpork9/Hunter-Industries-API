@@ -246,7 +246,7 @@ fetch next @pageSize rows only";
 
             try
             {
-                string sql = _FileSystem.ReadAllText(Path.Combine(
+                 string sql = _FileSystem.ReadAllText(Path.Combine(
                     _Options.SQLFiles,
                     "Media",
                     "GetApplicationEntityMedia.sql"));
@@ -297,12 +297,12 @@ fetch next @pageSize rows only";
                             URL = url,
                             Application = application,
                             DateUploaded = DateTime.SpecifyKind(
-                                reader.GetDateTime(8),
+                                reader.GetDateTime(7),
                                 DateTimeKind.Utc),
                             DateUpdated = DateTime.SpecifyKind(
-                                reader.GetDateTime(9),
+                                reader.GetDateTime(8),
                                 DateTimeKind.Utc),
-                            IsDeleted = reader.GetBoolean(10)
+                            IsDeleted = reader.GetBoolean(9)
                         };
                     },
                     parameters);
@@ -471,7 +471,7 @@ fetch next @pageSize rows only";
                     _Options.SQLFiles,
                     "Media",
                     "MediaExists.sql"));
-                sql += "\nwhere [Application].[Name] = @application\nand Media.[Name] = @name";
+                sql += "\nwhere [Application].[Name] = @application\nand Media.[Name] = @name\nand Media.IsDeleted = 0";
 
                 SqlParameter[] parameters =
                 {

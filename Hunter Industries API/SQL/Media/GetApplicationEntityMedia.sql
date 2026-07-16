@@ -1,5 +1,5 @@
 select
-	MediaId,
+	Media.MediaId,
 	Extension,
 	MimeType,
 	Media.[Name] as [FileName],
