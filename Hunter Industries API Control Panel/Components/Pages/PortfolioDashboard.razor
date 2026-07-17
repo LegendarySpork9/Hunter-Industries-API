@@ -226,7 +226,7 @@ else
                                     <TooltipTemplate Context="data">
                                         @{
                                             ChartDataPointModel model = (ChartDataPointModel)data;
-                                            IEnumerable<LLMUsedModel> groupedModels = Statistics!.LLMsUsed.Where(llm => llm.Company == model.Label);
+                                            IEnumerable<LLMUsedModel> groupedModels = Statistics!.LLMUsed.Where(llm => llm.Company == model.Label);
                                             int totalUsage = groupedModels.Sum(llm => llm.Uses);
                                         }
                                         <div>

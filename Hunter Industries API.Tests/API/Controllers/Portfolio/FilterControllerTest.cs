@@ -242,6 +242,56 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
         }
 
         /// <summary>
+        /// Checks whether the Post method returns a 201 status code when a comparison filter is created.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostComparisonFilter()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)1,
+                    (Exception)null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    (Exception)null));
+
+            FilterController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Post,
+                    new Uri("https://localhost/v2.2/portfolio/filter")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Post(
+                new FilterModel
+                {
+                    Name = "More Bugs than Features",
+                    Type = "comparison",
+                    Operator = "greater than",
+                    Path = "gitHubInformation.issueBreakdown.bugs",
+                    Values = "gitHubInformation.issueBreakdown.newFeatures"
+                });
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.Created,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
         /// Checks whether the Post method returns a 400 status code when the body is null.
         /// </summary>
         [TestMethod]

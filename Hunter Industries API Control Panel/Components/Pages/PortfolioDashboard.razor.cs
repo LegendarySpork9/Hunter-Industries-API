@@ -65,15 +65,15 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     StandardValues.LoggerValues.Debug,
                     $"Item Full Detail Views: {ItemFullDetailViews.Count}");
 
-                if (Statistics.LLMsUsed != null)
+                if (Statistics.LLMUsed != null)
                 {
-                    string[] companies = [.. Statistics.LLMsUsed.Select(llm => llm.Company)
+                    string[] companies = [.. Statistics.LLMUsed.Select(llm => llm.Company)
                         .Distinct()
                         .OrderBy(llm => llm)];
-                    string[] models = [.. Statistics.LLMsUsed.Select(llm => llm.Model)
+                    string[] models = [.. Statistics.LLMUsed.Select(llm => llm.Model)
                         .Distinct()
                         .OrderBy(llm => llm)];
-                    Dictionary<(string, string), int> llmLookup = Statistics.LLMsUsed.GroupBy(llm => new { llm.Model, llm.Company })
+                    Dictionary<(string, string), int> llmLookup = Statistics.LLMUsed.GroupBy(llm => new { llm.Model, llm.Company })
                         .ToDictionary(llm => (llm.Key.Model, llm.Key.Company), llm => llm.Sum(uses => uses.Uses));
                     LLMModelByCompany = models.ToDictionary(model => model, model => companies.Select(company => new ChartDataPointModel
                     {

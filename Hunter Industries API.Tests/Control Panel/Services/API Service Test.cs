@@ -2337,7 +2337,7 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                 [
                     new TopFiveModel { Name = "Windows", Uses = 6 }
                 ],
-                LLMsUsed =
+                LLMUsed =
                 [
                     new LLMUsedModel { Company = "Anthropic", Model = "Claude", Uses = 3 }
                 ]

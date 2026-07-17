@@ -29,11 +29,11 @@ namespace HunterIndustriesAPI.Functions
                 return null;
             }
 
-            string[] validTypes = { "numeric", "text", "boolean", "null" };
+            string[] validTypes = { "numeric", "text", "boolean", "null", "comparison" };
 
             if (!validTypes.Contains(request.Type.ToLower()))
             {
-                return $"Invalid filter type '{request.Type}'. Valid types are: tag, numeric, text, boolean, null.";
+                return $"Invalid filter type '{request.Type}'. Valid types are: tag, numeric, text, boolean, null, comparison.";
             }
 
             if (string.IsNullOrWhiteSpace(request.Path))
@@ -84,6 +84,16 @@ namespace HunterIndustriesAPI.Functions
                     if (!nullOperators.Contains(request.Operator.ToLower()))
                     {
                         return $"Invalid operator '{request.Operator}' for null filters. Valid operators are: {string.Join(", ", nullOperators)}.";
+                    }
+
+                    break;
+
+                case "comparison":
+                    string[] comparisonOperators = { "equals", "not equals", "greater than", "less than" };
+
+                    if (!comparisonOperators.Contains(request.Operator.ToLower()))
+                    {
+                        return $"Invalid operator '{request.Operator}' for comparison filters. Valid operators are: {string.Join(", ", comparisonOperators)}.";
                     }
 
                     break;

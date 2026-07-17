@@ -254,6 +254,50 @@ namespace HunterIndustriesAPI.Tests.API.Functions
 
         #endregion
 
+        #region Comparison
+
+        /// <summary>
+        /// Checks whether a valid comparison filter returns no error.
+        /// </summary>
+        [TestMethod]
+        public void TestValidateComparisonFilter()
+        {
+            FilterModel request = new()
+            {
+                Name = "More Bugs than Features",
+                Type = "comparison",
+                Operator = "greater than",
+                Path = "gitHubInformation.issueBreakdown.bugs",
+                Values = "gitHubInformation.issueBreakdown.newFeatures"
+            };
+
+            string result = FilterFunction.ValidateFilterType(request);
+
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Checks whether a comparison filter with an invalid operator returns an error.
+        /// </summary>
+        [TestMethod]
+        public void TestValidateComparisonInvalidOperator()
+        {
+            FilterModel request = new()
+            {
+                Name = "More Bugs than Features",
+                Type = "comparison",
+                Operator = "contains",
+                Path = "gitHubInformation.issueBreakdown.bugs",
+                Values = "gitHubInformation.issueBreakdown.newFeatures"
+            };
+
+            string result = FilterFunction.ValidateFilterType(request);
+
+            Assert.IsNotNull(result);
+        }
+
+        #endregion
+
         #region Validation
 
         /// <summary>
