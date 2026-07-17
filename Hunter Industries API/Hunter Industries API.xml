@@ -1584,6 +1584,15 @@
             Extracts the application name from the claims principal.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Functions.FilterFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.FilterFunction.ValidateFilterType(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel)">
+            <summary>
+            Validates the filter type, operator, and path combination.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Functions.ParameterFunction">
             <summary>
             </summary>
@@ -2207,6 +2216,21 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Name">
             <summary>
             The name of the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Type">
+            <summary>
+            The type of filter (tag, numeric, text, boolean, null).
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Operator">
+            <summary>
+            The comparison operator for the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Path">
+            <summary>
+            The dot-notation path to the item property.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Values">
@@ -3515,6 +3539,21 @@
         <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Name">
             <summary>
             The name of the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Type">
+            <summary>
+            The type of filter (tag, numeric, text, boolean, null).
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Operator">
+            <summary>
+            The comparison operator for the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Path">
+            <summary>
+            The dot-notation path to the item property.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Values">

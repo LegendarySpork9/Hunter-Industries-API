@@ -64,6 +64,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
                         {
                             Id = 1,
                             Name = "Language",
+                            Type = "tag",
                             Values = ["C#", "Python", "JavaScript"],
                             IsDeleted = false
                         }
@@ -144,7 +145,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
         #region Post
 
         /// <summary>
-        /// Checks whether the Post method returns a 201 status code when a filter is created.
+        /// Checks whether the Post method returns a 201 status code when a tag filter is created.
         /// </summary>
         [TestMethod]
         public async Task TestPost()
@@ -181,7 +182,57 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
                 new FilterModel
                 {
                     Name = "Language",
+                    Type = "tag",
                     Values = "C#,Python,JavaScript"
+                });
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.Created,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 201 status code when a null check filter is created.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostNullCheckFilter()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)1,
+                    (Exception)null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [],
+                    (Exception)null));
+
+            FilterController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Post,
+                    new Uri("https://localhost/v2.2/portfolio/filter")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Post(
+                new FilterModel
+                {
+                    Name = "Has LLM Usage",
+                    Type = "null",
+                    Operator = "has value",
+                    Path = "llmUsage"
                 });
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
@@ -218,6 +269,132 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
             };
 
             IHttpActionResult actionResult = await controller.Post(null);
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 400 status code when the operator is invalid for the type.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostInvalidOperator()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)1,
+                    (Exception)null));
+
+            FilterController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Post,
+                    new Uri("https://localhost/v2.2/portfolio/filter")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Post(
+                new FilterModel
+                {
+                    Name = "Invalid Filter",
+                    Type = "numeric",
+                    Operator = "contains",
+                    Path = "unitTestCoverage",
+                    Values = "50"
+                });
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 400 status code when the path is missing for a non-tag filter.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostMissingPath()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)1,
+                    (Exception)null));
+
+            FilterController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Post,
+                    new Uri("https://localhost/v2.2/portfolio/filter")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Post(
+                new FilterModel
+                {
+                    Name = "Missing Path",
+                    Type = "numeric",
+                    Operator = "greater than",
+                    Values = "5"
+                });
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 400 status code when the operator is missing for a non-tag filter.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostMissingOperator()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)1,
+                    (Exception)null));
+
+            FilterController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Post,
+                    new Uri("https://localhost/v2.2/portfolio/filter")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Post(
+                new FilterModel
+                {
+                    Name = "Missing Operator",
+                    Type = "boolean",
+                    Path = "isDeleted"
+                });
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(
@@ -263,6 +440,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
                 new FilterModel
                 {
                     Name = "Language",
+                    Type = "tag",
                     Values = "C#,Python,JavaScript"
                 });
 
@@ -310,6 +488,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
                 new FilterModel
                 {
                     Name = "Language",
+                    Type = "tag",
                     Values = "C#,Python,JavaScript"
                 });
 
@@ -357,6 +536,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
                 new FilterModel
                 {
                     Name = "Language",
+                    Type = "tag",
                     Values = "C#,Python,JavaScript"
                 });
 
@@ -378,7 +558,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
         {
             Mock<IFileSystem> mockFileSystem = new();
             mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
-                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
+                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Type] = @type,\n\t[Operator] = @operator,\n\t[Path] = @path,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.ExecuteScalar(
@@ -403,6 +583,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
                     {
                         Id = 1,
                         Name = "Language",
+                        Type = "tag",
                         Values = ["C#", "Python", "JavaScript"],
                         IsDeleted = false
                     },
@@ -532,7 +713,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
         {
             Mock<IFileSystem> mockFileSystem = new();
             mockFileSystem.Setup(fs => fs.ReadAllText(It.IsAny<string>()))
-                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
+                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Type] = @type,\n\t[Operator] = @operator,\n\t[Path] = @path,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.ExecuteScalar(
@@ -557,6 +738,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
                     {
                         Id = 1,
                         Name = "Language",
+                        Type = "tag",
                         Values = ["C#", "Python", "JavaScript"],
                         IsDeleted = false
                     },

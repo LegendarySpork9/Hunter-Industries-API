@@ -21,6 +21,46 @@ ELSE
 	PRINT('PortfolioFilter Table Already Exists')
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.PortfolioFilter') AND name = 'Type')
+BEGIN
+	ALTER TABLE [dbo].[PortfolioFilter] ADD [Type] [varchar](10) NOT NULL DEFAULT ('tag')
+
+	PRINT('PortfolioFilter Type Column Added')
+END
+ELSE
+	PRINT('PortfolioFilter Type Column Already Exists')
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.PortfolioFilter') AND name = 'Operator')
+BEGIN
+	ALTER TABLE [dbo].[PortfolioFilter] ADD [Operator] [varchar](20) NULL
+
+	PRINT('PortfolioFilter Operator Column Added')
+END
+ELSE
+	PRINT('PortfolioFilter Operator Column Already Exists')
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.PortfolioFilter') AND name = 'Path')
+BEGIN
+	ALTER TABLE [dbo].[PortfolioFilter] ADD [Path] [varchar](255) NULL
+
+	PRINT('PortfolioFilter Path Column Added')
+END
+ELSE
+	PRINT('PortfolioFilter Path Column Already Exists')
+GO
+
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.PortfolioFilter') AND name = 'Values' AND is_nullable = 0)
+BEGIN
+	ALTER TABLE [dbo].[PortfolioFilter] ALTER COLUMN [Values] [varchar](max) NULL
+
+	PRINT('PortfolioFilter Values Column Updated To Nullable')
+END
+ELSE
+	PRINT('PortfolioFilter Values Column Already Nullable')
+GO
+
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'PortfolioItemType' AND schema_id = SCHEMA_ID('dbo'))
 BEGIN
 	CREATE TABLE [dbo].[PortfolioItemType](

@@ -530,15 +530,20 @@ GO
 CREATE TABLE [dbo].[PortfolioFilter](
 	[PortfolioFilterId] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
-	[Values] [varchar](max) NOT NULL,
+	[Type] [varchar](10) NOT NULL,
+	[Operator] [varchar](20) NULL,
+	[Path] [varchar](255) NULL,
+	[Values] [varchar](max) NULL,
 	[IsDeleted] [bit] NOT NULL
- CONSTRAINT [PK_PortfolioFilter] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_PortfolioFilter] PRIMARY KEY CLUSTERED
 (
 	[PortfolioFilterId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[PortfolioFilter] ADD DEFAULT ((0)) FOR [IsDeleted]
+GO
+ALTER TABLE [dbo].[PortfolioFilter] ADD DEFAULT ('tag') FOR [Type]
 GO
 
 /****** Object:  Table [dbo].[PortfolioItem]    Script Date: 30/06/2026 13:29:01 ******/
