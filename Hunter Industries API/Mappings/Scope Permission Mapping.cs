@@ -63,7 +63,8 @@ namespace HunterIndustriesAPI.Mappings
                 {
                     "Filter",
                     "Metric",
-                    "Portfolio"
+                    "Portfolio",
+                    "User.Read"
                 }
             }
         };

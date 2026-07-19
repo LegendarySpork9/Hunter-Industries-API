@@ -43,6 +43,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
                 {
                     Id = 1,
                     Name = "Language",
+                    Type = "tag",
                     Values = ["C#", "JavaScript"],
                     IsDeleted = false
                 }
@@ -71,6 +72,60 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
             Assert.AreEqual(
                 "Language",
                 actual[0].Name);
+            Assert.AreEqual(
+                "tag",
+                actual[0].Type);
+        }
+
+        /// <summary>
+        /// Checks whether the GetFilters method returns records with the new filter type fields.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetFiltersWithNullCheckType()
+        {
+            List<FilterRecord> records =
+            [
+                new FilterRecord
+                {
+                    Id = 1,
+                    Name = "Has LLM Usage",
+                    Type = "null",
+                    Operator = "has value",
+                    Path = "llmUsage",
+                    IsDeleted = false
+                }
+            ];
+
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, FilterRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+
+            FilterService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            List<FilterRecord> actual = await service.GetFilters();
+
+            Assert.AreEqual(
+                1,
+                actual.Count);
+            Assert.AreEqual(
+                "null",
+                actual[0].Type);
+            Assert.AreEqual(
+                "has value",
+                actual[0].Operator);
+            Assert.AreEqual(
+                "llmUsage",
+                actual[0].Path);
+            Assert.IsNull(actual[0].Values);
         }
 
         /// <summary>
@@ -228,7 +283,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         #region FilterCreated
 
         /// <summary>
-        /// Checks whether the FilterCreated method returns true and the filter id when the record is created.
+        /// Checks whether the FilterCreated method returns true and the filter id when a tag filter is created.
         /// </summary>
         [TestMethod]
         public async Task TestFilterCreated()
@@ -250,7 +305,44 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
             FilterModel filter = new()
             {
                 Name = "Language",
+                Type = "tag",
                 Values = "C#,JavaScript"
+            };
+
+            (bool created, int filterId) = await service.FilterCreated(filter);
+
+            Assert.IsTrue(created);
+            Assert.AreEqual(
+                1,
+                filterId);
+        }
+
+        /// <summary>
+        /// Checks whether the FilterCreated method returns true when a null check filter is created with no values.
+        /// </summary>
+        [TestMethod]
+        public async Task TestFilterCreatedWithNullValues()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)1,
+                    null));
+
+            FilterService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            FilterModel filter = new()
+            {
+                Name = "Has LLM Usage",
+                Type = "null",
+                Operator = "has value",
+                Path = "llmUsage"
             };
 
             (bool created, int filterId) = await service.FilterCreated(filter);
@@ -284,6 +376,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
             FilterModel filter = new()
             {
                 Name = "Language",
+                Type = "tag",
                 Values = "C#,JavaScript"
             };
 
@@ -318,6 +411,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
             FilterModel filter = new()
             {
                 Name = "Language",
+                Type = "tag",
                 Values = "C#,JavaScript"
             };
 
@@ -340,7 +434,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestFilterUpdated()
         {
             _MockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>()))
-                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
+                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Type] = @type,\n\t[Operator] = @operator,\n\t[Path] = @path,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.Execute(
@@ -358,7 +452,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
 
             bool actual = await service.FilterUpdated(
                 1,
-                new FilterModel { Name = "Updated", Values = "C#,Python" });
+                new FilterModel { Name = "Updated", Type = "tag", Values = "C#,Python" });
 
             Assert.IsTrue(actual);
         }
@@ -370,7 +464,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestFilterUpdatedNoRowsAffected()
         {
             _MockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>()))
-                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
+                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Type] = @type,\n\t[Operator] = @operator,\n\t[Path] = @path,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.Execute(
@@ -388,7 +482,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
 
             bool actual = await service.FilterUpdated(
                 1,
-                new FilterModel { Name = "Updated", Values = "C#,Python" });
+                new FilterModel { Name = "Updated", Type = "tag", Values = "C#,Python" });
 
             Assert.IsFalse(actual);
         }
@@ -400,7 +494,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
         public async Task TestFilterUpdatedWithError()
         {
             _MockFileSystem.Setup(f => f.ReadAllText(It.IsAny<string>()))
-                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
+                .Returns("update PortfolioFilter set\n\t[Name] = @name,\n\t[Type] = @type,\n\t[Operator] = @operator,\n\t[Path] = @path,\n\t[Values] = @values\nwhere PortfolioFilterId = @filterId");
 
             Mock<IDatabase> mockDatabase = new();
             mockDatabase.Setup(d => d.Execute(
@@ -418,7 +512,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.Portfolio
 
             bool actual = await service.FilterUpdated(
                 1,
-                new FilterModel { Name = "Updated", Values = "C#,Python" });
+                new FilterModel { Name = "Updated", Type = "tag", Values = "C#,Python" });
 
             Assert.IsFalse(actual);
         }

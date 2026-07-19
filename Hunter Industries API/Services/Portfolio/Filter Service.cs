@@ -69,10 +69,15 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     {
                         Id = reader.GetInt32(0),
                         Name = reader.GetString(1),
-                        Values = reader.GetString(2)
-                            .Split(',')
-                            .ToList(),
-                        IsDeleted = reader.GetBoolean(3)
+                        Type = reader.GetString(2),
+                        Operator = reader.IsDBNull(3) ? null : reader.GetString(3),
+                        Path = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        Values = reader.IsDBNull(5)
+                            ? null
+                            : reader.GetString(5)
+                                .Split(',')
+                                .ToList(),
+                        IsDeleted = reader.GetBoolean(6)
                     });
 
                 if (ex != null)
@@ -139,10 +144,15 @@ namespace HunterIndustriesAPI.Services.Portfolio
                     {
                         Id = reader.GetInt32(0),
                         Name = reader.GetString(1),
-                        Values = reader.GetString(2)
-                            .Split(',')
-                            .ToList(),
-                        IsDeleted = reader.GetBoolean(3)
+                        Type = reader.GetString(2),
+                        Operator = reader.IsDBNull(3) ? null : reader.GetString(3),
+                        Path = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        Values = reader.IsDBNull(5)
+                            ? null
+                            : reader.GetString(5)
+                                .Split(',')
+                                .ToList(),
+                        IsDeleted = reader.GetBoolean(6)
                     },
                     parameters);
 
@@ -344,7 +354,10 @@ namespace HunterIndustriesAPI.Services.Portfolio
                 SqlParameter[] parameters =
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = filter.Name },
-                    new SqlParameter("@values", SqlDbType.VarChar) { Value = filter.Values }
+                    new SqlParameter("@type", SqlDbType.VarChar) { Value = filter.Type ?? "tag" },
+                    new SqlParameter("@operator", SqlDbType.VarChar) { Value = (object)filter.Operator ?? DBNull.Value },
+                    new SqlParameter("@path", SqlDbType.VarChar) { Value = (object)filter.Path ?? DBNull.Value },
+                    new SqlParameter("@values", SqlDbType.VarChar) { Value = (object)filter.Values ?? DBNull.Value }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(
@@ -421,6 +434,9 @@ namespace HunterIndustriesAPI.Services.Portfolio
                 List<SqlParameter> parameterList = new List<SqlParameter>()
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = filter.Name },
+                    new SqlParameter("@type", SqlDbType.VarChar) { Value = filter.Type },
+                    new SqlParameter("@operator", SqlDbType.VarChar) { Value = (object)filter.Operator ?? DBNull.Value },
+                    new SqlParameter("@path", SqlDbType.VarChar) { Value = (object)filter.Path ?? DBNull.Value },
                     new SqlParameter("@values", SqlDbType.VarChar) { Value = filter.Values },
                     new SqlParameter("@filterId", SqlDbType.Int) { Value = id }
                 };
@@ -431,6 +447,27 @@ namespace HunterIndustriesAPI.Services.Portfolio
 	[Name] = @name,", "");
                     parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@name"));
 
+                }
+
+                if (string.IsNullOrWhiteSpace(filter.Type))
+                {
+                    sql = sql.Replace(@"
+	[Type] = @type,", "");
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@type"));
+                }
+
+                if (string.IsNullOrWhiteSpace(filter.Operator))
+                {
+                    sql = sql.Replace(@"
+	[Operator] = @operator,", "");
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@operator"));
+                }
+
+                if (string.IsNullOrWhiteSpace(filter.Path))
+                {
+                    sql = sql.Replace(@"
+	[Path] = @path,", "");
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@path"));
                 }
 
                 if (string.IsNullOrWhiteSpace(filter.Values))

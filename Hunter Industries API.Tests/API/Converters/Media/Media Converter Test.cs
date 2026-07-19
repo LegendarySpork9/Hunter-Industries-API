@@ -29,7 +29,8 @@ namespace HunterIndustriesAPI.Tests.API.Converters.Media
         [TestMethod]
         public void TestGetSQLGetApplicationEntityPortfolio()
         {
-            string expected = @"join PortfolioItemImage PII with (nolock) on Media.MediaId = PII.MediaId
+            string expected = @"
+join PortfolioItemImage PII with (nolock) on Media.MediaId = PII.MediaId
 where PortfolioItemId = @entityId";
             string actual = MediaConverter.GetSQLGetApplicationEntity("Portfolio");
 

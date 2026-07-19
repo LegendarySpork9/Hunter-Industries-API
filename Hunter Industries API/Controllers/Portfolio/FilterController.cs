@@ -210,7 +210,12 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
 
             if (!_modelValidator.IsValid(
                 request,
-                true))
+                propertiesAllowedNulls: new string[]
+                {
+                    "Operator",
+                    "Path",
+                    "Values"
+                }))
             {
                 response = new ResponseModel()
                 {
@@ -239,6 +244,44 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                 return Content(
                     HttpStatusCode.BadRequest,
                     response.Data);
+            }
+
+            string filterTypeValidationError = FilterFunction.ValidateFilterType(request);
+
+            if (filterTypeValidationError != null)
+            {
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = filterTypeValidationError
+                    }
+                };
+
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("portfolio/filter"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("POST"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    null,
+                    requestBody: ParameterFunction.SerialiseRequestBody(request),
+                    responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Filter (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest,
+                    response.Data);
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Type))
+            {
+                request.Type = "tag";
             }
 
             if (await _filterService.FilterExists(request.Name))
@@ -341,7 +384,10 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                 {
                     Id = id,
                     Name = request.Name,
-                    Values = request.Values.Split(',')
+                    Type = request.Type,
+                    Operator = request.Operator,
+                    Path = request.Path,
+                    Values = request.Values?.Split(',')
                         .ToList()
                 }
             };
@@ -497,6 +543,33 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                             "Name",
                             filter.Name,
                             updatedFilter.Name);
+                    }
+
+                    if (updatedFilter.Type != filter.Type)
+                    {
+                        await _changeService.LogChange(
+                            audit.Item2,
+                            "Type",
+                            filter.Type,
+                            updatedFilter.Type);
+                    }
+
+                    if (updatedFilter.Operator != filter.Operator)
+                    {
+                        await _changeService.LogChange(
+                            audit.Item2,
+                            "Operator",
+                            filter.Operator ?? "",
+                            updatedFilter.Operator ?? "");
+                    }
+
+                    if (updatedFilter.Path != filter.Path)
+                    {
+                        await _changeService.LogChange(
+                            audit.Item2,
+                            "Path",
+                            filter.Path ?? "",
+                            updatedFilter.Path ?? "");
                     }
 
                     string updatedValues = string.Join(",", updatedFilter.Values);
@@ -734,5 +807,6 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                 HttpStatusCode.NotFound,
                 response.Data);
         }
+
     }
 }

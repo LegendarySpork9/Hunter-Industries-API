@@ -109,11 +109,12 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
             List<string> actual = ScopePermissionMapping.GetPermissions(["Portfolio API"]);
 
             Assert.AreEqual(
-                3,
+                4,
                 actual.Count);
             Assert.IsTrue(actual.Contains("Filter"));
             Assert.IsTrue(actual.Contains("Metric"));
             Assert.IsTrue(actual.Contains("Portfolio"));
+            Assert.IsTrue(actual.Contains("User.Read"));
         }
 
         #endregion

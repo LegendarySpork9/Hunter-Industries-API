@@ -61,9 +61,11 @@ A custom `RequiredPolicyAuthorisationAttributeFilter` is applied at the controll
 
 | Scope | Permissions |
 |-------|-------------|
-| Control Panel API | 13 permissions (Assistant.*, AuditHistory, Configuration, etc.) |
+| Control Panel API | 14 permissions (Assistant.*, AuditHistory, Configuration, ErrorLog, Media.Read, ServerStatus.*, Statistic, User, UserSettings) |
 | Assistant API | 4 Assistant-specific permissions |
 | Server Status API | 7 Server status and user management permissions |
+| Media API | 1 permission (Media) |
+| Portfolio API | 4 permissions (Filter, Metric, Portfolio, User.Read) |
 
 ### Token Validation Parameters
 
@@ -95,12 +97,17 @@ Raw SQL queries are stored as `.sql` files on the filesystem, organised by featu
 
 ```
 SQL/
-├── Token/
-├── User/
+├── Assistant/
+├── Audit History/
+├── Change/
 ├── Configuration/
+├── Error Log/
+├── Media/
+├── Portfolio/
 ├── Server Status/
 ├── Statistics/
-└── ...
+├── Token/
+└── User/
 ```
 
 Queries use parameterised inputs to prevent SQL injection.
@@ -143,28 +150,36 @@ The Control Panel has its own `log4net.config` file, separate from the API confi
 
 The API uses URL path versioning with custom attributes:
 
-- `VersionedRouteAttribute` - Applied to controller actions, accepts a path and minimum version.
+- `VersionedRouteAttribute` - Applied to controller actions, accepts a path, minimum version, and optional maximum version.
 - `VersionedDirectRouteProvider` - Expands versioned routes at startup.
-- **Current Versions:** 1.0, 1.1, 2.0
+- **Current Versions:** 1.0, 1.1, 2.0, 2.1, 2.2
 - **Route Format:** `api/v{version}/{path}` (e.g., `api/v2.0/auth/token`)
 
 ### Controllers
+
+Controllers are organised into subdirectories by feature area (`Assistant/`, `Media/`, `Portfolio/`, `Server Status/`, `User/`).
 
 | Controller | Version | Endpoints |
 |------------|---------|-----------|
 | TokenController | v1.0+ | `auth/token` |
 | UserController | v1.0+ (GET, POST), v2.0+ (PATCH, DELETE) | `user` |
 | UserSettingsController | v2.0+ | `usersettings` |
-| ConfigurationController | v1.0+ | `assistant/config` |
+| ConfigController | v1.0+ | `assistant/config` |
 | VersionController | v1.0+ | `assistant/version` |
 | DeletionController | v1.0+ | `assistant/deletion` |
 | LocationController | v1.0+ | `assistant/location` |
 | AuditController | v1.0+ | `audithistory` |
+| ConfigurationController | v2.0+ | `configuration`, `configuration/{entity}`, `configuration/{entity}/{id}` |
 | ServerInformationController | v2.0+ | `serverstatus/serverinformation` |
 | ServerAlertController | v2.0+ | `serverstatus/serveralert` |
 | ServerEventController | v2.0+ | `serverstatus/serverevent` |
 | StatisticController | v2.0+ | `statistic/dashboard`, `statistic/server/{id}`, `statistic/error`, `statistic/application/{id}`, `statistic/user/{id}` |
+| StatisticController | v2.2+ | `statistic/portfolio` |
 | ErrorController | v2.0+ | `errorlog`, `errorlog/{id}` |
+| MediaController | v2.1+ | `media/{application}`, `media/{application}/{entityId}`, `media/{id}` |
+| PortfolioController | v2.2+ | `portfolio`, `portfolio/{id}` |
+| FilterController | v2.2+ | `portfolio/filter`, `portfolio/filter/{id}` |
+| MetricController | v2.2+ | `portfolio/metric` |
 
 ### Response Format
 
@@ -190,21 +205,72 @@ All endpoints return a standardised envelope:
 ```
 Models/
 ├── Requests/
-│   ├── Bodies/         # Complex request bodies (Assistant, Configuration, Server Status, User)
-│   └── Filters/        # Query filter models (Assistant, Configuration, AuditHistory, etc.)
-├── Responses/          # Typed response models (Token, Configuration, Statistics, etc.)
-└── Objects/            # Domain models mapped from database records
-    ├── Configuration/
+│   ├── Bodies/         # Complex request bodies
+│   │   ├── Assistant/
+│   │   ├── Configuration/
+│   │   ├── Media/
+│   │   ├── Portfolio/
+│   │   ├── Server Status/
+│   │   └── User/
+│   └── Filters/        # Query filter models
+│       ├── Assistant/
+│       └── Media/
+└── Responses/          # Typed response models
+    ├── Assistant/
+    ├── Media/
     ├── Server Status/
-    ├── Statistics/
-    └── User/
+    └── Statistics/
+```
+
+## Service Layer
+
+Controllers delegate business logic to service classes, organised by feature area:
+
+```
+Services/
+├── Assistant/              # Config, Deletion, Location, Version
+├── Media/                  # Media Service
+├── Portfolio/              # Portfolio, Filter, GitHub, Metric
+├── Server Status/          # Server Alert, Event, Information
+├── User/                   # User, User Settings
+├── Audit History Service.cs
+├── Change Service.cs       # Tracks configuration changes
+├── Configuration Service.cs
+├── Error Log Service.cs
+├── Model Validation Service.cs
+├── Statistic Service.cs
+└── Token Service.cs
+```
+
+## Converters
+
+Converters transform between domain models and response/request objects:
+
+```
+Converters/
+├── Media/                  # Media Converter
+├── Portfolio/              # Portfolio, GitHub Issue, Metric Converters
+├── Audit History Converter.cs
+├── Configuration Converter.cs
+├── Statistics Converter.cs
+└── Token Converter.cs
+```
+
+## Data Reader Mappings
+
+```
+Mappings/
+├── Portfolio/              # Portfolio Data Reader Mapping
+├── Statistics/             # Dashboard, Error, Server, Shared Data Reader Mappings
+├── Configuration Data Reader Mapping.cs
+└── Scope Permission Mapping.cs
 ```
 
 ## Swagger / API Documentation
 
 - **Library:** Swashbuckle 5.6.0
 - **URL:** `/swagger/ui/index.html`
-- **Features:** Multi-version dropdown (v1.0, v1.1, v2.0), bearer token authorisation field, XML comment documentation
+- **Features:** Multi-version dropdown (v1.0, v1.1, v2.0, v2.1, v2.2), bearer token authorisation field, XML comment documentation
 - **Contact:** api@hunter-industries.co.uk
 
 ### Custom Swagger Filters
@@ -232,7 +298,17 @@ Custom CSS and JavaScript resources are embedded for UI enhancements and a versi
 
 ```
 Components/
-├── Pages/      # Routable pages
+├── Pages/
+│   ├── AuditHistory/       # Audit log browsing and detail
+│   ├── Configuration/      # Configuration management (list, detail)
+│   ├── Errors/             # Error log browsing and detail
+│   ├── Media/              # Media browsing and detail
+│   ├── Server/             # Server list and detail
+│   ├── User/               # User list and detail
+│   ├── Dashboard.razor
+│   ├── Login.razor
+│   ├── Logs.razor
+│   └── PortfolioDashboard.razor
 ├── Layout/     # MainLayout.razor
 └── Shared/     # Reusable components
 ```
@@ -274,16 +350,26 @@ All commit workflow steps, plus:
 ```
 Hunter Industries API.Tests/
 ├── API/                    # Tests targeting the main API (net472)
-│   ├── Controllers/        # Controller tests (Assistant, Server Status, User, etc.)
-│   ├── Converters/         # Converter tests
+│   ├── Controllers/        # Controller tests
+│   │   ├── Assistant/
+│   │   ├── Media/
+│   │   ├── Portfolio/
+│   │   ├── Server Status/
+│   │   └── User/
+│   ├── Converters/         # Converter tests (Media/, Portfolio/)
 │   ├── Filters/            # Filter tests
 │   ├── Functions/          # Function tests
-│   ├── Mappings/           # Mapping tests
-│   └── Services/           # Service tests (Assistant, Server Status, User, etc.)
+│   ├── Mappings/           # Mapping tests (Portfolio, Scope Permission)
+│   └── Services/           # Service tests
+│       ├── Assistant/
+│       ├── Media/
+│       ├── Portfolio/
+│       ├── Server Status/
+│       └── User/
 ├── Control Panel/          # Tests targeting the Blazor app (net10.0)
-│   ├── Converters/         # Converter tests
+│   ├── Converters/         # Converter tests (API, Application Setting, Graph, Media)
 │   ├── Functions/          # Function tests
-│   ├── Mappers/            # Mapper tests
+│   ├── Mappers/            # Mapper tests (Application, Authorisation, Component, Connection, Domain, Downtime, Game, Machine, etc.)
 │   └── Services/           # Service tests
 └── Common/                 # Shared test utilities
     └── Functions/          # Common function tests

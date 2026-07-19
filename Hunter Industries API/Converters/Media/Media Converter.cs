@@ -12,7 +12,8 @@ namespace HunterIndustriesAPI.Converters.Media
         {
             switch (application)
             {
-                case "Portfolio": return @"join PortfolioItemImage PII with (nolock) on Media.MediaId = PII.MediaId
+                case "Portfolio": return @"
+join PortfolioItemImage PII with (nolock) on Media.MediaId = PII.MediaId
 where PortfolioItemId = @entityId";
                 default: return "NoApplicationEntity";
             }

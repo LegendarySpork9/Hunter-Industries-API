@@ -11,6 +11,7 @@ using HunterIndustriesAPI.Services.Portfolio;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
@@ -47,6 +48,72 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
             _Database = _database;
             _Options = _options;
             _Clock = _clock;
+        }
+
+        /// <summary>
+        /// Returns a list of metrics.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        ///
+        ///     GET /portfolio/metric
+        ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+        /// </remarks>
+        [RequiredPolicyAuthorisationAttributeFilter("Metric.Read")]
+        [VersionedRoute("portfolio/metric", "2.2")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<object>), Description = "Returns the item(s) matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
+        public async Task<IHttpActionResult> Get()
+        {
+            AuditHistoryService _auditHistoryService = new AuditHistoryService(
+                _Logger,
+                _FileSystem,
+                _Options,
+                _Database,
+                _Clock);
+
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
+
+            ResponseModel response;
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Metric (Get) endpoint called.");
+
+            response = new ResponseModel()
+            {
+                StatusCode = 200,
+                Data = new
+                {
+                    Metrics = new string[]
+                    {
+                        "summary",
+                        "full"
+                    }
+                }
+            };
+
+            await _auditHistoryService.LogRequest(
+                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                AuditHistoryConverter.GetEndpointId("portfolio/metric"),
+                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                null,
+                requestBody: null,
+                responseBody: ResponseFunction.GetModelJSON(response.Data));
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Metric (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+            return Content(
+                HttpStatusCode.OK,
+                response.Data);
         }
 
         /// <summary>

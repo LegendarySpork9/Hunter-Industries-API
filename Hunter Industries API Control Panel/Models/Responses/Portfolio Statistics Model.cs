@@ -13,6 +13,6 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses
         public required List<TopFiveModel> TopFiveFrameworks { get; set; }
         public required List<TopFiveModel> TopFiveLanguages { get; set; }
         public required List<TopFiveModel> TopFiveEnvironments { get; set; }
-        public required List<LLMUsedModel> LLMsUsed { get; set; }
+        public required List<LLMUsedModel> LLMUsed { get; set; }
     }
 }

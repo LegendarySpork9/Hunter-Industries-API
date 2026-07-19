@@ -435,6 +435,17 @@
             <summary>
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Controllers.Portfolio.MetricController.Get">
+             <summary>
+             Returns a list of metrics.
+             </summary>
+             <remarks>
+             Sample Request:
+            
+                 GET /portfolio/metric
+                 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
+             </remarks>
+        </member>
         <member name="M:HunterIndustriesAPI.Controllers.Portfolio.MetricController.Post(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.ItemMetricModel)">
              <summary>
              Updates the metric for the portfolio item.
@@ -490,7 +501,7 @@
              <remarks>
              Sample Request:
             
-                 POST /portfolio/1
+                 POST /portfolio
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
                  Content-Type: application/json
                  {
@@ -1573,6 +1584,15 @@
             Extracts the application name from the claims principal.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Functions.FilterFunction">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.FilterFunction.ValidateFilterType(HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel)">
+            <summary>
+            Validates the filter type, operator, and path combination.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Functions.ParameterFunction">
             <summary>
             </summary>
@@ -2196,6 +2216,21 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Name">
             <summary>
             The name of the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Type">
+            <summary>
+            The type of filter (tag, numeric, text, boolean, null).
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Operator">
+            <summary>
+            The comparison operator for the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Path">
+            <summary>
+            The dot-notation path to the item property.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.Portfolio.FilterModel.Values">
@@ -3504,6 +3539,21 @@
         <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Name">
             <summary>
             The name of the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Type">
+            <summary>
+            The type of filter (tag, numeric, text, boolean, null).
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Operator">
+            <summary>
+            The comparison operator for the filter.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Path">
+            <summary>
+            The dot-notation path to the item property.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.Portfolio.FilterRecord.Values">

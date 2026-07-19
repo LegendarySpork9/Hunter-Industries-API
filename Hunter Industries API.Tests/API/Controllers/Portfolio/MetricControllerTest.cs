@@ -44,6 +44,41 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.Portfolio
         }
 
         /// <summary>
+        /// Checks whether the Get method returns a 200 status code with the list of metrics.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGet()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    (object)1,
+                    (Exception)null));
+
+            MetricController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v2.2/portfolio/metric")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Get();
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
         /// Checks whether the Post method returns a 201 status code when the metric is updated.
         /// </summary>
         [TestMethod]
