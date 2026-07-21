@@ -160,7 +160,7 @@ BEGIN
 		[GitHubLink] [varchar](255) NOT NULL,
 		[DemoLink] [varchar](255) NULL,
 		[UnitTestCoverage] [decimal](5, 2) NULL,
-		[LLMUsageNotes] [varchar](255) NULL,
+		[LLMUsageNotes] [varchar](400) NULL,
 		[DateCreated] [datetime] NOT NULL,
 		[DateUpdated] [datetime] NOT NULL,
 		[IsDeleted] [bit] NOT NULL
