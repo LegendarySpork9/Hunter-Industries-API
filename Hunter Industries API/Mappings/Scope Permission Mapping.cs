@@ -43,6 +43,7 @@ namespace HunterIndustriesAPI.Mappings
             {
                 "Server Status API", new List<string>
                 {
+                    "Configuration.Read",
                     "ServerStatus.Alert",
                     "ServerStatus.Event",
                     "ServerStatus.Information.Read",

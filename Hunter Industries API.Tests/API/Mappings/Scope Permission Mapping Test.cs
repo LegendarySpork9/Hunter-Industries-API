@@ -76,8 +76,9 @@ namespace HunterIndustriesAPI.Tests.API.Mappings
             List<string> actual = ScopePermissionMapping.GetPermissions(["Server Status API"]);
 
             Assert.AreEqual(
-                7,
+                8,
                 actual.Count);
+            Assert.IsTrue(actual.Contains("Configuration.Read"));
             Assert.IsTrue(actual.Contains("ServerStatus.Alert"));
             Assert.IsTrue(actual.Contains("ServerStatus.Event"));
             Assert.IsTrue(actual.Contains("ServerStatus.Information.Read"));
