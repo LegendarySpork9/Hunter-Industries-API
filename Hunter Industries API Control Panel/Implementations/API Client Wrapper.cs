@@ -811,11 +811,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    userSettings = JsonConvert.DeserializeObject<List<UserSettingModel>>(response.Content) ?? [];
+                    if (!response.Content.Contains("No data returned by given parameters."))
+                    {
+                        userSettings = JsonConvert.DeserializeObject<List<UserSettingModel>>(response.Content) ?? [];
+                    }
 
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Debug,
-                        $"User Settings Returned: {userSettings.Select(us => us.Settings.Count).Sum()}");
+                        $"User Settings Returned: {userSettings.Select(us => us.Settings.Count)
+                            .Sum()}");
                 }
 
                 if (response.ErrorException != null)
