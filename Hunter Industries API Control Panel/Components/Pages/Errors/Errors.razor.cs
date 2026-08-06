@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
 {
-    public partial class Errors
+    public partial class Errors : IAsyncDisposable
     {
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
@@ -35,15 +35,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         private string[] SummaryErrorColours = [];
         private string ErrorYearRange = string.Empty;
 
-        /// <summary>
-        /// Loads and transforms the summary data.
-        /// </summary>
         protected override async Task OnInitializedAsync()
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
                 "Opened Errors Page");
 
+            await LoadSummary();
+            await LoadData();
+        }
+
+        /// <summary>
+        /// Loads and transforms the summary data.
+        /// </summary>
+        private async Task LoadSummary()
+        {
             IsLoading = true;
 
             Statistics = await APIService.GetErrorStatistics();
@@ -72,8 +78,25 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
                     StandardValues.LoggerValues.Debug,
                     $"Error Year Range: {ErrorYearRange}");
             }
+        }
 
+        /// <summary>
+        /// Refreshes the page data.
+        /// </summary>
+        private async Task RefreshData()
+        {
+            await LoadSummary();
             await LoadData();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// Triggers the timer destruction.
+        /// </summary>
+        public async ValueTask DisposeAsync()
+        {
+            GC.SuppressFinalize(this);
+            await ValueTask.CompletedTask;
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
-    public partial class Dashboard
+    public partial class Dashboard : IAsyncDisposable
     {
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
@@ -37,15 +37,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private string[] EndpointColours = [];
         private string[] FieldColours = [];
 
-        /// <summary>
-        /// Loads and transforms the data.
-        /// </summary>
         protected override async Task OnInitializedAsync()
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
                 "Opened Dashboard Page");
 
+            await LoadData();
+        }
+
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
+        private async Task LoadData()
+        {
             IsLoading = true;
 
             Statistics = await APIService.GetDashboardStatistics();
@@ -107,7 +112,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     StandardValues.LoggerValues.Debug,
                     $"Method Colour(s): {MethodColours.Length}");
 
-                StatusColours = [.. Statistics.StatusCalls.Select(s => s.Status switch 
+                StatusColours = [.. Statistics.StatusCalls.Select(s => s.Status switch
                 {
                     string status when status.StartsWith("200") => "#28a745",
                     string status when status.StartsWith("201") => "#17a2b8",
@@ -172,6 +177,24 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             }
 
             IsLoading = false;
+        }
+
+        /// <summary>
+        /// Refreshes the page data.
+        /// </summary>
+        private async Task RefreshData()
+        {
+            await LoadData();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// Triggers the timer destruction.
+        /// </summary>
+        public async ValueTask DisposeAsync()
+        {
+            GC.SuppressFinalize(this);
+            await ValueTask.CompletedTask;
         }
 
         /// <summary>

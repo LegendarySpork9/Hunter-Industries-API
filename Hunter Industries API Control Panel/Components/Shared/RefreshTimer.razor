@@ -1,0 +1,6 @@
+<div class="refresh-timer d-flex align-items-center gap-2">
+    <small class="text-muted">Auto-refresh (@(IntervalSeconds)s): @(IsRunning ? "On" : "Off")</small>
+    <button class="btn btn-sm @(IsRunning ? "btn-outline-warning" : "btn-outline-success") refresh-timer-btn" @onclick="ToggleTimer">
+        @(IsRunning ? "Stop" : "Start")
+    </button>
+</div>

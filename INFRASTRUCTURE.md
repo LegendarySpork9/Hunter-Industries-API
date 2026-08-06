@@ -33,6 +33,7 @@ The solution consists of four projects with a clear separation of concerns:
 |---------|---------|---------|
 | Radzen.Blazor | 7.x | UI component library |
 | RestSharp | 114.0.0 | HTTP client for API communication |
+| Newtonsoft.Json | 13.0.4 | JSON serialisation |
 | log4net | 3.3.0 | Logging framework |
 
 ### Test Project
@@ -63,7 +64,7 @@ A custom `RequiredPolicyAuthorisationAttributeFilter` is applied at the controll
 |-------|-------------|
 | Control Panel API | 14 permissions (Assistant.*, AuditHistory, Configuration, ErrorLog, Media.Read, ServerStatus.*, Statistic, User, UserSettings) |
 | Assistant API | 4 Assistant-specific permissions |
-| Server Status API | 7 Server status and user management permissions |
+| Server Status API | 8 permissions (Configuration.Read, ServerStatus.Alert, ServerStatus.Event, ServerStatus.Information.Read, User.Read, User.Update, UserSettings.Read, UserSettings.Update) |
 | Media API | 1 permission (Media) |
 | Portfolio API | 4 permissions (Filter, Metric, Portfolio, User.Read) |
 
@@ -313,11 +314,21 @@ Components/
 └── Shared/     # Reusable components
 ```
 
+### Auto-Refresh
+
+Data-driven pages include a `RefreshTimer` component that automatically reloads page data on a configurable interval (default 60 seconds). The timer uses `PeriodicTimer` and implements `IAsyncDisposable` for cleanup on navigation. Users can stop and start the timer via a toggle button. Pages with auto-refresh: Dashboard, Server Detail, Logs, Errors, Portfolio Dashboard.
+
 ### Registered Services
 
-- `DialogService`, `NotificationService`, `TooltipService`, `ContextMenuService` (Radzen)
+- `APISettingsModel` (singleton, API configuration)
+- `IConfigurableLoggerService` (singleton, logging)
+- `IClock` (singleton, time abstraction)
+- `IFileSystem` (singleton, file system abstraction)
 - `IAPIClient`, `IHTTPClient` (custom abstractions)
+- `APIService` (singleton, API communication)
+- `DialogService`, `NotificationService`, `TooltipService`, `ContextMenuService` (Radzen)
 - `IHttpContextAccessor` (user context)
+- `UserModel` (scoped, current user state)
 
 ## CI/CD
 

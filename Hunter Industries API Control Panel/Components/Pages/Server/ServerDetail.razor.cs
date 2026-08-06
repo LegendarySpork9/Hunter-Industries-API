@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 {
-    public partial class ServerDetail
+    public partial class ServerDetail : IAsyncDisposable
     {
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
@@ -45,15 +45,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private string[] ComponentAlertColours = [];
         private string[] StatusAlertColours = [];
 
-        /// <summary>
-        /// Loads and transforms the data.
-        /// </summary>
         protected override async Task OnInitializedAsync()
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
                 "Opened Server Page");
 
+            await LoadData();
+        }
+
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
+        private async Task LoadData()
+        {
             IsLoading = true;
 
             Server = await APIService.GetServer(Id);
@@ -68,18 +73,22 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 EditEventInterval = Server.EventInterval;
                 EditIsActive = Server.IsActive;
 
+                HostNames.Clear();
                 List<MachineModel> machines = await GetMachines();
                 HostNames.AddRange(machines.Where(m => !m.IsDeleted && m.HostName != Server.HostName)
                     .Select(m => m.HostName));
 
+                Games.Clear();
                 List<GameModel> games = await GetGames();
                 Games.AddRange(games.Where(g => !g.IsDeleted && g.Name != Server.Name && g.Version != Server.GameVersion)
                     .Select(g => $"{g.Name} ({g.Version})"));
 
+                Connections.Clear();
                 List<ConnectionModel> connections = await GetConnections();
                 Connections.AddRange(connections.Where(c => !c.IsDeleted && c.IPAddress != Server.Connection.IpAddress && c.Port != Server.Connection.Port)
                     .Select(c => $"{c.IPAddress}:{c.Port}"));
 
+                Downtimes.Clear();
                 List<DowntimeModel> downtimes = await GetDowntimes();
                 Downtimes.AddRange(downtimes.Where(d => !d.IsDeleted && d.Time != Server.Downtime?.Time && d.Duration != Server.Downtime?.Duration)
                     .Select(d => $"{d.Time} ({d.Duration})"));
@@ -117,6 +126,21 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             }
 
             IsLoading = false;
+        }
+
+        /// <summary>
+        /// Refreshes the page data.
+        /// </summary>
+        private async Task RefreshData()
+        {
+            await LoadData();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            GC.SuppressFinalize(this);
+            await ValueTask.CompletedTask;
         }
 
         /// <summary>

@@ -2,6 +2,10 @@
 
 <PageTitle>Dashboard</PageTitle>
 
+<div class="d-flex justify-content-end mb-3">
+    <RefreshTimer OnRefresh="RefreshData" />
+</div>
+
 @if (IsLoading && RecentActivity == null)
 {
     <div class="d-flex justify-content-center py-5">

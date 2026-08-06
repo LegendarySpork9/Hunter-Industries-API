@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
-    public partial class Logs
+    public partial class Logs : IAsyncDisposable
     {
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
@@ -197,6 +197,25 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             }
 
             IsLoading = false;
+        }
+
+        /// <summary>
+        /// Refreshes the page data.
+        /// </summary>
+        private async Task RefreshData()
+        {
+            await LoadSummary();
+            await LoadData();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// Triggers the timer destruction.
+        /// </summary>
+        public async ValueTask DisposeAsync()
+        {
+            GC.SuppressFinalize(this);
+            await ValueTask.CompletedTask;
         }
 
         /// <summary>
