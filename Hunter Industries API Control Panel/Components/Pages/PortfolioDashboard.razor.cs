@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace HunterIndustriesAPIControlPanel.Components.Pages
 {
-    public partial class PortfolioDashboard
+    public partial class PortfolioDashboard : IAsyncDisposable
     {
         [Inject]
         private IConfigurableLoggerService _Logger { get; set; } = default!;
@@ -30,15 +30,20 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private string[] LanguageColours = [];
         private string[] EnvironmentColours = [];
 
-        /// <summary>
-        /// Loads and transforms the data.
-        /// </summary>
         protected override async Task OnInitializedAsync()
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
                 "Opened Portfolio Dashboard Page");
 
+            await LoadData();
+        }
+
+        /// <summary>
+        /// Loads and transforms the data.
+        /// </summary>
+        private async Task LoadData()
+        {
             IsLoading = true;
 
             Statistics = await APIService.GetPortfolioStatistics();
@@ -113,6 +118,24 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             }
 
             IsLoading = false;
+        }
+
+        /// <summary>
+        /// Refreshes the page data.
+        /// </summary>
+        private async Task RefreshData()
+        {
+            await LoadData();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// Triggers the timer destruction.
+        /// </summary>
+        public async ValueTask DisposeAsync()
+        {
+            GC.SuppressFinalize(this);
+            await ValueTask.CompletedTask;
         }
     }
 }

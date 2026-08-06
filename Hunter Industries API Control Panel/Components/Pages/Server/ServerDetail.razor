@@ -2,8 +2,9 @@
 
 <PageTitle>Server Detail</PageTitle>
 
-<div class="mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3">
     <a href="/servers" class="btn btn-outline-light btn-sm">&larr; Back to Servers</a>
+    <RefreshTimer OnRefresh="RefreshData" />
 </div>
 
 @if (IsLoading && Server == null && Statistics == null)
