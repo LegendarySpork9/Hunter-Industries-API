@@ -295,6 +295,17 @@ Custom CSS and JavaScript resources are embedded for UI enhancements and a versi
 - **API Communication:** `APIService` class using RestSharp to call the main API
 - **Authentication:** Payload-based authentication via `Authorise.json` (Base64-encoded credentials)
 
+### Timezone Handling
+
+All datetimes from the API are stored as UTC (`DateTime.SpecifyKind(..., DateTimeKind.Utc)`). The `TimezoneService` (scoped) manages per-user timezone preferences:
+
+- **Indicator:** The top bar displays the current UTC offset (e.g., "UTC+0", "UTC+1").
+- **User Setting:** When the "Timezone Conversion Enabled" user setting is `true` for the configured application, all displayed datetimes are converted from UTC to the user's configured offset.
+- **Configuration:** The application name is read from `AppSettings.ApplicationName` in `appsettings.json`.
+- **Session Persistence:** Timezone preferences are stored in `ProtectedSessionStorage` and restored on page navigation.
+- **Display Layer Only:** Conversion happens at render time via `TimezoneService.ConvertFromUtc()` — underlying data remains UTC.
+- **Fallback:** Defaults to UTC+0 with no conversion if settings are absent or the API call fails.
+
 ### Component Structure
 
 ```
@@ -329,6 +340,7 @@ Data-driven pages include a `RefreshTimer` component that automatically reloads 
 - `DialogService`, `NotificationService`, `TooltipService`, `ContextMenuService` (Radzen)
 - `IHttpContextAccessor` (user context)
 - `UserModel` (scoped, current user state)
+- `TimezoneService` (scoped, user timezone preference state)
 
 ## CI/CD
 

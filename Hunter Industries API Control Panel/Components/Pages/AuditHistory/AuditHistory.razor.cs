@@ -15,6 +15,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.AuditHistory
         private NavigationManager Navigation { get; set; } = default!;
         [Inject]
         private APIService APIService { get; set; } = default!;
+        [Inject]
+        private TimezoneService TimezoneService { get; set; } = default!;
 
         private PagedAPIResponseModel<AuditHistoryModel>? AuditLogs;
 

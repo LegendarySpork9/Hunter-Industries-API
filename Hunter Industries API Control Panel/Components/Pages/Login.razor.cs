@@ -3,7 +3,9 @@ using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using HunterIndustriesAPICommon.Functions;
 using HunterIndustriesAPIControlPanel.Functions;
+using HunterIndustriesAPIControlPanel.Models;
 using HunterIndustriesAPIControlPanel.Models.Responses;
+using HunterIndustriesAPIControlPanel.Models.Responses.Related;
 using HunterIndustriesAPIControlPanel.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -24,6 +26,10 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private APIService APIService { get; set; } = default!;
         [Inject]
         private UserModel User { get; set; } = default!;
+        [Inject]
+        private TimezoneService TimezoneService { get; set; } = default!;
+        [Inject]
+        private APISettingsModel APISettings { get; set; } = default!;
 
         private readonly LoginForm LoginInformation = new();
 
@@ -77,9 +83,36 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
                     User.Scopes = user.Scopes;
                     User.IsLoggedIn = true;
 
+                    List<UserSettingModel> userSettings = await APIService.GetUserSettings(user.Id);
+                    UserSettingModel? cpSettings = userSettings.FirstOrDefault(s => s.Application == APISettings.ApplicationName);
+
+                    if (cpSettings != null)
+                    {
+                        SettingModel? enabledSetting = cpSettings.Settings.FirstOrDefault(s => s.Name == "Timezone Conversion Enabled");
+                        SettingModel? offsetSetting = cpSettings.Settings.FirstOrDefault(s => s.Name == "Timezone Offset");
+
+                        if (enabledSetting != null && bool.TryParse(enabledSetting.Value, out bool enabled))
+                        {
+                            TimezoneService.ConversionEnabled = enabled;
+                        }
+
+                        if (offsetSetting != null && double.TryParse(offsetSetting.Value, out double offset))
+                        {
+                            TimezoneService.OffsetHours = offset;
+                        }
+                    }
+
                     await SessionStorage.SetAsync(
                         "loggedInUser",
                         User);
+
+                    await SessionStorage.SetAsync(
+                        "timezonePreference",
+                        new TimezonePreferenceModel
+                        {
+                            ConversionEnabled = TimezoneService.ConversionEnabled,
+                            OffsetHours = TimezoneService.OffsetHours
+                        });
 
                     Navigation.NavigateTo("/");
                 }

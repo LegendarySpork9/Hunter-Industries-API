@@ -59,10 +59,10 @@
                 MinWidth="200px" />
             <RadzenDataGridColumn
                 TItem="MediaModel"
-                Title="Date Updated (UTC)"
+                Title="@TimezoneService.GetDateLabel("Date Updated")"
                 Width="190px">
                 <Template Context="record">
-                    @record.DateUpdated.ToString("dd MMM yyyy HH:mm:ss")
+                    @TimezoneService.ConvertFromUtc(record.DateUpdated).ToString("dd MMM yyyy HH:mm:ss")
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn

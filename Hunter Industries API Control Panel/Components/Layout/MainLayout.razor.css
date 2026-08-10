@@ -78,6 +78,16 @@ main {
     }
 }
 
+.timezone-indicator {
+    color: #A9A9A9;
+    font-size: 0.85rem;
+    margin-right: 1rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #3E3E3E;
+}
+
 #blazor-error-ui {
     color-scheme: dark only;
     background: #4E4E4E;

@@ -87,10 +87,10 @@ else
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn
                     TItem="AuditHistoryModel"
-                    Title="Date (UTC)"
+                    Title="@TimezoneService.GetDateLabel()"
                     Width="190px">
                     <Template Context="record">
-                        @record.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")
+                        @TimezoneService.ConvertFromUtc(record.OccuredAt).ToString("dd MMM yyyy HH:mm:ss")
                     </Template>
                 </RadzenDataGridColumn>
             </Columns>

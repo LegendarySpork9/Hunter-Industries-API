@@ -65,8 +65,8 @@ else
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label text-muted">Date (UTC)</label>
-                        <div>@AuditHistory.OccuredAt.ToString("dd MMM yyyy HH:mm:ss")</div>
+                        <label class="form-label text-muted">@TimezoneService.GetDateLabel()</label>
+                        <div>@TimezoneService.ConvertFromUtc(AuditHistory.OccuredAt).ToString("dd MMM yyyy HH:mm:ss")</div>
                     </div>
                 </div>
             </div>
