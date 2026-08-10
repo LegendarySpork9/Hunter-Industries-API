@@ -159,6 +159,43 @@ namespace HunterIndustriesAPI.Tests.API.Services
 
         #endregion
 
+        #region UpdateResponseBody
+
+        /// <summary>
+        /// Checks whether the UpdateResponseBody method completes without throwing an exception.
+        /// </summary>
+        [TestMethod]
+        public async Task TestUpdateResponseBody()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+
+            ChangeService _changeService = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            AuditHistoryService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object,
+                _MockClock.Object,
+                _changeService);
+
+            await service.UpdateResponseBody(
+                1,
+                "{\"statusCode\":200}");
+        }
+
+        #endregion
+
         #region GetAuditHistory
 
         /// <summary>

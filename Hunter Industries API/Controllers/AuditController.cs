@@ -129,17 +129,57 @@ namespace HunterIndustriesAPI.Controllers
                     response.Data);
             }
 
+            string ipAddress = IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request));
+            string endpointVersion = AuditHistoryFunction.ExtractVersionFromRequest(Request);
+            DateTime fromDate = DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc);
+            DateTime toDate = DateTime.SpecifyKind(DateTime.ParseExact(filters.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc);
+            DateTime now = _Clock.UtcNow;
+
+            bool includeCurrentCall = filters.PageNumber == 1;
+
+            if (includeCurrentCall && !string.IsNullOrEmpty(filters.IPAddress) && filters.IPAddress != ipAddress)
+            {
+                includeCurrentCall = false;
+            }
+
+            if (includeCurrentCall && !string.IsNullOrEmpty(filters.Endpoint) && filters.Endpoint != "audithistory")
+            {
+                includeCurrentCall = false;
+            }
+
+            if (includeCurrentCall && !string.IsNullOrEmpty(filters.Username) && filters.Username != username)
+            {
+                includeCurrentCall = false;
+            }
+
+            if (includeCurrentCall && !string.IsNullOrEmpty(filters.Application) && filters.Application != applicationName)
+            {
+                includeCurrentCall = false;
+            }
+
+            if (includeCurrentCall && fromDate != _Clock.DefaultDate && now < fromDate)
+            {
+                includeCurrentCall = false;
+            }
+
+            if (includeCurrentCall && toDate != _Clock.DefaultDate && now >= toDate)
+            {
+                includeCurrentCall = false;
+            }
+
+            int fetchSize = includeCurrentCall ? filters.PageSize - 1 : filters.PageSize;
+
             (List<AuditHistoryRecord> auditHistories, int totalRecords) = await _auditHistoryService.GetAuditHistory(
                 filters.IPAddress,
                 filters.Endpoint,
                 filters.Username,
                 filters.Application,
-                DateTime.SpecifyKind(DateTime.ParseExact(filters.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc),
-                DateTime.SpecifyKind(DateTime.ParseExact(filters.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTimeKind.Utc),
-                filters.PageSize,
+                fromDate,
+                toDate,
+                fetchSize,
                 filters.PageNumber);
 
-            if (auditHistories.Count == 0)
+            if (auditHistories.Count == 0 && !includeCurrentCall)
             {
                 response = new ResponseModel()
                 {
@@ -151,9 +191,9 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("audithistory"),
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetEndpointVersionId(endpointVersion),
                     AuditHistoryConverter.GetMethodId("GET"),
                     AuditHistoryConverter.GetStatusId("NoContent"),
                     username,
@@ -172,6 +212,39 @@ namespace HunterIndustriesAPI.Controllers
                     response.Data);
             }
 
+            (_, int auditId) = await _auditHistoryService.LogRequest(
+                ipAddress,
+                AuditHistoryConverter.GetEndpointId("audithistory"),
+                AuditHistoryConverter.GetEndpointVersionId(endpointVersion),
+                AuditHistoryConverter.GetMethodId("GET"),
+                AuditHistoryConverter.GetStatusId("OK"),
+                username,
+                applicationName,
+                ParameterFunction.FormatParameters(
+                    null,
+                    filters),
+                requestBody: null,
+                responseBody: null);
+
+            if (includeCurrentCall)
+            {
+                AuditHistoryRecord currentCallRecord = new AuditHistoryRecord()
+                {
+                    Id = auditId,
+                    IPAddress = ipAddress,
+                    Username = username,
+                    Application = applicationName,
+                    Endpoint = "/audithistory",
+                    EndpointVersion = $"v{endpointVersion}",
+                    Method = "GET",
+                    Status = "200 OK",
+                    OccuredAt = now
+                };
+
+                auditHistories.Insert(0, currentCallRecord);
+                totalRecords += 1;
+            }
+
             int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
 
             response = new ResponseModel()
@@ -188,19 +261,9 @@ namespace HunterIndustriesAPI.Controllers
                 }
             };
 
-            await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
-                AuditHistoryConverter.GetEndpointId("audithistory"),
-                AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                AuditHistoryConverter.GetMethodId("GET"),
-                AuditHistoryConverter.GetStatusId("OK"),
-                username,
-                applicationName,
-                ParameterFunction.FormatParameters(
-                    null,
-                    filters),
-                requestBody: null,
-                responseBody: ResponseFunction.GetModelJSON(response.Data));
+            await _auditHistoryService.UpdateResponseBody(
+                auditId,
+                ResponseFunction.GetModelJSON(response.Data));
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
