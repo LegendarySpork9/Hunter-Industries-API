@@ -51,13 +51,12 @@ else
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phrase</label>
-                                <select class="form-control" @bind="EditAppPhrase" disabled="@IsDeleted">
-                                    <option value="@Application?.Authorisation.Phrase" disabled selected>@Application?.Authorisation.Phrase</option>
-                                    @foreach (string phrase in Phrases)
-                                    {
-                                        <option value="@phrase">@phrase</option>
-                                    }
-                                </select>
+                                <RadzenDropDown
+                                    TValue="string"
+                                    Data="@Phrases"
+                                    @bind-Value="EditAppPhrase"
+                                    Disabled="@IsDeleted"
+                                    Style="width:100%" />
                             </div>
                         </div>
 
@@ -110,13 +109,14 @@ else
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Type</label>
-                                            <select class="form-control" @bind="NewSetting.Type">
-                                                <option value="" disabled selected>Select an option</option>
-                                                @foreach (KeyValuePair<string, string> dataType in DataTypes.OrderBy(dt => dt.Value))
-                                                {
-                                                    <option value="@dataType.Key">@dataType.Value</option>
-                                                }
-                                            </select>
+                                            <RadzenDropDown
+                                                TValue="string"
+                                                Data="@DataTypes.OrderBy(dt => dt.Value)"
+                                                @bind-Value="NewSetting.Type"
+                                                TextProperty="Value"
+                                                ValueProperty="Key"
+                                                Placeholder="Select an option"
+                                                Style="width:100%" />
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label text-center">Required</label>

@@ -142,49 +142,45 @@ else
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Host Name</label>
-                                <select class="form-control" @bind="NewHostName">
-                                    <option value="" disabled selected>Select an option</option>
-                                    @foreach (string hostName in HostNames)
-                                    {
-                                        <option value="@hostName">@hostName</option>
-                                    }
-                                </select>
+                                <RadzenDropDown
+                                    TValue="string"
+                                    Data="@HostNames"
+                                    @bind-Value="NewHostName"
+                                    Placeholder="Select an option"
+                                    Style="width:100%" />
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-8">
                                 <label class="form-label">Game</label>
-                                <select class="form-control" @bind="NewGame">
-                                    <option value="" disabled selected>Select an option</option>
-                                    @foreach (string game in Games)
-                                    {
-                                        <option value="@game">@game</option>
-                                    }
-                                </select>
+                                <RadzenDropDown
+                                    TValue="string"
+                                    Data="@Games"
+                                    @bind-Value="NewGame"
+                                    Placeholder="Select an option"
+                                    Style="width:100%" />
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-8">
                                 <label class="form-label">Connection</label>
-                                <select class="form-control" @bind="NewConnection">
-                                    <option value="" disabled selected>Select an option</option>
-                                    @foreach (string connection in Connections)
-                                    {
-                                        <option value="@connection">@connection</option>
-                                    }
-                                </select>
+                                <RadzenDropDown
+                                    TValue="string"
+                                    Data="@Connections"
+                                    @bind-Value="NewConnection"
+                                    Placeholder="Select an option"
+                                    Style="width:100%" />
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-8">
                                 <label class="form-label">Downtime</label>
-                                <select class="form-control" @bind="NewDowntime">
-                                    <option value="" disabled selected>Select an option</option>
-                                    @foreach (string downtime in Downtimes)
-                                    {
-                                        <option value="@downtime">@downtime</option>
-                                    }
-                                </select>
+                                <RadzenDropDown
+                                    TValue="string"
+                                    Data="@Downtimes"
+                                    @bind-Value="NewDowntime"
+                                    Placeholder="Select an option"
+                                    Style="width:100%" />
                             </div>
                         </div>
                         <div class="row g-3 mb-3">

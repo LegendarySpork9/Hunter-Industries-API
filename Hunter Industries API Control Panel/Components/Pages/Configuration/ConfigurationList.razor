@@ -139,13 +139,12 @@ else
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phrase</label>
-                                    <select class="form-control" @bind="NewAppPhrase">
-                                        <option value="" disabled selected>Select an option</option>
-                                        @foreach (string phrase in Phrases)
-                                        {
-                                            <option value="@phrase">@phrase</option>
-                                        }
-                                    </select>
+                                    <RadzenDropDown
+                                        TValue="string"
+                                        Data="@Phrases"
+                                        @bind-Value="NewAppPhrase"
+                                        Placeholder="Select an option"
+                                        Style="width:100%" />
                                 </div>
                                 break;
 
