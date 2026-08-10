@@ -554,6 +554,7 @@
     <Content Include="SQL\Audit History\GetTotalAuditHistory.sql" />
     <Content Include="SQL\Audit History\LogLoginAttempt.sql" />
     <Content Include="SQL\Audit History\LogRequest.sql" />
+    <Content Include="SQL\Audit History\UpdateResponseBody.sql" />
     <Content Include="SQL\Configuration\Application Setting\DeleteApplicationSetting.sql" />
     <Content Include="SQL\Configuration\Application Setting\GetTotalApplicationSetting.sql" />
     <Content Include="SQL\Configuration\Application\DeleteApplication.sql" />

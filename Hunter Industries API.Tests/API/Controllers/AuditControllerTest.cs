@@ -79,6 +79,12 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 .Returns((
                     "1",
                     null));
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
             mockDatabase.Setup(d => d.Query(
                     It.IsAny<string>(),
                     It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
@@ -119,10 +125,10 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
         }
 
         /// <summary>
-        /// Checks whether the Get method returns a 204 status code with an info message when no records are found.
+        /// Checks whether the Get method returns a 204 status code when filters exclude the current call and no records are found.
         /// </summary>
         [TestMethod]
-        public async Task TestGetEmpty()
+        public async Task TestGetEmptyFilterMismatch()
         {
             List<AuditHistoryRecord> records = [];
 
@@ -161,7 +167,10 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
                 Configuration = new HttpConfiguration()
             };
 
-            AuditHistoryFilterModel filters = new();
+            AuditHistoryFilterModel filters = new()
+            {
+                Endpoint = "token"
+            };
 
             IHttpActionResult actionResult = await controller.Get(filters);
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
@@ -169,6 +178,123 @@ namespace HunterIndustriesAPI.Tests.API.Controllers
             Assert.IsNotNull(contentResult);
             Assert.AreEqual(
                 HttpStatusCode.NoContent,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Get method returns a 204 status code when on page 2 with no records.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetEmptyPageTwo()
+        {
+            List<AuditHistoryRecord> records = [];
+
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
+
+            AuditController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v1.0/audithistory")),
+                Configuration = new HttpConfiguration()
+            };
+
+            AuditHistoryFilterModel filters = new()
+            {
+                PageNumber = 2
+            };
+
+            IHttpActionResult actionResult = await controller.Get(filters);
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.NoContent,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Get method returns a 200 status code with the current call record when the database has no records but filters match.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetEmptyWithCurrentCall()
+        {
+            List<AuditHistoryRecord> records = [];
+
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    "1",
+                    null));
+            mockDatabase.Setup(d => d.Execute(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, AuditHistoryRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    records,
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    0,
+                    null));
+
+            AuditController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v1.0/audithistory")),
+                Configuration = new HttpConfiguration()
+            };
+
+            AuditHistoryFilterModel filters = new();
+
+            IHttpActionResult actionResult = await controller.Get(filters);
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
                 contentResult.StatusCode);
         }
 

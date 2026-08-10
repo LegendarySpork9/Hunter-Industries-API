@@ -5037,6 +5037,11 @@
             Logs the call made to the database.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.UpdateResponseBody(System.Int32,System.String)">
+            <summary>
+            Updates the response body of an existing audit history record.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Services.AuditHistoryService.LogLoginAttempt(System.Int32,System.Boolean,System.String,System.String,System.String)">
             <summary>
             Logs any authorisation calls made to the database.

@@ -137,6 +137,59 @@ namespace HunterIndustriesAPI.Services
         }
 
         /// <summary>
+        /// Updates the response body of an existing audit history record.
+        /// </summary>
+        public async Task UpdateResponseBody(
+            int auditId,
+            string responseBody)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"AuditHistoryService.UpdateResponseBody called with the parameter \"{auditId }\".");
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Audit History",
+                    "UpdateResponseBody.sql"));
+                SqlParameter[] sqlParameters =
+                {
+                    new SqlParameter("@auditId", SqlDbType.Int) { Value = auditId },
+                    new SqlParameter("@responseBody", SqlDbType.VarChar) { Value = (object)responseBody ?? DBNull.Value }
+                };
+
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
+                    sqlParameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run AuditHistoryService.UpdateResponseBody.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run AuditHistoryService.UpdateResponseBody.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+        }
+
+        /// <summary>
         /// Logs any authorisation calls made to the database.
         /// </summary>
         public async Task LogLoginAttempt(
