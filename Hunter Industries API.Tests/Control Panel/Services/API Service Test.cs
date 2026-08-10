@@ -159,58 +159,59 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
         [TestMethod]
         public async Task TestGetUsers()
         {
-            List<UserModel> expected =
-            [
-                new UserModel { Id = 1, Username = "TestUser", Password = "pass", Scopes = ["read"], IsDeleted = false }
-            ];
+            PagedAPIResponseModel<UserModel> expected = new()
+            {
+                Entries = [new UserModel { Id = 1, Username = "TestUser", Password = "pass", Scopes = ["read"], IsDeleted = false }],
+                EntryCount = 1,
+                PageNumber = 1,
+                PageSize = 25,
+                TotalPageCount = 1,
+                TotalCount = 1
+            };
 
-            _MockAPIClient.Setup(c => c.GetUsers(false))
+            _MockAPIClient.Setup(c => c.GetPagedUsers(It.IsAny<List<KeyValuePair<string, object>>?>()))
                 .ReturnsAsync(expected);
 
             APIService service = CreateService();
-            List<UserModel> actual = await service.GetUsers(false);
+            PagedAPIResponseModel<UserModel>? actual = await service.GetUsers(false);
 
             Assert.AreEqual(
                 1,
-                actual.Count);
+                actual.Entries.Count);
 
             Assert.AreEqual(
                 "TestUser",
-                actual[0].Username);
+                actual.Entries[0].Username);
         }
 
         /// <summary>
-        /// Tests whether the GetUsers method returns an empty list when no users are found.
+        /// Tests whether the GetUsers method returns null when no users are found.
         /// </summary>
         [TestMethod]
         public async Task TestGetUsersEmpty()
         {
-            _MockAPIClient.Setup(c => c.GetUsers(false))
-                .ReturnsAsync([]);
+            _MockAPIClient.Setup(c => c.GetPagedUsers(It.IsAny<List<KeyValuePair<string, object>>?>()))
+                .ReturnsAsync((PagedAPIResponseModel<UserModel>?)null);
 
             APIService service = CreateService();
-            List<UserModel> actual = await service.GetUsers(false);
+            PagedAPIResponseModel<UserModel>? actual = await service.GetUsers(false);
 
-            Assert.AreEqual(
-                0,
-                actual.Count);
+            Assert.IsNull(actual);
         }
 
         /// <summary>
-        /// Tests whether the GetUsers method returns an empty list when an exception occurs.
+        /// Tests whether the GetUsers method returns null when an exception occurs.
         /// </summary>
         [TestMethod]
         public async Task TestGetUsersException()
         {
-            _MockAPIClient.Setup(c => c.GetUsers(false))
+            _MockAPIClient.Setup(c => c.GetPagedUsers(It.IsAny<List<KeyValuePair<string, object>>?>()))
                 .ThrowsAsync(new Exception("Connection refused"));
 
             APIService service = CreateService();
-            List<UserModel> actual = await service.GetUsers(false);
+            PagedAPIResponseModel<UserModel>? actual = await service.GetUsers(false);
 
-            Assert.AreEqual(
-                0,
-                actual.Count);
+            Assert.IsNull(actual);
         }
 
         /// <summary>
@@ -219,8 +220,8 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
         [TestMethod]
         public async Task TestGetUsersReauthorises()
         {
-            _MockAPIClient.Setup(c => c.GetUsers(false))
-                .ReturnsAsync([]);
+            _MockAPIClient.Setup(c => c.GetPagedUsers(It.IsAny<List<KeyValuePair<string, object>>?>()))
+                .ReturnsAsync((PagedAPIResponseModel<UserModel>?)null);
 
             APIService service = CreateServiceWithExpiredToken();
             await service.GetUsers(false);
@@ -997,68 +998,72 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
         [TestMethod]
         public async Task TestGetServers()
         {
-            List<ServerInformationModel> expected =
-            [
-                new ServerInformationModel
-                {
-                    Id = 1,
-                    Name = "TestServer",
-                    HostName = "test-host",
-                    Game = "TestGame",
-                    GameVersion = "1.0",
-                    Connection = new ServerConnectionModel { IpAddress = "127.0.0.1", Port = 25565 },
-                    EventInterval = 60,
-                    IsActive = true
-                }
-            ];
+            PagedAPIResponseModel<ServerInformationModel> expected = new()
+            {
+                Entries =
+                [
+                    new ServerInformationModel
+                    {
+                        Id = 1,
+                        Name = "TestServer",
+                        HostName = "test-host",
+                        Game = "TestGame",
+                        GameVersion = "1.0",
+                        Connection = new ServerConnectionModel { IpAddress = "127.0.0.1", Port = 25565 },
+                        EventInterval = 60,
+                        IsActive = true
+                    }
+                ],
+                EntryCount = 1,
+                PageNumber = 1,
+                PageSize = 25,
+                TotalPageCount = 1,
+                TotalCount = 1
+            };
 
-            _MockAPIClient.Setup(c => c.GetServers())
+            _MockAPIClient.Setup(c => c.GetPagedServers(It.IsAny<List<KeyValuePair<string, object>>?>()))
                 .ReturnsAsync(expected);
 
             APIService service = CreateService();
-            List<ServerInformationModel> actual = await service.GetServers();
+            PagedAPIResponseModel<ServerInformationModel>? actual = await service.GetServers();
 
             Assert.AreEqual(
                 1,
-                actual.Count);
+                actual.Entries.Count);
 
             Assert.AreEqual(
                 "TestServer",
-                actual[0].Name);
+                actual.Entries[0].Name);
         }
 
         /// <summary>
-        /// Tests whether the GetServers method returns an empty list when no servers are found.
+        /// Tests whether the GetServers method returns null when no servers are found.
         /// </summary>
         [TestMethod]
         public async Task TestGetServersEmpty()
         {
-            _MockAPIClient.Setup(c => c.GetServers())
-                .ReturnsAsync([]);
+            _MockAPIClient.Setup(c => c.GetPagedServers(It.IsAny<List<KeyValuePair<string, object>>?>()))
+                .ReturnsAsync((PagedAPIResponseModel<ServerInformationModel>?)null);
 
             APIService service = CreateService();
-            List<ServerInformationModel> actual = await service.GetServers();
+            PagedAPIResponseModel<ServerInformationModel>? actual = await service.GetServers();
 
-            Assert.AreEqual(
-                0,
-                actual.Count);
+            Assert.IsNull(actual);
         }
 
         /// <summary>
-        /// Tests whether the GetServers method returns an empty list when an exception occurs.
+        /// Tests whether the GetServers method returns null when an exception occurs.
         /// </summary>
         [TestMethod]
         public async Task TestGetServersException()
         {
-            _MockAPIClient.Setup(c => c.GetServers())
+            _MockAPIClient.Setup(c => c.GetPagedServers(It.IsAny<List<KeyValuePair<string, object>>?>()))
                 .ThrowsAsync(new Exception("Connection refused"));
 
             APIService service = CreateService();
-            List<ServerInformationModel> actual = await service.GetServers();
+            PagedAPIResponseModel<ServerInformationModel>? actual = await service.GetServers();
 
-            Assert.AreEqual(
-                0,
-                actual.Count);
+            Assert.IsNull(actual);
         }
 
         #endregion

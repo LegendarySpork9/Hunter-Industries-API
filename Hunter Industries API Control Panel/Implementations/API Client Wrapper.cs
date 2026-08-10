@@ -124,17 +124,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns a list of users from the API.
+        /// Returns the paged users from the API.
         /// </summary>
-        public async Task<List<UserModel>> GetUsers(bool includeDeleted)
+        public async Task<PagedAPIResponseModel<UserModel>?> GetPagedUsers(List<KeyValuePair<string, object>>? queryParameters = null)
         {
-            List<UserModel> users = [];
+            PagedAPIResponseModel<UserModel>? pagedUsers = null;
 
             try
             {
                 string url = BuildURL(
                     "/user",
-                    ignoreQuery: !includeDeleted);
+                    queryParameters: queryParameters);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -172,11 +172,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    users = JsonConvert.DeserializeObject<List<UserModel>>(response.Content) ?? [];
-
-                    _Logger.LogMessage(
-                        StandardValues.LoggerValues.Debug,
-                        $"Users Returned: {users.Count}");
+                    pagedUsers = JsonConvert.DeserializeObject<PagedAPIResponseModel<UserModel>>(response.Content);
                 }
 
                 if (response.ErrorException != null)
@@ -200,7 +196,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     ex.ToString());
             }
 
-            return users;
+            return pagedUsers;
         }
 
         /// <summary>
@@ -1227,15 +1223,17 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         }
 
         /// <summary>
-        /// Returns a list of servers from the API.
+        /// Returns the paged servers from the API.
         /// </summary>
-        public async Task<List<ServerInformationModel>> GetServers()
+        public async Task<PagedAPIResponseModel<ServerInformationModel>?> GetPagedServers(List<KeyValuePair<string, object>>? queryParameters = null)
         {
-            List<ServerInformationModel> servers = [];
+            PagedAPIResponseModel<ServerInformationModel>? pagedServers = null;
 
             try
             {
-                string url = BuildURL("/serverstatus/serverinformation");
+                string url = BuildURL(
+                    "/serverstatus/serverinformation",
+                    queryParameters: queryParameters);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1273,11 +1271,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    servers = JsonConvert.DeserializeObject<List<ServerInformationModel>>(response.Content) ?? [];
-
-                    _Logger.LogMessage(
-                        StandardValues.LoggerValues.Debug,
-                        $"Servers Returned: {servers.Count}");
+                    pagedServers = JsonConvert.DeserializeObject<PagedAPIResponseModel<ServerInformationModel>>(response.Content);
                 }
 
                 if (response.ErrorException != null)
@@ -1301,7 +1295,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     ex.ToString());
             }
 
-            return servers;
+            return pagedServers;
         }
 
         /// <summary>

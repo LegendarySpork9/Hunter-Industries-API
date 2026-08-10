@@ -2,6 +2,7 @@
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Objects.ServerStatus;
 using HunterIndustriesAPICommon.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -81,6 +82,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                         }
                     ],
                     null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    (Exception)null));
 
             ServerInformationController controller = new(
                 _MockLogger.Object,
@@ -95,7 +103,12 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get(true);
+            ServerInformationFilterModel filters = new()
+            {
+                IsActive = true
+            };
+
+            IHttpActionResult actionResult = await controller.Get(filters);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(
@@ -137,7 +150,12 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get(true);
+            ServerInformationFilterModel filters = new()
+            {
+                IsActive = true
+            };
+
+            IHttpActionResult actionResult = await controller.Get(filters);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(

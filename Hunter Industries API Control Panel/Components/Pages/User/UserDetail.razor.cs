@@ -96,7 +96,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 }
             }
 
-            List<UserModel> users = await APIService.GetUsers(true);
+            List<UserModel> users = await UserFunction.GetUsers(APIService);
 
             if (users.Count > 0)
             {

@@ -23,12 +23,12 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Converters
         }
 
         /// <summary>
-        /// Tests whether the GetQuery method returns "?includeDeleted=true" when given "/user".
+        /// Tests whether the GetQuery method returns an empty string when given "/user".
         /// </summary>
         [TestMethod]
         public void TestGetQueryUser()
         {
-            string expected = "?includeDeleted=true";
+            string expected = string.Empty;
             string actual = APIConverter.GetQuery("/user");
 
             Assert.AreEqual(

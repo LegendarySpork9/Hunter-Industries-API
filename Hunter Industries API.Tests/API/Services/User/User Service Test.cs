@@ -59,6 +59,13 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                 .Returns((
                     ["User", "Assistant API"],
                     null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    (Exception)null));
 
             UserService service = new(
                 _MockLogger.Object,
@@ -66,7 +73,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            List<UserRecord> actual = await service.GetUsers(null);
+            (List<UserRecord> actual, int totalRecords) = await service.GetUsers(null);
 
             Assert.AreEqual(
                 1,
@@ -84,6 +91,9 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                 2,
                 actual[0].Scopes.Count);
             Assert.IsFalse(actual[0].IsDeleted);
+            Assert.AreEqual(
+                1,
+                totalRecords);
         }
 
         /// <summary>
@@ -107,11 +117,14 @@ namespace HunterIndustriesAPI.Tests.API.Services.User
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            List<UserRecord> actual = await service.GetUsers(null);
+            (List<UserRecord> actual, int totalRecords) = await service.GetUsers(null);
 
             Assert.AreEqual(
                 0,
                 actual.Count);
+            Assert.AreEqual(
+                0,
+                totalRecords);
         }
 
         #endregion

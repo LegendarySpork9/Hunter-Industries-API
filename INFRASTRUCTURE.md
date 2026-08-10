@@ -215,7 +215,8 @@ Models/
 │   │   └── User/
 │   └── Filters/        # Query filter models
 │       ├── Assistant/
-│       └── Media/
+│       ├── Media/
+│       └── Server Status/
 └── Responses/          # Typed response models
     ├── Assistant/
     ├── Media/

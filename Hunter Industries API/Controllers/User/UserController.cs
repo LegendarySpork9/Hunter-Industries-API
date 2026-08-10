@@ -12,6 +12,7 @@ using HunterIndustriesAPI.Services.User;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace HunterIndustriesAPI.Controllers.User
         [RequiredPolicyAuthorisationAttributeFilter("User.Read")]
         [VersionedRoute("user", "1.0")]
         [SwaggerOperation("GetUserList")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<UserRecord>), Description = "Returns the item(s) matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
@@ -96,8 +97,13 @@ namespace HunterIndustriesAPI.Controllers.User
                 filters = new UserFilterModel();
             }
 
+            if (filters.PageSize > 200)
+            {
+                filters.PageSize = 200;
+            }
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"User (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(filters))
@@ -129,13 +135,15 @@ namespace HunterIndustriesAPI.Controllers.User
                     StandardValues.LoggerValues.Info,
                     $"User (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     response.Data);
             }
 
-            List<UserRecord> users = await _userService.GetUsers(
+            (List<UserRecord> users, int totalRecords) = await _userService.GetUsers(
                 filters.Username,
-                filters.IncludeDeleted);
+                filters.IncludeDeleted,
+                filters.PageSize,
+                filters.PageNumber);
 
             if (users.Count == 0)
             {
@@ -170,10 +178,20 @@ namespace HunterIndustriesAPI.Controllers.User
                     response.Data);
             }
 
+            int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
+
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = users
+                Data = new UserResponseModel()
+                {
+                    Entries = users,
+                    EntryCount = users.Count,
+                    PageNumber = filters.PageNumber,
+                    PageSize = filters.PageSize,
+                    TotalPageCount = totalPages,
+                    TotalCount = totalRecords
+                }
             };
 
             await _auditHistoryService.LogRequest(
@@ -186,15 +204,15 @@ namespace HunterIndustriesAPI.Controllers.User
                 applicationName,
                 ParameterFunction.FormatParameters(
                     null,
-                        filters),
+                    filters),
                 null,
                 ResponseFunction.GetModelJSON(response.Data));
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"User (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.OK, 
+                HttpStatusCode.OK,
                 response.Data);
         }
 

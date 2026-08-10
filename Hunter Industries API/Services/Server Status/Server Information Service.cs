@@ -42,13 +42,17 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// <summary>
         /// Returns all the servers that match the parameters.
         /// </summary>
-        public async Task<List<ServerInformationRecord>> GetServers(bool isActive)
+        public async Task<(List<ServerInformationRecord>, int)> GetServers(
+            bool isActive,
+            int pageSize = 25,
+            int pageNumber = 1)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"ServerInformationService.GetServers called with the parameter \"{isActive}\".");
+                $"ServerInformationService.GetServers called with the parameters \"{isActive}\", \"{pageSize}\", \"{pageNumber}\".");
 
             List<ServerInformationRecord> servers = new List<ServerInformationRecord>();
+            int totalRecords = 0;
 
             try
             {
@@ -57,13 +61,22 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     "Server Status",
                     "Server Information",
                     "GetServers.sql"));
-                List<SqlParameter> parameterList = new List<SqlParameter>();
+                List<SqlParameter> parameterList = new List<SqlParameter>
+                {
+                    new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                    new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
+                };
 
                 if (isActive)
                 {
                     sql += "\nwhere IsActive = @isActive";
                     parameterList.Add(new SqlParameter("@isActive", SqlDbType.Bit) { Value = isActive });
                 }
+
+                sql += @"
+order by ServerInformationId asc
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
 
                 (List<ServerInformationRecord> results, Exception ex) = await _Database.Query(
                     sql,
@@ -112,6 +125,11 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 }
 
                 servers = results;
+
+                if (servers.Count > 0)
+                {
+                    totalRecords = await GetTotalServers(isActive);
+                }
             }
 
             catch (Exception ex)
@@ -128,8 +146,74 @@ namespace HunterIndustriesAPI.Services.ServerStatus
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"ServerInformationService.GetServers returned {servers.Count} records.");
-            return servers;
+                $"ServerInformationService.GetServers returned {servers.Count} records | {totalRecords} total records.");
+            return (
+                servers,
+                totalRecords);
+        }
+
+        /// <summary>
+        /// Returns the number of server records that match the parameters.
+        /// </summary>
+        private async Task<int> GetTotalServers(bool isActive)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.GetTotalServers called with the parameter \"{isActive}\".");
+
+            int totalRecords = 0;
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Server Status",
+                    "Server Information",
+                    "GetTotalServers.sql"));
+                List<SqlParameter> parameterList = new List<SqlParameter>();
+
+                if (isActive)
+                {
+                    sql += "\nwhere IsActive = @isActive";
+                    parameterList.Add(new SqlParameter("@isActive", SqlDbType.Bit) { Value = isActive });
+                }
+
+                (int result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => reader.GetInt32(0),
+                    parameterList.ToArray());
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run ServerInformationService.GetTotalServers.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                totalRecords = result;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run ServerInformationService.GetTotalServers.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"ServerInformationService.GetTotalServers returned {totalRecords}.");
+            return totalRecords;
         }
 
         /// <summary>

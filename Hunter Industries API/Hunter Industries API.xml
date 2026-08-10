@@ -796,7 +796,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.Get(System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.Get(HunterIndustriesAPI.Models.Requests.Filters.ServerInformationFilterModel)">
              <summary>
              Returns the collection of servers.
              </summary>
@@ -806,7 +806,6 @@
                  GET /serverstatus/serverinformation?isActive=true
                  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
              </remarks>
-             <param name="isActive">Whether the servers are active or not.</param>
         </member>
         <member name="M:HunterIndustriesAPI.Controllers.ServerStatus.ServerInformationController.Get(System.Int32)">
              <summary>
@@ -2718,6 +2717,25 @@
             The number of the page to pull.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Models.Requests.Filters.ServerInformationFilterModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ServerInformationFilterModel.IsActive">
+            <summary>
+            Whether the servers are active or not.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ServerInformationFilterModel.PageSize">
+            <summary>
+            The number of records to pull per page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.ServerInformationFilterModel.PageNumber">
+            <summary>
+            The number of the page to pull.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel">
             <summary>
             </summary>
@@ -2730,6 +2748,16 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.IncludeDeleted">
             <summary>
             Whether to return deleted users.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.PageSize">
+            <summary>
+            The number of records to pull per page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Filters.UserFilterModel.PageNumber">
+            <summary>
+            The number of the page to pull.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.Assistant.ConfigResponseModel">
@@ -2998,6 +3026,74 @@
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerAlertResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerInformationResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerInformationResponseModel.Entries">
+            <summary>
+            The server information records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerInformationResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerInformationResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerInformationResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerInformationResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.ServerStatus.ServerInformationResponseModel.TotalCount">
+            <summary>
+            The total number of records returned.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Models.Responses.UserResponseModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.UserResponseModel.Entries">
+            <summary>
+            The user records.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.UserResponseModel.EntryCount">
+            <summary>
+            The number of records in the page.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.UserResponseModel.PageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.UserResponseModel.PageSize">
+            <summary>
+            The current page size.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.UserResponseModel.TotalPageCount">
+            <summary>
+            The total number of pages returned.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.UserResponseModel.TotalCount">
             <summary>
             The total number of records returned.
             </summary>
@@ -5153,9 +5249,14 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServers(System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServers(System.Boolean,System.Int32,System.Int32)">
             <summary>
             Returns all the servers that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetTotalServers(System.Boolean)">
+            <summary>
+            Returns the number of server records that match the parameters.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.ServerStatus.ServerInformationService.GetServer(System.Int32)">
@@ -5219,9 +5320,14 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.String,System.Boolean)">
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUsers(System.String,System.Boolean,System.Int32,System.Int32)">
             <summary>
             Returns all user records that match the parameters.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetTotalUsers(System.String,System.Boolean)">
+            <summary>
+            Returns the number of user records that match the parameters.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUser(System.Int32)">

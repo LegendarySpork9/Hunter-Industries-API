@@ -43,15 +43,18 @@ namespace HunterIndustriesAPI.Services.User
         /// <summary>
         /// Returns all user records that match the parameters.
         /// </summary>
-        public async Task<List<UserRecord>> GetUsers(
+        public async Task<(List<UserRecord>, int)> GetUsers(
             string username,
-            bool includeDeleted = false)
+            bool includeDeleted = false,
+            int pageSize = 25,
+            int pageNumber = 1)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"UserService.GetUsers called with the parameters \"{username}\", \"{includeDeleted}\".");
+                $"UserService.GetUsers called with the parameters \"{username}\", \"{includeDeleted}\", \"{pageSize}\", \"{pageNumber}\".");
 
             List<UserRecord> users = new List<UserRecord>();
+            int totalRecords = 0;
 
             try
             {
@@ -59,7 +62,11 @@ namespace HunterIndustriesAPI.Services.User
                     _Options.SQLFiles,
                     "User",
                     "GetUsers.sql"));
-                List<SqlParameter> parameterList = new List<SqlParameter>();
+                List<SqlParameter> parameterList = new List<SqlParameter>
+                {
+                    new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
+                    new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
+                };
 
                 if (!string.IsNullOrEmpty(username))
                 {
@@ -71,6 +78,11 @@ namespace HunterIndustriesAPI.Services.User
                 {
                     sql += "\nand IsDeleted = 0";
                 }
+
+                sql += @"
+order by UserId asc
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
 
                 (List<UserRecord> results, Exception ex) = await _Database.Query(
                     sql,
@@ -101,6 +113,13 @@ namespace HunterIndustriesAPI.Services.User
 
                     users.Add(result);
                 }
+
+                if (users.Count > 0)
+                {
+                    totalRecords = await GetTotalUsers(
+                        username,
+                        includeDeleted);
+                }
             }
 
             catch (Exception ex)
@@ -117,8 +136,80 @@ namespace HunterIndustriesAPI.Services.User
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"UserService.GetUsers returned {users.Count} records.");
-            return users;
+                $"UserService.GetUsers returned {users.Count} records | {totalRecords} total records.");
+            return (
+                users,
+                totalRecords);
+        }
+
+        /// <summary>
+        /// Returns the number of user records that match the parameters.
+        /// </summary>
+        private async Task<int> GetTotalUsers(
+            string username,
+            bool includeDeleted)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetTotalUsers called with the parameters \"{username}\", \"{includeDeleted}\".");
+
+            int totalRecords = 0;
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "GetTotalUsers.sql"));
+                List<SqlParameter> parameterList = new List<SqlParameter>();
+
+                if (!string.IsNullOrEmpty(username))
+                {
+                    sql += "\nand Username = @username";
+                    parameterList.Add(new SqlParameter("@username", SqlDbType.VarChar) { Value = username });
+                }
+
+                if (!includeDeleted)
+                {
+                    sql += "\nand IsDeleted = 0";
+                }
+
+                (int result, Exception ex) = await _Database.QuerySingle(
+                    sql,
+                    reader => reader.GetInt32(0),
+                    parameterList.ToArray());
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run UserService.GetTotalUsers.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                totalRecords = result;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.GetTotalUsers.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetTotalUsers returned {totalRecords}.");
+            return totalRecords;
         }
 
         /// <summary>
