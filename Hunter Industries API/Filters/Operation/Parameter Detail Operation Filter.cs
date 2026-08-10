@@ -197,6 +197,16 @@ namespace HunterIndustriesAPI.Filters.Operation
                     {
                         param.name = "includeDeleted";
                     }
+
+                    if (param.name == "filters.pageSize")
+                    {
+                        param.name = "pageSize";
+                    }
+
+                    if (param.name == "filters.pageNumber")
+                    {
+                        param.name = "pageNumber";
+                    }
                 }
 
                 foreach (Parameter param in operation.parameters)
@@ -240,6 +250,21 @@ namespace HunterIndustriesAPI.Filters.Operation
                     if (param.name == "request")
                     {
                         param.name = "server";
+                    }
+
+                    if (param.name == "filters.isActive")
+                    {
+                        param.name = "isActive";
+                    }
+
+                    if (param.name == "filters.pageSize")
+                    {
+                        param.name = "pageSize";
+                    }
+
+                    if (param.name == "filters.pageNumber")
+                    {
+                        param.name = "pageNumber";
                     }
                 }
             }

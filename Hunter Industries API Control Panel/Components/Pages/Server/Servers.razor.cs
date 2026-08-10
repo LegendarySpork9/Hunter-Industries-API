@@ -48,7 +48,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
             IsLoading = true;
 
-            ServerRecords = await APIService.GetServers();
+            ServerRecords = await GetServers();
 
             List<MachineModel> machines = await GetMachines();
             HostNames.AddRange(machines.Where(m => !m.IsDeleted)
@@ -67,6 +67,46 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 .Select(d => $"{d.Time} ({d.Duration})"));
 
             IsLoading = false;
+        }
+
+        /// <summary>
+        /// Loads all server data.
+        /// </summary>
+        private async Task<List<ServerInformationModel>> GetServers()
+        {
+            List<ServerInformationModel> servers = [];
+
+            bool nextPage = true;
+            int pageNumber = 1;
+
+            while (nextPage)
+            {
+                PagedAPIResponseModel<ServerInformationModel>? pagedServers = await APIService.GetServers(
+                    200,
+                    pageNumber);
+
+                if (pagedServers != null && pagedServers.EntryCount > 0)
+                {
+                    servers.AddRange(pagedServers.Entries);
+
+                    if (pageNumber < pagedServers.TotalPageCount)
+                    {
+                        pageNumber++;
+                    }
+
+                    else
+                    {
+                        nextPage = false;
+                    }
+                }
+
+                else
+                {
+                    nextPage = false;
+                }
+            }
+
+            return servers;
         }
 
         /// <summary>

@@ -418,6 +418,7 @@
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Error Log Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Media\Media Filter Model.cs" />
+    <Compile Include="Models\Requests\Filters\Server Information Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\User Filter Model.cs" />
     <Compile Include="Models\Responses\Assistant\Config Response Model.cs" />
     <Compile Include="Models\Responses\Assistant\Deletion Response Model.cs" />
@@ -429,6 +430,8 @@
     <Compile Include="Models\Responses\Media\Media Response Model.cs" />
     <Compile Include="Models\Responses\Response Model.cs" />
     <Compile Include="Models\Responses\Server Status\Server Alert Response Model.cs" />
+    <Compile Include="Models\Responses\Server Status\Server Information Response Model.cs" />
+    <Compile Include="Models\Responses\User Response Model.cs" />
     <Compile Include="Models\Responses\Statistics\Dashboard Response Model.cs" />
     <Compile Include="Models\Responses\Statistics\Error Response Model.cs" />
     <Compile Include="Models\Responses\Statistics\Server Response Model.cs" />
@@ -654,6 +657,7 @@
     <Content Include="SQL\Server Status\Server Event\GetServerEvents.sql" />
     <Content Include="SQL\Server Status\Server Event\LogServerEvent.sql" />
     <Content Include="SQL\Server Status\Server Information\GetServers.sql" />
+    <Content Include="SQL\Server Status\Server Information\GetTotalServers.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerAdded.sql" />
     <Content Include="SQL\Server Status\Server Information\ServerExists.sql" />
     <Content Include="SQL\Server Status\Server Alerts\ServerAlertExists.sql" />
@@ -690,6 +694,7 @@
     <Content Include="SQL\User\CreateUser.sql" />
     <Content Include="SQL\User\DeleteUserScope.sql" />
     <Content Include="SQL\User\GetUser.sql" />
+    <Content Include="SQL\User\GetTotalUsers.sql" />
     <Content Include="SQL\User\GetUsers.sql" />
     <Content Include="SQL\User\GetUserScopes.sql" />
     <Content Include="SQL\User\User Settings\GetUserSetting.sql" />

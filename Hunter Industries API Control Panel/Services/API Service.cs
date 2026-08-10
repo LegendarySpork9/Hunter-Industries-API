@@ -78,9 +78,13 @@ namespace HunterIndustriesAPIControlPanel.Services
         }
 
         /// <summary>
-        /// Gets a list of the users from the API.
+        /// Gets the users from the API matching the given parameters.
         /// </summary>
-        public async Task<List<UserModel>> GetUsers(bool includeDeleted)
+        public async Task<PagedAPIResponseModel<UserModel>?> GetUsers(
+            bool includeDeleted = false,
+            int pageSize = 25,
+            int pageNumber = 1,
+            string? username = null)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -91,13 +95,39 @@ namespace HunterIndustriesAPIControlPanel.Services
                 await Authorise();
             }
 
-            List<UserModel> users = [];
+            PagedAPIResponseModel<UserModel>? pagedResponse = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (includeDeleted)
+            {
+                queryParameters.Add(new("includeDeleted", includeDeleted));
+            }
+
+            if (!string.IsNullOrWhiteSpace(username))
+            {
+                queryParameters.Add(new("username", username));
+            }
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
 
             try
             {
-                users = await _APIClient.GetUsers(includeDeleted);
+                pagedResponse = await _APIClient.GetPagedUsers(queryParameters);
 
-                if (users.Count > 0)
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Users Returned: {pagedResponse?.EntryCount ?? 0}");
+
+                if (pagedResponse != null && pagedResponse.Entries != null)
                 {
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
@@ -106,6 +136,8 @@ namespace HunterIndustriesAPIControlPanel.Services
 
                 else
                 {
+                    pagedResponse = null;
+
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
                         "Failed to fetch users from API");
@@ -125,7 +157,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     "Failed to fetch users from API");
             }
 
-            return users;
+            return pagedResponse;
         }
 
         /// <summary>
@@ -997,9 +1029,11 @@ namespace HunterIndustriesAPIControlPanel.Services
         }
 
         /// <summary>
-        /// Gets a list of the servers from the API.
+        /// Gets the servers from the API matching the given parameters.
         /// </summary>
-        public async Task<List<ServerInformationModel>> GetServers()
+        public async Task<PagedAPIResponseModel<ServerInformationModel>?> GetServers(
+            int pageSize = 25,
+            int pageNumber = 1)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -1010,21 +1044,39 @@ namespace HunterIndustriesAPIControlPanel.Services
                 await Authorise();
             }
 
-            List<ServerInformationModel> servers = [];
+            PagedAPIResponseModel<ServerInformationModel>? pagedResponse = null;
+
+            List<KeyValuePair<string, object>> queryParameters = [];
+
+            if (pageSize != 25)
+            {
+                queryParameters.Add(new("pageSize", pageSize));
+            }
+
+            if (pageNumber != 1)
+            {
+                queryParameters.Add(new("pageNumber", pageNumber));
+            }
 
             try
             {
-                servers = await _APIClient.GetServers();
+                pagedResponse = await _APIClient.GetPagedServers(queryParameters);
 
-                if (servers.Count > 0)
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Debug,
+                    $"Servers Returned: {pagedResponse?.EntryCount ?? 0}");
+
+                if (pagedResponse != null && pagedResponse.Entries != null)
                 {
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
-                        "Fetched users from API");
+                        "Fetched servers from API");
                 }
 
                 else
                 {
+                    pagedResponse = null;
+
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Info,
                         "Failed to fetch servers from API");
@@ -1044,7 +1096,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                     "Failed to fetch servers from API");
             }
 
-            return servers;
+            return pagedResponse;
         }
 
         /// <summary>

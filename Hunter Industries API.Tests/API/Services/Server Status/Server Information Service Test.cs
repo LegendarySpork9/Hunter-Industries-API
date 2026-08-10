@@ -57,6 +57,13 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                         }
                     ],
                     null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    (Exception)null));
 
             ServerInformationService service = new(
                 _MockLogger.Object,
@@ -64,7 +71,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            List<ServerInformationRecord> actual = await service.GetServers(true);
+            (List<ServerInformationRecord> actual, int totalRecords) = await service.GetServers(true);
 
             Assert.AreEqual(
                 1,
@@ -94,6 +101,9 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 60,
                 actual[0].Downtime.Duration);
             Assert.IsTrue(actual[0].IsActive);
+            Assert.AreEqual(
+                1,
+                totalRecords);
         }
 
         /// <summary>
@@ -117,11 +127,14 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 _MockOptions.Object,
                 mockDatabase.Object);
 
-            List<ServerInformationRecord> actual = await service.GetServers(true);
+            (List<ServerInformationRecord> actual, int totalRecords) = await service.GetServers(true);
 
             Assert.AreEqual(
                 0,
                 actual.Count);
+            Assert.AreEqual(
+                0,
+                totalRecords);
         }
 
         #endregion

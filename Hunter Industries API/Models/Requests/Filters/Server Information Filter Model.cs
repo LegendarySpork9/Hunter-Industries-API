@@ -1,18 +1,14 @@
-﻿// Copyright © - 11/06/2026 - Toby Hunter
+// Copyright © Unpublished - Toby Hunter
 namespace HunterIndustriesAPI.Models.Requests.Filters
 {
     /// <summary>
     /// </summary>
-    public class UserFilterModel
+    public class ServerInformationFilterModel
     {
         /// <summary>
-        /// The name of the user.
+        /// Whether the servers are active or not.
         /// </summary>
-        public string Username { get; set; }
-        /// <summary>
-        /// Whether to return deleted users.
-        /// </summary>
-        public bool IncludeDeleted { get; set; }
+        public bool IsActive { get; set; }
         /// <summary>
         /// The number of records to pull per page.
         /// </summary>
