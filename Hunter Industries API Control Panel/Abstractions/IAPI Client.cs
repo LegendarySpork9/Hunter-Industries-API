@@ -13,7 +13,7 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
     {
         void SetBearerToken(string bearerToken);
         Task<AuthenticationModel?> Authorise();
-        Task<List<UserModel>> GetUsers(bool includeDeleted);
+        Task<PagedAPIResponseModel<UserModel>?> GetPagedUsers(List<KeyValuePair<string, object>>? queryParameters = null);
         Task<DashboardStatisticsModel?> GetDashboardStatistics();
         Task<PagedAPIResponseModel<AuditHistoryModel>?> GetPagedAuditHistory(List<KeyValuePair<string, object>>? queryParameters = null);
         Task<(UserModel?, ResponseModel?)> CreateUser(UserRequestModel user);
@@ -26,7 +26,7 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
         Task<(UserModel?, ResponseModel?)> UpdateUser(int userId, UserUpdateRequestModel user);
         Task<(UserSettingModel?, ResponseModel?)> CreateUserSetting(UserSettingRequestModel userSetting);
         Task<(SettingModel?, ResponseModel?)> UpdateUserSetting(int userSettingId, UserSettingUpdateRequestModel updateUserSetting);
-        Task<List<ServerInformationModel>> GetServers();
+        Task<PagedAPIResponseModel<ServerInformationModel>?> GetPagedServers(List<KeyValuePair<string, object>>? queryParameters = null);
         Task<(ServerInformationModel?, ResponseModel?)> CreateServer(ServerRequestModel server);
         Task<(ServerInformationModel?, ResponseModel?)> UpdateServer(int serverId, ServerUpdateRequestModel server);
         Task<ServerInformationModel?> GetServer(int serverId);

@@ -4,13 +4,16 @@ using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Models.Responses;
+using HunterIndustriesAPI.Models.Responses.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
 using HunterIndustriesAPI.Services;
 using HunterIndustriesAPI.Services.ServerStatus;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -60,14 +63,14 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     GET /serverstatus/serverinformation?isActive=true
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        /// <param name="isActive">Whether the servers are active or not.</param>
         [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Information.Read")]
         [SwaggerOperation("GetServers")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<ServerInformationRecord>), Description = "Returns the item(s) matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerInformationResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Get([FromUri] bool isActive = false)
+        public async Task<IHttpActionResult> Get([FromUri] ServerInformationFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(
                 _Logger,
@@ -75,6 +78,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 _Options,
                 _Database,
                 _Clock);
+            ModelValidationService _modelValidator = new ModelValidationService();
             ServerInformationService _serverInformationService = new ServerInformationService(
                 _Logger,
                 _FileSystem,
@@ -87,11 +91,57 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             ResponseModel response;
 
-            _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
-                $"Server Information (Get) endpoint called with the following parameter \"{isActive}\".");
+            if (filters == null)
+            {
+                filters = new ServerInformationFilterModel();
+            }
 
-            List<ServerInformationRecord> servers = await _serverInformationService.GetServers(isActive);
+            if (filters.PageSize > 200)
+            {
+                filters.PageSize = 200;
+            }
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Info,
+                $"Server Information (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
+
+            if (!_modelValidator.IsValid(filters))
+            {
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "Invalid or no filters provided."
+                    }
+                };
+
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    null,
+                    ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Server Information (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest,
+                    response.Data);
+            }
+
+            (List<ServerInformationRecord> servers, int totalRecords) = await _serverInformationService.GetServers(
+                filters.IsActive,
+                filters.PageSize,
+                filters.PageNumber);
 
             if (servers.Count == 0)
             {
@@ -112,10 +162,9 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     AuditHistoryConverter.GetStatusId("NoContent"),
                     username,
                     applicationName,
-                    new string[]
-                    {
-                        $"IsActive: {isActive}"
-                    },
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
                     null,
                     ResponseFunction.GetModelJSON(response.Data));
 
@@ -127,10 +176,20 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     response.Data);
             }
 
+            int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
+
             response = new ResponseModel()
             {
                 StatusCode = 200,
-                Data = servers
+                Data = new ServerInformationResponseModel()
+                {
+                    Entries = servers,
+                    EntryCount = servers.Count,
+                    PageNumber = filters.PageNumber,
+                    PageSize = filters.PageSize,
+                    TotalPageCount = totalPages,
+                    TotalCount = totalRecords
+                }
             };
 
             await _auditHistoryService.LogRequest(
@@ -141,10 +200,9 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                new string[]
-                {
-                    $"IsActive: {isActive}"
-                },
+                ParameterFunction.FormatParameters(
+                    null,
+                    filters),
                 null,
                 ResponseFunction.GetModelJSON(response.Data));
 

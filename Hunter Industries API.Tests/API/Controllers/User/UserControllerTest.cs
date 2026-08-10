@@ -73,6 +73,13 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.User
                 .Returns((
                     ["User"],
                     null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    (Exception)null));
 
             UserController controller = new(
                 _MockLogger.Object,

@@ -49,7 +49,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
             IsLoading = true;
 
-            UserRecords = await APIService.GetUsers(true);
+            UserRecords = await UserFunction.GetUsers(APIService);
 
             if (UserRecords.Count > 0)
             {
