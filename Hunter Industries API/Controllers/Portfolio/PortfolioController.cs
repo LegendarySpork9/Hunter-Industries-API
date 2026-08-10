@@ -858,7 +858,7 @@ namespace HunterIndustriesAPI.Controllers.Portfolio
                     }
                 }
 
-                if (request.Languages != null && request.Frameworks.Count > 0)
+                if (request.Languages != null && request.Languages.Count > 0)
                 {
                     foreach (string language in request.Languages)
                     {
