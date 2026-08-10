@@ -343,6 +343,32 @@ namespace HunterIndustriesAPI.Tests.API.Functions
         }
 
         /// <summary>
+        /// Tests whether the CleanSQL method returns null when all SET properties are null.
+        /// </summary>
+        [TestMethod]
+        public void TestCleanSQLReturnsNullWhenAllSetPropertiesNull()
+        {
+            object model = new
+            {
+                Name = (string)null,
+                Version = (string)null
+            };
+            string sql = string.Join(Environment.NewLine,
+            [
+                "update Game set",
+                "\t[Name] = @name,",
+                "\t[Version] = @version",
+                "where GameId = @gameid"
+            ]);
+
+            string actual = SQLFunction.CleanSQL(
+                model,
+                sql);
+
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
         /// Tests whether the CleanSQL method removes the trailing comma from the last SET line when the last property is null.
         /// </summary>
         [TestMethod]
