@@ -548,29 +548,33 @@ where ApplicationId = @applicationId";
                 sql = SQLFunction.CleanSQL(
                     record,
                     sql);
-                parameters = SQLFunction.CleanParameterArray(
-                    record,
-                    parameters);
 
-                (int rowsAffected, Exception ex) = await _Database.Execute(
-                    sql,
-                    parameters);
-
-                if (ex != null)
+                if (sql != null)
                 {
-                    string message = "An error occured when trying to run ConfigurationService.RecordUpdated.";
-                    _Logger.LogMessage(
-                        StandardValues.LoggerValues.Warning,
-                        message);
-                    _Logger.LogMessage(
-                        StandardValues.LoggerValues.Error,
-                        ex.ToString(),
-                        message);
-                }
+                    parameters = SQLFunction.CleanParameterArray(
+                        record,
+                        parameters);
 
-                if (rowsAffected == 1)
-                {
-                    updated = true;
+                    (int rowsAffected, Exception ex) = await _Database.Execute(
+                        sql,
+                        parameters);
+
+                    if (ex != null)
+                    {
+                        string message = "An error occured when trying to run ConfigurationService.RecordUpdated.";
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Error,
+                            ex.ToString(),
+                            message);
+                    }
+
+                    if (rowsAffected == 1)
+                    {
+                        updated = true;
+                    }
                 }
             }
 

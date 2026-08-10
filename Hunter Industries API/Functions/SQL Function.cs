@@ -67,6 +67,15 @@ namespace HunterIndustriesAPI.Functions
                 }
             }
 
+            int setIndex = sqlLines.FindIndex(s => s.Contains("set"));
+            int whereIndex = sqlLines.FindIndex(s => s.Contains("where"));
+
+            if (setIndex >= 0 && whereIndex >= 0 && whereIndex == setIndex + 1
+                && !sqlLines[setIndex].Contains("="))
+            {
+                return null;
+            }
+
             string lastSet = sqlLines.LastOrDefault(s => s.Contains(','));
 
             if (lastSet != null)
