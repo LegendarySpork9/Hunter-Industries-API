@@ -321,6 +321,67 @@ h1:focus {
     border-color: #666 !important;
 }
 
+/* Radzen DropDown Dark Overrides */
+.rz-dropdown {
+    background-color: #4E4E4E;
+    border-color: #666;
+    color: #D7D7D7;
+}
+
+.rz-dropdown:hover {
+    border-color: #888;
+}
+
+.rz-dropdown.rz-state-focused {
+    background-color: #555;
+    border-color: #258cfb;
+    box-shadow: 0 0 0 0.1rem rgba(255,255,255,0.2), 0 0 0 0.25rem #258cfb;
+}
+
+.rz-dropdown.rz-state-disabled {
+    background-color: #444;
+    border-color: #555;
+    color: #999;
+    opacity: 1;
+}
+
+.rz-dropdown .rz-dropdown-label {
+    color: #D7D7D7;
+}
+
+.rz-dropdown .rz-placeholder {
+    color: #999;
+}
+
+.rz-dropdown .rz-dropdown-trigger {
+    color: #D7D7D7;
+}
+
+.rz-dropdown-panel {
+    background-color: #4E4E4E;
+    border-color: #666;
+}
+
+.rz-dropdown-panel .rz-dropdown-items .rz-dropdown-item {
+    color: #D7D7D7;
+}
+
+.rz-dropdown-panel .rz-dropdown-items .rz-dropdown-item:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+.rz-dropdown-panel .rz-dropdown-items .rz-dropdown-item.rz-state-highlight {
+    background-color: #1b6ec2;
+    color: #fff;
+}
+
+.rz-dropdown-panel .rz-dropdown-items .rz-dropdown-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* Activity Feed */
 .activity-feed-item {
     background-color: #3E3E3E;

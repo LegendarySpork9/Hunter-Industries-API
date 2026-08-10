@@ -51,53 +51,36 @@ else
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Host Name</label>
-                        <select class="form-control" @bind="EditHostName">
-                            <option value="@EditHostName" disabled selected>@EditHostName</option>
-                            @foreach (string hostName in HostNames)
-                            {
-                                <option value="@hostName">@hostName</option>
-                            }
-                        </select>
+                        <RadzenDropDown
+                            TValue="string"
+                            Data="@HostNames"
+                            @bind-Value="EditHostName"
+                            Style="width:100%" />
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Game</label>
-                        <select class="form-control" @bind="EditGame">
-                            <option value="@EditGame" disabled selected>@EditGame</option>
-                            @foreach (string game in Games)
-                            {
-                                <option value="@game">@game</option>
-                            }
-                        </select>
+                        <RadzenDropDown
+                            TValue="string"
+                            Data="@Games"
+                            @bind-Value="EditGame"
+                            Style="width:100%" />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Connection</label>
-                        <select class="form-control" @bind="EditConnection">
-                            <option value="@EditConnection" disabled selected>@EditConnection</option>
-                            @foreach (string connection in Connections)
-                            {
-                                <option value="@connection">@connection</option>
-                            }
-                        </select>
+                        <RadzenDropDown
+                            TValue="string"
+                            Data="@Connections"
+                            @bind-Value="EditConnection"
+                            Style="width:100%" />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Downtime</label>
-                        <select class="form-control" @bind="EditDowntime">
-                            @if (Server.Downtime != null)
-                            {
-                                <option value="@EditDowntime" disabled selected>@EditDowntime</option>
-                                <option value="No Downtime">No Downtime</option>
-                            }
-
-                            else
-                            {
-                                <option value="" disabled selected>Select an option</option>
-                            }
-
-                            @foreach (string downtime in Downtimes)
-                            {
-                                <option value="@downtime">@downtime</option>
-                            }
-                        </select>
+                        <RadzenDropDown
+                            TValue="string"
+                            Data="@(Server.Downtime != null ? (string[])["No Downtime", .. Downtimes] : Downtimes)"
+                            @bind-Value="EditDowntime"
+                            Placeholder="Select an option"
+                            Style="width:100%" />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Event Interval (s)</label>
