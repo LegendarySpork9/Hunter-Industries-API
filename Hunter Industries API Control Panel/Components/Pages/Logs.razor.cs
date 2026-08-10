@@ -17,6 +17,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
         private NavigationManager Navigation { get; set; } = default!;
         [Inject]
         private APIService APIService { get; set; } = default!;
+        [Inject]
+        private TimezoneService TimezoneService { get; set; } = default!;
 
         [SupplyParameterFromQuery(Name = "user")]
         public int? QueryUserId { get; set; }

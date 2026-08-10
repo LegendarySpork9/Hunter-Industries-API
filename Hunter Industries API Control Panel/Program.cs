@@ -57,6 +57,7 @@ namespace HunterIndustriesAPIControlPanel
             builder.Services.AddScoped<Radzen.TooltipService>();
             builder.Services.AddScoped<Radzen.ContextMenuService>();
             builder.Services.AddScoped<UserModel>();
+            builder.Services.AddScoped<TimezoneService>();
             builder.Services.AddHttpContextAccessor();
 
             _logger.LogMessage(

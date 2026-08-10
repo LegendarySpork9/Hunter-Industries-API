@@ -15,6 +15,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Media
         private NavigationManager Navigation { get; set; } = default!;
         [Inject]
         private APIService APIService { get; set; } = default!;
+        [Inject]
+        private TimezoneService TimezoneService { get; set; } = default!;
 
         [SupplyParameterFromQuery(Name = "application")]
         public string? QueryApplication { get; set; }

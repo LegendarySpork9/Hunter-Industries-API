@@ -13,6 +13,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Media
         private IConfigurableLoggerService _Logger { get; set; } = default!;
         [Inject]
         private APIService APIService { get; set; } = default!;
+        [Inject]
+        private TimezoneService TimezoneService { get; set; } = default!;
 
         [Parameter]
         public int Id { get; set; }

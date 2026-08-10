@@ -18,6 +18,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Errors
         private NavigationManager Navigation { get; set; } = default!;
         [Inject]
         private APIService APIService { get; set; } = default!;
+        [Inject]
+        private TimezoneService TimezoneService { get; set; } = default!;
 
         private ErrorStatisticsModel? Statistics;
         private PagedAPIResponseModel<ErrorModel>? ErrorLog;

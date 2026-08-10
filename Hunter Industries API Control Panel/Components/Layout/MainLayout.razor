@@ -9,6 +9,7 @@
         <div class="top-row px-4">
             @if (User.IsLoggedIn)
             {
+                <span class="timezone-indicator">@TimezoneService.GetOffsetLabel()</span>
                 <button class="btn btn-outline-light btn-sm" @onclick="SignOut">Sign Out</button>
             }
         </div>

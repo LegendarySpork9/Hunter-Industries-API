@@ -265,7 +265,7 @@ else
                                         <tr>
                                             <th class="table-header">Component</th>
                                             <th class="table-header">Status</th>
-                                            <th class="table-header">Date (UTC)</th>
+                                            <th class="table-header">@TimezoneService.GetDateLabel()</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -278,7 +278,7 @@ else
                                                         Text="@serverEvent.Status"
                                                         Type="@(serverEvent.Status == "Online" ? "active" : serverEvent.Status == "Offline" ? "danger" : "warning")" />
                                                 </td>
-                                                <td class="text-light-grey">@serverEvent.DateOccured.ToString("dd MMM yyyy HH:mm")</td>
+                                                <td class="text-light-grey">@TimezoneService.ConvertFromUtc(serverEvent.DateOccured).ToString("dd MMM yyyy HH:mm")</td>
                                             </tr>
                                         }
                                     </tbody>
@@ -339,10 +339,10 @@ else
                                 </RadzenDataGridColumn>
                                 <RadzenDataGridColumn
                                     TItem="RecentAlertModel"
-                                    Title="Date (UTC)"
+                                    Title="@TimezoneService.GetDateLabel()"
                                     Width="180px">
                                     <Template Context="alert">
-                                        @alert.AlertDate.ToString("dd MMM yyyy HH:mm")
+                                        @TimezoneService.ConvertFromUtc(alert.AlertDate).ToString("dd MMM yyyy HH:mm")
                                     </Template>
                                 </RadzenDataGridColumn>
                             </Columns>
@@ -380,10 +380,10 @@ else
                                 </RadzenDataGridColumn>
                                 <RadzenDataGridColumn
                                     TItem="ServerEventModel"
-                                    Title="Date (UTC)"
+                                    Title="@TimezoneService.GetDateLabel()"
                                     Width="180px">
                                     <Template Context="serverEvent">
-                                        @serverEvent.DateOccured.ToString("dd MMM yyyy HH:mm")
+                                        @TimezoneService.ConvertFromUtc(serverEvent.DateOccured).ToString("dd MMM yyyy HH:mm")
                                     </Template>
                                 </RadzenDataGridColumn>
                             </Columns>
