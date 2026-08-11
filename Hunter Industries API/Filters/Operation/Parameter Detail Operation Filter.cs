@@ -303,6 +303,24 @@ namespace HunterIndustriesAPI.Filters.Operation
                         }
                     }
                 }
+
+                foreach (Parameter param in operation.parameters)
+                {
+                    if (param.name == "filters.serverName")
+                    {
+                        param.name = "serverName";
+                    }
+
+                    if (param.name == "filters.pageSize")
+                    {
+                        param.name = "pageSize";
+                    }
+
+                    if (param.name == "filters.pageNumber")
+                    {
+                        param.name = "pageNumber";
+                    }
+                }
             }
 
             if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType == typeof(ErrorController))

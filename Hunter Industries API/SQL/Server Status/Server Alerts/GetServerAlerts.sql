@@ -18,6 +18,4 @@ join ServerAlertStatus SAS with (nolock) on SA.AlertStatusId = SAS.AlertStatusId
 join ServerInformation SI with (nolock) on SA.ServerInformationId = SI.ServerInformationId
 join Machine with (nolock) on SI.MachineId = Machine.MachineId
 join Game with (nolock) on SI.GameId = Game.GameId
-order by DateOccured desc
-offset (@pageSize * (@pageNumber - 1)) rows
-fetch next @pageSize rows only
+where ServerAlertId is not null
