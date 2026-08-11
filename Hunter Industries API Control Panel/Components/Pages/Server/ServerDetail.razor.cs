@@ -43,6 +43,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private string EditConnection = string.Empty;
         private string EditDowntime = string.Empty;
         private int EditEventInterval;
+        private string EditWebhookURL = string.Empty;
+        private long EditRecipientId;
         private bool EditIsActive;
         private string[] ComponentAlertColours = [];
         private string[] StatusAlertColours = [];
@@ -73,6 +75,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 EditConnection = $"{Server.Connection.IpAddress}:{Server.Connection.Port}";
                 EditDowntime = Server.Downtime == null ? string.Empty : $"{Server.Downtime.Time} ({Server.Downtime.Duration})";
                 EditEventInterval = Server.EventInterval;
+                EditWebhookURL = Server.WebhookURL;
+                EditRecipientId = Server.RecipientId;
                 EditIsActive = Server.IsActive;
 
                 HostNames.Clear();
@@ -468,6 +472,24 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                     }
                 }
 
+                if (!string.IsNullOrWhiteSpace(EditWebhookURL) && EditWebhookURL != Server.WebhookURL)
+                {
+                    server.WebhookURL = EditWebhookURL;
+
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Server Webhook URL: {Server.WebhookURL} -> {EditWebhookURL}");
+                }
+
+                if (EditRecipientId != 0 && EditRecipientId != Server.RecipientId)
+                {
+                    server.RecipientId = EditRecipientId;
+
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Debug,
+                        $"Server Recipient Id: {Server.RecipientId} -> {EditRecipientId}");
+                }
+
                 if (EditIsActive != Server.IsActive)
                 {
                     server.IsActive = EditIsActive;
@@ -491,6 +513,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                     EditConnection = $"{Server.Connection.IpAddress}:{Server.Connection.Port}";
                     EditDowntime = Server.Downtime == null ? string.Empty : $"{Server.Downtime.Time} ({Server.Downtime.Duration})";
                     EditEventInterval = Server.EventInterval;
+                    EditWebhookURL = Server.WebhookURL;
+                    EditRecipientId = Server.RecipientId;
                     EditIsActive = Server.IsActive;
                 }
 

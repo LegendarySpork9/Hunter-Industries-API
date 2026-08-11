@@ -16,6 +16,8 @@ namespace HunterIndustriesAPIControlPanel.Models.Responses
         public required ServerConnectionModel Connection { get; set; }
         public ServerDowntimeModel? Downtime { get; set; }
         public required int EventInterval { get; set; }
+        public required string WebhookURL { get; set; }
+        public required long RecipientId { get; set; }
         public required bool IsActive { get; set; }
     }
 }

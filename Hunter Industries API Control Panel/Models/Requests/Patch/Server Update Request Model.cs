@@ -13,6 +13,8 @@ namespace HunterIndustriesAPIControlPanel.Models.Requests.Patch
         public string? GameVersion { get; set; }
         public string? IPAddress { get; set; }
         public int? Port { get; set; }
+        public string? WebhookURL { get; set; }
+        public long? RecipientId { get; set; }
         public string? Time { get; set; }
         public int? Duration { get; set; }
         public bool? IsActive { get; set; }

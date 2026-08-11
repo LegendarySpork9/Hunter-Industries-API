@@ -107,7 +107,9 @@ fetch next @pageSize rows only";
                             },
                             Downtime = downtime,
                             EventInterval = reader.GetInt32(9),
-                            IsActive = reader.GetBoolean(10)
+                            WebhookURL = reader.GetString(10),
+                            RecipientId = reader.GetInt64(11),
+                            IsActive = reader.GetBoolean(12)
                         };
                     },
                     parameterList.ToArray());
@@ -270,7 +272,9 @@ where ServerInformationId = @serverId";
                             },
                             Downtime = downtime,
                             EventInterval = reader.GetInt32(9),
-                            IsActive = reader.GetBoolean(10)
+                            WebhookURL = reader.GetString(10),
+                            RecipientId = reader.GetInt64(11),
+                            IsActive = reader.GetBoolean(12)
                         };
                     },
                     parameters);
@@ -470,6 +474,8 @@ where ServerInformationId = @serverId";
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = server.Name },
                     new SqlParameter("@eventInterval", SqlDbType.Int) { Value = server.EventInterval },
+                    new SqlParameter("@webhookURL", SqlDbType.VarChar) { Value = server.WebhookURL },
+                    new SqlParameter("@recipientId", SqlDbType.BigInt) { Value = server.RecipientId },
                     new SqlParameter("@hostName", SqlDbType.VarChar) { Value = server.HostName },
                     new SqlParameter("@game", SqlDbType.VarChar) { Value = server.Game },
                     new SqlParameter("@gameVersion", SqlDbType.VarChar) { Value = server.GameVersion },
@@ -554,6 +560,8 @@ where ServerInformationId = @serverId";
                 {
                     new SqlParameter("@name", SqlDbType.VarChar) { Value = server.Name },
                     new SqlParameter("@eventInterval", SqlDbType.Int) { Value = server.EventInterval },
+                    new SqlParameter("@webhookURL", SqlDbType.VarChar) { Value = server.WebhookURL },
+                    new SqlParameter("@recipientId", SqlDbType.BigInt) { Value = server.RecipientId },
                     new SqlParameter("@active", SqlDbType.Bit) { Value = server.IsActive ?? false },
                     new SqlParameter("@hostName", SqlDbType.VarChar) { Value = server.HostName },
                     new SqlParameter("@game", SqlDbType.VarChar) { Value = server.Game },
@@ -578,6 +586,20 @@ where ServerInformationId = @serverId";
                     sql = sql.Replace(@"
 	EventInterval = @eventInterval,", "");
                     parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@eventInterval"));
+                }
+
+                if (string.IsNullOrWhiteSpace(server.WebhookURL))
+                {
+                    sql = sql.Replace(@"
+	WebhookURL = @webhookURL,", "");
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@webhookURL"));
+                }
+
+                if (server.RecipientId == 0)
+                {
+                    sql = sql.Replace(@"
+	RecipientId = @recipientId,", "");
+                    parameterList.RemoveAt(parameterList.FindIndex(p => p.ParameterName == "@recipientId"));
                 }
 
                 if (!server.IsActive.HasValue)

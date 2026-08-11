@@ -53,6 +53,8 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                             GameVersion = "1.0",
                             Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
                             Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
+                            WebhookURL = "https://discord.com/api/webhooks/test",
+                            RecipientId = 123456789,
                             IsActive = true
                         }
                     ],
@@ -100,6 +102,12 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
             Assert.AreEqual(
                 60,
                 actual[0].Downtime.Duration);
+            Assert.AreEqual(
+                "https://discord.com/api/webhooks/test",
+                actual[0].WebhookURL);
+            Assert.AreEqual(
+                123456789,
+                actual[0].RecipientId);
             Assert.IsTrue(actual[0].IsActive);
             Assert.AreEqual(
                 1,
@@ -218,6 +226,8 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                         GameVersion = "1.0",
                         Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
                         Downtime = new DowntimeRecord { Time = "03:00", Duration = 60 },
+                        WebhookURL = "https://discord.com/api/webhooks/test",
+                        RecipientId = 123456789,
                         IsActive = true
                     },
                     null));
@@ -355,6 +365,8 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 GameVersion = "1.0",
                 IPAddress = "127.0.0.1",
                 Port = 25565,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789,
                 Time = "03:00",
                 Duration = 60
             });
@@ -393,6 +405,8 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 GameVersion = "1.0",
                 IPAddress = "127.0.0.1",
                 Port = 25565,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789,
                 Time = "03:00",
                 Duration = 60
             });

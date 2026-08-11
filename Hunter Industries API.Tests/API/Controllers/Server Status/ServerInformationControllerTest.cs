@@ -78,6 +78,8 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                             GameVersion = "1.7.10",
                             Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
                             Downtime = new DowntimeRecord { Time = "02:00:00", Duration = 60 },
+                            WebhookURL = "https://discord.com/api/webhooks/test",
+                            RecipientId = 123456789,
                             IsActive = true
                         }
                     ],
@@ -209,6 +211,8 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 GameVersion = "1.7.10",
                 IPAddress = "127.0.0.1",
                 Port = 25565,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789,
                 Time = "02:00:00",
                 Duration = 60
             });
@@ -295,6 +299,8 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                         GameVersion = "1.7.10",
                         Connection = new ConnectionRecord { IPAddress = "127.0.0.1", Port = 25565 },
                         Downtime = new DowntimeRecord { Time = "02:00:00", Duration = 60 },
+                        WebhookURL = "https://discord.com/api/webhooks/test",
+                        RecipientId = 123456789,
                         IsActive = false
                     },
                     null));

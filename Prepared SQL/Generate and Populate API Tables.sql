@@ -861,6 +861,8 @@ CREATE TABLE [dbo].[ServerInformation](
 	[DowntimeId] [int] NULL,
 	[Name] [varchar](255) NOT NULL,
 	[EventInterval] [int] NOT NULL,
+	[WebhookURL] [varchar](200) NOT NULL,
+	[RecipientId] [bigint] NOT NULL,
 	[IsActive] [bit] NOT NULL
  CONSTRAINT [PK_ServerInformation] PRIMARY KEY CLUSTERED 
 (
@@ -868,9 +870,9 @@ CREATE TABLE [dbo].[ServerInformation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((0)) FOR [IsActive]
+ALTER TABLE [dbo].[ServerInformation] ADD DEFAULT ((0)) FOR [IsActive]
 GO
-ALTER TABLE [dbo].[ServerInformation] ADD  CONSTRAINT [DF_ServerInformation_IsActive]  DEFAULT ((300)) FOR [IsActive]
+ALTER TABLE [dbo].[ServerInformation] ADD DEFAULT ((300)) FOR [EventInterval]
 GO
 
 /* Constraints */

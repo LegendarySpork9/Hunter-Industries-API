@@ -34,6 +34,14 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// </summary>
         public int Port { get; set; }
         /// <summary>
+        /// The discord webhook url for alerts.
+        /// </summary>
+        public string WebhookURL { get; set; }
+        /// <summary>
+        /// The discord recipient id for alerts.
+        /// </summary>
+        public long RecipientId { get; set; }
+        /// <summary>
         /// The time that the server goes offline.
         /// </summary>
         public string Time { get; set; }

@@ -337,7 +337,9 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///         "ipAddress": "127.0.0.1",
         ///         "port": 25565,
         ///         "time": "02:00:00",
-        ///         "duration": 600
+        ///         "duration": 600,
+        ///         "webhookURL": "https://discord.com/api/webhooks/1536695792373469305/Pl_FmDWe6qwmgtVv2SDKFfgSMMdg1ZExM4eHsvsfcMeQ-8IIcB9Lg2yu33GT8irv63e-",
+        ///         "recipientId": 1196390118873890816
         ///     }
         /// </remarks>
         /// <param name="request">An object containing the server information.</param>
@@ -502,6 +504,9 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                         Port = request.Port,
                     },
                     Downtime = downtime,
+                    EventInterval = request.EventInterval,
+                    WebhookURL = request.WebhookURL,
+                    RecipientId = request.RecipientId,
                     IsActive = false
                 }
             };
@@ -695,6 +700,26 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                             serverRecord.EventInterval.ToString(),
                             request.EventInterval.ToString());
                         serverRecord.EventInterval = request.EventInterval;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(request.WebhookURL) && request.WebhookURL != serverRecord.WebhookURL)
+                    {
+                        await _changeService.LogChange(
+                            audit.Item2,
+                            "Webhook URL",
+                            serverRecord.WebhookURL,
+                            request.WebhookURL);
+                        serverRecord.WebhookURL = request.WebhookURL;
+                    }
+
+                    if (request.RecipientId != 0 && request.RecipientId != serverRecord.RecipientId)
+                    {
+                        await _changeService.LogChange(
+                            audit.Item2,
+                            "Recipient Id",
+                            serverRecord.RecipientId.ToString(),
+                            request.RecipientId.ToString());
+                        serverRecord.RecipientId = request.RecipientId;
                     }
 
                     if (request.IsActive.HasValue && request.IsActive.Value != serverRecord.IsActive)
