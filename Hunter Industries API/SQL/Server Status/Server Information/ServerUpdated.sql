@@ -1,6 +1,8 @@
 update SI set
 	[Name] = @name,
 	EventInterval = @eventInterval,
+	WebhookURL = @webhookURL,
+	RecipientId = @recipientId,
 	IsActive = @active,
 	MachineId = M.MachineId,
 	GameId = G.GameId,

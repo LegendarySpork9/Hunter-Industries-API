@@ -1,8 +1,10 @@
-insert into ServerInformation ([Name], EventInterval, MachineId, GameId, ConnectionId, DowntimeId)
+insert into ServerInformation ([Name], EventInterval, WebhookURL, RecipientId, MachineId, GameId, ConnectionId, DowntimeId)
 output inserted.ServerInformationId
 select
 	@name,
 	@eventInterval,
+	@webhookURL,
+	@recipientId,
 	M.MachineId,
 	G.GameId,
 	C.ConnectionId,

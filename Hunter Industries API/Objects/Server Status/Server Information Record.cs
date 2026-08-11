@@ -38,6 +38,14 @@ namespace HunterIndustriesAPI.Objects.ServerStatus
         /// </summary>
         public int EventInterval { get; set; }
         /// <summary>
+        /// The discord webhook url for alerts.
+        /// </summary>
+        public string WebhookURL { get; set; }
+        /// <summary>
+        /// The discord recipient id for alerts.
+        /// </summary>
+        public long RecipientId { get; set; }
+        /// <summary>
         /// Whether the server is active.
         /// </summary>
         public bool IsActive { get; set; }

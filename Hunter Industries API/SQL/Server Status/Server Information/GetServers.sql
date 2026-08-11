@@ -9,6 +9,8 @@
 	[Time],
 	Duration,
 	EventInterval,
+	WebhookURL,
+	RecipientId,
 	IsActive
 from ServerInformation with (nolock)
 join Machine with (nolock) on ServerInformation.MachineId = Machine.MachineId

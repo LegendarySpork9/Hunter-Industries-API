@@ -1011,6 +1011,8 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                         GameVersion = "1.0",
                         Connection = new ServerConnectionModel { IpAddress = "127.0.0.1", Port = 25565 },
                         EventInterval = 60,
+                        WebhookURL = "https://discord.com/api/webhooks/test",
+                        RecipientId = 123456789,
                         IsActive = true
                     }
                 ],
@@ -1085,6 +1087,8 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                 GameVersion = "1.0",
                 Connection = new ServerConnectionModel { IpAddress = "127.0.0.1", Port = 25565 },
                 EventInterval = 60,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789,
                 IsActive = true
             };
 
@@ -1149,7 +1153,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                 Game = "TestGame",
                 GameVersion = "1.0",
                 IPAddress = "127.0.0.1",
-                Port = 25565
+                Port = 25565,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789
             };
 
             ServerInformationModel expectedServer = new()
@@ -1161,6 +1167,8 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                 GameVersion = "1.0",
                 Connection = new ServerConnectionModel { IpAddress = "127.0.0.1", Port = 25565 },
                 EventInterval = 60,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789,
                 IsActive = true
             };
 
@@ -1191,7 +1199,9 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                 Game = "TestGame",
                 GameVersion = "1.0",
                 IPAddress = "127.0.0.1",
-                Port = 25565
+                Port = 25565,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789
             };
 
             _MockAPIClient.Setup(c => c.CreateServer(request))
@@ -1225,6 +1235,8 @@ namespace HunterIndustriesAPI.Tests.ControlPanel.Services
                 GameVersion = "1.0",
                 Connection = new ServerConnectionModel { IpAddress = "127.0.0.1", Port = 25565 },
                 EventInterval = 60,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789,
                 IsActive = true
             };
 

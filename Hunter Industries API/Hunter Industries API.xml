@@ -835,7 +835,9 @@
                      "ipAddress": "127.0.0.1",
                      "port": 25565,
                      "time": "02:00:00",
-                     "duration": 600
+                     "duration": 600,
+                     "webhookURL": "https://discord.com/api/webhooks/1536695792373469305/Pl_FmDWe6qwmgtVv2SDKFfgSMMdg1ZExM4eHsvsfcMeQ-8IIcB9Lg2yu33GT8irv63e-",
+                     "recipientId": 1196390118873890816
                  }
              </remarks>
              <param name="request">An object containing the server information.</param>
@@ -2464,6 +2466,16 @@
             The port the server runs on.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerUpdateModel.WebhookURL">
+            <summary>
+            The discord webhook url for alerts.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerUpdateModel.RecipientId">
+            <summary>
+            The discord recipient id for alerts.
+            </summary>
+        </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerUpdateModel.Time">
             <summary>
             The time that the server goes offline.
@@ -2521,6 +2533,16 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Port">
             <summary>
             The port the server runs on.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.WebhookURL">
+            <summary>
+            The discord webhook url for alerts.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.RecipientId">
+            <summary>
+            The discord recipient id for alerts.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerInformationModel.Time">
@@ -4059,6 +4081,16 @@
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.EventInterval">
             <summary>
             The time, in seconds, between server events.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.WebhookURL">
+            <summary>
+            The discord webhook url for alerts.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.RecipientId">
+            <summary>
+            The discord recipient id for alerts.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Objects.ServerStatus.ServerInformationRecord.IsActive">

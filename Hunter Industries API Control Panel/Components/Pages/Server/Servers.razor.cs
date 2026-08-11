@@ -36,6 +36,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
         private string NewConnection = string.Empty;
         private string NewDowntime = string.Empty;
         private int NewEventInterval;
+        private string NewWebhookURL = string.Empty;
+        private long NewRecipientId;
 
         /// <summary>
         /// Loads and transforms the data.
@@ -284,6 +286,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
             NewConnection = string.Empty;
             NewDowntime = string.Empty;
             NewEventInterval = 0;
+            NewWebhookURL = string.Empty;
+            NewRecipientId = 0;
             ErrorMessage = string.Empty;
             ShowModal = true;
 
@@ -373,6 +377,26 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(NewWebhookURL))
+            {
+                ErrorMessage = "Webhook URL is required.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
+                IsLoading = false;
+                return;
+            }
+
+            if (NewRecipientId == 0)
+            {
+                ErrorMessage = "Recipient ID is required.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    ErrorMessage);
+                IsLoading = false;
+                return;
+            }
+
             ServerInformationModel? existingServer = ServerRecords?.Find(s => s.Name == NewServerName);
 
             if (existingServer == null)
@@ -400,6 +424,8 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
                     GameVersion = version,
                     IPAddress = connectionParts[0],
                     Port = int.Parse(connectionParts[1]),
+                    WebhookURL = NewWebhookURL,
+                    RecipientId = NewRecipientId,
                     Time = NewDowntime == string.Empty ? null : downtimeParts[0],
                     Duration = duration == null ? null : int.Parse(duration)
                 };
