@@ -2,6 +2,7 @@
 using HunterIndustriesAPI.Abstractions;
 using HunterIndustriesAPI.Controllers.ServerStatus;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Objects.ServerStatus;
 using HunterIndustriesAPICommon.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -108,7 +109,7 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get(25, 1);
+            IHttpActionResult actionResult = await controller.Get(new ServerAlertFilterModel());
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(
@@ -157,7 +158,77 @@ namespace HunterIndustriesAPI.Tests.API.Controllers.ServerStatus
                 Configuration = new HttpConfiguration()
             };
 
-            IHttpActionResult actionResult = await controller.Get(25, 1);
+            IHttpActionResult actionResult = await controller.Get(new ServerAlertFilterModel());
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Get method returns a 200 with server alerts when filtered by server name.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetFiltered()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.ExecuteScalar(
+                    It.IsAny<string>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new ServerAlertRecord
+                        {
+                            Id = 1,
+                            Reporter = "System",
+                            Component = "CPU",
+                            ComponentStatus = "Critical",
+                            AlertStatus = "Open",
+                            AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
+                            Server = new RelatedServerRecord
+                            {
+                                Id = 1,
+                                Name = "Test",
+                                HostName = "TestServer",
+                                Game = "TestGame",
+                                GameVersion = "1.0"
+                            }
+                        }
+                    ],
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+
+            ServerAlertController controller = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                mockDatabase.Object,
+                _MockOptions.Object,
+                _MockClock.Object)
+            {
+                Request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    new Uri("https://localhost/v1.1/serverstatus/serveralert")),
+                Configuration = new HttpConfiguration()
+            };
+
+            IHttpActionResult actionResult = await controller.Get(new ServerAlertFilterModel
+            {
+                ServerName = "Test"
+            });
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(

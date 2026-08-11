@@ -4,6 +4,7 @@ using HunterIndustriesAPI.Converters;
 using HunterIndustriesAPI.Filters;
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus;
+using HunterIndustriesAPI.Models.Requests.Filters;
 using HunterIndustriesAPI.Models.Responses;
 using HunterIndustriesAPI.Models.Responses.ServerStatus;
 using HunterIndustriesAPI.Objects.ServerStatus;
@@ -59,20 +60,17 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         /// <remarks>
         /// Sample Request:
         ///
-        ///     GET /serverstatus/serveralert
+        ///     GET /serverstatus/serveralert?serverName=Test
         ///     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSElBUElBZG1pbiIsInNjb3BlIjpbIkFzc2lzdGFudCBBUEkiLCJBc3Npc3RhbnQgQ29udHJvbCBQYW5lbCBBUEkiLCJCb29rIFJlYWRlciBBUEkiXSwiZXhwIjoxNzA4MjgyMjQ3LCJpc3MiOiJodHRwczovL2h1bnRlci1pbmR1c3RyaWVzLmNvLnVrL2FwaS9hdXRoL3Rva2VuIiwiYXVkIjoiSHVudGVyIEluZHVzdHJpZXMgQVBJIn0.tvIecko1tNnFvASv4fgHvUptUzaM7FofSF8vkqqOg0s
         /// </remarks>
-        /// <param name="pageSize">The number of records to pull per page.</param>
-        /// <param name="pageNumber">The number of the page to pull.</param>
         [RequiredPolicyAuthorisationAttributeFilter("ServerStatus.Alert.Read")]
         [SwaggerOperation("GetServerAlert")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ServerAlertResponseModel), Description = "Returns the item(s) matching the given parameters.")]
         [SwaggerResponse(HttpStatusCode.NoContent, Type = typeof(ResponseModel), Description = "If there is no data matching the given parameters.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(ResponseModel), Description = "If the filters are invalid.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, Type = typeof(ResponseModel), Description = "If the bearer token is expired or fails validation.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, Type = typeof(ResponseModel), Description = "If something went wrong on the server.")]
-        public async Task<IHttpActionResult> Get(
-            [FromUri] int pageSize = 25,
-            [FromUri] int pageNumber = 1)
+        public async Task<IHttpActionResult> Get([FromUri] ServerAlertFilterModel filters)
         {
             AuditHistoryService _auditHistoryService = new AuditHistoryService(
                 _Logger,
@@ -80,6 +78,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 _Options,
                 _Database,
                 _Clock);
+            ModelValidationService _modelValidator = new ModelValidationService();
             ServerAlertService _serverAlertService = new ServerAlertService(
                 _Logger,
                 _FileSystem,
@@ -92,13 +91,57 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
 
             ResponseModel response;
 
+            if (filters == null)
+            {
+                filters = new ServerAlertFilterModel();
+            }
+
+            if (filters.PageSize > 200)
+            {
+                filters.PageSize = 200;
+            }
+
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
-                $"Server Alert (Get) endpoint called with the following parameters \"{pageSize}\", \"{pageNumber}\".");
+                StandardValues.LoggerValues.Info,
+                $"Server Alert (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
+
+            if (!_modelValidator.IsValid(filters))
+            {
+                response = new ResponseModel()
+                {
+                    StatusCode = 400,
+                    Data = new
+                    {
+                        error = "Invalid or no filters provided."
+                    }
+                };
+
+                await _auditHistoryService.LogRequest(
+                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    AuditHistoryConverter.GetEndpointId("serverstatus/serveralert"),
+                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
+                    AuditHistoryConverter.GetMethodId("GET"),
+                    AuditHistoryConverter.GetStatusId("BadRequest"),
+                    username,
+                    applicationName,
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
+                    null,
+                    ResponseFunction.GetModelJSON(response.Data));
+
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Info,
+                    $"Server Alert (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
+                return Content(
+                    HttpStatusCode.BadRequest,
+                    response.Data);
+            }
 
             (List<ServerAlertRecord> serverAlerts, int totalAlerts) = await _serverAlertService.GetServerAlerts(
-                pageSize,
-                pageNumber);
+                filters.ServerName,
+                filters.PageSize,
+                filters.PageNumber);
 
             if (serverAlerts.Count == 0)
             {
@@ -119,11 +162,9 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     AuditHistoryConverter.GetStatusId("NoContent"),
                     username,
                     applicationName,
-                    new string[]
-                    {
-                        $"PageSize: {pageSize}",
-                        $"PageNumber: {pageNumber}"
-                    },
+                    ParameterFunction.FormatParameters(
+                        null,
+                        filters),
                     null,
                     ResponseFunction.GetModelJSON(response.Data));
 
@@ -135,7 +176,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     response.Data);
             }
 
-            int totalPages = (int)Math.Ceiling((decimal)totalAlerts / (decimal)pageSize);
+            int totalPages = (int)Math.Ceiling((decimal)totalAlerts / (decimal)filters.PageSize);
 
             response = new ResponseModel()
             {
@@ -144,8 +185,8 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 {
                     Entries = serverAlerts,
                     EntryCount = serverAlerts.Count,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
+                    PageNumber = filters.PageNumber,
+                    PageSize = filters.PageSize,
                     TotalPageCount = totalPages,
                     TotalCount = totalAlerts
                 }
@@ -159,19 +200,17 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 AuditHistoryConverter.GetStatusId("OK"),
                 username,
                 applicationName,
-                new string[]
-                {
-                    $"PageSize: {pageSize}",
-                    $"PageNumber: {pageNumber}"
-                },
+                ParameterFunction.FormatParameters(
+                    null,
+                    filters),
                 null,
                 ResponseFunction.GetModelJSON(response.Data));
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Server Alert (Get) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
             return Content(
-                HttpStatusCode.OK, 
+                HttpStatusCode.OK,
                 response.Data);
         }
 

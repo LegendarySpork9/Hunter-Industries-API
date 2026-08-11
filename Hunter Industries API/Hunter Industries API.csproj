@@ -418,6 +418,7 @@
     <Compile Include="Models\Requests\Filters\Audit History Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Error Log Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Media\Media Filter Model.cs" />
+    <Compile Include="Models\Requests\Filters\Server Alert Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\Server Information Filter Model.cs" />
     <Compile Include="Models\Requests\Filters\User Filter Model.cs" />
     <Compile Include="Models\Responses\Assistant\Config Response Model.cs" />

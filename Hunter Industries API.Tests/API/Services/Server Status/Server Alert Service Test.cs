@@ -78,6 +78,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 mockDatabase.Object);
 
             (List<ServerAlertRecord> alerts, int total) = await service.GetServerAlerts(
+                null,
                 10,
                 1);
 
@@ -127,6 +128,7 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 mockDatabase.Object);
 
             (List<ServerAlertRecord> alerts, int total) = await service.GetServerAlerts(
+                null,
                 10,
                 1);
 
@@ -135,6 +137,68 @@ namespace HunterIndustriesAPI.Tests.API.Services.ServerStatus
                 alerts.Count);
             Assert.AreEqual(
                 0,
+                total);
+        }
+
+        /// <summary>
+        /// Checks whether the GetServerAlerts method returns filtered results when a server name is provided.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetServerAlertsFiltered()
+        {
+            Mock<IDatabase> mockDatabase = new();
+            mockDatabase.Setup(d => d.Query(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, ServerAlertRecord>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    [
+                        new ServerAlertRecord
+                        {
+                            Id = 1,
+                            Reporter = "System",
+                            Component = "CPU",
+                            ComponentStatus = "Critical",
+                            AlertStatus = "Open",
+                            AlertDate = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc),
+                            Server = new RelatedServerRecord
+                            {
+                                Id = 1,
+                                Name = "Test",
+                                HostName = "TestServer",
+                                Game = "TestGame",
+                                GameVersion = "1.0"
+                            }
+                        }
+                    ],
+                    null));
+            mockDatabase.Setup(d => d.QuerySingle(
+                    It.IsAny<string>(),
+                    It.IsAny<Func<SqlDataReader, int>>(),
+                    It.IsAny<SqlParameter[]>()).Result)
+                .Returns((
+                    1,
+                    null));
+
+            ServerAlertService service = new(
+                _MockLogger.Object,
+                _MockFileSystem.Object,
+                _MockOptions.Object,
+                mockDatabase.Object);
+
+            (List<ServerAlertRecord> alerts, int total) = await service.GetServerAlerts(
+                "Test",
+                10,
+                1);
+
+            Assert.AreEqual(
+                1,
+                alerts.Count);
+            Assert.AreEqual(
+                "Test",
+                alerts[0].Server.Name);
+            Assert.AreEqual(
+                1,
                 total);
         }
 

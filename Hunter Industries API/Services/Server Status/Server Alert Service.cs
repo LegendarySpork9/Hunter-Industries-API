@@ -42,12 +42,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         /// Returns all server alert records that match the parameters.
         /// </summary>
         public async Task<(List<ServerAlertRecord>, int)> GetServerAlerts(
+            string serverName,
             int pageSize,
             int pageNumber)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"ServerAlertService.GetServerAlerts called with the parameters \"{pageSize}\", \"{pageNumber}\".");
+                $"ServerAlertService.GetServerAlerts called with the parameters \"{serverName}\", \"{pageSize}\", \"{pageNumber}\".");
 
             List<ServerAlertRecord> serverAlerts = new List<ServerAlertRecord>();
             int totalRecords = 0;
@@ -59,11 +60,22 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     "Server Status",
                     "Server Alerts",
                     "GetServerAlerts.sql"));
-                SqlParameter[] parameters =
+                List<SqlParameter> parameterList = new List<SqlParameter>
                 {
                     new SqlParameter("@pageSize", SqlDbType.Int) { Value = pageSize },
                     new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber }
                 };
+
+                if (!string.IsNullOrEmpty(serverName))
+                {
+                    sql += "\nand SI.[Name] = @serverName";
+                    parameterList.Add(new SqlParameter("@serverName", SqlDbType.VarChar) { Value = serverName });
+                }
+
+                sql += @"
+order by DateOccured desc
+offset (@pageSize * (@pageNumber - 1)) rows
+fetch next @pageSize rows only";
 
                 (List<ServerAlertRecord> results, Exception ex) = await _Database.Query(
                     sql,
@@ -86,7 +98,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                             GameVersion = reader.GetString(10)
                         }
                     },
-                    parameters);
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
@@ -101,7 +113,7 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 }
 
                 serverAlerts = results;
-                totalRecords = await GetTotalServerAlerts();
+                totalRecords = await GetTotalServerAlerts(serverName);
             }
 
             catch (Exception ex)
@@ -214,13 +226,13 @@ namespace HunterIndustriesAPI.Services.ServerStatus
         }
 
         /// <summary>
-        /// Returns the number of server alert records in the table.
+        /// Returns the number of server alert records that match the parameters.
         /// </summary>
-        private async Task<int> GetTotalServerAlerts()
+        private async Task<int> GetTotalServerAlerts(string serverName)
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
-                $"ServerAlertService.GetTotalServerAlerts called.");
+                $"ServerAlertService.GetTotalServerAlerts called with the parameter \"{serverName}\".");
 
             int totalRecords = 0;
 
@@ -231,9 +243,18 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                     "Server Status",
                     "Server Alerts",
                     "GetTotalServerAlerts.sql"));
+                List<SqlParameter> parameterList = new List<SqlParameter>();
+
+                if (!string.IsNullOrEmpty(serverName))
+                {
+                    sql += "\nand SI.[Name] = @serverName";
+                    parameterList.Add(new SqlParameter("@serverName", SqlDbType.VarChar) { Value = serverName });
+                }
+
                 (int result, Exception ex) = await _Database.QuerySingle(
                     sql,
-                    reader => reader.GetInt32(0));
+                    reader => reader.GetInt32(0),
+                    parameterList.ToArray());
 
                 if (ex != null)
                 {
