@@ -714,6 +714,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="Web.Development.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
