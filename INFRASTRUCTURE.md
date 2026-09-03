@@ -142,7 +142,7 @@ log4net 3.3.0 is used across all projects, wrapped behind an `ILoggerService` ab
 | Target Table | [ErrorLog] |
 | Columns | DateOccured (UTC), IPAddress, Summary, Message |
 
-The logger uses MDC (Mapped Diagnostic Context) properties for `IPAddress` and `Summary` to enrich log entries.
+The logger uses MDC (Mapped Diagnostic Context) properties for `IPAddress` and `Summary` to enrich log entries. The `LoggerServiceWrapper` extracts the IP address using null-safe `HttpContext.Current?.Request` access with an "Unknown" fallback.
 
 ### Control Panel Logging
 
@@ -195,6 +195,15 @@ All endpoints return a standardised envelope:
   "data": { }
 }
 ```
+
+### IP Address Extraction
+
+Controller methods capture the client IP address once at the start of each method using `IPAddressFunction.FetchIpAddress(Request)`. The function accepts `HttpRequestMessage` (thread-safe, survives async continuations) and checks headers in priority order:
+
+1. `CF-Connecting-IP` (Cloudflare)
+2. `X-Forwarded-For` (reverse proxy)
+3. `HttpContext.Current?.Request?.UserHostAddress` (direct connection, null-safe)
+4. `"Unknown"` (fallback)
 
 ### HTTP Configuration
 
@@ -296,7 +305,7 @@ Custom CSS and JavaScript resources are embedded for UI enhancements and a versi
 
 - **Rendering:** Interactive Server (SignalR-based)
 - **UI Framework:** Radzen.Blazor for components, dialogs, notifications, and tooltips
-- **API Communication:** `APIService` class using RestSharp to call the main API
+- **API Communication:** `APIService` class using `APIClientWrapper` (implements `IAPIClient`) which delegates HTTP calls to `IRestClientWrapper` for testability
 - **Authentication:** Payload-based authentication via `Authorise.json` (Base64-encoded credentials)
 
 ### Timezone Handling
@@ -339,6 +348,7 @@ Data-driven pages include a `RefreshTimer` component that automatically reloads 
 - `IConfigurableLoggerService` (singleton, logging)
 - `IClock` (singleton, time abstraction)
 - `IFileSystem` (singleton, file system abstraction)
+- `IRestClientWrapper` (singleton, testable HTTP execution)
 - `IAPIClient`, `IHTTPClient` (custom abstractions)
 - `APIService` (singleton, API communication)
 - `DialogService`, `NotificationService`, `TooltipService`, `ContextMenuService` (Radzen)
@@ -416,12 +426,28 @@ Tests/
 │       └── User/
 ```
 
+### Test Count
+
+| Suite | Target | Count |
+|-------|--------|-------|
+| Unit Tests | net10.0 | 80 |
+| Unit Tests | net472 | 461 |
+| Persistence Tests | net10.0 | 111 |
+| Persistence Tests | net472 | 246 |
+| Integration Tests | net472 | 131 |
+| **Total** | | **1029** |
+
 ### Approach
 
 - Conditional compilation separates tests by target framework
 - net472 tests validate API logic (UnitTests, PersistenceTests, IntegrationTests)
 - net10.0 tests validate Control Panel logic (UnitTests, PersistenceTests)
-- Moq is used for mocking dependencies behind interfaces
+- Persistence and integration tests use real LocalDB databases via `LocalDbTestHelper`
+- `LocalDbTestHelper` creates a unique database per test class, reads schema from `Prepared SQL/Generate and Populate API Tables.sql`, and clears+reseeds data between tests
+- All LocalDB test classes use `[DoNotParallelize]` to prevent database contention
+- Only `ILoggerService` (and `IClock` where needed) are mocked — `IDatabase`, `IFileSystem` use real implementations
+- Controller tests set `HttpContext.Current` in `TestInitialize` and `ClaimsPrincipal` on `RequestContext` for auth-dependent endpoints
+- Moq is used for remaining mock dependencies behind interfaces
 - Code coverage collected via coverlet.collector and reported to PR status
 
 ## Project Conventions
