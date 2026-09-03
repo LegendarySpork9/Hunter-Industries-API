@@ -21,7 +21,6 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers
@@ -100,6 +99,7 @@ namespace HunterIndustriesAPI.Controllers
                 "Password" 
             };
             int auditId = 0;
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -120,7 +120,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 auditId = (await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("token"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
@@ -178,7 +178,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 auditId = (await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("token"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
@@ -258,7 +258,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 auditId = (await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("token"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
@@ -298,7 +298,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             auditId = (await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("token"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("POST"),

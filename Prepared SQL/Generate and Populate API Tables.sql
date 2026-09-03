@@ -1072,8 +1072,8 @@ REFERENCES [dbo].[ServerInformation] ([ServerInformationId])
 GO
 ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_ServerInformation]
 GO
-ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_UserSetting] FOREIGN KEY([UserSettingsId])
-REFERENCES [dbo].[UserSetting] ([UserSettingsId])
+ALTER TABLE [dbo].[ServerAlert]  WITH CHECK ADD  CONSTRAINT [FK_ServerAlert_UserSetting] FOREIGN KEY([UserSettingId])
+REFERENCES [dbo].[UserSetting] ([UserSettingId])
 GO
 ALTER TABLE [dbo].[ServerAlert] CHECK CONSTRAINT [FK_ServerAlert_UserSetting]
 GO
