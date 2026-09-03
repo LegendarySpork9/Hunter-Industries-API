@@ -1,5 +1,4 @@
 ﻿// Copyright © - 11/06/2026 - Toby Hunter
-using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Services;
 using System.Web;
@@ -18,8 +17,13 @@ namespace HunterIndustriesAPI.Implementations
             string message,
             string summary = null)
         {
+            string ipAddress = HttpContext.Current?.Request?.Headers["CF-Connecting-IP"]
+                ?? HttpContext.Current?.Request?.Headers["X-Forwarded-For"]
+                ?? HttpContext.Current?.Request?.UserHostAddress
+                ?? "Unknown";
+
             LoggerService _logger = new LoggerService(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 "APILog");
             _logger.LogMessage(
                 level,

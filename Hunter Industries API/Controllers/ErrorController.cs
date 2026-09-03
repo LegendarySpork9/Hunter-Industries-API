@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Security.Claims;
 using System.Web.Http;
 
@@ -85,6 +84,7 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 
@@ -114,7 +114,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("errorlog"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
@@ -155,7 +155,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("errorlog"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
@@ -193,7 +193,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("errorlog"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -248,11 +248,12 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Error Log endpoint called with the following parameter \"{id}\".");
 
             ErrorLogRecord errorLog = await _errorLogService.GetErrorLogId(id);
@@ -269,7 +270,7 @@ namespace HunterIndustriesAPI.Controllers
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("errorlog"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
@@ -298,7 +299,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("errorlog"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),

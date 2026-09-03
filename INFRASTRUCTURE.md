@@ -9,7 +9,9 @@ The solution consists of four projects with a clear separation of concerns:
 | Hunter Industries API | .NET Framework 4.7.2 | ASP.NET Web API | RESTful API endpoints with JWT authentication |
 | Hunter Industries API Control Panel | .NET 10.0 | Blazor Server | Dashboard for monitoring and controlling API traffic |
 | Hunter Industries API Common | netstandard2.0 + net10.0 | Class Library | Shared abstractions and implementations |
-| Hunter Industries API.Tests | net472 + net10.0 | MSTest | Automated test suite |
+| Hunter Industries API.UnitTests | net472 + net10.0 | MSTest | Unit tests — converters, functions, helpers, mappers |
+| Hunter Industries API.PersistenceTests | net472 + net10.0 | MSTest | Persistence tests — service layer tests |
+| Hunter Industries API.IntegrationTests | net472 | MSTest | Integration tests — controller tests |
 
 ## Frameworks and Key Dependencies
 
@@ -44,6 +46,7 @@ The solution consists of four projects with a clear separation of concerns:
 | MSTest.TestFramework | 3.8.3 | Test framework |
 | MSTest.TestAdapter | 3.8.3 | Test discovery and execution |
 | Moq | 4.20.72 | Mocking framework |
+| coverlet.collector | 6.0.2 | Code coverage collection |
 
 ## Authentication and Authorisation
 
@@ -360,51 +363,66 @@ Data-driven pages include a `RefreshTimer` component that automatically reloads 
 
 All commit workflow steps, plus:
 
-1. Run tests (`dotnet test` with TRX logger)
-2. Publish API (.NET Framework) to `artifacts/HunterIndustriesAPI`
-3. Publish Control Panel (.NET 10) to `artifacts/HunterIndustriesAPIControlPanel`
-4. Upload artifacts with timestamp suffix
+1. Run tests with coverage (`dotnet test --collect:"XPlat Code Coverage"`)
+2. Generate coverage report (ReportGenerator — Cobertura + JsonSummary)
+3. Post coverage status to PR
+4. Upload coverage report as artifact
+5. Publish API (.NET Framework) to `artifacts/HunterIndustriesAPI`
+6. Publish Control Panel (.NET 10) to `artifacts/HunterIndustriesAPIControlPanel`
+7. Upload artifacts with timestamp suffix
 
 **Environment:** `windows-latest`
+
+### Code Coverage
+
+- **Collector:** XPlat Code Coverage (via `coverlet.collector`)
+- **Configuration:** `coverlet.runsettings` in solution root
+- **Report Generator:** `dotnet-reportgenerator-globaltool`
+- **Report Formats:** Cobertura, JsonSummary
+- **Exclusions:** Program entry points, Models, Entities, generated code
+- **CI Integration:** Coverage percentage posted to PR status and uploaded as artifact
 
 ## Testing
 
 ### Structure
 
 ```
-Hunter Industries API.Tests/
-├── API/                    # Tests targeting the main API (net472)
-│   ├── Controllers/        # Controller tests
+Tests/
+├── Hunter Industries API.UnitTests/        # Unit tests — converters, functions, helpers, mappers
+│   ├── API/                                # API tests (net472)
+│   │   ├── Converters/                     # Converter tests (Media/, Portfolio/)
+│   │   ├── Filters/                        # Filter tests
+│   │   ├── Functions/                      # Function tests
+│   │   └── Mappings/                       # Mapping tests
+│   ├── Control Panel/                      # Control Panel tests (net10.0)
+│   │   ├── Converters/                     # Converter tests
+│   │   ├── Functions/                      # Function tests
+│   │   └── Mappers/                        # Mapper tests
+│   └── Common/Functions/                   # Shared function tests (both frameworks)
+├── Hunter Industries API.PersistenceTests/ # Persistence tests — service layer
+│   ├── API/Services/                       # API service tests (net472)
 │   │   ├── Assistant/
 │   │   ├── Media/
 │   │   ├── Portfolio/
 │   │   ├── Server Status/
 │   │   └── User/
-│   ├── Converters/         # Converter tests (Media/, Portfolio/)
-│   ├── Filters/            # Filter tests
-│   ├── Functions/          # Function tests
-│   ├── Mappings/           # Mapping tests (Portfolio, Scope Permission)
-│   └── Services/           # Service tests
+│   └── Control Panel/Services/             # Control Panel service tests (net10.0)
+├── Hunter Industries API.IntegrationTests/ # Integration tests — controllers (net472)
+│   └── API/Controllers/
 │       ├── Assistant/
 │       ├── Media/
 │       ├── Portfolio/
 │       ├── Server Status/
 │       └── User/
-├── Control Panel/          # Tests targeting the Blazor app (net10.0)
-│   ├── Converters/         # Converter tests (API, Application Setting, Graph, Media)
-│   ├── Functions/          # Function tests
-│   ├── Mappers/            # Mapper tests (Application, Authorisation, Component, Connection, Domain, Downtime, Game, Machine, etc.)
-│   └── Services/           # Service tests
-└── Common/                 # Shared test utilities
-    └── Functions/          # Common function tests
 ```
 
 ### Approach
 
 - Conditional compilation separates tests by target framework
-- net472 tests validate API logic
-- net10.0 tests validate Control Panel logic
+- net472 tests validate API logic (UnitTests, PersistenceTests, IntegrationTests)
+- net10.0 tests validate Control Panel logic (UnitTests, PersistenceTests)
 - Moq is used for mocking dependencies behind interfaces
+- Code coverage collected via coverlet.collector and reported to PR status
 
 ## Project Conventions
 

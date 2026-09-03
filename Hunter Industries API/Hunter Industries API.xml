@@ -1555,7 +1555,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:HunterIndustriesAPI.Functions.IPAddressFunction.FetchIpAddress(System.Web.HttpRequestBase)">
+        <member name="M:HunterIndustriesAPI.Functions.IPAddressFunction.FetchIpAddress(System.Net.Http.HttpRequestMessage)">
             <summary>
             Returns the IP address for logging.
             </summary>

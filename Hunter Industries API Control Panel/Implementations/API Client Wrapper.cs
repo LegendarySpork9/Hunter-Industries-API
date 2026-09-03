@@ -17,6 +17,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
     {
         private readonly IConfigurableLoggerService _Logger;
         private readonly IFileSystem _FileSystem;
+        private readonly IRestClientWrapper _RestClient;
         private readonly APISettingsModel APISettings;
 
         private string? BearerToken;
@@ -25,10 +26,12 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         public APIClientWrapper(
             IConfigurableLoggerService _logger,
             IFileSystem _fileSystem,
+            IRestClientWrapper _restClient,
             APISettingsModel apiSettings)
         {
             _Logger = _logger;
             _FileSystem = _fileSystem;
+            _RestClient = _restClient;
             APISettings = apiSettings;
         }
 
@@ -52,24 +55,18 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    APISettings.Credentials);
-                client.AddDefaultHeader(
-                    "Accept",
-                    "application/json");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = _FileSystem.ReadAllText(APISettings.AuthPayloadLocation);
 
                 RestRequest request = new()
                 {
                     Method = Method.Post
                 };
+                request.AddHeader(
+                    "Authorization",
+                    APISettings.Credentials);
+                request.AddHeader(
+                    "Accept",
+                    "application/json");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -85,7 +82,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -140,19 +139,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -161,7 +154,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -214,19 +209,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -235,7 +224,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -290,19 +281,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -311,7 +296,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -367,21 +354,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(user);
 
                 RestRequest request = new()
                 {
                     Method = Method.Post
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -397,7 +378,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -466,19 +449,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Delete
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -487,7 +464,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -543,19 +522,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -564,7 +537,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -621,19 +596,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -642,7 +611,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -699,19 +670,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -720,7 +685,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -775,19 +742,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -796,7 +757,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -863,19 +826,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -884,7 +841,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -943,21 +902,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(user);
 
                 RestRequest request = new()
                 {
                     Method = Method.Patch
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -973,7 +926,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1040,21 +995,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(userSetting);
 
                 RestRequest request = new()
                 {
                     Method = Method.Post
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -1070,7 +1019,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1141,21 +1092,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(updateUserSetting);
 
                 RestRequest request = new()
                 {
                     Method = Method.Patch
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -1171,7 +1116,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1239,19 +1186,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1260,7 +1201,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1314,21 +1257,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(server);
 
                 RestRequest request = new()
                 {
                     Method = Method.Post
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -1344,7 +1281,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1415,21 +1354,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(server);
 
                 RestRequest request = new()
                 {
                     Method = Method.Patch
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -1445,7 +1378,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1513,19 +1448,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1534,7 +1463,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1589,19 +1520,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1610,7 +1535,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1663,19 +1590,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1684,7 +1605,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1743,21 +1666,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(entityObject);
 
                 RestRequest request = new()
                 {
                     Method = Method.Post
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -1773,7 +1690,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1843,19 +1762,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Delete
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1864,7 +1777,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -1923,21 +1838,15 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 string body = JsonConvert.SerializeObject(entityObject);
 
                 RestRequest request = new()
                 {
                     Method = Method.Patch
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
                 request.AddParameter(
                     "application/json",
                     body,
@@ -1953,7 +1862,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2019,19 +1930,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2040,7 +1945,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2095,19 +2002,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2116,7 +2017,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2172,19 +2075,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2193,7 +2090,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2249,19 +2148,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2270,7 +2163,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2328,19 +2223,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2349,7 +2238,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2404,19 +2295,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2425,7 +2310,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2478,19 +2365,13 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     $"URL: {url}");
 
-                RestClient client = new(url);
-                client.AddDefaultHeader(
-                    "Authorization",
-                    $"Bearer {BearerToken}");
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Debug,
-                    "Configured Rest Client");
-
                 RestRequest request = new()
                 {
                     Method = Method.Get
                 };
+                request.AddHeader(
+                    "Authorization",
+                    $"Bearer {BearerToken}");
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
@@ -2499,7 +2380,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = await _RestClient.ExecuteAsync(
+                    url,
+                    request);
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,

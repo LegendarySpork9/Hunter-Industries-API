@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Security.Claims;
 using System.Web.Http;
 
@@ -86,11 +85,12 @@ namespace HunterIndustriesAPI.Controllers.User
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"User Settings (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(new string[] { id.ToString(), application })}.");
 
             List<UserSettingRecord> userSettings = await _userSettingsService.GetUserSettings(
@@ -109,7 +109,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("usersettings"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
@@ -139,7 +139,7 @@ namespace HunterIndustriesAPI.Controllers.User
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("usersettings"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -204,6 +204,7 @@ namespace HunterIndustriesAPI.Controllers.User
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 
@@ -230,7 +231,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("usersettings"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
@@ -264,7 +265,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("usersettings"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
@@ -296,7 +297,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("usersettings"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("POST"),
@@ -334,7 +335,7 @@ namespace HunterIndustriesAPI.Controllers.User
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("usersettings"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("POST"),
@@ -399,11 +400,12 @@ namespace HunterIndustriesAPI.Controllers.User
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"User Settings (Patch) endpoint called with the following parameters \"{id}\", {ParameterFunction.FormatParameters(request)}.");
 
             if (!_modelValidator.IsValid(request))
@@ -418,7 +420,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("usersettings"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("PATCH"),
@@ -455,7 +457,7 @@ namespace HunterIndustriesAPI.Controllers.User
                     };
 
                     (bool, int) audit = await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        ipAddress,
                         AuditHistoryConverter.GetEndpointId("usersettings"),
                         AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                         AuditHistoryConverter.GetMethodId("PATCH"),
@@ -497,7 +499,7 @@ namespace HunterIndustriesAPI.Controllers.User
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("usersettings"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("PATCH"),
@@ -529,7 +531,7 @@ namespace HunterIndustriesAPI.Controllers.User
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("usersettings"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("PATCH"),

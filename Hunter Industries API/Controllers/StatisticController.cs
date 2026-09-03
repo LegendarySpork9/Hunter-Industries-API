@@ -19,7 +19,6 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 
 namespace HunterIndustriesAPI.Controllers
@@ -85,6 +84,7 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -151,7 +151,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -203,6 +203,7 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -259,7 +260,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -313,6 +314,7 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -342,7 +344,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -394,6 +396,7 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -440,7 +443,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -495,6 +498,7 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -541,7 +545,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -595,6 +599,7 @@ namespace HunterIndustriesAPI.Controllers
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Info,
@@ -638,7 +643,7 @@ namespace HunterIndustriesAPI.Controllers
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("statistic"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),

@@ -15,7 +15,6 @@ using HunterIndustriesAPICommon.Converters;
 using Swashbuckle.Swagger.Annotations;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Security.Claims;
 using System.Web.Http;
 
@@ -83,6 +82,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 
@@ -92,7 +92,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Version (Get) endpoint called with the following parameters {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(
@@ -109,7 +109,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("assistant/version"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("PATCH"),
@@ -146,7 +146,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("assistant/version"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("GET"),
@@ -174,7 +174,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("assistant/version"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("GET"),
@@ -247,6 +247,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
             string username = ClaimFunction.GetUsername(principal);
             string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 
@@ -256,7 +257,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             }
 
             _Logger.LogMessage(
-                StandardValues.LoggerValues.Info, 
+                StandardValues.LoggerValues.Info,
                 $"Assistant Version (Patch) endpoint called with the following parameters {ParameterFunction.FormatParameters(request)}, {ParameterFunction.FormatParameters(filters)}.");
 
             if (!_modelValidator.IsValid(request) || !_modelValidator.IsValid(
@@ -275,7 +276,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 if (request == null)
                 {
                     await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        ipAddress,
                         AuditHistoryConverter.GetEndpointId("assistant/version"),
                         AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                         AuditHistoryConverter.GetMethodId("PATCH"),
@@ -290,7 +291,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 else
                 {
                     await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        ipAddress,
                         AuditHistoryConverter.GetEndpointId("assistant/version"),
                         AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                         AuditHistoryConverter.GetMethodId("PATCH"),
@@ -334,7 +335,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                     };
 
                     (bool, int) audit = await _auditHistoryService.LogRequest(
-                        IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                        ipAddress,
                         AuditHistoryConverter.GetEndpointId("assistant/version"),
                         AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                         AuditHistoryConverter.GetMethodId("PATCH"),
@@ -372,7 +373,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
                 };
 
                 await _auditHistoryService.LogRequest(
-                    IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                    ipAddress,
                     AuditHistoryConverter.GetEndpointId("assistant/version"),
                     AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                     AuditHistoryConverter.GetMethodId("PATCH"),
@@ -401,7 +402,7 @@ namespace HunterIndustriesAPI.Controllers.Assistant
             };
 
             await _auditHistoryService.LogRequest(
-                IPAddressFunction.FetchIpAddress(new HttpRequestWrapper(HttpContext.Current.Request)),
+                ipAddress,
                 AuditHistoryConverter.GetEndpointId("assistant/version"),
                 AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
                 AuditHistoryConverter.GetMethodId("PATCH"),

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Exclude>
+            [Hunter Industries API]HunterIndustriesAPI.Program,
+            [Hunter Industries API Control Panel]HunterIndustriesAPI.ControlPanel.Program,
+            [*]*.Models.*,
+            [*]*.Entities.*
+          </Exclude>
+          <ExcludeByAttribute>
+            GeneratedCodeAttribute,
+            CompilerGeneratedAttribute
+          </ExcludeByAttribute>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

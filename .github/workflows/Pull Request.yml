@@ -5,6 +5,9 @@ on:
     branches:
       - '**'
 
+permissions:
+  statuses: write
+
 jobs:
   build-and-test:
     runs-on: windows-latest
@@ -35,7 +38,9 @@ jobs:
         nuget restore "Hunter Industries API.sln"
         dotnet restore "Hunter Industries API Common/Hunter Industries API Common.csproj"
         dotnet restore "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj"
-        dotnet restore "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj"
+        dotnet restore "Tests/Hunter Industries API.UnitTests/Hunter Industries API.UnitTests.csproj"
+        dotnet restore "Tests/Hunter Industries API.PersistenceTests/Hunter Industries API.PersistenceTests.csproj"
+        dotnet restore "Tests/Hunter Industries API.IntegrationTests/Hunter Industries API.IntegrationTests.csproj"
 
     - name: Navigate to workspace
       run: cd $GITHUB_WORKSPACE
@@ -49,14 +54,62 @@ jobs:
     - name: Build .NET Control Panel project
       run: dotnet build "Hunter Industries API Control Panel/Hunter Industries API Control Panel.csproj" --configuration Release --no-restore
 
-    - name: Build test project (net472)
-      run: msbuild.exe "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" /p:Configuration=Release /p:TargetFramework=net472
+    - name: Build UnitTests (net472)
+      run: msbuild.exe "Tests/Hunter Industries API.UnitTests/Hunter Industries API.UnitTests.csproj" /p:Configuration=Release /p:TargetFramework=net472
 
-    - name: Build test project (net10.0)
-      run: dotnet build "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-restore --framework net10.0
+    - name: Build UnitTests (net10.0)
+      run: dotnet build "Tests/Hunter Industries API.UnitTests/Hunter Industries API.UnitTests.csproj" --configuration Release --no-restore --framework net10.0
 
-    - name: Run tests
-      run: dotnet test "Hunter Industries API.Tests/Hunter Industries API.Tests.csproj" --configuration Release --no-build --logger "trx"
+    - name: Build PersistenceTests (net472)
+      run: msbuild.exe "Tests/Hunter Industries API.PersistenceTests/Hunter Industries API.PersistenceTests.csproj" /p:Configuration=Release /p:TargetFramework=net472
+
+    - name: Build PersistenceTests (net10.0)
+      run: dotnet build "Tests/Hunter Industries API.PersistenceTests/Hunter Industries API.PersistenceTests.csproj" --configuration Release --no-restore --framework net10.0
+
+    - name: Build IntegrationTests (net472)
+      run: msbuild.exe "Tests/Hunter Industries API.IntegrationTests/Hunter Industries API.IntegrationTests.csproj" /p:Configuration=Release /p:TargetFramework=net472
+
+    - name: Run tests with coverage
+      run: |
+        dotnet test "Tests/Hunter Industries API.UnitTests/Hunter Industries API.UnitTests.csproj" --configuration Release --no-build --verbosity normal --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory ./TestResults
+        dotnet test "Tests/Hunter Industries API.PersistenceTests/Hunter Industries API.PersistenceTests.csproj" --configuration Release --no-build --verbosity normal --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory ./TestResults
+        dotnet test "Tests/Hunter Industries API.IntegrationTests/Hunter Industries API.IntegrationTests.csproj" --configuration Release --no-build --verbosity normal --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+    - name: Generate coverage report
+      run: reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:"./TestResults/CoverageReport" -reporttypes:"Cobertura;JsonSummary"
+
+    - name: Post coverage status
+      if: github.event_name == 'pull_request'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+      run: |
+        COVERAGE=$(python3 -c "
+        import json
+        with open('./TestResults/CoverageReport/Summary.json') as f:
+            data = json.load(f)
+        print(round(data['summary']['linecoverage'], 1))
+        ")
+
+        echo "coverage=$COVERAGE" >> "$GITHUB_OUTPUT"
+
+        echo "### Code Coverage" >> "$GITHUB_STEP_SUMMARY"
+        echo "Line coverage: **${COVERAGE}%**" >> "$GITHUB_STEP_SUMMARY"
+
+        gh api repos/${{ github.repository }}/statuses/${{ github.event.pull_request.head.sha }} \
+          -f state="success" \
+          -f context="code-coverage" \
+          -f description="Line coverage: ${COVERAGE}%" \
+          -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: ./TestResults/CoverageReport/
 
     - name: Publish API (.NET Framework)
       run: >
