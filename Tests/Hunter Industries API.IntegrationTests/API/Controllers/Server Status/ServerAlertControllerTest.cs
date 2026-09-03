@@ -536,6 +536,5 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
                 HttpStatusCode.NotFound,
                 contentResult.StatusCode);
         }
-
     }
 }

@@ -249,5 +249,55 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.Assistant
                 contentResult.StatusCode);
         }
 
+        /// <summary>
+        /// Checks whether the Post method returns a 400 status code when the body is invalid.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPatchInvalidModel()
+        {
+            ConfigController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Post(null);
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 200 status code when the assistant already exists.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostAlreadyExists()
+        {
+            InsertAssistantData(
+                "TestAssistant",
+                "A001",
+                "TestUser",
+                "TestHost",
+                "192.168.1.1",
+                2,
+                "1.0.0");
+
+            ConfigController controller = CreateController();
+
+            ConfigModel request = new()
+            {
+                AssistantName = "TestAssistant",
+                IdNumber = "A001",
+                AssignedUser = "TestUser",
+                HostName = "TestHost"
+            };
+
+            IHttpActionResult actionResult = await controller.Post(request);
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
     }
 }

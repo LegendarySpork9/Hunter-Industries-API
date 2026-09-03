@@ -282,5 +282,40 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.Assistant
                 contentResult.StatusCode);
         }
 
+        /// <summary>
+        /// Checks whether the Get method returns a 400 status code when the filters are invalid.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetInvalidModel()
+        {
+            LocationController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Get(null);
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Patch method returns a 400 status code when the body is invalid.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPatchInvalidModel()
+        {
+            LocationController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Patch(
+                null,
+                null);
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
     }
 }

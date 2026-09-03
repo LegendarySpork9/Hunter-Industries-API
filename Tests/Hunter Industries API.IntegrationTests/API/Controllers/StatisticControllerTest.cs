@@ -226,5 +226,21 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers
                 contentResult.StatusCode);
         }
 
+        /// <summary>
+        /// Checks whether the GetDashboard method returns a 200 with empty data when called with an unknown endpoint path.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetDashboardUnknown()
+        {
+            StatisticController controller = CreateController("v2.0/statistic/unknown");
+
+            IHttpActionResult actionResult = await controller.GetDashboard();
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
     }
 }

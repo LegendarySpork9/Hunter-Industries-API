@@ -365,5 +365,51 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.User
                 contentResult.StatusCode);
         }
 
+        /// <summary>
+        /// Checks whether the Post method returns a 200 status code when a user with the username already exists.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostAlreadyExists()
+        {
+            InsertUser(
+                "ExistingUser",
+                "HashedPassword");
+
+            UserController controller = CreateController();
+
+            UserModel body = new()
+            {
+                Username = "ExistingUser",
+                Password = "Password123",
+                Scopes = ["User"]
+            };
+
+            IHttpActionResult actionResult = await controller.Post(body);
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Patch method returns a 400 status code when the body is null.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPatchInvalidModel()
+        {
+            UserController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Patch(
+                1,
+                null);
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
     }
 }

@@ -420,6 +420,5 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers
                 HttpStatusCode.NotFound,
                 contentResult.StatusCode);
         }
-
     }
 }

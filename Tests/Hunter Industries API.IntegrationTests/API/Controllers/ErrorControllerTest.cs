@@ -202,6 +202,5 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers
                 HttpStatusCode.OK,
                 contentResult.StatusCode);
         }
-
     }
 }

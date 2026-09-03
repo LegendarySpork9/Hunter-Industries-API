@@ -595,6 +595,5 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.Media
                 HttpStatusCode.NotFound,
                 contentResult.StatusCode);
         }
-
     }
 }

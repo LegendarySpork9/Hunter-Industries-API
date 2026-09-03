@@ -464,6 +464,5 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
                 HttpStatusCode.BadRequest,
                 contentResult.StatusCode);
         }
-
     }
 }

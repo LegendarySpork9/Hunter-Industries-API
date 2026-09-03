@@ -210,5 +210,25 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers
                 HttpStatusCode.OK,
                 contentResult.StatusCode);
         }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 400 status code when the body is missing the phrase field.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostMissingPhrase()
+        {
+            TokenController controller = CreateController();
+            controller.Request.Headers.Authorization = new AuthenticationHeaderValue(
+                "Basic",
+                Convert.ToBase64String(Encoding.UTF8.GetBytes("testuser:testpass")));
+
+            IHttpActionResult actionResult = await controller.Post(new AuthenticationModel());
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
     }
 }

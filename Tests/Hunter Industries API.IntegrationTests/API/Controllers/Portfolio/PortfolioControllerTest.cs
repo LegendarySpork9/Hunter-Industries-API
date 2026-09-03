@@ -493,6 +493,5 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.Portfolio
                 HttpStatusCode.NotFound,
                 contentResult.StatusCode);
         }
-
     }
 }

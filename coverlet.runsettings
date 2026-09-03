@@ -7,9 +7,16 @@
           <Format>cobertura</Format>
           <Exclude>
             [Hunter Industries API]HunterIndustriesAPI.Program,
-            [Hunter Industries API Control Panel]HunterIndustriesAPI.ControlPanel.Program,
+            [Hunter Industries API]HunterIndustriesAPI.Startup,
+            [Hunter Industries API]HunterIndustriesAPI.WebApiApplication,
+            [Hunter Industries API]HunterIndustriesAPI.WebApiConfig,
+            [Hunter Industries API]HunterIndustriesAPI.FilterConfig,
+            [Hunter Industries API]HunterIndustriesAPI.RouteConfig,
+            [Hunter Industries API]HunterIndustriesAPI.SwaggerConfig,
+            [Hunter Industries API Control Panel]HunterIndustriesAPIControlPanel.Program,
             [*]*.Models.*,
-            [*]*.Entities.*
+            [*]*.Entities.*,
+            [*]*.Objects.*,
           </Exclude>
           <ExcludeByAttribute>
             GeneratedCodeAttribute,

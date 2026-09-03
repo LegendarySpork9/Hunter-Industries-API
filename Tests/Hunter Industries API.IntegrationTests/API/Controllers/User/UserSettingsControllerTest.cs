@@ -334,5 +334,21 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.User
                 contentResult.StatusCode);
         }
 
+        /// <summary>
+        /// Checks whether the Patch method returns a 400 status code when the body is null.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPatchInvalidModel()
+        {
+            UserSettingsController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Patch(1, null);
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(
+                HttpStatusCode.BadRequest,
+                contentResult.StatusCode);
+        }
     }
 }
