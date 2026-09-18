@@ -124,6 +124,102 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers
         }
 
         /// <summary>
+        /// Inserts an authorisation record and returns the generated ID.
+        /// </summary>
+        private int InsertAuthorisation(
+            string phrase,
+            bool isDeleted = false)
+        {
+            using (SqlConnection conn = new(_ConnectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new(
+                    "INSERT INTO Authorisation (Phrase, IsDeleted) VALUES (@phrase, @isDeleted); SELECT SCOPE_IDENTITY();",
+                    conn))
+                {
+                    cmd.Parameters.AddWithValue(
+                        "@phrase",
+                        phrase);
+                    cmd.Parameters.AddWithValue(
+                        "@isDeleted",
+                        isDeleted);
+
+                    return (int)(decimal)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Inserts an application record and returns the generated ID.
+        /// </summary>
+        private int InsertApplication(
+            int phraseId,
+            string name,
+            bool isDeleted = false)
+        {
+            using (SqlConnection conn = new(_ConnectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new(
+                    "INSERT INTO [Application] (PhraseId, [Name], IsDeleted) VALUES (@phraseId, @name, @isDeleted); SELECT SCOPE_IDENTITY();",
+                    conn))
+                {
+                    cmd.Parameters.AddWithValue(
+                        "@phraseId",
+                        phraseId);
+                    cmd.Parameters.AddWithValue(
+                        "@name",
+                        name);
+                    cmd.Parameters.AddWithValue(
+                        "@isDeleted",
+                        isDeleted);
+
+                    return (int)(decimal)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Inserts an application setting record into the database.
+        /// </summary>
+        private void InsertApplicationSetting(
+            int applicationId,
+            string name,
+            string type,
+            bool required,
+            bool isDeleted = false)
+        {
+            using (SqlConnection conn = new(_ConnectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new(
+                    "INSERT INTO ApplicationSetting (ApplicationId, [Name], [Type], [Required], IsDeleted) VALUES (@applicationId, @name, @type, @required, @isDeleted)",
+                    conn))
+                {
+                    cmd.Parameters.AddWithValue(
+                        "@applicationId",
+                        applicationId);
+                    cmd.Parameters.AddWithValue(
+                        "@name",
+                        name);
+                    cmd.Parameters.AddWithValue(
+                        "@type",
+                        type);
+                    cmd.Parameters.AddWithValue(
+                        "@required",
+                        required);
+                    cmd.Parameters.AddWithValue(
+                        "@isDeleted",
+                        isDeleted);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
         /// Checks whether the Get method returns a 200 status code with the list of configuration objects.
         /// </summary>
         [TestMethod]
@@ -222,6 +318,39 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers
             IHttpActionResult actionResult = await controller.Get(
                 "machine",
                 999);
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Get by id method returns a 200 status code with all settings for an application with multiple settings.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetByIdApplicationGrouping()
+        {
+            int phraseId = InsertAuthorisation("testphrase");
+            int applicationId = InsertApplication(
+                phraseId,
+                "App1");
+            InsertApplicationSetting(
+                applicationId,
+                "Setting1",
+                "String",
+                true);
+            InsertApplicationSetting(
+                applicationId,
+                "Setting2",
+                "Boolean",
+                false);
+
+            ConfigurationController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Get(
+                "application",
+                applicationId);
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(
