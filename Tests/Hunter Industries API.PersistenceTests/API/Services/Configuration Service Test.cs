@@ -314,10 +314,10 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services
         }
 
         /// <summary>
-        /// Checks whether the GetRecords method filters out deleted application settings when grouping.
+        /// Checks whether the GetRecords method includes deleted application settings when grouping.
         /// </summary>
         [TestMethod]
-        public async Task TestGetRecordsApplicationGroupingFiltersDeleted()
+        public async Task TestGetRecordsApplicationGroupingIncludesDeleted()
         {
             int phraseId = InsertAuthorisation("testphrase");
             int applicationId = InsertApplication(
@@ -348,11 +348,8 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services
                 1,
                 actual.Count);
             Assert.AreEqual(
-                1,
+                2,
                 ((ApplicationRecord)actual[0]).Settings.Count);
-            Assert.AreEqual(
-                "Setting1",
-                ((ApplicationRecord)actual[0]).Settings[0].Name);
         }
 
         /// <summary>
@@ -431,6 +428,79 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services
                 99999);
 
             Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Checks whether the GetRecord method returns all settings for an application with multiple settings.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetRecordApplicationGrouping()
+        {
+            int phraseId = InsertAuthorisation("testphrase");
+            int applicationId = InsertApplication(
+                phraseId,
+                "App1");
+            InsertApplicationSetting(
+                applicationId,
+                "Setting1",
+                "String",
+                true);
+            InsertApplicationSetting(
+                applicationId,
+                "Setting2",
+                "Boolean",
+                false);
+
+            ConfigurationService service = CreateService();
+
+            object actual = await service.GetRecord(
+                "application",
+                applicationId);
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(
+                2,
+                ((ApplicationRecord)actual).Settings.Count);
+            Assert.AreEqual(
+                "Setting1",
+                ((ApplicationRecord)actual).Settings[0].Name);
+            Assert.AreEqual(
+                "Setting2",
+                ((ApplicationRecord)actual).Settings[1].Name);
+        }
+
+        /// <summary>
+        /// Checks whether the GetRecord method includes deleted application settings.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetRecordApplicationGroupingIncludesDeleted()
+        {
+            int phraseId = InsertAuthorisation("testphrase");
+            int applicationId = InsertApplication(
+                phraseId,
+                "App1");
+            InsertApplicationSetting(
+                applicationId,
+                "Setting1",
+                "String",
+                true);
+            InsertApplicationSetting(
+                applicationId,
+                "Setting2",
+                "Boolean",
+                false,
+                true);
+
+            ConfigurationService service = CreateService();
+
+            object actual = await service.GetRecord(
+                "application",
+                applicationId);
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(
+                2,
+                ((ApplicationRecord)actual).Settings.Count);
         }
 
         /// <summary>

@@ -121,7 +121,7 @@ where ApplicationId = @applicationId";
                         {
                             if (current != null && record.Id == current.Id)
                             {
-                                settings.AddRange(record.Settings.Where(s => s.IsDeleted == false));
+                                settings.AddRange(record.Settings);
                             }
 
                             else
@@ -259,24 +259,66 @@ where ApplicationId = @applicationId";
 
                 if (dataReaderMappings != null)
                 {
-                    (object result, Exception ex) = await _Database.QuerySingle(
-                        sql,
-                        dataReaderMappings,
-                        parameters);
-
-                    if (ex != null)
+                    if (entity == "application")
                     {
-                        string message = "An error occured when trying to run ConfigurationService.GetRecord.";
-                        _Logger.LogMessage(
-                            StandardValues.LoggerValues.Warning,
-                            message);
-                        _Logger.LogMessage(
-                            StandardValues.LoggerValues.Error,
-                            ex.ToString(),
-                            message);
+                        (List<object> results, Exception ex) = await _Database.Query(
+                            sql,
+                            dataReaderMappings,
+                            parameters);
+
+                        if (ex != null)
+                        {
+                            string message = "An error occured when trying to run ConfigurationService.GetRecord.";
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Warning,
+                                message);
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Error,
+                                ex.ToString(),
+                                message);
+                        }
+
+                        if (results.Count > 0)
+                        {
+                            ApplicationRecord application = (ApplicationRecord)results[0];
+                            List<ApplicationSettingRecord> settings = new List<ApplicationSettingRecord>(application.Settings);
+
+                            foreach (ApplicationRecord row in results.Skip(1).Cast<ApplicationRecord>())
+                            {
+                                settings.AddRange(row.Settings);
+                            }
+
+                            application.Settings = settings;
+                            record = application;
+                        }
+
+                        else
+                        {
+                            record = null;
+                        }
                     }
 
-                    record = result;
+                    else
+                    {
+                        (object result, Exception ex) = await _Database.QuerySingle(
+                            sql,
+                            dataReaderMappings,
+                            parameters);
+
+                        if (ex != null)
+                        {
+                            string message = "An error occured when trying to run ConfigurationService.GetRecord.";
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Warning,
+                                message);
+                            _Logger.LogMessage(
+                                StandardValues.LoggerValues.Error,
+                                ex.ToString(),
+                                message);
+                        }
+
+                        record = result;
+                    }
                 }
             }
 
