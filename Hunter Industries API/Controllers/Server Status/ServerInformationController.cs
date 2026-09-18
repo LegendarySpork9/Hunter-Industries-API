@@ -622,40 +622,6 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     response.Data);
             }
 
-            if (await _serverInformationService.ServerExists(request.Name))
-            {
-                response = new ResponseModel()
-                {
-                    StatusCode = 400,
-                    Data = new
-                    {
-                        error = "A server with the name already exists."
-                    }
-                };
-
-                await _auditHistoryService.LogRequest(
-                    ipAddress,
-                    AuditHistoryConverter.GetEndpointId("serverstatus/serverinformation"),
-                    AuditHistoryConverter.GetEndpointVersionId(AuditHistoryFunction.ExtractVersionFromRequest(Request)),
-                    AuditHistoryConverter.GetMethodId("PATCH"),
-                    AuditHistoryConverter.GetStatusId("BadRequest"),
-                    username,
-                    applicationName,
-                    new string[]
-                    {
-                        $"Id: {id}"
-                    },
-                    ResponseFunction.GetModelJSON(request),
-                    ResponseFunction.GetModelJSON(response.Data));
-
-                _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info,
-                    $"Server Information (Post) endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
-                return Content(
-                    HttpStatusCode.BadRequest,
-                    response.Data);
-            }
-
             if (await _serverInformationService.ServerExists(id))
             {
                 ServerInformationRecord serverRecord = await _serverInformationService.GetServer(id);

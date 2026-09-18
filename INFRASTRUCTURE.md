@@ -433,9 +433,9 @@ Tests/
 | Unit Tests | net10.0 | 80 |
 | Unit Tests | net472 | 461 |
 | Persistence Tests | net10.0 | 111 |
-| Persistence Tests | net472 | 246 |
-| Integration Tests | net472 | 131 |
-| **Total** | | **1029** |
+| Persistence Tests | net472 | 247 |
+| Integration Tests | net472 | 132 |
+| **Total** | | **1031** |
 
 ### Approach
 

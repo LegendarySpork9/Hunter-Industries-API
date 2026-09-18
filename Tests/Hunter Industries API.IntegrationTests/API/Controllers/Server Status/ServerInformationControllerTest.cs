@@ -420,31 +420,20 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
         }
 
         /// <summary>
-        /// Checks whether the Patch method returns a 400 status code when a server with the name already exists.
+        /// Checks whether the Patch method returns a 500 status code when the update fails.
         /// </summary>
         [TestMethod]
-        public async Task TestPatchNameExists()
+        public async Task TestPatchInternalServerError()
         {
-            InsertServerInformation(
-                "ExistingServer",
-                "ExistingHost",
-                "Minecraft",
-                "1.7.10",
-                "192.168.0.1",
-                25565,
-                "https://discord.com/api/webhooks/test",
-                123456789,
-                true);
-
             int serverId = InsertServerInformation(
                 "Test",
                 "TestServer",
                 "Minecraft",
                 "1.7.10",
                 "127.0.0.1",
-                25566,
-                "https://discord.com/api/webhooks/test2",
-                987654321,
+                25565,
+                "https://discord.com/api/webhooks/test",
+                123456789,
                 true);
 
             ServerInformationController controller = CreateController();
@@ -456,12 +445,40 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
                 serverId,
                 new ServerUpdateModel
                 {
-                    Name = "ExistingServer"
+                    HostName = "NonExistentHost"
                 });
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(
-                HttpStatusCode.BadRequest,
+                HttpStatusCode.InternalServerError,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Post method returns a 500 status code when the creation fails.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPostInternalServerError()
+        {
+            ServerInformationController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Post(new ServerInformationModel
+            {
+                Name = "Test",
+                HostName = "NonExistentHost",
+                Game = "NonExistentGame",
+                GameVersion = "1.0",
+                IPAddress = "192.168.0.1",
+                Port = 99999,
+                WebhookURL = "https://discord.com/api/webhooks/test",
+                RecipientId = 123456789,
+                Time = "03:00",
+                Duration = 60
+            });
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.InternalServerError,
                 contentResult.StatusCode);
         }
     }

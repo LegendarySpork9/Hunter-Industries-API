@@ -529,5 +529,34 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services.ServerStatus
             Assert.IsFalse(actual);
         }
 
+        /// <summary>
+        /// Checks whether the ServerUpdated method returns true when only IsActive is provided.
+        /// </summary>
+        [TestMethod]
+        public async Task TestServerUpdatedMinimal()
+        {
+            int serverId = InsertServerInformation(
+                "Test",
+                "TestServer",
+                "TestGame",
+                "1.0",
+                "127.0.0.1",
+                25565,
+                "https://discord.com/api/webhooks/test",
+                123456789,
+                true);
+
+            ServerInformationService service = CreateService();
+
+            bool actual = await service.ServerUpdated(
+                serverId,
+                new ServerUpdateModel
+                {
+                    IsActive = false
+                });
+
+            Assert.IsTrue(actual);
+        }
+
     }
 }
