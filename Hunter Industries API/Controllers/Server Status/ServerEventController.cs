@@ -223,16 +223,17 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                 _Options,
                 _Database,
                 _Clock);
-            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
-            string username = ClaimFunction.GetUsername(principal);
-            string applicationName = ClaimFunction.GetApplicationName(principal);
-            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
             ModelValidationService _modelValidator = new ModelValidationService();
             ServerEventService _serverEventService = new ServerEventService(
                 _Logger,
                 _FileSystem,
                 _Options,
                 _Database);
+
+            ClaimsPrincipal principal = RequestContext.Principal as ClaimsPrincipal;
+            string username = ClaimFunction.GetUsername(principal);
+            string applicationName = ClaimFunction.GetApplicationName(principal);
+            string ipAddress = IPAddressFunction.FetchIpAddress(Request);
 
             ResponseModel response;
 

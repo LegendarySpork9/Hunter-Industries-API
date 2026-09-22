@@ -340,6 +340,14 @@ fetch next @pageSize rows only";
 
                 if (result == null)
                 {
+                    if (ex == null)
+                    {
+                        string message = "No data was returned when trying to run ServerAlertService.LogServerAlert. A user setting may not exist for the given reporter and application.";
+                        _Logger.LogMessage(
+                            StandardValues.LoggerValues.Warning,
+                            message);
+                    }
+
                     logged = false;
                 }
 

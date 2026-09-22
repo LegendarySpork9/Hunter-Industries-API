@@ -13,5 +13,4 @@ join [Application] A with (nolock) on A.ApplicationId = US.ApplicationId
 join Component C with (nolock) on C.[Name] = @component
 join ComponentStatus CS with (nolock) on CS.[Value] = @componentStatus
 join ServerAlertStatus SAS with (nolock) on SAS.[Value] = @alertStatus
-where US.[Name] = 'DiscordName'
-and US.[Value] = @reporter
+where US.[Value] = @reporter
