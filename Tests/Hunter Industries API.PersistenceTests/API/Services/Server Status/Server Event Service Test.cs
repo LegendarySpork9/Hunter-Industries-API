@@ -197,6 +197,27 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services.ServerStatus
             }
         }
         /// <summary>
+        /// Deactivates a server by setting IsActive to false.
+        /// </summary>
+        private void DeactivateServer(int serverInformationId)
+        {
+            using (SqlConnection conn = new(_ConnectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new(
+                    "UPDATE ServerInformation SET IsActive = 0 WHERE ServerInformationId = @id;",
+                    conn))
+                {
+                    cmd.Parameters.AddWithValue(
+                        "@id",
+                        serverInformationId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
         /// Checks whether the GetServerEvents method returns a list of events.
         /// </summary>
         [TestMethod]
@@ -277,6 +298,36 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services.ServerStatus
 
             Assert.IsTrue(logged);
             Assert.IsTrue(eventId > 0);
+        }
+
+        /// <summary>
+        /// Checks whether the GetServerEvents method excludes events for inactive servers.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetServerEventsExcludesInactiveServers()
+        {
+            int serverId = InsertServerInformation(
+                "Test",
+                "TestServer",
+                "TestGame",
+                "1.0",
+                "127.0.0.1",
+                25565);
+
+            InsertComponentInformation(
+                serverId,
+                "PC",
+                "Online");
+
+            DeactivateServer(serverId);
+
+            ServerEventService service = CreateService();
+
+            List<ServerEventRecord> actual = await service.GetServerEvents("PC");
+
+            Assert.AreEqual(
+                0,
+                actual.Count);
         }
 
         /// <summary>
