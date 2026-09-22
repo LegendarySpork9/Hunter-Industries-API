@@ -207,6 +207,27 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
             }
         }
         /// <summary>
+        /// Deactivates a server by setting IsActive to false.
+        /// </summary>
+        private void DeactivateServer(int serverInformationId)
+        {
+            using (SqlConnection conn = new(_ConnectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new(
+                    "UPDATE ServerInformation SET IsActive = 0 WHERE ServerInformationId = @id;",
+                    conn))
+                {
+                    cmd.Parameters.AddWithValue(
+                        "@id",
+                        serverInformationId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
         /// Checks whether the Get method returns a 200 with server events.
         /// </summary>
         [TestMethod]
@@ -241,6 +262,33 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
             ServerEventController controller = CreateController();
 
             IHttpActionResult actionResult = await controller.Get("Unknown Component");
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
+        /// Checks whether the Get method returns a 200 with info when only inactive server events exist.
+        /// </summary>
+        [TestMethod]
+        public async Task TestGetExcludesInactiveServers()
+        {
+            int serverId = InsertServerInformation(
+                "Test",
+                "TestServer",
+                "TestGame",
+                "1.0");
+            InsertComponentInformation(
+                serverId,
+                "PC",
+                "Online");
+            DeactivateServer(serverId);
+
+            ServerEventController controller = CreateController();
+
+            IHttpActionResult actionResult = await controller.Get("PC");
 
             NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
             Assert.AreEqual(

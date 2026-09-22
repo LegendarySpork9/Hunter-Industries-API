@@ -20,6 +20,7 @@
 	join Machine with (nolock) on SI.MachineId = Machine.MachineId
 	join Game with (nolock) on SI.GameId = Game.GameId
 	where Component.[Name] = @component
+	and SI.IsActive = 1
 )
 select
 	ComponentInformationId,
