@@ -125,9 +125,9 @@ namespace HunterIndustriesAPIControlPanel.Implementations
         /// <summary>
         /// Returns the paged users from the API.
         /// </summary>
-        public async Task<PagedAPIResponseModel<UserModel>?> GetPagedUsers(List<KeyValuePair<string, object>>? queryParameters = null)
+        public async Task<PagedUserResponseModel?> GetPagedUsers(List<KeyValuePair<string, object>>? queryParameters = null)
         {
-            PagedAPIResponseModel<UserModel>? pagedUsers = null;
+            PagedUserResponseModel? pagedUsers = null;
 
             try
             {
@@ -167,7 +167,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
                 {
-                    pagedUsers = JsonConvert.DeserializeObject<PagedAPIResponseModel<UserModel>>(response.Content);
+                    pagedUsers = JsonConvert.DeserializeObject<PagedUserResponseModel>(response.Content);
                 }
 
                 if (response.ErrorException != null)

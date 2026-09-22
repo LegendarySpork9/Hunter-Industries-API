@@ -569,6 +569,61 @@ fetch next @pageSize rows only";
         }
 
         /// <summary>
+        /// Gets all available scopes.
+        /// </summary>
+        public async Task<List<string>> GetAvailableScopes()
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                "UserService.GetAvailableScopes called.");
+
+            List<string> scopes = new List<string>();
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "User",
+                    "GetAvailableScopes.sql"));
+
+                (List<string> results, Exception ex) = await _Database.Query(
+                    sql,
+                    reader => reader.GetString(0));
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run UserService.GetAvailableScopes.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+
+                scopes = results;
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run UserService.GetAvailableScopes.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
+
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"UserService.GetAvailableScopes returned {scopes.Count} records.");
+            return scopes;
+        }
+
+        /// <summary>
         /// Gets the scopes assigned to the user.
         /// </summary>
         public async Task<List<string>> GetUserScopes(

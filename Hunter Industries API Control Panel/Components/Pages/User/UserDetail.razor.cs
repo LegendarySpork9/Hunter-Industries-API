@@ -96,12 +96,11 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
                 }
             }
 
-            List<UserModel> users = await UserFunction.GetUsers(APIService);
+            PagedUserResponseModel? pagedUsers = await APIService.GetUsers(pageSize: 1);
 
-            if (users.Count > 0)
+            if (pagedUsers != null && pagedUsers.AvailableScopes.Count > 0)
             {
-                List<string> scopes = [.. users.SelectMany(u => u.Scopes)];
-                AvailableScopes = [.. scopes.Distinct()];
+                AvailableScopes = pagedUsers.AvailableScopes;
 
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,

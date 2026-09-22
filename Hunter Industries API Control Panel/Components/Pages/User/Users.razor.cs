@@ -49,13 +49,10 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
 
             IsLoading = true;
 
-            UserRecords = await UserFunction.GetUsers(APIService);
+            UserRecords = await GetUsers();
 
-            if (UserRecords.Count > 0)
+            if (AvailableScopes.Count > 0)
             {
-                List<string> scopes = [.. UserRecords.SelectMany(u => u.Scopes)];
-                AvailableScopes = [.. scopes.Distinct()];
-
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
                     $"Available Scope(s): {AvailableScopes.Count}");
@@ -64,6 +61,52 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.User
             ControlPanelUsername = CredentialsFunction.GetCredentialsUsername(APISettings);
 
             IsLoading = false;
+        }
+
+        /// <summary>
+        /// Loads all user data.
+        /// </summary>
+        private async Task<List<UserModel>> GetUsers()
+        {
+            List<UserModel> users = [];
+
+            bool nextPage = true;
+            int pageNumber = 1;
+
+            while (nextPage)
+            {
+                PagedUserResponseModel? pagedUsers = await APIService.GetUsers(
+                    true,
+                    200,
+                    pageNumber);
+
+                if (pagedUsers != null && pagedUsers.EntryCount > 0)
+                {
+                    users.AddRange(pagedUsers.Entries);
+
+                    if (pageNumber == 1 && pagedUsers.AvailableScopes.Count > 0)
+                    {
+                        AvailableScopes = pagedUsers.AvailableScopes;
+                    }
+
+                    if (pageNumber < pagedUsers.TotalPageCount)
+                    {
+                        pageNumber++;
+                    }
+
+                    else
+                    {
+                        nextPage = false;
+                    }
+                }
+
+                else
+                {
+                    nextPage = false;
+                }
+            }
+
+            return users;
         }
 
         /// <summary>

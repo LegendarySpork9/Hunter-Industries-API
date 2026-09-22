@@ -80,7 +80,7 @@ namespace HunterIndustriesAPIControlPanel.Services
         /// <summary>
         /// Gets the users from the API matching the given parameters.
         /// </summary>
-        public async Task<PagedAPIResponseModel<UserModel>?> GetUsers(
+        public async Task<PagedUserResponseModel?> GetUsers(
             bool includeDeleted = false,
             int pageSize = 25,
             int pageNumber = 1,
@@ -95,7 +95,7 @@ namespace HunterIndustriesAPIControlPanel.Services
                 await Authorise();
             }
 
-            PagedAPIResponseModel<UserModel>? pagedResponse = null;
+            PagedUserResponseModel? pagedResponse = null;
 
             List<KeyValuePair<string, object>> queryParameters = [];
 
