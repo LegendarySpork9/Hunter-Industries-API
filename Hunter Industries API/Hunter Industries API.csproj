@@ -698,6 +698,7 @@
     <Content Include="SQL\User\GetUser.sql" />
     <Content Include="SQL\User\GetTotalUsers.sql" />
     <Content Include="SQL\User\GetUsers.sql" />
+    <Content Include="SQL\User\GetAvailableScopes.sql" />
     <Content Include="SQL\User\GetUserScopes.sql" />
     <Content Include="SQL\User\User Settings\GetUserSetting.sql" />
     <Content Include="SQL\User\User Settings\GetUserSettings.sql" />

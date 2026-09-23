@@ -179,6 +179,7 @@ namespace HunterIndustriesAPI.Controllers.User
             }
 
             int totalPages = (int)Math.Ceiling((decimal)totalRecords / (decimal)filters.PageSize);
+            List<string> availableScopes = await _userService.GetAvailableScopes();
 
             response = new ResponseModel()
             {
@@ -190,7 +191,8 @@ namespace HunterIndustriesAPI.Controllers.User
                     PageNumber = filters.PageNumber,
                     PageSize = filters.PageSize,
                     TotalPageCount = totalPages,
-                    TotalCount = totalRecords
+                    TotalCount = totalRecords,
+                    AvailableScopes = availableScopes
                 }
             };
 

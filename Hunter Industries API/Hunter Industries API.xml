@@ -3137,6 +3137,11 @@
             The total number of records returned.
             </summary>
         </member>
+        <member name="P:HunterIndustriesAPI.Models.Responses.UserResponseModel.AvailableScopes">
+            <summary>
+            The available scopes.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Models.Responses.Statistics.DashboardResponseModel">
             <summary>
             </summary>
@@ -5407,6 +5412,11 @@
         <member name="M:HunterIndustriesAPI.Services.User.UserService.UserScopeCreated(System.Int32,System.Collections.Generic.List{System.String})">
             <summary>
             Creates the user scopes.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Services.User.UserService.GetAvailableScopes">
+            <summary>
+            Gets all available scopes.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Services.User.UserService.GetUserScopes(System.Int32,System.String)">

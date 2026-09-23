@@ -158,7 +158,7 @@ namespace HunterIndustriesAPI.PersistenceTests.ControlPanel.Services
         [TestMethod]
         public async Task TestGetUsers()
         {
-            PagedAPIResponseModel<UserModel> expected = new()
+            PagedUserResponseModel expected = new()
             {
                 Entries = [new UserModel { Id = 1, Username = "TestUser", Password = "pass", Scopes = ["read"], IsDeleted = false }],
                 EntryCount = 1,
@@ -172,7 +172,7 @@ namespace HunterIndustriesAPI.PersistenceTests.ControlPanel.Services
                 .ReturnsAsync(expected);
 
             APIService service = CreateService();
-            PagedAPIResponseModel<UserModel>? actual = await service.GetUsers(false);
+            PagedUserResponseModel? actual = await service.GetUsers(false);
 
             Assert.AreEqual(
                 1,
@@ -190,10 +190,10 @@ namespace HunterIndustriesAPI.PersistenceTests.ControlPanel.Services
         public async Task TestGetUsersEmpty()
         {
             _MockAPIClient.Setup(c => c.GetPagedUsers(It.IsAny<List<KeyValuePair<string, object>>?>()))
-                .ReturnsAsync((PagedAPIResponseModel<UserModel>?)null);
+                .ReturnsAsync((PagedUserResponseModel?)null);
 
             APIService service = CreateService();
-            PagedAPIResponseModel<UserModel>? actual = await service.GetUsers(false);
+            PagedUserResponseModel? actual = await service.GetUsers(false);
 
             Assert.IsNull(actual);
         }
@@ -208,7 +208,7 @@ namespace HunterIndustriesAPI.PersistenceTests.ControlPanel.Services
                 .ThrowsAsync(new Exception("Connection refused"));
 
             APIService service = CreateService();
-            PagedAPIResponseModel<UserModel>? actual = await service.GetUsers(false);
+            PagedUserResponseModel? actual = await service.GetUsers(false);
 
             Assert.IsNull(actual);
         }
@@ -220,7 +220,7 @@ namespace HunterIndustriesAPI.PersistenceTests.ControlPanel.Services
         public async Task TestGetUsersReauthorises()
         {
             _MockAPIClient.Setup(c => c.GetPagedUsers(It.IsAny<List<KeyValuePair<string, object>>?>()))
-                .ReturnsAsync((PagedAPIResponseModel<UserModel>?)null);
+                .ReturnsAsync((PagedUserResponseModel?)null);
 
             APIService service = CreateServiceWithExpiredToken();
             await service.GetUsers(false);

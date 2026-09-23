@@ -67,7 +67,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages
             {
                 await APIService.Authorise();
 
-                PagedAPIResponseModel<UserModel>? pagedUsers = await APIService.GetUsers(username: LoginInformation.Username);
+                PagedUserResponseModel? pagedUsers = await APIService.GetUsers(username: LoginInformation.Username);
                 UserModel? user = pagedUsers?.Entries.Find(u => u.Password == HashFunction.HashString(LoginInformation.Password));
 
                 if (user != null && user.Scopes.Contains("Control Panel API"))

@@ -32,5 +32,9 @@ namespace HunterIndustriesAPI.Models.Responses
         /// The total number of records returned.
         /// </summary>
         public int TotalCount { get; set; }
+        /// <summary>
+        /// The available scopes.
+        /// </summary>
+        public List<string> AvailableScopes { get; set; }
     }
 }

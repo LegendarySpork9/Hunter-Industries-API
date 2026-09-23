@@ -13,7 +13,7 @@ namespace HunterIndustriesAPIControlPanel.Abstractions
     {
         void SetBearerToken(string bearerToken);
         Task<AuthenticationModel?> Authorise();
-        Task<PagedAPIResponseModel<UserModel>?> GetPagedUsers(List<KeyValuePair<string, object>>? queryParameters = null);
+        Task<PagedUserResponseModel?> GetPagedUsers(List<KeyValuePair<string, object>>? queryParameters = null);
         Task<DashboardStatisticsModel?> GetDashboardStatistics();
         Task<PagedAPIResponseModel<AuditHistoryModel>?> GetPagedAuditHistory(List<KeyValuePair<string, object>>? queryParameters = null);
         Task<(UserModel?, ResponseModel?)> CreateUser(UserRequestModel user);
