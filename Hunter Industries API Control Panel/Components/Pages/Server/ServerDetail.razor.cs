@@ -354,7 +354,7 @@ namespace HunterIndustriesAPIControlPanel.Components.Pages.Server
 
                 if (EditEventInterval != 0 && EditEventInterval != Server.EventInterval)
                 {
-                    server.Duration = EditEventInterval;
+                    server.EventInterval = EditEventInterval;
 
                     _Logger.LogMessage(
                         StandardValues.LoggerValues.Debug,
