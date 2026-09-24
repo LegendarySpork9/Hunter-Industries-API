@@ -420,6 +420,41 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
         }
 
         /// <summary>
+        /// Checks whether the Patch method returns a 200 status code when only EventInterval is updated.
+        /// </summary>
+        [TestMethod]
+        public async Task TestPatchEventIntervalOnly()
+        {
+            int serverId = InsertServerInformation(
+                "Test",
+                "TestServer",
+                "Minecraft",
+                "1.7.10",
+                "127.0.0.1",
+                25565,
+                "https://discord.com/api/webhooks/test",
+                123456789,
+                true);
+
+            ServerInformationController controller = CreateController();
+            controller.Request = new HttpRequestMessage(
+                new HttpMethod("PATCH"),
+                new Uri($"https://localhost/v2.0/serverstatus/serverinformation/{serverId}"));
+
+            IHttpActionResult actionResult = await controller.Patch(
+                serverId,
+                new ServerUpdateModel
+                {
+                    EventInterval = 120
+                });
+
+            NegotiatedContentResult<object> contentResult = actionResult as NegotiatedContentResult<object>;
+            Assert.AreEqual(
+                HttpStatusCode.OK,
+                contentResult.StatusCode);
+        }
+
+        /// <summary>
         /// Checks whether the Patch method returns a 500 status code when the update fails.
         /// </summary>
         [TestMethod]
