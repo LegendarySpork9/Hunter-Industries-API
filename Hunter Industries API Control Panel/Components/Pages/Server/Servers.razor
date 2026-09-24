@@ -138,7 +138,7 @@ else
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Name</label>
-                                <input type="text" class="form-control" @bind="NewServerName" />
+                                <input type="text" class="form-control" @bind="NewServerName" maxlength="255" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Host Name</label>
@@ -186,17 +186,17 @@ else
                         <div class="row g-3 mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Event Interval (s)</label>
-                                <input type="number" class="form-control" @bind="NewEventInterval" />
+                                <input type="number" class="form-control" @bind="NewEventInterval" min="0" max="2147483647" />
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Webhook URL</label>
-                                <input type="text" class="form-control" @bind="NewWebhookURL" />
+                                <input type="text" class="form-control" @bind="NewWebhookURL" maxlength="200" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Recipient ID</label>
-                                <input type="number" class="form-control" @bind="NewRecipientId" />
+                                <input type="number" class="form-control" @bind="NewRecipientId" min="0" max="9223372036854775807" />
                             </div>
                         </div>
                         @if (!string.IsNullOrEmpty(ErrorMessage))

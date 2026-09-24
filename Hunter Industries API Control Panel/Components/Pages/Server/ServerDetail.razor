@@ -47,7 +47,7 @@ else
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">Name</label>
-                        <input type="text" class="form-control" @bind="EditServerName" />
+                        <input type="text" class="form-control" @bind="EditServerName" maxlength="255" />
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Host Name</label>
@@ -84,7 +84,7 @@ else
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Event Interval (s)</label>
-                        <input type="number" class="form-control" @bind="EditEventInterval" />
+                        <input type="number" class="form-control" @bind="EditEventInterval" min="0" max="2147483647" />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">&nbsp;</label>
@@ -95,11 +95,11 @@ else
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Webhook URL</label>
-                        <input type="text" class="form-control" @bind="EditWebhookURL" />
+                        <input type="text" class="form-control" @bind="EditWebhookURL" maxlength="200" />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Recipient ID</label>
-                        <input type="number" class="form-control" @bind="EditRecipientId" />
+                        <input type="number" class="form-control" @bind="EditRecipientId" min="0" max="9223372036854775807" />
                     </div>
                 </div>
                 <div class="mt-3">

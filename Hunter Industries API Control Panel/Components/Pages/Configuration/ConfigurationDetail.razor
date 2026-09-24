@@ -47,7 +47,7 @@ else
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Name</label>
-                                <input type="text" class="form-control" @bind="EditAppName" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditAppName" maxlength="50" disabled="@IsDeleted" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phrase</label>
@@ -105,7 +105,7 @@ else
                                     <div class="row g-3">
                                         <div class="col-md-4">
                                             <label class="form-label">Name</label>
-                                            <input type="text" class="form-control" @bind="NewSetting.Name" />
+                                            <input type="text" class="form-control" @bind="NewSetting.Name" maxlength="255" />
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Type</label>
@@ -173,10 +173,10 @@ else
                                     {
                                         <tr>
                                             <td>
-                                                <input type="text" class="form-control form-control-sm" @bind="setting.Name" disabled="@(IsDeleted || setting.IsDeleted)" />
+                                                <input type="text" class="form-control form-control-sm" @bind="setting.Name" maxlength="255" disabled="@(IsDeleted || setting.IsDeleted)" />
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control form-control-sm" @bind="setting.Type" disabled="@(IsDeleted || setting.IsDeleted)" />
+                                                <input type="text" class="form-control form-control-sm" @bind="setting.Type" maxlength="20" disabled="@(IsDeleted || setting.IsDeleted)" />
                                             </td>
                                             <td class="text-center">
                                                 <div class="form-check d-flex justify-content-center">
@@ -311,7 +311,7 @@ else
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Name</label>
-                                <input type="text" class="form-control" @bind="EditComponentName" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditComponentName" maxlength="17" disabled="@IsDeleted" />
                             </div>
                         </div>
                         @if (!IsDeleted)
@@ -363,11 +363,11 @@ else
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">IP Address</label>
-                                <input type="text" class="form-control" @bind="EditConnectionIP" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditConnectionIP" maxlength="50" disabled="@IsDeleted" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Port</label>
-                                <input type="number" class="form-control" @bind="EditConnectionPort" disabled="@IsDeleted" />
+                                <input type="number" class="form-control" @bind="EditConnectionPort" min="0" max="2147483647" disabled="@IsDeleted" />
                             </div>
                         </div>
                         @if (!IsDeleted)
@@ -419,7 +419,7 @@ else
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Host</label>
-                                <input type="text" class="form-control" @bind="EditDomainHost" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditDomainHost" maxlength="255" disabled="@IsDeleted" />
                             </div>
                         </div>
                         @if (!IsDeleted)
@@ -471,11 +471,11 @@ else
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Time</label>
-                                <input type="text" class="form-control" @bind="EditDowntimeTime" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditDowntimeTime" maxlength="8" disabled="@IsDeleted" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Duration (seconds)</label>
-                                <input type="number" class="form-control" @bind="EditDowntimeDuration" disabled="@IsDeleted" />
+                                <input type="number" class="form-control" @bind="EditDowntimeDuration" min="0" max="2147483647" disabled="@IsDeleted" />
                             </div>
                         </div>
                         @if (!IsDeleted)
@@ -527,11 +527,11 @@ else
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Name</label>
-                                <input type="text" class="form-control" @bind="EditGameName" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditGameName" maxlength="255" disabled="@IsDeleted" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Version</label>
-                                <input type="text" class="form-control" @bind="EditGameVersion" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditGameVersion" maxlength="20" disabled="@IsDeleted" />
                             </div>
                         </div>
                         @if (!IsDeleted)
@@ -583,7 +583,7 @@ else
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Host Name</label>
-                                <input type="text" class="form-control" @bind="EditHostName" disabled="@IsDeleted" />
+                                <input type="text" class="form-control" @bind="EditHostName" maxlength="255" disabled="@IsDeleted" />
                             </div>
                         </div>
                         @if (!IsDeleted)

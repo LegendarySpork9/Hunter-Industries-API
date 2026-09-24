@@ -135,7 +135,7 @@ else
                             case "application":
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" @bind="NewAppName" />
+                                    <input type="text" class="form-control" @bind="NewAppName" maxlength="50" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phrase</label>
@@ -158,54 +158,54 @@ else
                             case "component":
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" @bind="NewComponentName" />
+                                    <input type="text" class="form-control" @bind="NewComponentName" maxlength="17" />
                                 </div>
                                 break;
 
                             case "connection":
                                 <div class="mb-3">
                                     <label class="form-label">IP Address</label>
-                                    <input type="text" class="form-control" @bind="NewConnectionIP" />
+                                    <input type="text" class="form-control" @bind="NewConnectionIP" maxlength="50" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Port</label>
-                                    <input type="text" class="form-control" @bind="NewConnectionPort" />
+                                    <input type="number" class="form-control" @bind="NewConnectionPort" min="0" max="2147483647" />
                                 </div>
                                 break;
 
                             case "domain":
                                 <div class="mb-3">
                                     <label class="form-label">Host</label>
-                                    <input type="text" class="form-control" @bind="NewDomainHost" />
+                                    <input type="text" class="form-control" @bind="NewDomainHost" maxlength="255" />
                                 </div>
                                 break;
 
                             case "downtime":
                                 <div class="mb-3">
                                     <label class="form-label">Time</label>
-                                    <input type="text" class="form-control" @bind="NewDowntimeTime" placeholder="HH:mm:ss" />
+                                    <input type="text" class="form-control" @bind="NewDowntimeTime" maxlength="8" placeholder="HH:mm:ss" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Duration (seconds)</label>
-                                    <input type="text" class="form-control" @bind="NewDowntimeDuration" />
+                                    <input type="number" class="form-control" @bind="NewDowntimeDuration" min="0" max="2147483647" />
                                 </div>
                                 break;
 
                             case "game":
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" @bind="NewGameName" />
+                                    <input type="text" class="form-control" @bind="NewGameName" maxlength="255" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Version</label>
-                                    <input type="text" class="form-control" @bind="NewGameVersion" />
+                                    <input type="text" class="form-control" @bind="NewGameVersion" maxlength="20" />
                                 </div>
                                 break;
 
                             case "machine":
                                 <div class="mb-3">
                                     <label class="form-label">Host Name</label>
-                                    <input type="text" class="form-control" @bind="NewMachineHostName" />
+                                    <input type="text" class="form-control" @bind="NewMachineHostName" maxlength="255" />
                                 </div>
                                 break;
                         }
