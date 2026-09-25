@@ -202,6 +202,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
         ///     {
         ///         "component": "PC",
         ///         "status": "Online",
+        ///         "dateOccured": "1900-01-01T00:00:00.000Z"
         ///         "serverId": 1,
         ///         "name": "Test",
         ///         "hostName": "Test",
@@ -319,7 +320,7 @@ namespace HunterIndustriesAPI.Controllers.ServerStatus
                     Id = serverEventId,
                     Component = request.Component,
                     Status = request.Status,
-                    DateOccured = _Clock.UtcNow,
+                    DateOccured = request.DateOccured,
                     Server = new RelatedServerRecord()
                     {
                         Id = request.ServerId,
