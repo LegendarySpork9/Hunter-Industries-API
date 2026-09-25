@@ -138,7 +138,8 @@ namespace HunterIndustriesAPI.Services.ServerStatus
                 {
                     new SqlParameter("@serverID", SqlDbType.Int) { Value = serverEvent.ServerId },
                     new SqlParameter("@component", SqlDbType.VarChar) { Value = serverEvent.Component },
-                    new SqlParameter("@status", SqlDbType.VarChar) { Value = serverEvent.Status }
+                    new SqlParameter("@status", SqlDbType.VarChar) { Value = serverEvent.Status },
+                    new SqlParameter("@dateOccured", SqlDbType.DateTime) { Value = serverEvent.DateOccured }
                 };
 
                 (object result, Exception ex) = await _Database.ExecuteScalar(
