@@ -46,12 +46,12 @@ else
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Username</label>
-                        <input type="text" class="form-control" @bind="EditUsername" disabled="@User.IsDeleted" />
+                        <input type="text" class="form-control" @bind="EditUsername" maxlength="255" disabled="@User.IsDeleted" />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Password</label>
                         <div class="input-group">
-                            <input type="@(ShowPassword ? "text" : "password")" class="form-control" @bind="EditPassword" disabled="@User.IsDeleted" />
+                            <input type="@(ShowPassword ? "text" : "password")" class="form-control" @bind="EditPassword" maxlength="255" disabled="@User.IsDeleted" />
                             <button class="btn btn-outline-light" type="button" @onclick="() => ShowPassword = !ShowPassword">
                                 @(ShowPassword ? "Hide" : "Show")
                             </button>
@@ -157,14 +157,14 @@ else
                                         <td>
                                             @if (setting != null)
                                             {
-                                                <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" disabled="@(application.IsDeleted || User.IsDeleted)" />
+                                                <input type="text" class="form-control form-control-sm setting-input" @bind="setting.Value" maxlength="255" disabled="@(application.IsDeleted || User.IsDeleted)" />
                                             }
 
                                             else if (!User.IsDeleted && IsAddingSetting(application.Name,
                                                 applicationSetting.Name))
                                             {
                                                 <div class="d-flex gap-2 align-items-center setting-input">
-                                                    <input type="text" class="form-control form-control-sm" value="@GetNewSettingValue(application.Name,
+                                                    <input type="text" class="form-control form-control-sm" maxlength="255" value="@GetNewSettingValue(application.Name,
                                                         applicationSetting.Name)" @onchange="(e) => SetNewSettingValue(application.Name,
                                                             applicationSetting.Name, e.Value?.ToString() ?? string.Empty)" placeholder="Enter value..." />
                                                     <button class="btn btn-outline-light btn-sm" @onclick="() => CancelAddSetting(application.Name,

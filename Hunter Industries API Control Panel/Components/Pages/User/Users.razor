@@ -112,11 +112,11 @@ else
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Username</label>
-                            <input type="text" class="form-control" @bind="NewUserUsername" placeholder="Enter username" />
+                            <input type="text" class="form-control" @bind="NewUserUsername" maxlength="255" placeholder="Enter username" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
-                            <input type="password" class="form-control" @bind="NewUserPassword" placeholder="Enter password" />
+                            <input type="password" class="form-control" @bind="NewUserPassword" maxlength="255" placeholder="Enter password" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Scopes</label>
