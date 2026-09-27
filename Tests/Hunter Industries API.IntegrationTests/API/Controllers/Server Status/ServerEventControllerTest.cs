@@ -314,6 +314,7 @@ namespace HunterIndustriesAPI.IntegrationTests.API.Controllers.ServerStatus
             {
                 Component = "PC",
                 Status = "Online",
+                DateOccured = DateTime.UtcNow,
                 ServerId = serverId,
                 Name = "Test",
                 HostName = "TestServer",
