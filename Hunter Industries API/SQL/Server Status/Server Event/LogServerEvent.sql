@@ -4,7 +4,7 @@ select
 	@serverId,
 	C.ComponentId,
 	CS.ComponentStatusId,
-	GETUTCDATE()
+	@dateOccured
 from Component C with (nolock)
 join ComponentStatus CS with (nolock) on CS.[Value] = @status
 where C.[Name] = @component

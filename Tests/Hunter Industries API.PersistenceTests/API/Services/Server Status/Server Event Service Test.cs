@@ -9,6 +9,7 @@ using HunterIndustriesAPICommon.Abstractions;
 using HunterIndustriesAPICommon.Implementations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -289,6 +290,7 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services.ServerStatus
             {
                 Component = "PC",
                 Status = "Online",
+                DateOccured = DateTime.UtcNow,
                 ServerId = serverId,
                 Name = "Test",
                 HostName = "TestServer",
@@ -342,6 +344,7 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services.ServerStatus
             {
                 Component = "NonExistentComponent",
                 Status = "NonExistentStatus",
+                DateOccured = DateTime.UtcNow,
                 ServerId = 999,
                 Name = "Test",
                 HostName = "TestServer",

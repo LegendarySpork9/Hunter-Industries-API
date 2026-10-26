@@ -777,6 +777,7 @@
                  {
                      "component": "PC",
                      "status": "Online",
+                     "dateOccured": "1900-01-01T00:00:00.000Z"
                      "serverId": 1,
                      "name": "Test",
                      "hostName": "Test",
@@ -2400,6 +2401,11 @@
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.Status">
             <summary>
             The status of the component.
+            </summary>
+        </member>
+        <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.DateOccured">
+            <summary>
+            When the event occured.
             </summary>
         </member>
         <member name="P:HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus.ServerEventModel.ServerId">

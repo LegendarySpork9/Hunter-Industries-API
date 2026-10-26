@@ -1,4 +1,6 @@
 ﻿// Copyright © - 11/06/2026 - Toby Hunter
+using System;
+
 namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
 {
     /// <summary>
@@ -13,6 +15,10 @@ namespace HunterIndustriesAPI.Models.Requests.Bodies.ServerStatus
         /// The status of the component.
         /// </summary>
         public string Status { get; set; }
+        /// <summary>
+        /// When the event occured.
+        /// </summary>
+        public DateTime DateOccured { get; set; }
         /// <summary>
         /// The id number of the server.
         /// </summary>
