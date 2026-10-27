@@ -838,7 +838,7 @@
                      "time": "02:00:00",
                      "duration": 600,
                      "webhookURL": "https://discord.com/api/webhooks/000000000000000000/example-webhook-token",
-                     "recipientId": 1196390118873890816
+                     "recipientId": 000000000000000000
                  }
              </remarks>
              <param name="request">An object containing the server information.</param>
