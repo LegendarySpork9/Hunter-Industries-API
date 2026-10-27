@@ -6,6 +6,9 @@
 # Odds
 /.vs/
 
+# Obj
+**[Oo]bj/
+
 # Logs
 **[Ll]ogs/
 
