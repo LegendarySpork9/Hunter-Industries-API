@@ -367,6 +367,7 @@
     <Compile Include="Mappings\Portfolio\Portfolio Data Reader Mapping.cs" />
     <Compile Include="Mappings\Scope Permission Mapping.cs" />
     <Compile Include="Filters\Versioned Direct Route Provider.cs" />
+    <Compile Include="Filters\Rate Limit Handler.cs" />
     <Compile Include="Filters\Versioned Route Attribute.cs" />
     <Compile Include="Functions\Audit History Function.cs" />
     <Compile Include="Functions\Claim Function.cs" />
@@ -692,6 +693,7 @@
     <Content Include="SQL\Token\GetApplicationName.sql" />
     <Content Include="SQL\Token\GetAuthorisationPhrases.sql" />
     <Content Include="SQL\Token\GetUsers.sql" />
+    <Content Include="SQL\Token\UpdateUserSalt.sql" />
     <Content Include="SQL\User\CreateUserScope.sql" />
     <Content Include="SQL\User\CreateUser.sql" />
     <Content Include="SQL\User\DeleteUserScope.sql" />

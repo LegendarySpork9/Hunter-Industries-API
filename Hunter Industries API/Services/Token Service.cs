@@ -57,7 +57,7 @@ namespace HunterIndustriesAPI.Services
         /// <summary>
         /// Returns all username and passwords.
         /// </summary>
-        public async Task<(string[], string[])> GetUsers()
+        public async Task<(string[], string[], string[])> GetUsers()
         {
             _Logger.LogMessage(
                 StandardValues.LoggerValues.Debug,
@@ -65,6 +65,7 @@ namespace HunterIndustriesAPI.Services
 
             string[] usernames = Array.Empty<string>();
             string[] passwords = Array.Empty<string>();
+            string[] salts = Array.Empty<string>();
 
             try
             {
@@ -72,11 +73,12 @@ namespace HunterIndustriesAPI.Services
                     _Options.SQLFiles,
                     "Token",
                     "GetUsers.SQL"));
-                (List<(string, string)> results, Exception ex) = await _Database.Query(
+                (List<(string, string, string)> results, Exception ex) = await _Database.Query(
                     sql,
                     reader => (
                         reader.GetString(0),
-                        reader.GetString(1)
+                        reader.GetString(1),
+                        reader.IsDBNull(2) ? null : reader.GetString(2)
                     ));
 
                 if (ex != null)
@@ -94,6 +96,8 @@ namespace HunterIndustriesAPI.Services
                 usernames = results.Select(r => r.Item1)
                     .ToArray();
                 passwords = results.Select(r => r.Item2)
+                    .ToArray();
+                salts = results.Select(r => r.Item3)
                     .ToArray();
             }
 
@@ -114,7 +118,63 @@ namespace HunterIndustriesAPI.Services
                 $"TokenService.GetUsers returned {usernames.Length} usernames | {passwords.Length} passwords.");
             return (
                 usernames,
-                passwords);
+                passwords,
+                salts);
+        }
+
+        /// <summary>
+        /// Updates the user's password hash and salt after migration.
+        /// </summary>
+        public async Task UpdateUserSalt(
+            string username,
+            string newPasswordHash,
+            string salt)
+        {
+            _Logger.LogMessage(
+                StandardValues.LoggerValues.Debug,
+                $"TokenService.UpdateUserSalt called for user \"{username}\".");
+
+            try
+            {
+                string sql = _FileSystem.ReadAllText(Path.Combine(
+                    _Options.SQLFiles,
+                    "Token",
+                    "UpdateUserSalt.sql"));
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@username", SqlDbType.VarChar) { Value = username },
+                    new SqlParameter("@password", SqlDbType.VarChar) { Value = newPasswordHash },
+                    new SqlParameter("@salt", SqlDbType.VarChar) { Value = salt }
+                };
+
+                (int rowsAffected, Exception ex) = await _Database.Execute(
+                    sql,
+                    parameters);
+
+                if (ex != null)
+                {
+                    string message = "An error occured when trying to run TokenService.UpdateUserSalt.";
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Warning,
+                        message);
+                    _Logger.LogMessage(
+                        StandardValues.LoggerValues.Error,
+                        ex.ToString(),
+                        message);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string message = "An error occured when trying to run TokenService.UpdateUserSalt.";
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Warning,
+                    message);
+                _Logger.LogMessage(
+                    StandardValues.LoggerValues.Error,
+                    ex.ToString(),
+                    message);
+            }
         }
 
         /// <summary>

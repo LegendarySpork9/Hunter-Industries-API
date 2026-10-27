@@ -162,7 +162,10 @@ namespace HunterIndustriesAPI.Controllers
                 _Options,
                 _Database);
 
-            (request.Username, request.Password) = TokenFunction.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
+            string rawPassword;
+
+            (request.Username, rawPassword) = TokenFunction.ExtractCredentialsFromBasicAuth(request.AuthHeader.ToString());
+            request.Password = HashFunction.HashString(rawPassword);
 
             if (!_modelValidator.IsValid(
                 request,
@@ -201,24 +204,44 @@ namespace HunterIndustriesAPI.Controllers
                     request.Password,
                     request.Phrase);
                 _Logger.LogMessage(
-                    StandardValues.LoggerValues.Info, 
+                    StandardValues.LoggerValues.Info,
                     $"Token endpoint returned a {response.StatusCode} with the data {ResponseFunction.GetModelJSON(response.Data)}.");
                 return Content(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     response.Data);
             }
 
-            (string[] usernames, string[] passwords) = await _tokenService.GetUsers();
+            (string[] usernames, string[] passwords, string[] salts) = await _tokenService.GetUsers();
             string[] phrases = await _tokenService.GetAuthorisationPhrases();
+
+            string userSalt = TokenFunction.FindUserSalt(
+                usernames,
+                salts,
+                request.Username);
+            string hashedPassword = string.IsNullOrWhiteSpace(userSalt) ? request.Password : HashFunction.HashString(
+                rawPassword,
+                userSalt);
 
             if (TokenFunction.IsValidUser(
                 usernames,
                 passwords,
                 phrases,
                 request.Username,
-                request.Password,
+                hashedPassword,
                 request.Phrase))
             {
+                if (string.IsNullOrWhiteSpace(userSalt))
+                {
+                    string newSalt = HashFunction.GenerateSalt();
+                    string newHash = HashFunction.HashString(
+                        rawPassword,
+                        newSalt);
+                    await _tokenService.UpdateUserSalt(
+                        request.Username,
+                        newHash,
+                        newSalt);
+                }
+
                 string applicationName = await _tokenService.ApplicationName();
                 Claim[] claims = TokenConverter.GetClaims(
                     request.Username,

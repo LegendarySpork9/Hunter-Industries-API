@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Web.Http;
 
-namespace HunterIndustriesAPI.UnitTests.API.Filters
+namespace HunterIndustriesAPI.IntegrationTests.API.Filters
 {
     [TestClass]
     public class VersionedDirectRouteProviderTest

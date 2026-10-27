@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Dependencies;
 
-namespace HunterIndustriesAPI.UnitTests.API.Filters
+namespace HunterIndustriesAPI.IntegrationTests.API.Filters
 {
     [TestClass]
     public class DependencyResolverTest

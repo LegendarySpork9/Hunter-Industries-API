@@ -42,12 +42,12 @@ namespace HunterIndustriesAPI.UnitTests.API.Functions
         }
 
         /// <summary>
-        /// Tests whether the ExtractCredentialsFromBasicAuth method returns a hashed password when given a valid header.
+        /// Tests whether the ExtractCredentialsFromBasicAuth method returns the raw password when given a valid header.
         /// </summary>
         [TestMethod]
         public void TestExtractCredentialsFromBasicAuthPassword()
         {
-            string expected = HashFunction.HashString("testpass");
+            string expected = "testpass";
             string header = "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("testuser:testpass"));
             (string _, string password) = TokenFunction.ExtractCredentialsFromBasicAuth(header);
 
@@ -171,6 +171,26 @@ namespace HunterIndustriesAPI.UnitTests.API.Functions
                 "phrase2");
 
             Assert.IsTrue(actual);
+        }
+
+        /// <summary>
+        /// Tests whether the IsValidUser method returns false when given a valid username with a different user's password.
+        /// </summary>
+        [TestMethod]
+        public void TestIsValidUserCrossUserCredentials()
+        {
+            string[] usernames = [ "admin", "user" ];
+            string[] passwords = [ "pass1", "pass2" ];
+            string[] phrases = [ "phrase1", "phrase2" ];
+            bool actual = TokenFunction.IsValidUser(
+                usernames,
+                passwords,
+                phrases,
+                "admin",
+                "pass2",
+                "phrase1");
+
+            Assert.IsFalse(actual);
         }
 
     }

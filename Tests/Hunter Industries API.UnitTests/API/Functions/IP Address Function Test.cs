@@ -1,4 +1,4 @@
-// Copyright © - Unpublished - Toby Hunter
+﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Functions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net.Http;
@@ -9,24 +9,24 @@ namespace HunterIndustriesAPI.UnitTests.API.Functions
     public class IPAddressFunctionTest
     {
         /// <summary>
-        /// Tests whether the FetchIpAddress method returns the CF-Connecting-IP header when present.
+        /// Tests whether the FetchIpAddress method ignores CF-Connecting-IP when the direct IP is not from Cloudflare.
         /// </summary>
         [TestMethod]
-        public void TestFetchIpAddressCFConnectingIP()
+        public void TestFetchIpAddressCFConnectingIPIgnoredWithoutCloudflare()
         {
-            string expected = "203.0.113.1";
             HttpRequestMessage request = new HttpRequestMessage();
-            request.Headers.Add("CF-Connecting-IP", expected);
+            request.Headers.Add("CF-Connecting-IP", "203.0.113.1");
+            request.Headers.Add("X-Forwarded-For", "198.51.100.1");
 
             string actual = IPAddressFunction.FetchIpAddress(request);
 
             Assert.AreEqual(
-                expected,
+                "198.51.100.1",
                 actual);
         }
 
         /// <summary>
-        /// Tests whether the FetchIpAddress method returns the X-Forwarded-For header when CF-Connecting-IP is absent.
+        /// Tests whether the FetchIpAddress method returns the X-Forwarded-For header when present.
         /// </summary>
         [TestMethod]
         public void TestFetchIpAddressXForwardedFor()
@@ -58,15 +58,14 @@ namespace HunterIndustriesAPI.UnitTests.API.Functions
         }
 
         /// <summary>
-        /// Tests whether the FetchIpAddress method prioritises CF-Connecting-IP over X-Forwarded-For.
+        /// Tests whether the FetchIpAddress method returns the first IP from a comma-separated X-Forwarded-For header.
         /// </summary>
         [TestMethod]
-        public void TestFetchIpAddressCFConnectingIPPriority()
+        public void TestFetchIpAddressXForwardedForMultiple()
         {
             string expected = "203.0.113.1";
             HttpRequestMessage request = new HttpRequestMessage();
-            request.Headers.Add("CF-Connecting-IP", expected);
-            request.Headers.Add("X-Forwarded-For", "198.51.100.1");
+            request.Headers.Add("X-Forwarded-For", "203.0.113.1, 198.51.100.1");
 
             string actual = IPAddressFunction.FetchIpAddress(request);
 

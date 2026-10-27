@@ -1,5 +1,6 @@
 ﻿select
 	Username,
-	[Password]
+	[Password],
+	Salt
 from APIUser with (nolock)
 where IsDeleted = 0

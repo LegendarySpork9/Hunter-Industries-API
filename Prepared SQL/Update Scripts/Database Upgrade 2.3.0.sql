@@ -35,6 +35,16 @@ ELSE
 	PRINT('ServerInformation RecipientId Column Already Exists')
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.APIUser') AND name = 'Salt')
+	ALTER TABLE APIUser ADD [Salt] [varchar](100) NULL
+GO
+
+IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('dbo.APIUser') AND name = 'Salt')
+	PRINT('APIUser Salt Column Added')
+ELSE
+	PRINT('APIUser Salt Column Already Exists')
+GO
+
 IF NOT EXISTS (SELECT * FROM VersionHistory WHERE ReleaseVersion = '2.3.0')
 	INSERT INTO VersionHistory(ReleaseVersion, ScriptName, DateUpdated)
 	VALUES ('2.3.0', 'Database Upgrade 2.3.0', GETUTCDATE())
