@@ -7,6 +7,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 {
     public class HTTPClientWrapper : IHTTPClient
     {
+        private static readonly HttpClient _client = new();
         private readonly IConfigurableLoggerService _Logger;
 
         // Sets the class's global variables.
@@ -25,8 +26,6 @@ namespace HunterIndustriesAPIControlPanel.Implementations
 
             try
             {
-                HttpClient client = new();
-
                 _Logger.LogMessage(
                     StandardValues.LoggerValues.Debug,
                     "Configured Http Client");
@@ -34,7 +33,7 @@ namespace HunterIndustriesAPIControlPanel.Implementations
                     StandardValues.LoggerValues.Debug,
                     "Sending Request");
 
-                response = await client.SendAsync(request);
+                response = await _client.SendAsync(request);
             }
 
             catch (Exception ex)

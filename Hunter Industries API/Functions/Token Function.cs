@@ -15,7 +15,7 @@ namespace HunterIndustriesAPI.Functions
         public static (string, string) ExtractCredentialsFromBasicAuth(string authHeaderValue)
         {
             string username = string.Empty;
-            string password = string.Empty;
+            string rawPassword = string.Empty;
 
             try
             {
@@ -26,7 +26,7 @@ namespace HunterIndustriesAPI.Functions
                 if (credentialsArray.Length == 2)
                 {
                     username = credentialsArray[0];
-                    password = HashFunction.HashString(credentialsArray[1]);
+                    rawPassword = credentialsArray[1];
                 }
             }
 
@@ -34,7 +34,26 @@ namespace HunterIndustriesAPI.Functions
             {
             }
 
-            return (username, password);
+            return (username, rawPassword);
+        }
+
+        /// <summary>
+        /// Returns the salt for the given username.
+        /// </summary>
+        public static string FindUserSalt(
+            string[] usernames,
+            string[] salts,
+            string usernameInput)
+        {
+            for (int i = 0; i < usernames.Length && i < salts.Length; i++)
+            {
+                if (usernames[i] == usernameInput)
+                {
+                    return salts[i];
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -48,29 +67,31 @@ namespace HunterIndustriesAPI.Functions
             string passwordInput,
             string phraseInput)
         {
-            bool valid = false;
+            bool credentialsValid = false;
 
-            foreach (string username in usernames)
+            for (int i = 0; i < usernames.Length && i < passwords.Length; i++)
             {
-                if (username == usernameInput)
+                if (usernames[i] == usernameInput && passwords[i] == passwordInput)
                 {
-                    foreach (string password in passwords)
-                    {
-                        if (password == passwordInput)
-                        {
-                            foreach (string phrase in phrases)
-                            {
-                                if (phrase == phraseInput)
-                                {
-                                    valid = true;
-                                }
-                            }
-                        }
-                    }
+                    credentialsValid = true;
+                    break;
                 }
             }
 
-            return valid;
+            if (!credentialsValid)
+            {
+                return false;
+            }
+
+            foreach (string phrase in phrases)
+            {
+                if (phrase == phraseInput)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

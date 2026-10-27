@@ -2974,7 +2974,7 @@ where MachineId = @machineId";
                 actual,
                 typeof(MachineModel));
             Assert.AreEqual(
-                "TestMachine", 
+                "TestMachine",
                 ((MachineModel)actual).HostName);
         }
 

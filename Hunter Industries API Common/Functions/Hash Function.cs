@@ -9,16 +9,20 @@ namespace HunterIndustriesAPICommon.Functions
         /// <summary>
         /// Takes the given value and hashes it.
         /// </summary>
-        public static string HashString(string value)
+        public static string HashString(
+            string value,
+            string salt = null)
         {
             string hashString = null;
 
             if (!string.IsNullOrWhiteSpace(value))
             {
+                string input = string.IsNullOrWhiteSpace(salt) ? value : salt + value;
+
                 StringBuilder hashedValue = new();
                 SHA512 shaHash = SHA512.Create();
 
-                byte[] hashBytes = shaHash.ComputeHash(Encoding.UTF8.GetBytes(value));
+                byte[] hashBytes = shaHash.ComputeHash(Encoding.UTF8.GetBytes(input));
 
                 for (int i = 0; i < hashBytes.Length; i++)
                 {
@@ -29,6 +33,21 @@ namespace HunterIndustriesAPICommon.Functions
             }
 
             return hashString;
+        }
+
+        /// <summary>
+        /// Generates a random salt value.
+        /// </summary>
+        public static string GenerateSalt()
+        {
+            byte[] saltBytes = new byte[32];
+
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(saltBytes);
+            }
+
+            return Convert.ToBase64String(saltBytes);
         }
     }
 }

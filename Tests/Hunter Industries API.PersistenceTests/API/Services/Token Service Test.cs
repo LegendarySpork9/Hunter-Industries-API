@@ -157,7 +157,7 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services
 
             (TokenService service, _) = CreateService("testphrase");
 
-            (string[] usernames, string[] passwords) = await service.GetUsers();
+            (string[] usernames, string[] passwords, string[] salts) = await service.GetUsers();
 
             Assert.AreEqual(
                 2,
@@ -187,7 +187,7 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services
         {
             (TokenService service, _) = CreateService("testphrase");
 
-            (string[] usernames, string[] passwords) = await service.GetUsers();
+            (string[] usernames, string[] passwords, string[] salts) = await service.GetUsers();
 
             Assert.AreEqual(
                 0,
@@ -217,7 +217,7 @@ namespace HunterIndustriesAPI.PersistenceTests.API.Services
 
             (TokenService service, _) = CreateService("testphrase");
 
-            (string[] usernames, string[] passwords) = await service.GetUsers();
+            (string[] usernames, string[] passwords, string[] salts) = await service.GetUsers();
 
             Assert.AreEqual(
                 1,

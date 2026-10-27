@@ -1500,6 +1500,23 @@
             Creates the route for the given context.
             </summary>
         </member>
+        <member name="T:HunterIndustriesAPI.Filters.RateLimitHandler">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.RateLimitHandler.#ctor(HunterIndustriesAPICommon.Abstractions.IClock)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Filters.RateLimitHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.Filters.RateLimitHandler.RateLimitEntry">
+            <summary>
+            Tracks the request count and window start time for a single client.
+            </summary>
+        </member>
         <member name="T:HunterIndustriesAPI.Filters.VersionedRouteAttribute">
             <summary>
             </summary>
@@ -1559,6 +1576,16 @@
         <member name="M:HunterIndustriesAPI.Functions.IPAddressFunction.FetchIpAddress(System.Net.Http.HttpRequestMessage)">
             <summary>
             Returns the IP address for logging.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.IPAddressFunction.IsCloudflareIP(System.String)">
+            <summary>
+            Returns whether the given IP address belongs to a Cloudflare range.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.IPAddressFunction.IsInRange(System.Net.IPAddress,System.String)">
+            <summary>
+            Returns whether the given IP address falls within the specified CIDR range.
             </summary>
         </member>
         <member name="T:HunterIndustriesAPI.Functions.AuditHistoryFunction">
@@ -1648,6 +1675,11 @@
         <member name="M:HunterIndustriesAPI.Functions.TokenFunction.ExtractCredentialsFromBasicAuth(System.String)">
             <summary>
             Returns the username and password from the decoded header.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.Functions.TokenFunction.FindUserSalt(System.String[],System.String[],System.String)">
+            <summary>
+            Returns the salt for the given username.
             </summary>
         </member>
         <member name="M:HunterIndustriesAPI.Functions.TokenFunction.IsValidUser(System.String[],System.String[],System.String[],System.String,System.String,System.String)">
@@ -5367,6 +5399,11 @@
             Returns all username and passwords.
             </summary>
         </member>
+        <member name="M:HunterIndustriesAPI.Services.TokenService.UpdateUserSalt(System.String,System.String,System.String)">
+            <summary>
+            Updates the user's password hash and salt after migration.
+            </summary>
+        </member>
         <member name="M:HunterIndustriesAPI.Services.TokenService.GetAuthorisationPhrases">
             <summary>
             Returns all application phrases.
@@ -5490,6 +5527,21 @@
         <member name="M:HunterIndustriesAPI.Startup.Configuration(Owin.IAppBuilder)">
             <summary>
             Sets up the app.
+            </summary>
+        </member>
+        <member name="T:HunterIndustriesAPI.CorsMiddleware">
+            <summary>
+            Handles CORS headers for browser-based requests using allowed origins from configuration.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.CorsMiddleware.#ctor(Microsoft.Owin.OwinMiddleware)">
+            <summary>
+            Sets the class's global variables.
+            </summary>
+        </member>
+        <member name="M:HunterIndustriesAPI.CorsMiddleware.Invoke(Microsoft.Owin.IOwinContext)">
+            <summary>
+            Processes the request and adds CORS headers if the origin is allowed.
             </summary>
         </member>
     </members>

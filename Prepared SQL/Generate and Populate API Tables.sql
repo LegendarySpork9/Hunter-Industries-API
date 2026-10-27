@@ -12,6 +12,7 @@ CREATE TABLE [dbo].[APIUser](
 	[UserId] [int] IDENTITY(1,1) NOT NULL,
 	[Username] [varchar](255) NOT NULL,
 	[Password] [varchar](255) NOT NULL,
+	[Salt] [varchar](100) NULL,
 	[IsDeleted] [bit] NOT NULL
  CONSTRAINT [PK_APIUser] PRIMARY KEY CLUSTERED 
 (

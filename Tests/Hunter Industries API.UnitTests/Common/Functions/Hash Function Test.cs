@@ -81,5 +81,86 @@ namespace HunterIndustriesAPI.UnitTests.Common.Functions
                 first,
                 second);
         }
+
+        /// <summary>
+        /// Tests whether the HashString method returns a different hash when given a salt.
+        /// </summary>
+        [TestMethod]
+        public void TestHashStringWithSalt()
+        {
+            string unsalted = HashFunction.HashString("password");
+            string salted = HashFunction.HashString("password", "somesalt");
+
+            Assert.AreNotEqual(
+                unsalted,
+                salted);
+        }
+
+        /// <summary>
+        /// Tests whether the HashString method returns the same hash when given the same value and salt.
+        /// </summary>
+        [TestMethod]
+        public void TestHashStringWithSaltConsistent()
+        {
+            string first = HashFunction.HashString("password", "somesalt");
+            string second = HashFunction.HashString("password", "somesalt");
+
+            Assert.AreEqual(
+                first,
+                second);
+        }
+
+        /// <summary>
+        /// Tests whether the HashString method returns different hashes when given different salts.
+        /// </summary>
+        [TestMethod]
+        public void TestHashStringWithDifferentSalts()
+        {
+            string first = HashFunction.HashString("password", "salt1");
+            string second = HashFunction.HashString("password", "salt2");
+
+            Assert.AreNotEqual(
+                first,
+                second);
+        }
+
+        /// <summary>
+        /// Tests whether the HashString method returns the same hash when given a null salt as when given no salt.
+        /// </summary>
+        [TestMethod]
+        public void TestHashStringNullSaltMatchesNoSalt()
+        {
+            string withoutSalt = HashFunction.HashString("password");
+            string withNullSalt = HashFunction.HashString("password", null);
+
+            Assert.AreEqual(
+                withoutSalt,
+                withNullSalt);
+        }
+
+        /// <summary>
+        /// Tests whether the GenerateSalt method returns a non-null non-empty string.
+        /// </summary>
+        [TestMethod]
+        public void TestGenerateSalt()
+        {
+            string salt = HashFunction.GenerateSalt();
+
+            Assert.IsFalse(string.IsNullOrWhiteSpace(salt));
+        }
+
+        /// <summary>
+        /// Tests whether the GenerateSalt method returns a different value each time.
+        /// </summary>
+        [TestMethod]
+        public void TestGenerateSaltUnique()
+        {
+            string first = HashFunction.GenerateSalt();
+            string second = HashFunction.GenerateSalt();
+
+            Assert.AreNotEqual(
+                first,
+                second);
+        }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright © - Unpublished - Toby Hunter
+﻿// Copyright © - Unpublished - Toby Hunter
 using HunterIndustriesAPI.Functions;
 using HunterIndustriesAPI.Models.Requests.Bodies.Portfolio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

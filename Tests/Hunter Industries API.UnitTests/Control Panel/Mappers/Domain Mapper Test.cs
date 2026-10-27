@@ -1,4 +1,4 @@
-// Copyright © - 14/06/2026 - Toby Hunter
+﻿// Copyright © - 14/06/2026 - Toby Hunter
 using HunterIndustriesAPIControlPanel.Mappers;
 using HunterIndustriesAPIControlPanel.Models.Responses;
 using HunterIndustriesAPIControlPanel.Models.Responses.Related;

@@ -2,7 +2,7 @@
 using HunterIndustriesAPI.Filters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HunterIndustriesAPI.UnitTests.API.Filters
+namespace HunterIndustriesAPI.IntegrationTests.API.Filters
 {
     [TestClass]
     public class VersionedRouteAttributeTest
